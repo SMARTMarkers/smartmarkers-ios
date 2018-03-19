@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:SwiftSMART/SwiftSMART.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:ResearchKit/ResearchKit.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "container:EASIPRO.xcodeproj">
+   </FileRef>
+</Workspace>
