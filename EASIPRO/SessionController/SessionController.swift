@@ -93,7 +93,6 @@ open class SessionController: NSObject, UITableViewDelegate, ORKTaskViewControll
     }
     
     open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
-//		let verifyController = VerifyPatientController(patient: patient)
 		let verifyController = PatientVerificationController(patient: patient)
 		var views : [UIViewController] = taskViewControllers
 		views.insert(verifyController, at: 0)
