@@ -42,18 +42,20 @@ public class SMARTManager : NSObject {
     
     class func smartClient() -> Client {
         
-        let baseURL = URL(string: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImIiOiIyZTI3YzcxZS0zMGM4LTRjZWItOGMxYy01NjQxZTA2NmMwYTQsZWIzMjcxZTEtYWUxYi00NjQ0LTkzMzItNDFlMzJjODI5NDg2IiwiaSI6IjEiLCJlIjoic21hcnQtUHJhY3RpdGlvbmVyLTcxMDgxMzMyIn0/fhir")!
-        
+//        let baseURL = URL(string: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImIiOiIyZTI3YzcxZS0zMGM4LTRjZWItOGMxYy01NjQxZTA2NmMwYTQsZWIzMjcxZTEtYWUxYi00NjQ0LTkzMzItNDFlMzJjODI5NDg2IiwiaSI6IjEiLCJlIjoic21hcnQtUHJhY3RpdGlvbmVyLTcxMDgxMzMyIn0/fhir")!
+		
+		let baseURL = URL(string: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir")!
+        //openid profile user/*.* patient/*.* launch/encounter launch/patient
         let settings = [ "client_name" : "EASIPRO",
                          "redirect"    : "easipro2://callback",
-                         "scope"       : "openid profile user/*.* patient/*.* launch/encounter launch/patient",
+                         "scope"       : "openid profile user/*.*",
                          "client_id"   : "7c5dc7c9-74ca-451a-bd3d-eeb21bb66e93",
                          
                          ]
         
         let client = Client(baseURL: baseURL, settings: settings)
         client.authProperties.embedded = true
-        client.authProperties.granularity = .patientSelectWeb
+        client.authProperties.granularity = .tokenOnly
         let logger = OAuth2DebugLogger.init()
         logger.level = .trace
         client.server.logger = logger
@@ -112,7 +114,17 @@ public class SMARTManager : NSObject {
                 } else {
                     callback(false)
                 }
-            }
+			} else if let idToken = self.client.server.idToken,
+				let decoded = self.base64UrlDecode(idToken),
+				let userProfile = decoded["profile"] as? String {
+				let practitionerId = userProfile.components(separatedBy: "/")[1]
+				Practitioner.read(practitionerId, server: self.client.server, callback: { (practitioner, error) in
+					if let practitioner = practitioner as? Practitioner {
+						self.practitioner = practitioner
+					}
+					callback(true)
+				})
+			}
             else if nil != error {
                 
                 print(error.debugDescription)
@@ -214,9 +226,7 @@ public class SMARTManager : NSObject {
     
     public func selectPatient(callback: @escaping ((_ patientPicker: UIViewController) -> Void)) {
         
-        let allPatientList = PatientListAll()
-        let patientPickerViewController = PatientListViewController(list: allPatientList, server: client.server)
-        patientPickerViewController.title = "Select Patient"
+		let patientPickerViewController = EPPatientListViewController(server: client.server)
         patientPickerViewController.onPatientSelect = { [unowned self] (patient) in
             self.patient = patient
         }

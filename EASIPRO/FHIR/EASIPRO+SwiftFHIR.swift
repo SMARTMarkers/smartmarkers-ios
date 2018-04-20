@@ -7,7 +7,29 @@
 //
 
 import Foundation
-import SMART 
+import SMART
+
+
+extension Appointment {
+	
+	public func ep_patientReferences() -> [String]? {
+		
+		guard let participant = participant else {
+			return nil
+		}
+		
+		var patientReferences = [String]()
+		for p in participant {
+			if let reference = p.actor, let referenceString = reference.reference, referenceString.string.contains("Patient/") {
+				let fhirID = referenceString.string.components(separatedBy: "/")[1]
+				patientReferences.append(fhirID)
+			}
+		}
+		
+		return (patientReferences.count > 0) ? patientReferences : nil
+	}
+	
+}
 
 extension ProcedureRequest {
     
