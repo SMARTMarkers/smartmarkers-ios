@@ -11,6 +11,8 @@
 		D4618A46205F07EC004E117F /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4618A45205F07EB004E117F /* LocalAuth.swift */; };
 		D4618A4E20616100004E117F /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = D4618A4D206160FF004E117F /* Readme.md */; };
 		D465D5A4203DCB8E0057BD23 /* Installation.md in Resources */ = {isa = PBXBuildFile; fileRef = D465D5A3203DCB8E0057BD23 /* Installation.md */; };
+		D4C2B2AE208FA55E00262B14 /* InsightsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C2B2AD208FA55E00262B14 /* InsightsController.swift */; };
+		D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C2B2AF208FA59800262B14 /* LineGraphView.swift */; };
 		D4CBBFEA203F72B7002B6AC9 /* QuestionnaireViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */; };
 		D4CBC0082045ACF2002B6AC9 /* EASIPRO+SwiftFHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBC0072045ACF2002B6AC9 /* EASIPRO+SwiftFHIR.swift */; };
 		D4CBC00C2046F1C3002B6AC9 /* PROMeasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBC00B2046F1C3002B6AC9 /* PROMeasure.swift */; };
@@ -31,6 +33,8 @@
 		D4618A45205F07EB004E117F /* LocalAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalAuth.swift; path = EASIPRO/LocalAuth.swift; sourceTree = "<group>"; };
 		D4618A4D206160FF004E117F /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		D465D5A3203DCB8E0057BD23 /* Installation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Installation.md; sourceTree = "<group>"; };
+		D4C2B2AD208FA55E00262B14 /* InsightsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsController.swift; sourceTree = "<group>"; };
+		D4C2B2AF208FA59800262B14 /* LineGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGraphView.swift; sourceTree = "<group>"; };
 		D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireViewController.swift; sourceTree = "<group>"; };
 		D4CBC0072045ACF2002B6AC9 /* EASIPRO+SwiftFHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EASIPRO+SwiftFHIR.swift"; sourceTree = "<group>"; };
 		D4CBC00B2046F1C3002B6AC9 /* PROMeasure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROMeasure.swift; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 				D4CFF03B203C7F9D00A6FB31 /* SMARTManager.swift */,
 				D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */,
 				D4618A43205ED820004E117F /* PatientVerificationController.swift */,
+				D4C2B2AD208FA55E00262B14 /* InsightsController.swift */,
+				D4C2B2AF208FA59800262B14 /* LineGraphView.swift */,
 			);
 			path = EASIPRO;
 			sourceTree = "<group>";
@@ -250,6 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4C2B2AE208FA55E00262B14 /* InsightsController.swift in Sources */,
 				D4CBBFEA203F72B7002B6AC9 /* QuestionnaireViewController.swift in Sources */,
 				D4E75D8120361EE5000CE95A /* PatientsViewController.swift in Sources */,
 				D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */,
@@ -260,6 +267,7 @@
 				D4CFF03C203C7F9D00A6FB31 /* SMARTManager.swift in Sources */,
 				D4CBC00C2046F1C3002B6AC9 /* PROMeasure.swift in Sources */,
 				D4E75D732035E7AA000CE95A /* EHRLoginController.swift in Sources */,
+				D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

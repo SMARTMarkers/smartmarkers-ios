@@ -41,8 +41,6 @@ public class SMARTManager : NSObject {
     public var measures: [PROMeasure]? = nil
     
     class func smartClient() -> Client {
-        
-//        let baseURL = URL(string: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImIiOiIyZTI3YzcxZS0zMGM4LTRjZWItOGMxYy01NjQxZTA2NmMwYTQsZWIzMjcxZTEtYWUxYi00NjQ0LTkzMzItNDFlMzJjODI5NDg2IiwiaSI6IjEiLCJlIjoic21hcnQtUHJhY3RpdGlvbmVyLTcxMDgxMzMyIn0/fhir")!
 		
 		let baseURL = URL(string: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir")!
         //openid profile user/*.* patient/*.* launch/encounter launch/patient
@@ -59,7 +57,6 @@ public class SMARTManager : NSObject {
         let logger = OAuth2DebugLogger.init()
         logger.level = .trace
         client.server.logger = logger
-        
         return client
     }
     
@@ -135,16 +132,17 @@ public class SMARTManager : NSObject {
     
     // MARK: FHIR Fetch Resource
     
-    func fetch<T: DomainResource>(type domainResource: T.Type, resourceIdentifier: String, callback: @escaping (_ resource: T?, _ error: Error?) -> Void) {
+    func fetch<T: DomainResource>(type domainResource: T.Type, resource identifier: String, callback: @escaping (_ resource: T?, _ error: Error?) -> Void) {
         client.ready(callback: { [unowned self] (error) in
             if nil != error {
                 callback(nil, error)
             }
-            domainResource.read(resourceIdentifier, server: self.client.server, callback: { (resource, ferror) in
+            domainResource.read(identifier, server: self.client.server, callback: { (resource, ferror) in
                 callback(resource as? T, ferror)
             })
         })
     }
+
     
     // MARK: FHIR Search Resources
     
@@ -155,6 +153,19 @@ public class SMARTManager : NSObject {
     public func getQuestionnaires(callback: @escaping(_ questionnaires: [Questionnaire]?, _ error: Error?) -> Void) {
         search(type: Questionnaire.self, params: [:], callback: callback)
     }
+	
+	public func getQuestionnaireResponses(callback: @escaping(_ questionnaires: [QuestionnaireResponse]?, _ error: Error?) -> Void) {
+		search(type: QuestionnaireResponse.self, params: [:], callback: callback)
+	}
+	
+	public func getObservations(callback: @escaping(_ observations: [Observation]?, _ error: Error?) -> Void) {
+		guard let patient = patient else {
+			print("Select Patient")
+			callback(nil, nil)
+			return
+		}
+		search(type: Observation.self, params: ["category":"survey", "patient": patient.id!.string], callback: callback)
+	}
     
     private func search<T: DomainResource>(type domainResource: T.Type, params: [String: String], callback : @escaping (_ resources: [T]?, _ serror : Error?) -> Void) {
         client.ready { [unowned self] (rerror) in
@@ -282,14 +293,8 @@ public class SMARTManager : NSObject {
     }
     
 
-    
-
-    public func demo() {
-        
-        
-        
-    }
-    
+	
+	
     
     
     
