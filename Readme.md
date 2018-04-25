@@ -1,12 +1,7 @@
 EASIPRO Framework
 ================
 
-Swift Framework for Questionnaire based Patient Reported Outcomes. Works with SMART enabled FHIR Server of the Electronic Health Record Provider to read and write Patient Responses.
+Swift Framework for Questionnaire based Patient Reported Outcome Measure. Works with SMART-on-FHIR enabled of EHR.
 
-### Outpatient Mode
-
-
- n./
-
-More soon...
+### More soon... 
 
