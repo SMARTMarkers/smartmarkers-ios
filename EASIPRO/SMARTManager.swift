@@ -20,6 +20,7 @@ public class SMARTManager : NSObject {
     
     public var client: SMART.Client
     public static let shared = SMARTManager()
+	
     public internal(set) var practitioner: Practitioner? = nil {
         didSet {
             DispatchQueue.main.async {
@@ -63,7 +64,8 @@ public class SMARTManager : NSObject {
     public var onPatientSelected : (() -> Void)?
     
     public var onPractitionerSelected : (() -> Void)?
-
+	
+	public var onLoggedOut : (() -> Void)?
     
     required override public init() {
         client = SMARTManager.smartClient()
@@ -170,7 +172,10 @@ public class SMARTManager : NSObject {
     private func search<T: DomainResource>(type domainResource: T.Type, params: [String: String], callback : @escaping (_ resources: [T]?, _ serror : Error?) -> Void) {
         client.ready { [unowned self] (rerror) in
             if nil != rerror { callback(nil, rerror) }
-            domainResource.search(params).perform(self.client.server, callback: { (bundle, fhirError) in
+			let search = domainResource.search(params)
+			// TODO: Decide Appropriate Number
+			search.pageCount = 100
+            search.perform(self.client.server, callback: { (bundle, fhirError) in
                 if let bundle = bundle {
                     let resources = bundle.entry?.filter{ $0.resource is T}.map{ $0.resource as! T}
                     if let count = resources?.count, count > 0 {
