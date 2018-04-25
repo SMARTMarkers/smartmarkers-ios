@@ -12,7 +12,7 @@ import UIKit
 @IBDesignable class LineGraphView: UIView {
 	
 	private struct Constants {
-		static let cornerRadiusSize = CGSize(width: 8.0, height: 8.0)
+		static let cornerRadiusSize = CGSize(width: 10.0, height: 10.0)
 		static let margin: 			CGFloat = 30.0
 		static let topBorder: 		CGFloat = 60.0
 		static let bottomBorder: 	CGFloat = 10
@@ -21,9 +21,9 @@ import UIKit
 		static let attributes = [NSAttributedStringKey.foregroundColor: UIColor.white,
 								 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 10)]
 	}
-	@IBInspectable var startColor: 	UIColor = .orange
-	@IBInspectable var endColor: 	UIColor = .orange
-	@IBInspectable var strokeColor: UIColor = .black
+	@IBInspectable var startColor: 	UIColor = UIColor(red: 1, green:  0.493272, blue: 0.473998, alpha: 1)
+	@IBInspectable var endColor: 	UIColor = UIColor(red: 1, green:  0.57810, blue: 0, alpha: 1)
+	@IBInspectable var strokeColor: UIColor = .white
 	
 	var thresholds : [Double] = []
 	var title : String?
@@ -33,23 +33,33 @@ import UIKit
 		}
 	}
 	
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		self.backgroundColor = UIColor.clear
+
+	}
+	
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	
 	
 	
 	override func draw(_ rect: CGRect) {
 		
-		
-		
-		print(graphPoints)
-		
+
 		thresholds = [90, 50, 10]
 		
 		let width = rect.width
 		let height = rect.height
 		
+		UIColor.white.set()
 		let path = UIBezierPath(roundedRect: rect,
 								byRoundingCorners: UIRectCorner.allCorners,
 								cornerRadii: Constants.cornerRadiusSize)
 		path.addClip()
+
 		
 		let context = UIGraphicsGetCurrentContext()!
 		let colors = [startColor.cgColor, endColor.cgColor]
@@ -85,7 +95,6 @@ import UIKit
 		
 		
 		if graphPoints.count > 0 {
-			strokeColor.setFill()
 			strokeColor.setStroke()
 			let graphPath = UIBezierPath()
 			var _points = [CGPoint]()
@@ -112,13 +121,13 @@ import UIKit
 			graphPath.lineWidth = 2.0
 			graphPath.stroke()
 			
+			strokeColor.setFill()
 			for p in _points {
 				var p = p
 				p.x -= Constants.circleDiameter / 2
 				p.y -= Constants.circleDiameter / 2
 				let circle = UIBezierPath(ovalIn: CGRect(origin: p, size: CGSize(width: Constants.circleDiameter, height: Constants.circleDiameter)))
 				circle.fill()
-				
 			}
 		}
 		
@@ -141,9 +150,12 @@ import UIKit
 		linePath.lineWidth = 1.0
 		linePath.stroke()
 		
-		let nstitle = (title ?? "TITLE") as NSString
-		nstitle.draw(at: CGPoint.init(x: Constants.margin, y: 10) , withAttributes: [NSAttributedStringKey.foregroundColor: UIColor.white,
+		if let title = title  {
+			(title as NSString).draw(at: CGPoint.init(x: Constants.margin, y: 10) , withAttributes: [NSAttributedStringKey.foregroundColor: UIColor.white,
 																					 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 15)])
+		}
+		
+
 		
 	}
 }
