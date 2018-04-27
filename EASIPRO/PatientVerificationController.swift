@@ -78,12 +78,11 @@ class PatientVerificationController: UIViewController {
 	
 	
 	func EPButton(_ title: String) -> UIButton {
-		let btn = UIButton(type: .system)
+		
+		let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+		let btn = RoundedButton(frame: frame)
 		btn.translatesAutoresizingMaskIntoConstraints = false
-		btn.setTitleColor(UIColor.white, for: .normal)
-		btn.backgroundColor = UIColor(red: 0.0236419, green: 0.328521, blue: 0.574885, alpha: 1.0)
 		btn.setTitle(title, for: .normal)
-		btn.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
 		btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
 		return btn
 	}

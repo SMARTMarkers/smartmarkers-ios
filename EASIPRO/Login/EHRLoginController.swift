@@ -98,13 +98,12 @@ open class EHRLoginController: UIViewController {
     }
     
     func EASIPROButton() -> UIButton {
-        
-        let btn = UIButton(type: .roundedRect)
+		
+		let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+		let btn = RoundedButton(frame: frame)
+		btn.setTitle(loginTitle, for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitleColor(UIColor.white, for: .normal)
-        btn.backgroundColor = UIColor(red: 0.0236419, green: 0.328521, blue: 0.574885, alpha: 1.0)
-        btn.setTitle(loginTitle, for: .normal)
-        btn.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+		btn.setTitle(loginTitle, for: .normal)
         btn.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         btn.addTarget(self, action: #selector(login(_:)), for: UIControlEvents.touchUpInside)
 

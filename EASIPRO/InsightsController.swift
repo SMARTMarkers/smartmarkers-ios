@@ -22,6 +22,7 @@ open class InsightsController: UITableViewController {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
 		tableView.separatorStyle = .none
 		tableView.allowsSelection = false
+		tableView.backgroundColor = UIColor.gray
 		fetchObservations()
     }
 	

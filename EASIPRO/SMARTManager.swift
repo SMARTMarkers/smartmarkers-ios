@@ -249,19 +249,7 @@ public class SMARTManager : NSObject {
         let navigationController = UINavigationController(rootViewController: patientPickerViewController)
         callback(navigationController)
     }
-    
-    /**
-     
-     - selectPatient
-     - selectMeasures
-     - beginSession
-     - completeSession
-     - completeSession:[session], result:[acscore]
-     -
- 
-    */
-    
-    
+	
     
     
     // MARK: EASIPRO FHIR METHODS
