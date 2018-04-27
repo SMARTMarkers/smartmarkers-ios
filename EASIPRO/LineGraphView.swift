@@ -14,7 +14,7 @@ import UIKit
 	private struct Constants {
 		static let cornerRadiusSize = CGSize(width: 10.0, height: 10.0)
 		static let margin: 			CGFloat = 30.0
-		static let topBorder: 		CGFloat = 60.0
+		static let topBorder: 		CGFloat = 70.0
 		static let bottomBorder: 	CGFloat = 10
 		static let colorAlpha: 		CGFloat = 0.3
 		static let circleDiameter: 	CGFloat = 7.0
@@ -27,6 +27,8 @@ import UIKit
 	
 	var thresholds : [Double] = []
 	var title : String?
+    var subtitle: String?
+    
 	var graphPoints: [Double] = [] {
 		didSet {
 			self.setNeedsDisplay()
@@ -49,7 +51,7 @@ import UIKit
 	override func draw(_ rect: CGRect) {
 		
 
-		thresholds = [90, 50, 10]
+		thresholds = [90,80,70,60,50,40,30,20,10]
 		
 		let width = rect.width
 		let height = rect.height
@@ -95,6 +97,7 @@ import UIKit
 		
 		
 		if graphPoints.count > 0 {
+            strokeColor.setFill()
 			strokeColor.setStroke()
 			let graphPath = UIBezierPath()
 			var _points = [CGPoint]()
@@ -116,7 +119,10 @@ import UIKit
 			let highestYPoint = columnYPoint(maxValue)
 			startPoint = CGPoint(x:margin, y: highestYPoint)
 			endPoint = CGPoint(x:margin, y: bounds.height)
-			context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: CGGradientDrawingOptions(rawValue: 0))
+            let gradient2 = CGGradient(colorsSpace: colorSpace,
+                                       colors: [strokeColor.withAlphaComponent(0.5).cgColor, startColor.withAlphaComponent(0.3).cgColor, endColor.cgColor] as CFArray,
+                                      locations: [0.0, 0.5, 1.0])!
+			context.drawLinearGradient(gradient2, start: startPoint, end: endPoint, options: CGGradientDrawingOptions(rawValue: 0))
 			context.restoreGState()
 			graphPath.lineWidth = 2.0
 			graphPath.stroke()
@@ -129,7 +135,7 @@ import UIKit
 				let circle = UIBezierPath(ovalIn: CGRect(origin: p, size: CGSize(width: Constants.circleDiameter, height: Constants.circleDiameter)))
 				circle.fill()
 			}
-		}
+        }
 		
 		
 		
@@ -150,10 +156,17 @@ import UIKit
 		linePath.lineWidth = 1.0
 		linePath.stroke()
 		
+        
 		if let title = title  {
 			(title as NSString).draw(at: CGPoint.init(x: Constants.margin, y: 10) , withAttributes: [NSAttributedStringKey.foregroundColor: UIColor.white,
-																					 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 15)])
+																					 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 20)])
 		}
+        if let subtitle = subtitle {
+            (subtitle as NSString).draw(at: CGPoint(x: Constants.margin, y: 35), withAttributes:
+                [NSAttributedStringKey.foregroundColor: UIColor.lightText,
+                 NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
+        }
+        
 		
 
 		

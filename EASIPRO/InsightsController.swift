@@ -22,7 +22,6 @@ open class InsightsController: UITableViewController {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
 		tableView.separatorStyle = .none
 		tableView.allowsSelection = false
-		tableView.backgroundColor = UIColor.gray
 		fetchObservations()
     }
 	
@@ -106,6 +105,7 @@ open class InsightsController: UITableViewController {
 		let scores = obss.map { Double($0.valueString!.string)! }
 		let graphView = cell?.viewWithTag(10) as? LineGraphView
 		graphView?.title = title
+        graphView?.subtitle  = "MOST RECENT RECORDED SCORE: \(lastestObservation.valueString!.string)"
 		graphView?.graphPoints = scores
 		
 
