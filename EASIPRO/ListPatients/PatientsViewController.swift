@@ -73,6 +73,7 @@ class EPPatientListViewController : PatientListViewController {
 		let allPatientsItem = UIBarButtonItem(title: "All-Patients", style: .plain, target: self, action: #selector(allPatientsSearch(_:)))
 		navigationItem.rightBarButtonItems = [allPatientsItem, appointmentsItem]
 		navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = false
 
 		
