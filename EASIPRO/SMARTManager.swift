@@ -169,7 +169,7 @@ public class SMARTManager : NSObject {
 		search(type: Observation.self, params: ["category":"survey", "patient": patient.id!.string], callback: callback)
 	}
     
-    private func search<T: DomainResource>(type domainResource: T.Type, params: [String: String], callback : @escaping (_ resources: [T]?, _ serror : Error?) -> Void) {
+    public func search<T: DomainResource>(type domainResource: T.Type, params: [String: String], callback : @escaping (_ resources: [T]?, _ serror : Error?) -> Void) {
         client.ready { [unowned self] (rerror) in
             if nil != rerror { callback(nil, rerror) }
 			let search = domainResource.search(params)

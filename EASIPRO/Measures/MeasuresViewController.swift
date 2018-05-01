@@ -160,10 +160,6 @@ open class MeasuresViewController : UITableViewController {
             selections.remove(at: idx)
         }
     }
-    
-    
-    
-    
 }
 
 extension MeasuresViewController : UISearchControllerDelegate {

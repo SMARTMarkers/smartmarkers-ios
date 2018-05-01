@@ -12,6 +12,7 @@ import SMART
 
 open class InsightsController: UITableViewController {
 
+	
 	var sortedObservations : [[Observation]]?
 
 	

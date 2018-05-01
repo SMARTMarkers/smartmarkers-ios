@@ -58,9 +58,7 @@ class PatientVerificationController: UIViewController {
 			present(alert, animated: true)
 			return
 		}
-		
 		moveToPROMeasures()
-		
 	}
 
 	@objc func cancelVerification(_ sender: Any?) {

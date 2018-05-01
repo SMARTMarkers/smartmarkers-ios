@@ -94,6 +94,20 @@ extension ProcedureRequest {
         
         return pr
     }
+	
+	
+	var ep_titleCode : String? {
+		get {
+			if let text = self.code?.text?.string { return text }
+			return nil
+		}
+	}
+	
+	var ep_titleCategory : String? {
+		get {
+			return self.category?.first?.text?.string
+		}
+	}
 
 }
 
