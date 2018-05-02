@@ -30,7 +30,8 @@ open class RoundedButton: UIButton {
 	}
 	
 	func configView() {
-		layer.cornerRadius = 25
+        let height = frame.size.height
+        layer.cornerRadius = (height <= 30) ? (height/3 + 5) : 25
 		tintColorDidChange()
 		titleLabel?.textAlignment = .center
 	}
