@@ -10,8 +10,8 @@ import Foundation
 import SMART
 
 
-public enum UserType : Int {
-    case Provider
+public enum UsageMode  {
+    case Practitioner
     case Patient
 }
 
@@ -19,10 +19,11 @@ public class SMARTManager : NSObject {
     
     
     public var client: SMART.Client
-    public var settings : [String:String]?
-    public var base: URL?
+    
     public static let shared = SMARTManager()
-	
+    
+    public internal(set) var usageMode : UsageMode?
+    
     public internal(set) var practitioner: Practitioner? = nil {
         didSet {
             DispatchQueue.main.async {
@@ -116,6 +117,7 @@ public class SMARTManager : NSObject {
                     Practitioner.read(userID, server: self.client.server, callback: { (practitioner, error) in
                         if let practitioner = practitioner as? Practitioner {
                             self.practitioner = practitioner
+                            self.usageMode = .Practitioner
                         }
                         callback(true)
                     })
@@ -124,6 +126,7 @@ public class SMARTManager : NSObject {
                     Patient.read(userID, server: self.client.server, callback: { (patient, error) in
                         if let patient = patient as? Patient {
                             self.patient = patient
+                            self.usageMode = .Patient
                         }
                         callback(true)
                     })
