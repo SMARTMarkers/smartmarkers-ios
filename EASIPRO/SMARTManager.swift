@@ -51,20 +51,7 @@ public class SMARTManager : NSObject {
         let logger = OAuth2DebugLogger.init()
         logger.level = .trace
         client.server.logger = logger
-//        SMARTManager.shared.client = client
         return client
-    }
-    
-    public class func smartClient() -> Client {
-		
-		let baseURL = URL(string: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir")!
-        //openid profile user/*.* patient/*.* launch/encounter launch/patient
-        let settings = [ "client_name" : "EASIPRO",
-                         "redirect"    : "easipro-home://callback",
-                         "scope"       : "openid profile user/*.*",
-                         "client_id"   : "7c5dc7c9-74ca-451a-bd3d-eeb21bb66e93",
-                         ]
-        return SMARTManager.client(with: baseURL, settings: settings)
     }
     
     public var onPatientSelected : (() -> Void)?
@@ -73,9 +60,9 @@ public class SMARTManager : NSObject {
 	
 	public var onLoggedOut : (() -> Void)?
     
-    required override public init() {
-        client = SMARTManager.smartClient()
-//        super.init()
+    override private init() {
+//        client = SMARTManager.smartClient()
+        client = SMARTManager.patientClient()
     }
     
     public func resetClient() {
