@@ -109,13 +109,25 @@ public class SMARTManager : NSObject {
 			} else if let idToken = self.client.server.idToken,
 				let decoded = self.base64UrlDecode(idToken),
 				let userProfile = decoded["profile"] as? String {
-				let practitionerId = userProfile.components(separatedBy: "/")[1]
-				Practitioner.read(practitionerId, server: self.client.server, callback: { (practitioner, error) in
-					if let practitioner = practitioner as? Practitioner {
-						self.practitioner = practitioner
-					}
-					callback(true)
-				})
+                let comps = userProfile.components(separatedBy: "/")
+                let userID = comps[1]
+                let userType = comps[0]
+                if userType == "Practitioner" {
+                    Practitioner.read(userID, server: self.client.server, callback: { (practitioner, error) in
+                        if let practitioner = practitioner as? Practitioner {
+                            self.practitioner = practitioner
+                        }
+                        callback(true)
+                    })
+                }
+                else if userType == "Patient" {
+                    Patient.read(userID, server: self.client.server, callback: { (patient, error) in
+                        if let patient = patient as? Patient {
+                            self.patient = patient
+                        }
+                        callback(true)
+                    })
+                }
 			}
             else if nil != error {
                 
