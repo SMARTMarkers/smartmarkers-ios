@@ -12,9 +12,7 @@ import SMART
 
 open class InsightsController: UITableViewController {
 
-	
 	var sortedObservations : [[Observation]]?
-
 	
 	override open func viewDidLoad() {
         super.viewDidLoad()
@@ -115,7 +113,6 @@ open class InsightsController: UITableViewController {
 	
 	override open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		cell.preservesSuperviewLayoutMargins = false
-		cell.layoutMargins = UIEdgeInsetsMake(0, 100, 0, 100)
 	}
 	
 	override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
