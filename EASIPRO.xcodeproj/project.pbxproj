@@ -31,6 +31,7 @@
 		D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D7D20361EB5000CE95A /* MeasuresViewController.swift */; };
 		D4E75D8120361EE5000CE95A /* PatientsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D8020361EE5000CE95A /* PatientsViewController.swift */; };
 		D4E75D8520363C0E000CE95A /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D8420363C0E000CE95A /* SessionController.swift */; };
+		D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F0A578209A3CE200481868 /* LineChartView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		D4E75D7D20361EB5000CE95A /* MeasuresViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasuresViewController.swift; sourceTree = "<group>"; };
 		D4E75D8020361EE5000CE95A /* PatientsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientsViewController.swift; sourceTree = "<group>"; };
 		D4E75D8420363C0E000CE95A /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
+		D4F0A578209A3CE200481868 /* LineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,7 +133,6 @@
 				D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */,
 				D4618A43205ED820004E117F /* PatientVerificationController.swift */,
 				D4C2B2AD208FA55E00262B14 /* InsightsController.swift */,
-				D4C2B2AF208FA59800262B14 /* LineGraphView.swift */,
 			);
 			path = EASIPRO;
 			sourceTree = "<group>";
@@ -139,7 +140,9 @@
 		D4E75D742035EABD000CE95A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D4C2B2AF208FA59800262B14 /* LineGraphView.swift */,
 				D42605CD209364FE00853609 /* RoundedButton.swift */,
+				D4F0A578209A3CE200481868 /* LineChartView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				D4E75D8120361EE5000CE95A /* PatientsViewController.swift in Sources */,
 				D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */,
 				D4E75D8520363C0E000CE95A /* SessionController.swift in Sources */,
+				D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */,
 				D4CBC0082045ACF2002B6AC9 /* EASIPRO+SwiftFHIR.swift in Sources */,
 				D4618A44205ED820004E117F /* PatientVerificationController.swift in Sources */,
 				D40B19CF2098A3CF00C18C23 /* SMARTManager+Config.swift in Sources */,
