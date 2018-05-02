@@ -8,7 +8,7 @@
 
 import UIKit
 
-@IBDesignable class LineChartView: UIView {
+@IBDesignable public class LineChartView: UIView {
     
     @IBInspectable var lineColor : UIColor = .white
     @IBInspectable var startColor: UIColor = .black
@@ -26,7 +26,7 @@ import UIKit
     }
     
     public var showScore : Bool = true
-    var points : [Double]?
+    public var points : [Double]?
     var colors : [UIColor]?
     
     class func Gradient(for color: UIColor, colorSpace: CGColorSpace) -> CGGradient {
@@ -39,7 +39,7 @@ import UIKit
     }
     
     
-    override func draw(_ rect: CGRect) {
+    override public func draw(_ rect: CGRect) {
         
         let context = UIGraphicsGetCurrentContext()!
         self.superview?.superview?.backgroundColor?.setFill()
