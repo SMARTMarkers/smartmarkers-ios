@@ -26,21 +26,20 @@ import UIKit
     }
     
     public var showScore : Bool = true
+    
 	public var points : [Double]? {
-		didSet {
-			setNeedsLayout()
-			setNeedsDisplay()
-			layoutIfNeeded()
-		}
+		didSet { setNeedsDisplay() }
 	}
+    
     var colors : [UIColor]?
     
     class func Gradient(for color: UIColor, colorSpace: CGColorSpace) -> CGGradient {
-        let topColor = color.withAlphaComponent(0.4).cgColor
-        let bottomColor = color.withAlphaComponent(0.1).cgColor
+        let topColor = color.withAlphaComponent(0.5).cgColor
+        let middleColor = color.withAlphaComponent(0.2).cgColor
+        let bottomColor = color.withAlphaComponent(0.02).cgColor
         let gradient = CGGradient(colorsSpace: colorSpace,
-                                  colors: [topColor, bottomColor] as CFArray,
-                                  locations: [0.0, 1.0])!
+                                  colors: [topColor, middleColor, bottomColor] as CFArray,
+                                  locations: [0.0, 0.3, 1.0])!
         return gradient
     }
     
@@ -51,21 +50,13 @@ import UIKit
         self.superview?.superview?.backgroundColor?.setFill()
         context.fill(rect)
         
-        //points = [33.0, 44.0, 34.0, 64.3]
         colors = [UIColor.orange, UIColor.red, UIColor.red, UIColor.red, UIColor.red, UIColor.red, UIColor.red, UIColor.red]
         
         guard let points = self.points, points.count > 0 else {
             return
         }
         
-        
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        
-        
-        
-        
-        
-        
         let height = rect.height
         let width  = rect.width - Const.rightMargin
         let margin = Const.margin
