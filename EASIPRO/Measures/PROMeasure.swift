@@ -211,6 +211,13 @@ public final class PROMeasure2 : PROMProtocol {
 
 }
 
+extension PROMeasure2 : Equatable {
+    
+    public static func ==(lhs: PROMeasure2, rhs: PROMeasure2) -> Bool {
+        return (lhs.identifier == rhs.identifier)
+    }
+}
+
 
 open class PROMeasure {
 	
@@ -249,8 +256,6 @@ open class PROMeasure {
     open func getIdentifier() -> String {
         return "---"
     }
-    
-    
 }
 
 extension PROMeasure : Equatable {

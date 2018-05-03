@@ -13,6 +13,69 @@ import SMART
 
 
 
+public protocol SessionProtocol : class {
+    
+    associatedtype PROMeasureObjectType
+    
+    associatedtype PROMeasureScoreObjectType
+    
+    var measures: [PROMeasureObjectType]? { get set }
+    
+    var practitioner: Practitioner { get }
+    
+    var patient: Patient { get }
+    
+    var onMeasureFailure: ((_ result: PROMeasureScoreObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
+    
+    var onMeasureCompletion: ((_ result: PROMeasureScoreObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
+    
+    /// Callback handler for Completed Session (for All PROMeasures)
+    var onSessionCompletion: ((_ result: PROMeasureScoreObjectType?, _ measures: [PROMeasureScoreObjectType]?) -> Void)? { get set }
+    
+    
+    /// Callback handler: Called when session is interrupted
+    var onCancellation: ((_ viewController: ORKTaskViewController, _ error: Error?) -> Void)? { get set }
+    
+    func prepareSessionContainer(callback: @escaping ((_ container: UIViewController?, _ error: Error?) -> Void))
+}
+
+open class SessionController2: SessionProtocol {
+
+    
+    public typealias PROMeasureObjectType = PROMeasure2
+
+    public typealias PROMeasureScoreObjectType = AnyObject
+    
+    public var measures: [PROMeasure2]?
+    
+    public var practitioner: Practitioner
+    
+    public var patient: Patient
+    
+    public var onMeasureFailure: ((AnyObject?, PROMeasure2?) -> Void)?
+    
+    public var onMeasureCompletion: ((AnyObject?, PROMeasure2?) -> Void)?
+    
+    public var onSessionCompletion: ((AnyObject?, [AnyObject]?) -> Void)?
+    
+    public var onCancellation: ((ORKTaskViewController, Error?) -> Void)?
+    
+    public func prepareSessionContainer(callback: @escaping ((UIViewController?, Error?) -> Void)) {
+        
+    }
+    
+    required public init(patient: Patient, measures: [PROMeasure2]?, practitioner : Practitioner) {
+        self.patient = patient
+        self.measures = measures
+        self.practitioner = practitioner
+    }
+    
+
+    
+    
+}
+
+
 
 open class SessionController: NSObject, UITableViewDelegate, ORKTaskViewControllerDelegate, UINavigationControllerDelegate {
     
