@@ -65,7 +65,15 @@ public final class PROMeasure2 : PROMProtocol {
 	
 	public var status: PROMeasureStatus = .unknown
 	
-	public var results: [Observation]?
+	public var results: [Observation]? {
+		didSet {
+			if let res = results {
+				self.scores = res.map { Double($0.valueString!.string)! }
+			}
+		}
+	}
+	
+	public var scores : [Double]?
 	
 	public var title: String
 	

@@ -26,7 +26,13 @@ import UIKit
     }
     
     public var showScore : Bool = true
-    public var points : [Double]?
+	public var points : [Double]? {
+		didSet {
+			setNeedsLayout()
+			setNeedsDisplay()
+			layoutIfNeeded()
+		}
+	}
     var colors : [UIColor]?
     
     class func Gradient(for color: UIColor, colorSpace: CGColorSpace) -> CGGradient {

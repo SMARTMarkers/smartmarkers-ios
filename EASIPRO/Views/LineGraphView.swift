@@ -9,7 +9,7 @@
 
 import UIKit
 
-@IBDesignable class LineGraphView: UIView {
+@IBDesignable public class LineGraphView: UIView {
 	
 	private struct Constants {
 		static let cornerRadiusSize = CGSize(width: 10.0, height: 10.0)
@@ -25,11 +25,11 @@ import UIKit
 	@IBInspectable var endColor: 	UIColor = UIColor(red: 1, green:  0.57810, blue: 0, alpha: 1)
 	@IBInspectable var strokeColor: UIColor = .white
 	
-	var thresholds : [Double] = []
-	var title : String?
-    var subtitle: String?
+	public var thresholds : [Double] = []
+	public var title : String?
+    public var subtitle: String?
     
-	var graphPoints: [Double] = [] {
+	public var graphPoints: [Double] = [] {
 		didSet {
 			self.setNeedsDisplay()
 		}
@@ -41,14 +41,14 @@ import UIKit
 
 	}
 	
-    required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 	
 	
 	
 	
-	override func draw(_ rect: CGRect) {
+	override public func draw(_ rect: CGRect) {
 		
 
 		thresholds = [90,80,70,60,50,40,30,20,10]
