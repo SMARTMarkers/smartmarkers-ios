@@ -11,15 +11,20 @@ import SMART
 
 
 public enum PROMeasureStatus {
-	
 	case completed
 	case aborted
 	case cancelled
 	case active
 	case unknown
-	
 }
 
+public enum PROSessionStatus : String {
+    case upcoming = "UPCOMING"
+    case due       = "DUE TODAY"
+    case planConcluded    = "CONCLUDED"
+    case completedCurrent = "COMPLETED CURRENT SLOT"
+    case unknown  = "---"
+}
 public protocol PROMProtocol {
 	
 	associatedtype PrescribingResourceType
@@ -30,13 +35,15 @@ public protocol PROMProtocol {
 	
 	var measure: AnyObject? { get set }
 	
-	var status: PROMeasureStatus { get set }
+	var measureStatus: PROMeasureStatus { get set }
 	
 	var results : [MeasurementResourceType]? { get set }
 	
 	var title : String { get set }
 	
 	var identifier : String { get set }
+    
+    var sessionStatus: PROSessionStatus { get set }
 	
 	static func fetchPrescribingResources(callback: @escaping (_ resource: [Self]?, _ error: Error?) -> Void)
 	
@@ -56,24 +63,28 @@ public final class PROMeasure2 : PROMProtocol {
 		didSet {
 			if let pr = prescribingResource {
 				self.schedule = Schedule.initialise(prescribing: pr)
-				self.status   = status(of: pr)
+				self.measureStatus   = status(of: pr)
 			}
 		}
 	}
 	
 	public var measure: AnyObject?
 	
-	public var status: PROMeasureStatus = .unknown
+	public var measureStatus: PROMeasureStatus = .unknown
+    
+    public var sessionStatus: PROSessionStatus = .unknown
+    
+    public var scores : [Double]?
 	
 	public var results: [Observation]? {
-		didSet {
-			if let res = results {
-				self.scores = res.map { Double($0.valueString!.string)! }
-			}
-		}
+        didSet {
+            results = results?.sorted { $0.effectiveDateTime!.nsDate < $1.effectiveDateTime!.nsDate }
+            filterObservations()
+        }
 	}
 	
-	public var scores : [Double]?
+    
+    
 	
 	public var title: String
 	
@@ -101,15 +112,11 @@ public final class PROMeasure2 : PROMProtocol {
 			}
 			
 			if let requests = requests {
-				
 				let promeasures = requests.map({ (procedureRequest) -> PROMeasure2 in
-					
 					let title = procedureRequest.ep_titleCode ?? procedureRequest.ep_titleCategory ?? procedureRequest.id!.string
 					let identifier = procedureRequest.id!.string
-					
 					let prom = PROMeasure2(title: title, identifier: identifier)
-					prom.prescribingResource = procedureRequest
-					prom.fetchMeasurementResources(callback: nil)
+                    prom.prescribingResource = procedureRequest
 					return prom
 				})
 				callback(promeasures, nil)
@@ -122,7 +129,7 @@ public final class PROMeasure2 : PROMProtocol {
 	
 	
 	public func fetchMeasurementResources(callback:  ((Bool) -> Void)?) {
-		
+
 		guard let patient = SMARTManager.shared.patient, let pr = prescribingResource else {
 			callback?(false)
 			return
@@ -155,6 +162,53 @@ public final class PROMeasure2 : PROMProtocol {
 				return .unknown
 		}
 	}
+    
+    
+    func filterObservations() {
+        if let res = results {
+            scores = res.map { Double($0.valueString!.string)! }
+        }
+        
+        // if Scheduled, then check slots
+        // TODO: associate results with slotIntervals
+        // Each slot --->> [Observations]
+        if let _ = schedule?.slots {
+            
+            
+            
+            
+            
+            
+        }
+        
+        if measureStatus == .completed || measureStatus == .aborted {
+            sessionStatus = .planConcluded
+        } else if measureStatus == .active {
+            // Compare Observations and things here:
+            // Check if Current Slot is due
+            let hasNext     = schedule?.nextSlot != nil
+            let dueToday    = schedule?.currentSlot != nil
+            let latestScore = results?.last?.effectiveDateTime?.nsDate
+            
+            if !dueToday && !hasNext { sessionStatus = .planConcluded }
+
+            else if dueToday {
+                if latestScore == nil { sessionStatus = .due }
+                if let latestScore = latestScore, schedule!.currentSlot!.period.contains(latestScore) {
+                    sessionStatus = (hasNext) ? .completedCurrent : .planConcluded
+                } else {
+                    sessionStatus = .due
+                }
+            }
+            else if hasNext { sessionStatus = .upcoming }
+            
+            
+            
+            
+        } else { sessionStatus = .unknown }
+        
+    }
+
 }
 
 
