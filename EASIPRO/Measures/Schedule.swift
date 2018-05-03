@@ -80,17 +80,17 @@ public struct Frequency {
 
 
 
+
 public struct Slot {
 	
 	let period : PeriodBound
 	let status : SlotStatus = .unknown
 	var current: Bool = false
-	
+
 	init(period: PeriodBound) {
 		self.period = period
 		self.current = period.contains(Date())
 	}
-	
 }
 
 
@@ -113,7 +113,7 @@ public struct Schedule {
 	var periodBound : PeriodBound?
 	
 	/// Slots available for PRO Measurement
-	var slots : [Slot]?
+	public var slots : [Slot]?
 	
 	
 	var slotCount : Int? {
@@ -136,6 +136,7 @@ public struct Schedule {
 	/// next Slot
 	public var nextSlot : Slot? {
 		get {
+            if currentSlot == nil { return nil }
 			guard let slots = slots, currentSlotIndex < slots.endIndex else { return nil }
 			let nextIdx = slots.index(after: currentSlotIndex)
 			return slots[nextIdx]
@@ -153,7 +154,7 @@ public struct Schedule {
 	
 	
 	/// Current slot, based on `now`: today's date
-	var currentSlot : Slot? {
+	public var currentSlot : Slot? {
 		get {
 			guard let slots = slots else {
 				return nil
@@ -164,6 +165,8 @@ public struct Schedule {
 			return nil
 		}
 	}
+    
+    
 	
 	
 	init(period: PeriodBound, freq: Frequency) {
@@ -222,6 +225,8 @@ public struct Schedule {
 		
 		
 	}
+    
+    
 	
 	
 	

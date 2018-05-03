@@ -24,10 +24,13 @@ extension Schedule {
 		return nil
 	}
 	
-	func setStatus(measuring resource: Observation) {
+	func setStatus(measuring resources: [Observation]) {
+        
+        
 		
 	}
 }
+
 
 
 
