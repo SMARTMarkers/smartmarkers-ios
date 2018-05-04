@@ -10,6 +10,7 @@ import Foundation
 import SMART
 
 
+
 public enum PROMeasureStatus {
 	case completed
 	case aborted
@@ -45,6 +46,8 @@ public protocol PROMProtocol {
     
     var sessionStatus: PROSessionStatus { get set }
 	
+	
+	
 	static func fetchPrescribingResources(callback: @escaping (_ resource: [Self]?, _ error: Error?) -> Void)
 	
 	func fetchMeasurementResources(callback: ((_ success: Bool) -> Void)?)
@@ -64,6 +67,8 @@ public final class PROMeasure2 : PROMProtocol {
 			if let pr = prescribingResource {
 				self.schedule = Schedule.initialise(prescribing: pr)
 				self.measureStatus   = status(of: pr)
+				// todo: in appropriate use of status
+				filterObservations()
 			}
 		}
 	}
@@ -83,19 +88,17 @@ public final class PROMeasure2 : PROMProtocol {
         }
 	}
 	
-    
-    
-	
 	public var title: String
 	
 	public var identifier: String
 	
 	public var schedule: Schedule?
 	
-	init(title: String, identifier: String) {
+	public init(title: String, identifier: String) {
 		self.title = title
 		self.identifier = identifier
 	}
+	
 	
 
 	public static func fetchPrescribingResources(callback: @escaping (_ resource: [PROMeasure2]?, _ error: Error?) -> Void) {
@@ -161,6 +164,8 @@ public final class PROMeasure2 : PROMProtocol {
 			default:
 				return .unknown
 		}
+		
+
 	}
     
     
@@ -208,6 +213,24 @@ public final class PROMeasure2 : PROMProtocol {
         } else { sessionStatus = .unknown }
         
     }
+	
+	public static func SortedPROMs(proms: [PROMeasure2]?) -> [[String:Any]]? {
+		
+		var data = [[String:Any]]()
+
+		if let dues = proms?.filter({ $0.sessionStatus ==  .due}), dues.count > 0 {
+			data.append(["status" : "due", "data" : dues])
+		}
+		if let upcoming = proms?.filter({ $0.sessionStatus == .upcoming || $0.sessionStatus == .completedCurrent }), upcoming.count > 0 {
+			data.append(["status" : "Upcoming", "data" : upcoming])
+		}
+		if let completed = proms?.filter({ $0.sessionStatus == .planConcluded }), completed.count > 0 {
+			data.append(["status" : "Completed", "data" : completed])
+		}
+		
+		return data
+		
+	}
 
 }
 
@@ -289,33 +312,4 @@ open class PROQuestionnaire: PROMeasure {
 }
 
 
-extension Questionnaire {
-    
-    /// Best possible title for the Questionnaire
-    public func ep_displayTitle() -> String {
-        
-        if let title = self.title {
-            return title.string
-        }
-        
-        if let identifier = self.identifier {
-            for iden in identifier {
-                if let value = iden.value {
-                    return value.string
-                }
-            }
-        }
-        
-        if let codes = self.code {
-            for code in codes {
-                if let display = code.display {
-                    return display.string
-                }
-            }
-        }
-        
-        return self.id!.string
-    }
-    
-    
-}
+

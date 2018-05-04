@@ -11,20 +11,20 @@ import SMART
 
 
 
-open class MeasuresViewController : UITableViewController {
+open class MeasuresViewController :  UITableViewController {
     
     
     let searchController = UISearchController(searchResultsController: nil)
     
-    open var _measures : [PROMeasure]? {
+    open var _measures : [PROMeasure2]? {
         didSet { measures = _measures }
     }
     
-    open var measures : [PROMeasure]?
+    open var measures : [PROMeasure2]?
     
     open var selections = [String]()
     
-    open var onSelection: (([PROMeasure]?) ->Void)?
+    open var onSelection: (([PROMeasure2]?) ->Void)?
     
     
     
@@ -59,8 +59,12 @@ open class MeasuresViewController : UITableViewController {
         markBusy()
         SMARTManager.shared.getQuestionnaires { [unowned self] (questionnaires, error) in
             if let questionnaires = questionnaires {
-                
-                self._measures = questionnaires.map { PROQuestionnaire(measure: $0 as AnyObject) }
+
+				self._measures = questionnaires.map({ (q) -> PROMeasure2 in
+					let measure = PROMeasure2(title: q.ep_displayTitle(), identifier: q.id!.string)
+					measure.measure = q
+					return measure
+				})
                 DispatchQueue.main.async {
                     self.markStandby()
                 }
@@ -145,7 +149,7 @@ open class MeasuresViewController : UITableViewController {
         return (false, nil)
     }
     
-    func contains(_ measure: PROMeasure) -> Bool {
+    func contains(_ measure: PROMeasure2) -> Bool {
         return selections.contains(measure.identifier)
     }
     
