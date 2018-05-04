@@ -116,6 +116,7 @@ open class EHRLoginController: UIViewController {
         titleLabel.text = viewtitle
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+		titleLabel.adjustsFontSizeToFitWidth = true
         return titleLabel
     }
     

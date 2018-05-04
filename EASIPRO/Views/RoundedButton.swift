@@ -17,6 +17,9 @@ open class RoundedButton: UIButton {
 	
 	override open func setTitle(_ title: String?, for state: UIControlState) {
 		super.setTitle(title, for: state)
+		_title = (state == .normal) ? title : nil
+		
+		
 	}
 	
 	override init(frame: CGRect) {
