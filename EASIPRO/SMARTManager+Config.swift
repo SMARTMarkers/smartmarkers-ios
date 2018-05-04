@@ -54,11 +54,11 @@ extension SMARTManager {
         
     }
     
-    public class func smartClient() -> Client {
+    public class func practitionerClient() -> Client {
         
         let baseURL = URL(string: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImkiOiIxIiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTAzMjcwMiJ9/fhir")!
         let settings = [ "client_name" : "EASIPRO",
-                         "redirect"    : "easipro-home://callback",
+                         "redirect"    : "easipro-clinic://callback",
                          "scope"       : "openid profile user/*.*",
                          "client_id"   : "7c5dc7c9-74ca-451a-bd3d-eeb21bb66e93",
                          ]

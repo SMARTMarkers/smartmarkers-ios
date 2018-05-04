@@ -157,4 +157,31 @@ extension Observation {
         
     }
 }
+extension Questionnaire {
+	
+	/// Best possible title for the Questionnaire
+	public func ep_displayTitle() -> String {
+		
+		if let name 	= name { return name.string }
+		if let title	= title	{	return title.string }
+		
+		if let identifier = self.identifier {
+			for iden in identifier {
+				if let value = iden.value {
+					return value.string
+				}
+			}
+		}
+		
+		if let codes = self.code {
+			for code in codes {
+				if let display = code.display {
+					return display.string
+				}
+			}
+		}
+		
+		return self.id!.string
+	}
+}
 

@@ -42,7 +42,7 @@ public class SMARTManager : NSObject {
         }
     }
     
-    public var measures: [PROMeasure]? = nil
+    public var measures: [PROMeasure2]? = nil
     
     
     public class func client(with baseURL: URL, settings: [String:String]) -> Client {
@@ -62,8 +62,8 @@ public class SMARTManager : NSObject {
 	public var onLoggedOut : (() -> Void)?
     
     override private init() {
-//        client = SMARTManager.smartClient()
-        client = SMARTManager.patientClient()
+//        client = SMARTManager.patientClient()
+        client = SMARTManager.practitionerClient()
     }
     
     public func resetClient() {
