@@ -69,9 +69,20 @@ public final class PROMeasure2 : PROMProtocol {
 				self.measureStatus   = status(of: pr)
 				// todo: in appropriate use of status
 				filterObservations()
+                assignInstrumentCode()
 			}
 		}
 	}
+    
+    func assignInstrumentCode() {
+        
+    }
+    
+    public var prescriber : String? {
+        get {
+            return (prescribingResource?.requester?.agent?.display?.string.uppercased())
+        }
+    }
 	
 	public var measure: AnyObject?
 	
@@ -117,7 +128,7 @@ public final class PROMeasure2 : PROMProtocol {
 			if let requests = requests {
 				let promeasures = requests.map({ (procedureRequest) -> PROMeasure2 in
 					let title = procedureRequest.ep_titleCode ?? procedureRequest.ep_titleCategory ?? procedureRequest.id!.string
-					let identifier = procedureRequest.id!.string
+                    let identifier = procedureRequest.id!.string // TODO: standardize measureIdentifier
 					let prom = PROMeasure2(title: title, identifier: identifier)
                     prom.prescribingResource = procedureRequest
 					return prom

@@ -62,8 +62,8 @@ public class SMARTManager : NSObject {
 	public var onLoggedOut : (() -> Void)?
     
     override private init() {
-//        client = SMARTManager.patientClient()
-        client = SMARTManager.practitionerClient()
+        client = SMARTManager.patientClient()
+//        client = SMARTManager.practitionerClient()
     }
     
     public func resetClient() {

@@ -21,7 +21,7 @@ public protocol SessionProtocol : class {
     
     var measures: [PROMeasureObjectType]? { get set }
     
-    var practitioner: Practitioner { get }
+    var practitioner: Practitioner? { get }
     
     var patient: Patient { get }
     
@@ -48,7 +48,7 @@ open class SessionController2: NSObject, SessionProtocol,  UINavigationControlle
     
     public var measures: [PROMeasure2]?
     
-    public var practitioner: Practitioner
+    public var practitioner: Practitioner?
     
     public var patient: Patient
     
@@ -64,16 +64,18 @@ open class SessionController2: NSObject, SessionProtocol,  UINavigationControlle
         
     }
     
-    required public init(patient: Patient, measures: [PROMeasure2], practitioner : Practitioner) {
+    required public init(patient: Patient, measures: [PROMeasure2], practitioner : Practitioner?) {
         self.patient = patient
         self.measures = measures
         self.practitioner = practitioner
     }
 	
 	open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
-		let verifyController = PatientVerificationController(patient: patient)
-		var views : [UIViewController] = taskViewControllers
-		views.insert(verifyController, at: 0)
+        var views : [UIViewController] = taskViewControllers
+        if SMARTManager.shared.usageMode == .Practitioner {
+            let verifyController = PatientVerificationController(patient: patient)
+            views.insert(verifyController, at: 0)
+        }
 		let navigationController = UINavigationController()
 		navigationController.setViewControllers(views.reversed(), animated: false)
 		navigationController.setNavigationBarHidden(true, animated: false)
@@ -208,7 +210,7 @@ open class SessionController: NSObject, UITableViewDelegate, ORKTaskViewControll
 
 class Animator: NSObject, UIViewControllerAnimatedTransitioning {
 	
-	let duration = 0.5
+	let duration = 0.4
 	
     func transitionDuration(using context: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration

@@ -12,11 +12,11 @@ import Foundation
 
 public enum SlotStatus : String {
 	
-	case due = "due"
-	case upcoming = "upcoming"
-	case missed   = "missed"
-	case completedAllSessions = "completed"
-	case unknown  = "unkown"
+	case due                    = "due"
+	case upcoming               = "upcoming"
+	case missed                 = "missed"
+	case completedAllSessions   = "completed"
+	case unknown                = "unkown"
 	
 }
 
@@ -48,6 +48,10 @@ public struct PeriodBound : Equatable {
 		
 		return validStartDate && validEndDate
 	}
+    
+    func description() -> String {
+        return "\(start.shortDate) –- \(end.shortDate)"
+    }
 	
 	init(_ start: Date, _ end: Date) {
 		self.start = start
@@ -55,6 +59,7 @@ public struct PeriodBound : Equatable {
 	}
 	
 	init(duration: UInt64, from date: Date) {
+        // TODO
 		// calculate duration from date: Date
 		// based on number o
 		self.init(Date(), Date())
@@ -226,29 +231,12 @@ public struct Schedule {
 		
 	}
     
-    
-	
-	
-	
-	
-	
-	
+    public func periodString() -> String? {
+        if instant  { return instantDate!.shortDate }
+        if let p = periodBound { return p.description() }
+        return nil
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class PROCalender {
@@ -274,7 +262,8 @@ extension Date {
 	
 	private static let dateFormat: DateFormatter = {
 		let formatter = DateFormatter()
-		formatter.dateFormat = "EEEE, MMMM dd, yyyy"
+//        formatter.dateFormat = "EEEE, MMMM dd, yyyy"
+        formatter.dateStyle = .short
 		formatter.calendar = PROCalender.shared.calender
 		return formatter
 	}()
@@ -282,6 +271,8 @@ extension Date {
 	public var shortDate : String {
 		return Date.dateFormat.string(from: self)
 	}
+    
+    
 	
 	func addDays(days: Int) -> Date {
 		let calender = PROCalender.shared.calender

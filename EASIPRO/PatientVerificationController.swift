@@ -12,6 +12,8 @@ import SMART
 class PatientVerificationController: UIViewController {
 
 	let patient : Patient
+    
+    let context = SMARTManager.shared.usageMode
 	
 	let datePicker = UIDatePicker()
 	
@@ -63,11 +65,17 @@ class PatientVerificationController: UIViewController {
 
 	@objc func cancelVerification(_ sender: Any?) {
 		
-		LocalAuth.verifyDeviceUser { [weak self] (success, error) in
-			if success {
-				self?.dismiss(animated: true)
-			}
-		}
+        if context != .Patient {
+            LocalAuth.verifyDeviceUser { [weak self] (success, error) in
+                if success {
+                    self?.dismiss(animated: true)
+                }
+            }
+        } else {
+            dismiss(animated: true)
+        }
+        
+		
 	}
 	
 	func verify() -> Bool {
@@ -89,6 +97,7 @@ class PatientVerificationController: UIViewController {
 		titleLabel.font = UIFont.boldSystemFont(ofSize: 30)
 		titleLabel.text = title
 		titleLabel.textAlignment = .center
+        titleLabel.adjustsFontSizeToFitWidth = true
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		return titleLabel
 	}
@@ -143,8 +152,8 @@ class PatientVerificationController: UIViewController {
 		view.addConstraint(centerY)
 		ac("H:|-40-[patientlbl]-40-|", views)
 		ac("V:[patientlbl]-[subtitlelbl]-20-[datepicker]-20-[verifyBtn(60)]", views)
-		ac("H:[cancelBtn]-20-|", views)
-		ac("V:|-30-[cancelBtn]", views )
+		ac("H:|-70-[cancelBtn]-70-|", views)
+		ac("V:[verifyBtn]-30-[cancelBtn]", views )
 		
 		
 	}

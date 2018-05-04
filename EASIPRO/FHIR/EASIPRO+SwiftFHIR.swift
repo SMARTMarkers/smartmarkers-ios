@@ -108,6 +108,14 @@ extension ProcedureRequest {
 			return self.category?.first?.text?.string
 		}
 	}
+    
+    public func ep_coding(for system: String) -> Coding? {
+        if let coding = code?.coding {
+            let filter = coding.filter { $0.system?.absoluteString == system }
+            if filter.count > 0 { return filter.first! }
+        }
+        return nil
+    }
 
 }
 
