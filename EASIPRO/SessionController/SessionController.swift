@@ -39,7 +39,7 @@ public protocol SessionProtocol : class {
     func prepareSessionContainer(callback: @escaping ((_ container: UIViewController?, _ error: Error?) -> Void))
 }
 
-open class SessionController2: SessionProtocol {
+open class SessionController2: NSObject, SessionProtocol,  UINavigationControllerDelegate {
 
     
     public typealias PROMeasureObjectType = PROMeasure2
@@ -60,15 +60,34 @@ open class SessionController2: SessionProtocol {
     
     public var onCancellation: ((ORKTaskViewController, Error?) -> Void)?
     
-    public func prepareSessionContainer(callback: @escaping ((UIViewController?, Error?) -> Void)) {
+    open func prepareSessionContainer(callback: @escaping ((UIViewController?, Error?) -> Void)) {
         
     }
     
-    required public init(patient: Patient, measures: [PROMeasure2]?, practitioner : Practitioner) {
+    required public init(patient: Patient, measures: [PROMeasure2], practitioner : Practitioner) {
         self.patient = patient
         self.measures = measures
         self.practitioner = practitioner
     }
+	
+	open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
+		let verifyController = PatientVerificationController(patient: patient)
+		var views : [UIViewController] = taskViewControllers
+		views.insert(verifyController, at: 0)
+		let navigationController = UINavigationController()
+		navigationController.setViewControllers(views.reversed(), animated: false)
+		navigationController.setNavigationBarHidden(true, animated: false)
+		navigationController.delegate = self
+		return navigationController
+	}
+	
+	public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+		
+		if operation == .pop {
+			return Animator()
+		}
+		return nil
+	}
     
 
     
