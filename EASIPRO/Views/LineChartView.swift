@@ -13,7 +13,11 @@ import UIKit
     @IBInspectable var lineColor : UIColor = .white
     @IBInspectable var startColor: UIColor = .black
     @IBInspectable var endColor: UIColor = .green
-    
+	@IBInspectable var severeSegmentColor: UIColor = UIColor(red:0.96, green:0.98, blue:0.85, alpha:1.0)
+	@IBInspectable var mildSegmentColor: UIColor = UIColor(red:0.95, green:0.76, blue:0.59, alpha:1.0)
+	@IBInspectable var moderateSegmentColor: UIColor = UIColor(red:0.98, green:0.92, blue:0.86, alpha:1.0)
+	@IBInspectable var normalSegmentColor: UIColor = UIColor(red:0.85, green:0.89, blue:0.75, alpha:1.0)
+	
     private struct Const {
         static let margin : CGFloat = 2.0
         static let colorAlpha: CGFloat = 0.5
@@ -22,36 +26,62 @@ import UIKit
         static let rightMargin : CGFloat = 40.0
         static let attributes = [NSAttributedStringKey.foregroundColor: UIColor.black,
                                  NSAttributedStringKey.font: UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.thin)]
-        
     }
-    
+	
     public var showScore : Bool = true
+	
+	public var grayScale : Bool = false
     
 	public var points : [Double]? {
-		didSet { setNeedsDisplay() }
+		didSet {
+			setNeedsDisplay()
+		}
 	}
-    
-    var colors : [UIColor]?
-    
+	public var thresholds : [Double]? = [55,60,70]
+	public var thresholdIndicators : [UIColor]?
+	
     class func Gradient(for color: UIColor, colorSpace: CGColorSpace) -> CGGradient {
-        let topColor = color.withAlphaComponent(0.5).cgColor
-        let middleColor = color.withAlphaComponent(0.2).cgColor
-        let bottomColor = color.withAlphaComponent(0.02).cgColor
-        let gradient = CGGradient(colorsSpace: colorSpace,
-                                  colors: [topColor, middleColor, bottomColor] as CFArray,
-                                  locations: [0.0, 0.3, 1.0])!
-        return gradient
+		return CGGradient(colorsSpace: colorSpace,
+						  colors: [color.withAlphaComponent(0.6).cgColor, //0.5
+								   color.withAlphaComponent(0.2).cgColor, //0.2
+								   color.withAlphaComponent(0.0).cgColor] as CFArray, //0.02
+						  locations: [0.0, 0.4, 1.0])!
     }
+	
+	func segmentColor(_ reading: Double) -> UIColor {
+		for (i, v) in thresholds!.enumerated()  {
+			if reading <= v {
+				return thresholdIndicators![i]
+			}
+		}
+		return thresholdIndicators!.last!
+	}
     
     
     override public func draw(_ rect: CGRect) {
-        
+		
+		if grayScale {
+		thresholdIndicators = [UIColor.white,
+							   UIColor.gray,
+							   UIColor.darkGray,
+							   UIColor.black]
+		}
+		else {
+		
+				thresholdIndicators =
+					[normalSegmentColor,
+				mildSegmentColor,
+				moderateSegmentColor,
+				severeSegmentColor]
+		}
+//
+//
         let context = UIGraphicsGetCurrentContext()!
-        self.superview?.superview?.backgroundColor?.setFill()
+		backgroundColor?.setFill()
         context.fill(rect)
-        
-        colors = [UIColor.orange, UIColor.red, UIColor.red, UIColor.red, UIColor.red, UIColor.red, UIColor.red, UIColor.red]
-        
+		
+		// todo: set colors
+		
         guard let points = self.points, points.count > 0 else {
             return
         }
@@ -146,18 +176,15 @@ import UIKit
         
         
         context.resetClip()
+		
+		if thresholds == nil { return }
         
-        
-        
+		
         for i in 0..<graphPoints.count {
             
             if i == graphPoints.count-1 {
                 break
             }
-            
-            
-            
-            
             context.resetClip()
             
             let p = graphPoints[i]
@@ -178,10 +205,12 @@ import UIKit
             highestYP.x = p.x
             print(nextP)
             print(p)
-            
-            let gd = LineChartView.Gradient(for: colors![i], colorSpace: colorSpace)
+			
+			let segmentColor = self.segmentColor(points[i])
+            let gd = LineChartView.Gradient(for:segmentColor, colorSpace: colorSpace)
             context.drawLinearGradient(gd, start: highestYP, end: baseP2, options:CGGradientDrawingOptions(rawValue: 0))
         }
+
         
         
     }

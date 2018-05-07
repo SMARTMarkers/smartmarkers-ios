@@ -48,7 +48,7 @@ public protocol PROMProtocol {
 	
 	
 	
-	static func fetchPrescribingResources(callback: @escaping (_ resource: [Self]?, _ error: Error?) -> Void)
+	static func fetchPrescribingResources(for patient: Patient, callback: @escaping (_ resource: [Self]?, _ error: Error?) -> Void)
 	
 	func fetchMeasurementResources(callback: ((_ success: Bool) -> Void)?)
 	
@@ -112,15 +112,13 @@ public final class PROMeasure2 : PROMProtocol {
 	
 	
 
-	public static func fetchPrescribingResources(callback: @escaping (_ resource: [PROMeasure2]?, _ error: Error?) -> Void) {
-		
-		guard let patient = SMARTManager.shared.patient else {
-			callback(nil, nil)
-			return
-		}
+	public static func fetchPrescribingResources(for patient: Patient, callback: @escaping (_ resource: [PROMeasure2]?, _ error: Error?) -> Void) {
+		//todo: expand search params to get survey category, promis identifiers etc..
 		let searchParams = ["patient": patient.id!.string]
+		
 		SMARTManager.shared.search(type: ProcedureRequest.self, params: searchParams) { (requests, error) in
 			if nil != error {
+				print(error.debugDescription)
 				callback(nil, error)
 				return
 			}
@@ -128,12 +126,17 @@ public final class PROMeasure2 : PROMProtocol {
 			if let requests = requests {
 				let promeasures = requests.map({ (procedureRequest) -> PROMeasure2 in
 					let title = procedureRequest.ep_titleCode ?? procedureRequest.ep_titleCategory ?? procedureRequest.id!.string
-                    let identifier = procedureRequest.id!.string // TODO: standardize measureIdentifier
+					// Every PROMeasure = ProcedureRequest
+                    let identifier = procedureRequest.id!.string
+					// TODO: standardize measureIdentifier
 					let prom = PROMeasure2(title: title, identifier: identifier)
                     prom.prescribingResource = procedureRequest
 					return prom
 				})
 				callback(promeasures, nil)
+			}
+			else {
+				callback(nil, nil)
 			}
 		}
 		
@@ -205,11 +208,14 @@ public final class PROMeasure2 : PROMProtocol {
             let hasNext     = schedule?.nextSlot != nil
             let dueToday    = schedule?.currentSlot != nil
             let latestScore = results?.last?.effectiveDateTime?.nsDate
+			
             
             if !dueToday && !hasNext { sessionStatus = .planConcluded }
 
             else if dueToday {
                 if latestScore == nil { sessionStatus = .due }
+				// TODO: add Frequency Matching.
+				
                 if let latestScore = latestScore, schedule!.currentSlot!.period.contains(latestScore) {
                     sessionStatus = (hasNext) ? .completedCurrent : .planConcluded
                 } else {

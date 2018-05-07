@@ -17,7 +17,7 @@ public protocol SessionProtocol : class {
     
     associatedtype PROMeasureObjectType
     
-    associatedtype PROMeasureScoreObjectType
+    associatedtype PROResultObjectType
     
     var measures: [PROMeasureObjectType]? { get set }
     
@@ -25,13 +25,9 @@ public protocol SessionProtocol : class {
     
     var patient: Patient { get }
     
-    var onMeasureFailure: ((_ result: PROMeasureScoreObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
+    var onMeasureFailure: ((_ result: PROResultObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
     
-    var onMeasureCompletion: ((_ result: PROMeasureScoreObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
-    
-    /// Callback handler for Completed Session (for All PROMeasures)
-    var onSessionCompletion: ((_ result: PROMeasureScoreObjectType?, _ measures: [PROMeasureScoreObjectType]?) -> Void)? { get set }
-    
+    var onMeasureCompletion: ((_ result: PROResultObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
     
     /// Callback handler: Called when session is interrupted
     var onCancellation: ((_ viewController: ORKTaskViewController, _ error: Error?) -> Void)? { get set }
@@ -44,7 +40,7 @@ open class SessionController2: NSObject, SessionProtocol,  UINavigationControlle
     
     public typealias PROMeasureObjectType = PROMeasure2
 
-    public typealias PROMeasureScoreObjectType = AnyObject
+    public typealias PROResultObjectType = Observation
     
     public var measures: [PROMeasure2]?
     
@@ -52,12 +48,10 @@ open class SessionController2: NSObject, SessionProtocol,  UINavigationControlle
     
     public var patient: Patient
     
-    public var onMeasureFailure: ((AnyObject?, PROMeasure2?) -> Void)?
+    public var onMeasureFailure: ((Observation?, PROMeasure2?) -> Void)?
     
-    public var onMeasureCompletion: ((AnyObject?, PROMeasure2?) -> Void)?
-    
-    public var onSessionCompletion: ((AnyObject?, [AnyObject]?) -> Void)?
-    
+    public var onMeasureCompletion: ((Observation?, PROMeasure2?) -> Void)?
+	
     public var onCancellation: ((ORKTaskViewController, Error?) -> Void)?
     
     open func prepareSessionContainer(callback: @escaping ((UIViewController?, Error?) -> Void)) {

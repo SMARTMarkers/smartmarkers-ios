@@ -30,9 +30,12 @@ open class PROMeasureViewController: UITableViewController {
     }
 	
 	open func loadMeasures() {
-		if nil != measures { return }
+		guard let p = SMARTManager.shared.patient else {
+			return
+		}
+		if nil != measures  { return }
 		markBusy()
-		PROMeasure2.fetchPrescribingResources { [weak self] (measures, error) in
+		PROMeasure2.fetchPrescribingResources(for: p) { [weak self] (measures, error) in
 			if let m = measures {
 				self?.measures = m
 			}

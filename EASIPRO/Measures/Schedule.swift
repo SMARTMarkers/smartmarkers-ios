@@ -23,8 +23,8 @@ public enum SlotStatus : String {
 
 public struct PeriodBound : Equatable {
 	
-	let start   :   Date
-	let end     :   Date
+	public let start   :   Date
+	public let end     :   Date
 	let calender = PROCalender.shared.calender
 	
 	public static func == (lhs: PeriodBound, rhs: PeriodBound) -> Bool {
@@ -88,9 +88,9 @@ public struct Frequency {
 
 public struct Slot {
 	
-	let period : PeriodBound
-	let status : SlotStatus = .unknown
-	var current: Bool = false
+	public let period : PeriodBound
+	public let status : SlotStatus = .unknown
+	public var current: Bool = false
 
 	init(period: PeriodBound) {
 		self.period = period
@@ -141,8 +141,9 @@ public struct Schedule {
 	/// next Slot
 	public var nextSlot : Slot? {
 		get {
-            if currentSlot == nil { return nil }
-			guard let slots = slots, currentSlotIndex < slots.endIndex else { return nil }
+			guard let slots = slots, currentSlotIndex < slots.endIndex else { return nil
+			}
+			
 			let nextIdx = slots.index(after: currentSlotIndex)
 			return slots[nextIdx]
 		}
@@ -271,6 +272,7 @@ extension Date {
 	public var shortDate : String {
 		return Date.dateFormat.string(from: self)
 	}
+	
     
     
 	

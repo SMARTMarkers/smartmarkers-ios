@@ -31,14 +31,13 @@ public class SMARTManager : NSObject {
             }
         }
     }
+	
 
     
     public  internal(set) var patient : Patient? = nil {
         didSet {
             measures = nil
-            DispatchQueue.main.async {
-                self.onPatientSelected?()
-            }
+			onPatientSelected?()
         }
     }
     
@@ -62,8 +61,8 @@ public class SMARTManager : NSObject {
 	public var onLoggedOut : (() -> Void)?
     
     override private init() {
-        client = SMARTManager.patientClient()
-//        client = SMARTManager.practitionerClient()
+//        client = SMARTManager.patientClient()
+        client = SMARTManager.practitionerClient()
     }
     
     public func resetClient() {
@@ -73,6 +72,10 @@ public class SMARTManager : NSObject {
     public var shouldSelectPatient : Bool {
         get { return patient == nil }
     }
+	
+	func clientNotReady(_ e:Error ) {
+		print("Not ready")
+	}
     
     
     public func showLoginController(over viewController: UIViewController) {
@@ -144,8 +147,10 @@ public class SMARTManager : NSObject {
     
     func fetch<T: DomainResource>(type domainResource: T.Type, resource identifier: String, callback: @escaping (_ resource: T?, _ error: Error?) -> Void) {
         client.ready(callback: { [unowned self] (error) in
-            if nil != error {
+            if let error = error {
+				self.clientNotReady(error)
                 callback(nil, error)
+				
             }
             domainResource.read(identifier, server: self.client.server, callback: { (resource, ferror) in
                 callback(resource as? T, ferror)
@@ -179,7 +184,10 @@ public class SMARTManager : NSObject {
     
     public func search<T: DomainResource>(type domainResource: T.Type, params: [String: String], callback : @escaping (_ resources: [T]?, _ serror : Error?) -> Void) {
         client.ready { [unowned self] (rerror) in
-            if nil != rerror { callback(nil, rerror) }
+            if nil != rerror {
+				self.clientNotReady(rerror!)
+				callback(nil, rerror)
+			}
 			let search = domainResource.search(params)
 			// TODO: Decide Appropriate Number
 			search.pageCount = 100

@@ -41,9 +41,14 @@ open class InsightsController: UITableViewController {
 				}
 				return
 			}
-	
+			
 			let crossReference = requests.reduce(into: [String: [Observation]]()) {
-				$0[$1.code!.coding!.first!.code!.string, default: []].append($1)
+				if let loincCoding = $1.code?.ep_coding(for: "http://loinc.org"), let code = loincCoding.code {
+					$0[code.string, default: []].append($1)
+				}
+				else {
+					$0[$1.code!.coding!.first!.code!.string, default: []].append($1)
+				}
 			}
 
 			var list = [[Observation]]()

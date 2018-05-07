@@ -110,13 +110,27 @@ extension ProcedureRequest {
 	}
     
     public func ep_coding(for system: String) -> Coding? {
-        if let coding = code?.coding {
-            let filter = coding.filter { $0.system?.absoluteString == system }
-            if filter.count > 0 { return filter.first! }
+        if let codeConcept = code {
+			return codeConcept.ep_coding(for: system)
         }
         return nil
     }
+	
+	public func ep_loincCode() -> String? {
+		return ep_coding(for: "http://loinc.org")?.code?.string
+	}
+	
 
+	
+	
+
+}
+
+extension CodeableConcept {
+	
+	public func ep_coding(for systemURI: String) -> Coding? {
+		return self.coding?.filter { $0.system?.absoluteString == systemURI }.first
+	}
 }
 
 
