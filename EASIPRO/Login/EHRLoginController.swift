@@ -126,7 +126,8 @@ open class EHRLoginController: UIViewController {
         SMARTManager.shared.authorize { [weak self] (success) in
             if success {
                 DispatchQueue.main.async {
-                    self?.statuslbl?.text = SMARTManager.shared.practitioner?.name?.first?.human
+                    let name = (SMARTManager.shared.usageMode == .Practitioner) ? SMARTManager.shared.practitioner?.name?.first?.human : SMARTManager.shared.patient?.humanName
+                    self?.statuslbl?.text = name
                     self?.dismiss(animated: true, completion: nil)
                 }
             }

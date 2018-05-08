@@ -61,8 +61,8 @@ public class SMARTManager : NSObject {
 	public var onLoggedOut : (() -> Void)?
     
     override private init() {
-//        client = SMARTManager.patientClient()
-        client = SMARTManager.practitionerClient()
+        client = SMARTManager.patientClient()
+//        client = SMARTManager.practitionerClient()
     }
     
     public func resetClient() {
@@ -92,53 +92,49 @@ public class SMARTManager : NSObject {
     
     public func authorize(callback: @escaping (_ success: Bool) -> Void) {
         
-        client.authorize(callback: { [unowned self] (patient,  error) in
+        client.authorize(callback: { [unowned self] (patientResource,  error) in
             
-            if let patient = patient {
-                self.patient = patient
-                if  let idToken = self.client.server.idToken,
-                    let decoded = self.base64UrlDecode(idToken),
-                    let userProfile = decoded["profile"] as? String {
-                    let practitionerId = userProfile.components(separatedBy: "/")[1]
-                    Practitioner.read(practitionerId, server: self.client.server, callback: { (practitioner, error) in
-                        if let practitioner = practitioner as? Practitioner {
-                            self.practitioner = practitioner
-                        }
-                        callback(true)
-                    })
-                    
-                } else {
-                    callback(false)
-                }
-			} else if let idToken = self.client.server.idToken,
-				let decoded = self.base64UrlDecode(idToken),
-				let userProfile = decoded["profile"] as? String {
-                let comps = userProfile.components(separatedBy: "/")
-                let userID = comps[1]
-                let userType = comps[0]
-                if userType == "Practitioner" {
-                    Practitioner.read(userID, server: self.client.server, callback: { (practitioner, error) in
-                        if let practitioner = practitioner as? Practitioner {
+            
+            if let p = patientResource {
+                self.patient = p
+            }
+            if  let idToken = self.client.server.idToken,
+                let decoded = self.base64UrlDecode(idToken),
+                let userProfile = decoded["profile"] as? String {
+                let components = userProfile.components(separatedBy: "/")
+                let resourceType = components[0]
+                let resourceId   = components[1]
+                if resourceType == "Practitioner" {
+                    Practitioner.read(resourceId, server: self.client.server, callback: { (resource, ferror) in
+                        if let practitioner = resource as? Practitioner {
                             self.practitioner = practitioner
                             self.usageMode = .Practitioner
+                            callback(true)
                         }
-                        callback(true)
                     })
                 }
-                else if userType == "Patient" {
-                    Patient.read(userID, server: self.client.server, callback: { (patient, error) in
-                        if let patient = patient as? Patient {
-                            self.patient = patient
+                else if resourceType == "Patient" {
+                    Patient.read(resourceId, server: self.client.server, callback: { (resource, ferror) in
+                        if let patient = resource as? Patient {
+                            //User Resource
+                            //TODO: Support multiple user modes. (eg. guardian)
+                            //self.patient = patient
+                            if self.patient == nil || self.patient!.id != patient.id {
+                                self.patient = patient
+                            }
                             self.usageMode = .Patient
+                            callback(true)
                         }
-                        callback(true)
                     })
                 }
-			}
-            else if nil != error {
+                else {
+                    //Error
+                    if let e = error {
+                        print(e.localizedDescription)
+                    }
+                    callback(error != nil)
+                }
                 
-                print(error.debugDescription)
-                callback(false)
             }
         })
     }
