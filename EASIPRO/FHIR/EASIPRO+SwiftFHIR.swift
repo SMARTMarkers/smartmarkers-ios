@@ -28,12 +28,11 @@ extension Appointment {
 		
 		return (patientReferences.count > 0) ? patientReferences : nil
 	}
-	
 }
 
 extension ProcedureRequest {
     
-    open class func ep_instant(for patient: Patient, measure: PROMeasure, practitioner: Practitioner) -> ProcedureRequest? {
+    open class func ep_instant(for patient: Patient, measure: PROMeasure2, practitioner: Practitioner) -> ProcedureRequest? {
         if let questionnaire = measure.measure as? Questionnaire {
             return ProcedureRequest.ep_instant(for: patient, questionnaire: questionnaire , practitioner: practitioner)
         }

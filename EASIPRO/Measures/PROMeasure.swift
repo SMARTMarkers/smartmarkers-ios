@@ -258,6 +258,9 @@ extension PROMeasure2 : Equatable {
     }
 }
 
+/*
+
+
 
 open class PROMeasure {
 	
@@ -327,6 +330,7 @@ open class PROQuestionnaire: PROMeasure {
         }
     }
 }
+*/
 
 
 

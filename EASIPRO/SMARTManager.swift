@@ -61,8 +61,8 @@ public class SMARTManager : NSObject {
 	public var onLoggedOut : (() -> Void)?
     
     override private init() {
-        client = SMARTManager.patientClient()
-//        client = SMARTManager.practitionerClient()
+//        client = SMARTManager.patientClient()
+        client = SMARTManager.practitionerClient()
     }
     
     public func resetClient() {
@@ -262,42 +262,6 @@ public class SMARTManager : NSObject {
         callback(navigationController)
     }
 	
-    
-    
-    // MARK: EASIPRO FHIR METHODS
-    
-    func writeProcedureRequest(for measures: [Any], callback: @escaping (_ pRequest: ProcedureRequest?, _ error: Error?) -> Void) {
-        
-        let pr = ProcedureRequest()
-        pr.status = RequestStatus.active
-        pr.intent = RequestIntent.plan
-        
-        
-    }
-    
-    public func writePR(for measure: PROMeasure, callback: @escaping (_ procedureRequest: ProcedureRequest?, _ error :  Error?) -> Void) {
-        
-        guard let patient = patient, let practitioner = practitioner else {
-            print("login")
-            callback(nil, nil)
-            return
-        }
-        
-        guard let pr = ProcedureRequest.ep_instant(for: patient, measure: measure, practitioner: practitioner) else {
-            callback(nil, nil)
-            return
-        }
-        pr.createAndReturn(client.server, callback: { (ferror) in
-            if nil == ferror {
-                callback(pr, nil)
-            }
-            else {
-                callback(nil, ferror)
-            }
-        })
-    }
-    
-
 	
 	
     

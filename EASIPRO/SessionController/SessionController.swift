@@ -25,17 +25,15 @@ public protocol SessionProtocol : class {
     
     var patient: Patient { get }
     
-    var onMeasureFailure: ((_ result: PROResultObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
+    var onMeasureCancellation: ((_ measure: PROMeasureObjectType?) -> Void)?  { get set }
     
     var onMeasureCompletion: ((_ result: PROResultObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
-    
-    /// Callback handler: Called when session is interrupted
-    var onCancellation: ((_ viewController: ORKTaskViewController, _ error: Error?) -> Void)? { get set }
     
     func prepareSessionContainer(callback: @escaping ((_ container: UIViewController?, _ error: Error?) -> Void))
 }
 
 open class SessionController2: NSObject, SessionProtocol {
+    
 
     
     public typealias PROMeasureObjectType = PROMeasure2
@@ -48,11 +46,9 @@ open class SessionController2: NSObject, SessionProtocol {
     
     public var patient: Patient
     
-    public var onMeasureFailure: ((Observation?, PROMeasure2?) -> Void)?
-    
+    public var onMeasureCancellation: ((PROMeasure2?) -> Void)?
+
     public var onMeasureCompletion: ((Observation?, PROMeasure2?) -> Void)?
-	
-    public var onCancellation: ((ORKTaskViewController, Error?) -> Void)?
     
     open func prepareSessionContainer(callback: @escaping ((UIViewController?, Error?) -> Void)) {
         
@@ -84,9 +80,7 @@ open class SessionNavigationController: UINavigationController, UINavigationCont
 	func superDismiss(animated: Bool, completion: (() -> Void)? = nil) {
 		super.dismiss(animated: animated, completion: completion)
 	}
-	
-	
-	
+		
 	open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
 		
 		if viewControllers.count < 2 && shouldVerifyAfter {
@@ -130,113 +124,6 @@ open class SessionNavigationController: UINavigationController, UINavigationCont
 		return nil
 	}
 }
-
-open class SessionController: NSObject, UITableViewDelegate, ORKTaskViewControllerDelegate, UINavigationControllerDelegate {
-    
-    
-    
-    /// Patient Resource
-	public final var patient : Patient {
-		didSet {
-			verifiedPatient = false
-		}
-	}
-    
-    /// Practitioner
-    public final var practitioner : Practitioner
-    
-    /// Questionnaires to do
-    open var measures: [PROMeasure]? = nil
-	
-	/// checks if patient has been verified by the patient
-	open var verifiedPatient : Bool = false
-    
-    /// ResearchKit's TaskViewControllers.
-    public final var taskViewControllers: [ORKTaskViewController]?
-    
-    /// Callback handler: Called when all questionnaires are completed
-    public final var onMeasureFailure: ((_ result: AnyObject?, _ measure: PROMeasure?) -> Void)?
-
-    public final var onMeasureCompletion: ((_ result: AnyObject?, _ measure: PROMeasure?) -> Void)?
-    
-    /// Callback handler for Completed Session (for All PROMeasures)
-    public final var onSessionCompletion: ((_ result: AnyObject?, _ measures: [PROMeasure]?) -> Void)?
-    
-    /// Callback handler: Called when session is interrupted
-    public final var onCancellation: ((_ viewController: ORKTaskViewController, _ error: Error?) -> Void)?
-    
-    
-    /// if not nil; generates `Observation`
-    open func resultFromTaskViewController(_ taskViewController: ORKTaskViewController) -> String? {
-        return nil
-    }
-	
-    
-    
-    required public init(patient: Patient, measures: [PROMeasure]?, practitioner : Practitioner) {
-        self.patient = patient
-        self.measures = measures
-        self.practitioner = practitioner
-    }
-    
-    open func prepareSession(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        print("-> EASIPRO: PREPARING SESSION")
-        
-        
-    }
-    
-    
-    open func prepareSessions(callback: @escaping (([ORKTaskViewController]?, Error?) -> Void)) {
-        
-        print("-> EASIPRO: PREPARING SESSION[S]")
-    
-    }
-    
-    open func prepareSessionContainer(callback: @escaping ((_ container: UIViewController?, _ error: Error?) -> Void)) {
-
-        
-        
-        
-        
-    }
-    
-    
-    open class func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
-        let navigationController = UINavigationController()
-        navigationController.setViewControllers(taskViewControllers.reversed(), animated: false)
-        navigationController.setNavigationBarHidden(true, animated: false)
-        return navigationController
-    }
-    
-    open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
-		let verifyController = PatientVerificationController(patient: patient)
-		var views : [UIViewController] = taskViewControllers
-		views.insert(verifyController, at: 0)
-		let navigationController = UINavigationController()
-		navigationController.setViewControllers(views.reversed(), animated: false)
-		navigationController.setNavigationBarHidden(true, animated: false)
-        navigationController.delegate = self
-        return navigationController
-    }
-	
-    
-    public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        print("here")
-    }
-	
-    public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		
-		if operation == .pop {
-			return Animator()
-		}
-		return nil
-    }
-	
-	
-	
-}
-
 
 
 
