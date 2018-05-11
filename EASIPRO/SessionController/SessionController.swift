@@ -35,7 +35,7 @@ public protocol SessionProtocol : class {
     func prepareSessionContainer(callback: @escaping ((_ container: UIViewController?, _ error: Error?) -> Void))
 }
 
-open class SessionController2: NSObject, SessionProtocol,  UINavigationControllerDelegate {
+open class SessionController2: NSObject, SessionProtocol {
 
     
     public typealias PROMeasureObjectType = PROMeasure2
@@ -66,31 +66,70 @@ open class SessionController2: NSObject, SessionProtocol,  UINavigationControlle
 	
 	open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
         var views : [UIViewController] = taskViewControllers
-        if SMARTManager.shared.usageMode == .Practitioner {
+		let practitionerContext = SMARTManager.shared.usageMode == .Practitioner
+        if  practitionerContext {
             let verifyController = PatientVerificationController(patient: patient)
             views.insert(verifyController, at: 0)
         }
-		let navigationController = UINavigationController()
-		navigationController.setViewControllers(views.reversed(), animated: false)
-		navigationController.setNavigationBarHidden(true, animated: false)
-		navigationController.delegate = self
-		return navigationController
+		let sessionNC = SessionNavigationController(views: views, reversed: true)
+		sessionNC.shouldVerifyAfter = practitionerContext
+		return sessionNC
+	}
+}
+
+open class SessionNavigationController: UINavigationController, UINavigationControllerDelegate {
+	
+	var shouldVerifyAfter: Bool = false
+	
+	func superDismiss(animated: Bool, completion: (() -> Void)? = nil) {
+		super.dismiss(animated: animated, completion: completion)
+	}
+	
+	
+	
+	open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+		
+		if viewControllers.count < 2 && shouldVerifyAfter {
+			dismissWithDeviceLock()
+		}
+		else {
+			super.dismiss(animated: flag, completion: completion)
+		}
+	}
+	
+	open override func popViewController(animated: Bool) -> UIViewController? {
+		
+		if viewControllers.count < 2 && shouldVerifyAfter {
+			dismissWithDeviceLock()
+		}
+		else {
+			super.popViewController(animated: animated)
+		}
+		return nil
+	}
+	
+	func dismissWithDeviceLock() {
+		LocalAuth.verifyDeviceUser("Practitioner Verification Required\nPlease Handover device to Practitioner.\n") { [weak self] (success, error) in
+			if success {
+				self?.superDismiss(animated: true)
+			}
+		}
+	}
+	
+	convenience init(views: [UIViewController], reversed: Bool = false) {
+		self.init()
+		setViewControllers( reversed ? views.reversed() : views, animated: false)
+		setNavigationBarHidden(true, animated: false)
+		delegate = self
 	}
 	
 	public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		
 		if operation == .pop {
 			return Animator()
 		}
 		return nil
 	}
-    
-
-    
-    
 }
-
-
 
 open class SessionController: NSObject, UITableViewDelegate, ORKTaskViewControllerDelegate, UINavigationControllerDelegate {
     

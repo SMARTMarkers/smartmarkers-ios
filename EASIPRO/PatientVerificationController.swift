@@ -43,24 +43,30 @@ class PatientVerificationController: UIViewController {
 	func moveToPROMeasures() {
 		
 		//Verification is always assumed to be the topMost hence can be popped.
+		
+//		self.dismiss(animated: true, completion: nil)
+//		return
 		if let navigationController = self.navigationController, navigationController.topViewController == self {
 			navigationController.popViewController(animated: true)
+//			self.dismiss(animated: true, completion: nil)
 		}
 	}
 	
 	@objc func verifyPatient(_ sender: Any?) {
 		
-		
 		if verify() == false {
 			let alert = UIAlertController(title: "Verification Failed", message: "Incorrect entry, please try again or talk to the practitioner", preferredStyle: .alert)
+			weak var weakalert = alert
 			alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-			alert.addAction(UIAlertAction(title: "DEMO:OVERRIDE", style: .destructive, handler: { [unowned self] (_ ) in
-				self.moveToPROMeasures()
+			alert.addAction(UIAlertAction(title: "DEMO:OVERRIDE", style: .destructive, handler: { [weak self] (_ ) in
+				self?.moveToPROMeasures()
 			}))
 			present(alert, animated: true)
 			return
 		}
-		moveToPROMeasures()
+		else {
+			moveToPROMeasures()
+		}
 	}
 
 	@objc func cancelVerification(_ sender: Any?) {
@@ -74,8 +80,6 @@ class PatientVerificationController: UIViewController {
         } else {
             dismiss(animated: true)
         }
-        
-		
 	}
 	
 	func verify() -> Bool {
