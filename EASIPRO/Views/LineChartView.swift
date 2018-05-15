@@ -10,14 +10,6 @@ import UIKit
 
 @IBDesignable public class LineChartView: UIView {
     
-    @IBInspectable var lineColor : UIColor = .white
-    @IBInspectable var startColor: UIColor = .black
-    @IBInspectable var endColor: UIColor = .green
-	@IBInspectable var severeSegmentColor: UIColor = UIColor(red:0.96, green:0.98, blue:0.85, alpha:1.0)
-	@IBInspectable var mildSegmentColor: UIColor = UIColor(red:0.95, green:0.76, blue:0.59, alpha:1.0)
-	@IBInspectable var moderateSegmentColor: UIColor = UIColor(red:0.98, green:0.92, blue:0.86, alpha:1.0)
-	@IBInspectable var normalSegmentColor: UIColor = UIColor(red:0.85, green:0.89, blue:0.75, alpha:1.0)
-	
     private struct Const {
         static let margin : CGFloat = 2.0
         static let colorAlpha: CGFloat = 0.5
@@ -27,17 +19,29 @@ import UIKit
         static let attributes = [NSAttributedStringKey.foregroundColor: UIColor.black,
                                  NSAttributedStringKey.font: UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.thin)]
     }
+    
+    
+    @IBInspectable var lineColor : UIColor = .white
+    @IBInspectable var startColor: UIColor = .black
+    @IBInspectable var endColor: UIColor = .green
+	@IBInspectable var severeSegmentColor: UIColor = UIColor(red:0.96, green:0.98, blue:0.85, alpha:1.0)
+	@IBInspectable var mildSegmentColor: UIColor = UIColor(red:0.95, green:0.76, blue:0.59, alpha:1.0)
+	@IBInspectable var moderateSegmentColor: UIColor = UIColor(red:0.98, green:0.92, blue:0.86, alpha:1.0)
+	@IBInspectable var normalSegmentColor: UIColor = UIColor(red:0.85, green:0.89, blue:0.75, alpha:1.0)
 	
     public var showScore : Bool = true
 	
 	public var grayScale : Bool = false
+    
+    public var highIsNormal : Bool = false
     
 	public var points : [Double]? {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
-	public var thresholds : [Double]? = [55,60,70]
+    public var thresholds : [Double]? //= [55,60,70]
+    // 55,60,70
 	public var thresholdIndicators : [UIColor]?
 	
     class func Gradient(for color: UIColor, colorSpace: CGColorSpace) -> CGGradient {
@@ -47,20 +51,38 @@ import UIKit
 								   color.withAlphaComponent(0.0).cgColor] as CFArray, //0.02
 						  locations: [0.0, 0.4, 1.0])!
     }
+    
+    public func setThresholds(_ _thresholds: [Double]? = nil, highNormal : Bool = false, _grayScale : Bool = false) {
+        highIsNormal = highNormal
+        thresholds = _thresholds
+        grayScale  = _grayScale
+    }
+    
 	
 	func segmentColor(_ reading: Double) -> UIColor {
-		for (i, v) in thresholds!.enumerated()  {
-			if reading <= v {
-				return thresholdIndicators![i]
-			}
-		}
-		return thresholdIndicators!.last!
+        
+        if highIsNormal {
+            for (i, v) in thresholds!.enumerated() {
+                if reading >= v {
+                    return thresholdIndicators![i]
+                }
+            }
+            return thresholdIndicators!.last!
+        }
+        else {
+            for (i, v) in thresholds!.enumerated() {
+                if reading <= v {
+                    return thresholdIndicators![i]
+                }
+            }
+            return thresholdIndicators!.last!
+        }
 	}
     
     
     override public func draw(_ rect: CGRect) {
 		
-		if grayScale {
+		if grayScale || thresholds == nil {
 		thresholdIndicators = [UIColor.white,
 							   UIColor.gray,
 							   UIColor.darkGray,
@@ -74,8 +96,7 @@ import UIKit
 				moderateSegmentColor,
 				severeSegmentColor]
 		}
-//
-//
+        
         let context = UIGraphicsGetCurrentContext()!
 		backgroundColor?.setFill()
         context.fill(rect)
@@ -88,7 +109,7 @@ import UIKit
         
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let height = rect.height
-        let width  = rect.width - Const.rightMargin
+        let width  = (showScore) ? rect.width - Const.rightMargin : rect.width
         let margin = Const.margin
         // X-Axis
         let spacing_x = (width - ((margin * 2))) / CGFloat(points.count)
