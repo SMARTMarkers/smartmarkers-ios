@@ -59,10 +59,27 @@ public class SMARTManager : NSObject {
     public var onPractitionerSelected : (() -> Void)?
 	
 	public var onLoggedOut : (() -> Void)?
-    
+	
+	/**
+	SMART.Client settings taken from wrapper app's Info.plist;
+	TODO: Allow override
+	*/
     override private init() {
-//        client = SMARTManager.patientClient()
-        client = SMARTManager.practitionerClient()
+		
+		let infoDict = Bundle.main.infoDictionary!
+		let base 		= infoDict["SMART_BASE_URI"] as! String
+		let scope		= infoDict["SMART_SCOPE"] as! String
+		let clientid	= infoDict["SMART_CLIENT_ID"] as! String
+		let clientname 	= infoDict["SMART_CLIENT_NAME"] as! String
+		let callback 	= infoDict["SMART_CLIENT_CALLBACK_URI"] as! String
+		let httpschema 	= infoDict["SMART_BASE_HTTP_SCHEMA"] as! String
+		let baseURL = URL(string: "\(httpschema)://\(base)")!
+		let settings = [ "client_name" : clientname,
+						 "redirect"    : "\(callback)://callback",
+						 "scope"       : scope,
+						 "client_id"   : clientid,
+						 ]
+		client = SMARTManager.client(with: baseURL, settings: settings)
     }
     
     public func resetClient() {
