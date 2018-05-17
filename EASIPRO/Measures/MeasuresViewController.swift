@@ -111,6 +111,7 @@ open class MeasuresViewController :  UITableViewController {
             cell?.accessoryType = .detailButton
             cell?.textLabel?.numberOfLines = 2
             cell?.textLabel?.lineBreakMode = .byWordWrapping
+            cell?.detailTextLabel?.textColor = UIColor.gray
         }
         
         let measure = measures![indexPath.row]
