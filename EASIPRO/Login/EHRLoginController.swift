@@ -10,7 +10,7 @@ import Foundation
 
 // options
 let fhirserverbaseURL = ""
-let viewtitle = "EASI PRO"
+let viewtitle = "PROF"
 let loginTitle = "LOGIN TO EHR"
 let hospitalName = 		"SMART Hospital"
 

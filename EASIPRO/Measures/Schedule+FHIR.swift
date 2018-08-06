@@ -11,6 +11,20 @@ import SMART
 
 extension Schedule {
 	
+    
+    init?(prescribing resource: ProcedureRequest) {
+        if let occuranceDate = resource.ep_dateTime {
+            self.init(dueDate: occuranceDate)
+        }
+        else if let (start, end, fValue, fUnit) = resource.ep_period_frequency {
+            let period = PeriodBound(start, end)
+            let frequency = Frequency(value: fValue, unit: fUnit)
+            self.init(period: period, freq: frequency)
+        }
+        else { return nil }
+    }
+    
+    
 	static func initialise(prescribing resource: ProcedureRequest) -> Schedule? {
 		if let occuranceDate = resource.ep_dateTime {
 			return Schedule.init(dueDate: occuranceDate)
@@ -24,11 +38,10 @@ extension Schedule {
 		return nil
 	}
 	
-	func setStatus(measuring resources: [Observation]) {
-        
-        
-		
-	}
+    
+    
+    
+    
 }
 
 

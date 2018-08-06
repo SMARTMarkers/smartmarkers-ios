@@ -44,11 +44,8 @@ class PatientVerificationController: UIViewController {
 		
 		//Verification is always assumed to be the topMost hence can be popped.
 		
-//		self.dismiss(animated: true, completion: nil)
-//		return
-		if let navigationController = self.navigationController, navigationController.topViewController == self {
+        if let navigationController = self.navigationController, navigationController.topViewController == self {
 			navigationController.popViewController(animated: true)
-//			self.dismiss(animated: true, completion: nil)
 		}
 	}
 	

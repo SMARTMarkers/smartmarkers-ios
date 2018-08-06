@@ -15,8 +15,8 @@ public enum SlotStatus : String {
 	case due                    = "due"
 	case upcoming               = "upcoming"
 	case missed                 = "missed"
-	case completedAllSessions   = "completed"
 	case unknown                = "unkown"
+    case completed              = "completed"
 	
 }
 
@@ -89,13 +89,53 @@ public struct Frequency {
 public struct Slot {
 	
 	public let period : PeriodBound
-	public let status : SlotStatus = .unknown
-	public var current: Bool = false
-
+    public var status : SlotStatus = .unknown
+    public var fulfilledDates = [Date]()
+    public var current: Bool = false
+    public var hasPassed : Bool = false
+    public var future: Bool {
+        get {
+            return !current && !hasPassed
+        }
+    }
+    
 	init(period: PeriodBound) {
-		self.period = period
-		self.current = period.contains(Date())
-	}
+            let today = Date()
+            self.period = period
+            current = period.contains(today)
+            hasPassed = !current && (today > period.start)
+        
+        if current {
+            status = .due
+        }
+        if future {
+            status = .upcoming
+        }
+        if hasPassed {
+            status = .due
+        }
+        
+    }
+    
+    
+    mutating func satisfied(_ date: Date, _ freq: Frequency?) -> Bool {
+        
+        //todo:
+        if period.contains(date) {
+            status = .completed
+            return true
+        }
+        return false
+    }
+    
+    mutating func newStatus(_ s: SlotStatus) {
+        status = s
+    }
+    
+    
+
+    
+    
 }
 
 
@@ -108,11 +148,13 @@ public struct Schedule {
 	let now = Date()
 	
 	/// Instant Date if applicable
-	let instantDate : Date?
+	let instantDate : Date? 
 	
 	var instant : Bool {
 		get { return (instantDate == nil) ? false : true }
 	}
+    
+    
 	
 	/// Calculated or set value
 	var periodBound : PeriodBound?
@@ -125,14 +167,25 @@ public struct Schedule {
 		get { return slots?.count }
 	}
 	
-	
+    //TODO: Frequency per slot calculation?
+    // Default is Frequency: 1
 	/// Frequency of a repeating measurement
 	let frequency: Frequency?
 	
-	/// Current status of the current slot
-	var currentStatus : SlotStatus? {
-		get { return currentSlot?.status }
-	}
+
+    var instantStatus : SlotStatus = .unknown
+    
+    public var status: SlotStatus {
+        get {
+            //TODO : instant items can be same day slots.
+            // Enddate could be optional?
+            if instant {
+                return instantStatus
+            }
+            return currentSlot?.status ?? nextSlot?.status ?? previousSlot?.status ?? .unknown
+        }
+    }
+    
 	
 	/// for Internal use, current slot index in slots.array
 	public internal(set) var currentSlotIndex = -1
@@ -152,7 +205,8 @@ public struct Schedule {
 	/// Previous Slot
 	public var previousSlot : Slot? {
 		get {
-			guard let slots = slots, currentSlotIndex > slots.startIndex else { return nil }
+            guard let slots = slots else { return nil }
+            if currentSlotIndex > slots.startIndex { return slots.last }
 			let previousIdx = slots.index(before: currentSlotIndex)
 			return slots[previousIdx]
 		}
@@ -172,6 +226,12 @@ public struct Schedule {
 		}
 	}
     
+    // TODO: streamline Due Slots
+    public var dueDate: Date? {
+        get {
+            return instantDate ?? currentSlot?.period.start ?? nextSlot?.period.start ?? previousSlot?.period.start ?? nil
+        }
+    }
     
 	
 	
@@ -187,7 +247,9 @@ public struct Schedule {
 		self.instantDate = dueDate
 		self.periodBound = nil
 		self.frequency = nil
-		
+        if now > dueDate || calendar.isDateInToday(dueDate) {
+            instantStatus = .due
+        } else { instantStatus = .upcoming }
 	}
 	
 	
@@ -224,12 +286,36 @@ public struct Schedule {
 		}
 		return newSlots
 	}
+    
 	
 	
 	/// Updates completion status of the slots with corresponding dates
-	public func update(with scores: [Double]?) {
-		
-		
+    public mutating func update(with scoredDates: [Date]) {
+        
+        
+        
+        
+        if slots == nil {
+            
+            //TODO
+            if instant {
+                instantStatus = .completed
+            }
+            return
+        }
+        
+        scoredDates.forEach { (date) in
+            for i in slots!.indices {
+                // TODO: Check schedule satisfied wth Frequency
+                if slots![i].satisfied(date, frequency) {
+                    slots![i].newStatus(.completed)
+                    break
+                }
+                if slots![i].hasPassed {
+                    slots![i].newStatus(.missed)
+                }
+            }
+        }
 	}
     
     public func periodString() -> String? {

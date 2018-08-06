@@ -32,16 +32,13 @@ public class SMARTManager : NSObject {
         }
     }
 	
-
     
     public  internal(set) var patient : Patient? = nil {
         didSet {
-            measures = nil
 			onPatientSelected?()
         }
     }
     
-    public var measures: [PROMeasure2]? = nil
     
     
     public class func client(with baseURL: URL, settings: [String:String]) -> Client {
@@ -92,6 +89,7 @@ public class SMARTManager : NSObject {
 	
 	func clientNotReady(_ e:Error ) {
 		print("Not ready")
+        print(e)
 	}
     
     
@@ -107,10 +105,12 @@ public class SMARTManager : NSObject {
         return EHRLoginController()
     }
     
+    // TODO:
+    // Verify IdToken
+    
     public func authorize(callback: @escaping (_ success: Bool) -> Void) {
         
         client.authorize(callback: { [unowned self] (patientResource,  error) in
-            
             
             if let p = patientResource {
                 self.patient = p
@@ -182,9 +182,8 @@ public class SMARTManager : NSObject {
         search(type: Questionnaire.self, params: [:], callback: callback)
     }
 	
-	public func getQuestionnaireResponses(callback: @escaping(_ questionnaires: [QuestionnaireResponse]?, _ error: Error?) -> Void) {
-		search(type: QuestionnaireResponse.self, params: [:], callback: callback)
-	}
+
+    
 	
 	public func getObservations(callback: @escaping(_ observations: [Observation]?, _ error: Error?) -> Void) {
 		guard let patient = patient else {
@@ -244,6 +243,7 @@ public class SMARTManager : NSObject {
     
     // MARK: Patient/Measures Selectors
     
+    /*
     public func switchPatient(over viewController: UIViewController) {
         
         let allPatientList = PatientListAll()
@@ -256,17 +256,18 @@ public class SMARTManager : NSObject {
         viewController.present(navigationController, animated: true, completion: nil)
         
     }
+    */
     
-    
-
+    /*
     public func selectMeasures(callback: @escaping ((_ measuresPicker: UIViewController) -> Void)) {
         let measuresViewController = MeasuresViewController()
-        measuresViewController.onSelection = { measures in
+        /*measuresViewController.onSelection = { measures in
             self.measures = measures
-        }
+        }*/
         let navigationController = UINavigationController(rootViewController: measuresViewController)
         callback(navigationController)
     }
+    */
     
     
     public func selectPatient(callback: @escaping ((_ patientPicker: UIViewController) -> Void)) {
@@ -280,6 +281,7 @@ public class SMARTManager : NSObject {
     }
 	
 	
+    // MARK PROMeasure
 	
     
     

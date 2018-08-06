@@ -13,20 +13,17 @@ import SMART
 
 open class MeasuresViewController :  UITableViewController {
     
-    
     let searchController = UISearchController(searchResultsController: nil)
     
-    open var _measures : [PROMeasure2]? {
-        didSet { measures = _measures }
-    }
+    open var instruments : [InstrumentResource]?
     
-    open var measures : [PROMeasure2]?
+    open var _instruments : [InstrumentResource]? {
+        didSet { instruments = _instruments }
+    }
     
     open var selections = [String]()
     
-    open var onSelection: (([PROMeasure2]?) ->Void)?
-    
-    
+    open var onSelection: (([InstrumentResource]?) ->Void)?
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +35,7 @@ open class MeasuresViewController :  UITableViewController {
         searchController.delegate = self
         tableView.tableHeaderView = searchController.searchBar
         definesPresentationContext = true
+        tableView.estimatedRowHeight = UITableViewAutomaticDimension
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissModal(_:)))
         self.loadQuestionnaires()
     }
@@ -55,16 +53,11 @@ open class MeasuresViewController :  UITableViewController {
     
     
     open func loadQuestionnaires() {
-        if nil != measures { return }
+        if nil != instruments { return }
         markBusy()
         SMARTManager.shared.getQuestionnaires { [unowned self] (questionnaires, error) in
             if let questionnaires = questionnaires {
-
-				self._measures = questionnaires.map({ (q) -> PROMeasure2 in
-					let measure = PROMeasure2(title: q.ep_displayTitle(), identifier: q.id!.string)
-					measure.measure = q
-					return measure
-				})
+                self._instruments = questionnaires.map { InstrumentResource($0) }
                 DispatchQueue.main.async {
                     self.markStandby()
                 }
@@ -76,8 +69,8 @@ open class MeasuresViewController :  UITableViewController {
     @objc
     public func dismissModal(_ sender: AnyObject?) {
         if let onSelection = onSelection {
-            if selections.count > 0, let m = _measures {
-                let questionnaires = m.filter { selections.contains($0.identifier) }
+            if selections.count > 0, let instruments = _instruments {
+                let questionnaires = instruments.filter { selections.contains($0.identifier) }
                 onSelection(questionnaires)
             } else {
                 onSelection(nil)
@@ -92,7 +85,7 @@ open class MeasuresViewController :  UITableViewController {
     
     override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return measures?.count ?? 0
+        return instruments?.count ?? 0
     }
     
     override open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -109,19 +102,18 @@ open class MeasuresViewController :  UITableViewController {
         if cell == nil {
             cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
             cell?.accessoryType = .detailButton
-            cell?.textLabel?.numberOfLines = 2
+            cell?.textLabel?.numberOfLines = 0
             cell?.textLabel?.lineBreakMode = .byWordWrapping
             cell?.detailTextLabel?.textColor = UIColor.gray
         }
-        
-        let measure = measures![indexPath.row]
-        let selected = (contains(measure))
-            cell?.accessoryType = (selected) ? .checkmark : .detailButton
-            cell?.textLabel?.text = measure.title
-            cell?.detailTextLabel?.text = measure.identifier.lowercased()
-            cell?.setSelected(selected, animated: false)
-        
+        let instr = instruments![indexPath.row]
+        cell?.textLabel?.text = instr.title
+        cell?.detailTextLabel?.text = instr.code?.code?.string ?? instr.identifier
+        cell?.accessoryType = (contains(instr)) ? .checkmark : .detailButton
 
+        
+        
+        
         return cell!
     }
     
@@ -144,14 +136,14 @@ open class MeasuresViewController :  UITableViewController {
     }
     
     func contains(_ indexPath: IndexPath) -> (contains: Bool, id: String?) {
-        if let measure = measures?[indexPath.row] {
-            return (contains(measure), measure.identifier)
+        if let instr = instruments?[indexPath.row] {
+            return (contains(instr), instr.identifier)
         }
         return (false, nil)
     }
     
-    func contains(_ measure: PROMeasure2) -> Bool {
-        return selections.contains(measure.identifier)
+    func contains(_ instr: InstrumentResource) -> Bool {
+        return selections.contains(instr.identifier)
     }
     
     func select(_ indexPath: IndexPath) {
@@ -170,7 +162,7 @@ open class MeasuresViewController :  UITableViewController {
 extension MeasuresViewController : UISearchControllerDelegate {
     
     public func willDismissSearchController(_ searchController: UISearchController) {
-        measures = _measures
+        instruments = _instruments
         tableView.reloadData()
     }
 }
@@ -178,10 +170,10 @@ extension MeasuresViewController : UISearchResultsUpdating {
 
     public func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text?.lowercased(), !searchText.isEmpty {
-            let filtered = _measures?.filter{ $0.title.lowercased().range(of: searchText) != nil }
-            measures = filtered
+            let filtered = _instruments?.filter{ $0.title.lowercased().range(of: searchText) != nil }
+            instruments = filtered
         } else {
-            measures = _measures
+            instruments = _instruments
         }
         tableView.reloadData()
     }

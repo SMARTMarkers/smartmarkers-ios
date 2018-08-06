@@ -32,12 +32,13 @@ extension Appointment {
 
 extension ProcedureRequest {
     
+    /*
     open class func ep_instant(for patient: Patient, measure: PROMeasure2, practitioner: Practitioner) -> ProcedureRequest? {
         if let questionnaire = measure.measure as? Questionnaire {
             return ProcedureRequest.ep_instant(for: patient, questionnaire: questionnaire , practitioner: practitioner)
         }
         return nil
-    }
+    }*/
     
     open class func ep_instant(for patient: Patient, questionnaire: Questionnaire?, practitioner: Practitioner) -> ProcedureRequest {
         print(questionnaire)
@@ -109,6 +110,7 @@ extension ProcedureRequest {
 	}
     
     public func ep_coding(for system: String) -> Coding? {
+        
         if let codeConcept = code {
 			return codeConcept.ep_coding(for: system)
         }
