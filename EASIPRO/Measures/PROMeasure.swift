@@ -75,8 +75,16 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
             measurements = ResourceFetch(Observation.self, param: params)
             responses = ResourceFetch(QuestionnaireResponse.self, param: params)
         }
-        
-        
+    }
+    
+    public convenience init(_ _instrument: InstrumentResource?) {
+        self.init()
+        self.orderedInstrument = _instrument
+        //::: TODO- configure responses/measurements based on Instrument.code or Instrument.identifier
+
+        if let questionnaire = _instrument?.instrument as? Questionnaire {
+            responses = ResourceFetch(QuestionnaireResponse.self, param: ["questionnaire" : questionnaire.id!.string])
+        }
     }
     
     public override init() { }
