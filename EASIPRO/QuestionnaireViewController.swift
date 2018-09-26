@@ -27,8 +27,14 @@ public class QuestionnaireViewController: UITableViewController {
         if let date = questionnaireResponse.authored?.nsDate.shortDate {
             title = "Completed on " + date
         }
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSelf))
     }
     
+    @objc
+    func dismissSelf() {
+        dismiss(animated: true, completion: nil)
+    }
     // MARK: - Table view data source
     
     override public func numberOfSections(in tableView: UITableView) -> Int {
