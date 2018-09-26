@@ -37,8 +37,7 @@ extension PROStepProtocol where Self : ORKStep {
     public static func initialise(_ qItem: QuestionnaireItem,  callback: @escaping (_ step: Self?, _ error: Error?) -> Void) {
         
         let step = Self(identifier: qItem.rk_Identifier())
-        step.title = qItem.text?.string
-        
+        step.title = qItem.rk_text()
         if let slf = step as? PROQuestionStep {
             
             qItem.rk_answerFormat { (format, error) in
@@ -53,7 +52,7 @@ extension PROStepProtocol where Self : ORKStep {
         }
         
         if let slf = step as? PROInstructionStep {
-            slf.detailText = "Detail"
+            slf.detailText = qItem.rk_InstructionText()
             callback(step, nil)
         }
         
@@ -81,7 +80,7 @@ extension PROStepProtocol where Self : ORKStep {
         }
         
         if let slf = self as? PROInstructionStep {
-            slf.detailText = "Detailed Instruction"
+//            slf.detailText = "Detailed Instruction"
         }
         
         if let slf = self as? PROFormStep {
