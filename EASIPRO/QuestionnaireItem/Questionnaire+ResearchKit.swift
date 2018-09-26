@@ -85,6 +85,10 @@ extension Questionnaire : InstrumentProtocol     {
         return ep_displayTitle()
     }
     
+    public var rk_version: String? {
+        return version?.string
+    }
+    
     
     
     
@@ -194,8 +198,8 @@ extension Questionnaire : InstrumentProtocol     {
             
         }
         
-        
-        group.notify(queue: .global(qos: .default)) {
+//        .global(qos: .default)
+        group.notify(queue: .main) {
             callback(steps, nil)
         }
         
@@ -208,6 +212,19 @@ extension Questionnaire : InstrumentProtocol     {
 }
 
 extension QuestionnaireItem {
+    
+    public func rk_text() -> String? {
+        return text?.localized
+    }
+    
+    public func rk_InstructionText() -> String? {
+        return extensions(forURI: kStructureDefinition_QuestionnaireInstruction)?.first?.valueString?.localized
+    }
+    
+    public func rk_HelpText() -> String? {
+        return extensions(forURI: kStructureDefinition_QuestionnaireHelp)?.first?.valueString?.localized
+    }
+    
     
     public func rk_Identifier() -> String {
         return linkId?.string ?? UUID().uuidString
@@ -222,6 +239,7 @@ extension QuestionnaireItem {
         }
         
         switch type {
+        case .display:   callback(nil, nil)
         case .boolean:   callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
         case .date:      callback(ORKAnswerFormat.dateAnswerFormat(), nil)
         case .dateTime:  callback(ORKAnswerFormat.dateTime(), nil)

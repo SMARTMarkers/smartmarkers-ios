@@ -12,6 +12,7 @@ import Foundation
 /// Structure Definition to resolve `Questionnaire` reference embedded in `ProcedureRequest`
 let kStructureDefinition_QuestionnaireRequest = "http://hl7.org/fhir/StructureDefinition/procedurerequest-questionnaireRequest"
 let kStructureDefinition_QuestionnaireInstruction = "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction"
+let kStructureDefinition_QuestionnaireHelp = "http://hl7.org/fhir/StructureDefinition/questionnaire-help"
 
 /// Coding Systems - LOINC
 let kLoincSystemKey = "http://loinc.org"
