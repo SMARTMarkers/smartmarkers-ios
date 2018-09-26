@@ -34,6 +34,8 @@ public protocol InstrumentProtocol : class {
     
     var rk_code: SMART.Coding? { get }
     
+    var rk_version: String? { get }
+    
     func rk_generateSteps(callback: @escaping ((_ steps : [ORKStep]?, _ error: Error?) -> Void))
     
     func rk_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
@@ -55,6 +57,10 @@ open class InstrumentResource : InstrumentResourceProtocol {
     
     public var code: Coding? {
         return instrument.rk_code
+    }
+    
+    public var version: String? {
+        return instrument.rk_version
     }
     
     public weak var _prescriber: PrescriberType?
