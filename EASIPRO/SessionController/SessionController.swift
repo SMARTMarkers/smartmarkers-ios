@@ -14,6 +14,8 @@ import SMART
 public protocol SessionControllerTaskDelegate : class  {
     
     func sessionEnded(_ taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason, error: Error?)
+    
+    func sessionShouldBegin(taskViewController: ORKTaskViewController, PRO: PROMeasure) -> Bool
 
 }
 
@@ -59,12 +61,14 @@ open class SessionController: NSObject, SessionProtocol {
             return
         }
         var taskControllers = [ORKTaskViewController]()
+
         let group = DispatchGroup()
         
         for measure in measures {
             group.enter()
-            measure.prepareSession { (taskViewControlelr, error) in
-                if let tvc = taskViewControlelr {
+            measure.prepareSession { (taskViewController, error) in
+                print(taskViewController as Any)
+                if let tvc = taskViewController {
                     taskControllers.append(tvc)
                 }
                 group.leave()

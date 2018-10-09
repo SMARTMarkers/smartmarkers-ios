@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D40A121C21627DBE002F9F53 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40A121B21627DBE002F9F53 /* Notifications.swift */; };
 		D40B19CB20989B9000C18C23 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40B19CA20989B9000C18C23 /* Schedule.swift */; };
 		D40B19CD20989BA800C18C23 /* Schedule+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40B19CC20989BA800C18C23 /* Schedule+FHIR.swift */; };
 		D40B19CF2098A3CF00C18C23 /* SMARTManager+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40B19CE2098A3CF00C18C23 /* SMARTManager+Config.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D40A121B21627DBE002F9F53 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		D40B19CA20989B9000C18C23 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		D40B19CC20989BA800C18C23 /* Schedule+FHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Schedule+FHIR.swift"; sourceTree = "<group>"; };
 		D40B19CE2098A3CF00C18C23 /* SMARTManager+Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SMARTManager+Config.swift"; sourceTree = "<group>"; };
@@ -58,7 +60,7 @@
 		D451C38220E5DE0B0018766F /* InstrumentResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentResource.swift; sourceTree = "<group>"; };
 		D451C38420E94DE30018766F /* EventResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventResource.swift; sourceTree = "<group>"; };
 		D4618A43205ED820004E117F /* PatientVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientVerificationController.swift; sourceTree = "<group>"; };
-		D4618A45205F07EB004E117F /* LocalAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalAuth.swift; path = EASIPRO/LocalAuth.swift; sourceTree = "<group>"; };
+		D4618A45205F07EB004E117F /* LocalAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalAuth.swift; sourceTree = "<group>"; };
 		D4618A4D206160FF004E117F /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		D465D5A3203DCB8E0057BD23 /* Installation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Installation.md; sourceTree = "<group>"; };
 		D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRDefinitions.swift; sourceTree = "<group>"; };
@@ -96,6 +98,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D40A121A21627D95002F9F53 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D4618A45205F07EB004E117F /* LocalAuth.swift */,
+				D40A121B21627DBE002F9F53 /* Notifications.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		D436B1D520EBF89E00CAF2F5 /* QuestionnaireItem */ = {
 			isa = PBXGroup;
 			children = (
@@ -129,7 +140,6 @@
 			isa = PBXGroup;
 			children = (
 				D4618A4D206160FF004E117F /* Readme.md */,
-				D4618A45205F07EB004E117F /* LocalAuth.swift */,
 				D465D5A3203DCB8E0057BD23 /* Installation.md */,
 				D4E75D5F2035E73E000CE95A /* EASIPRO */,
 				D4E75D5E2035E73E000CE95A /* Products */,
@@ -148,6 +158,7 @@
 		D4E75D5F2035E73E000CE95A /* EASIPRO */ = {
 			isa = PBXGroup;
 			children = (
+				D40A121A21627D95002F9F53 /* Classes */,
 				D436B1D520EBF89E00CAF2F5 /* QuestionnaireItem */,
 				D4CBC0062045ACC6002B6AC9 /* FHIR */,
 				D4E75D8320363BFF000CE95A /* SessionController */,
@@ -317,6 +328,7 @@
 				D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */,
 				D451C37F20E5ABCB0018766F /* PrescribingResource.swift in Sources */,
 				D4E75D8520363C0E000CE95A /* SessionController.swift in Sources */,
+				D40A121C21627DBE002F9F53 /* Notifications.swift in Sources */,
 				D436B1DD20F17BE900CAF2F5 /* PROTask.swift in Sources */,
 				D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */,
 				D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */,
