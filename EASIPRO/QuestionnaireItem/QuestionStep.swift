@@ -12,6 +12,8 @@ import SMART
 
 public protocol PROStepProtocol : class {
     
+    var identifier: String  { get}
+    
     var order: UInt { get set }
     
     var title : String? { get set }
@@ -20,74 +22,56 @@ public protocol PROStepProtocol : class {
     
     var _parent : PROStepProtocol? { get set }
     
-    init(_identifier: String, parentItem: PROStepProtocol?)
+    var condition: StepCondition? { get set }
     
+    init(_identifier: String, parentItem: PROStepProtocol?, title: String?, text: String? , condition: StepCondition?)
 }
-
 
 
 extension PROStepProtocol where Self : ORKStep {
     
-    public init(_identifier: String, parentItem: PROStepProtocol?) {
+    public var identifier : String {
+        return self.identifier
+    }
+    public var title: String? {
+        return self.title
+    }
+    public init(_identifier: String, parentItem: PROStepProtocol?, title: String? = nil, text: String? = nil, condition: StepCondition? = nil) {
         self.init(identifier: _identifier)
-        _parent = parentItem
-        order = 0
+        self._parent = parentItem
+        self.order = 0
+        self.title = title
+        self.text = text
+        self.condition = condition
     }
-    
-    public static func initialise(_ qItem: QuestionnaireItem,  callback: @escaping (_ step: Self?, _ error: Error?) -> Void) {
-        
-        let step = Self(identifier: qItem.rk_Identifier())
-        step.title = qItem.rk_text()
-        if let slf = step as? PROQuestionStep {
-            
-            qItem.rk_answerFormat { (format, error) in
-                if let format = format {
-                    slf.answerFormat = format
-                    callback(step, nil)
-                }
-                else {
-                    callback(nil, nil)
-                }
-            }
-        }
-        
-        if let slf = step as? PROInstructionStep {
-            slf.detailText = qItem.rk_InstructionText()
-            callback(step, nil)
-        }
-        
-        if let slf = step as? PROFormStep {
-            
-        }
-        
+}
 
-        
-        
-    }
-    
-    public init(_ questionnaireItem: QuestionnaireItem) {
-        
-        let identifier = questionnaireItem.rk_Identifier()
-        self.init(_identifier: identifier, parentItem: nil)
-        self.title = questionnaireItem.text?.string
-        
-        if let slf = self as? PROQuestionStep {
-            questionnaireItem.rk_answerFormat { (format, error) in
-                slf.answerFormat = format
-                print(slf.answerFormat)
-            }
-            
-        }
-        
-        if let slf = self as? PROInstructionStep {
-//            slf.detailText = "Detailed Instruction"
-        }
-        
-        if let slf = self as? PROFormStep {
-            
-        }
-    }
 
+
+
+public class PROQuestionStep: ORKQuestionStep, PROStepProtocol {
+    
+    public var order: UInt = 0
+    
+    public var linkIds: [String]?
+    
+    public var _parent: PROStepProtocol?
+    
+    public var condition: StepCondition?
+    
+}
+
+
+public class PROInstructionStep: ORKInstructionStep, PROStepProtocol {
+    
+    public var order: UInt = 0
+    
+    public var linkIds: [String]?
+    
+    public var _parent: PROStepProtocol?
+    
+    public var condition: StepCondition?
+    
 }
 
 
@@ -96,45 +80,12 @@ extension PROStepProtocol where Self : ORKStep {
 
 
 
-public class PROInstructionStep : ORKInstructionStep, PROStepProtocol {
-   
+public struct StepCondition {
     
+    let questionId: String
+    let hasAnswer: String
+    let isAnswer: String
     
-    public weak var _parent: PROStepProtocol?
-    
-    public var order: UInt = 0
-    
-    public var linkIds: [String]?
-    
-    
-}
-
-public class PROQuestionStep : ORKQuestionStep, PROStepProtocol {
-    
-    public weak var _parent: PROStepProtocol?
-    
-    public var order: UInt = 0
-    
-    public var linkIds: [String]?
-    
-}
-public class PROFormStep : ORKFormStep, PROStepProtocol {
-    
-    public weak var _parent: PROStepProtocol?
-    
-    public var order: UInt = 0
-    
-    public var linkIds: [String]?
-    
-}
-
-public class PROCompletionStep : ORKCompletionStep, PROStepProtocol {
-    
-    public weak var _parent: PROStepProtocol?
-    
-    public var order: UInt = 0
-    
-    public var linkIds: [String]?
     
 }
 

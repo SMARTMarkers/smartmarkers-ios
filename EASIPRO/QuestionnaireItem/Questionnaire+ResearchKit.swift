@@ -11,22 +11,40 @@ import SMART
 import ResearchKit
 
 
-extension Questionnaire : InstrumentProtocol     {
+extension Questionnaire : InstrumentProtocol {
     
-    public var rk_code: Coding? {
+    
+    public func ip_generateSteps(callback: @escaping (([ORKStep]?, Error?) -> Void)) {
+        callback(nil, nil)
+    }
+    
+    
+    public func ip_navigableRules(for steps: [ORKStep]?, callback: (([ORKStepNavigationRule]?, Error?) -> Void)) {
+        
+        callback(nil, nil)
+    }
+    
+    
+    public var ip_code: Coding? {
         return code?.first
     }
     
     
     
-    public func rk_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))  {
+    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))  {
         
-        rk_generateSteps { (steps, error) in
+        ip_genereteSteps { (steps, rules, error) in
             if let steps = steps {
                 let uuid = UUID()
                 let taskIdentifier = measure.prescribingResource?.resource?.pro_identifier ?? uuid.uuidString
+                
                 let task = PROTask(identifier: taskIdentifier, steps: steps)
                 task.measure = measure
+                rules?.forEach({ (rule, ids) in
+                    ids.forEach({ (stepid) in
+                        task.setNavigationRule(rule, forTriggerStepIdentifier: stepid)
+                    })
+                })
                 let taskViewController = PROTaskViewController(task: task, taskRun: uuid)
                 taskViewController.measure = measure
                 callback(taskViewController, nil)
@@ -40,7 +58,7 @@ extension Questionnaire : InstrumentProtocol     {
     
     
     
-    public func rk_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
 
         guard let taskResults = result.results as? [ORKStepResult] else {
             print("No results found")
@@ -70,141 +88,99 @@ extension Questionnaire : InstrumentProtocol     {
         let bundle = SMART.Bundle()
         bundle.entry = [entry]
         bundle.type = BundleType.transaction
-        
-        
-        
         return bundle
         
         
     }
     
     
-    
-    
-    public var rk_title :String {
+    public var ip_title :String {
         return ep_displayTitle()
     }
     
-    public var rk_version: String? {
+    public var ip_version: String? {
         return version?.string
     }
     
-    
-    
-    
-    public var rk_identifier: String {
+    public var ip_identifier: String {
         return id!.string
     }
     
     
-    public func rk_taskController(for measure: PROMeasure, callback: @escaping ((RKTaskViewControllerProtocol?, Error?) -> Void)) {
-        rk_generateSteps { (steps, error) in
-            if let steps = steps {
-                let uuid = UUID()
-                let taskIdentifier = measure.prescribingResource?.resource?.pro_identifier ?? uuid.uuidString
-                let task = PROTask(identifier: taskIdentifier, steps: steps)
-                task.measure = measure
-                let taskViewController = PROTaskViewController(task: task, taskRun: uuid)
-                taskViewController.measure = measure
-                callback(taskViewController, nil)
-            }
-            else {
-                callback(nil, nil)
-            }
-        }
-    }
-    
-    
-    public func rk_generateSteps(callback:  @escaping ((_ steps : [ORKStep]?, _ error: Error?) -> Void)) {
+    public func ip_genereteSteps(callback: @escaping ((_ steps: [ORKStep]?, _ rules: [ORKPredicateStepNavigationRule: [String]]?, _ error: Error?) -> Void)) {
         
         guard let items = self.item else {
-            callback(nil, nil)
+            callback(nil, nil, nil)
             return
         }
-        
-        var steps =  [ORKStep]()
+        var steps = [ORKStep]()
+        var rules = [ORKPredicateStepNavigationRule: [String]]()
+        var conditionalItems = [QuestionnaireItem]()
         let group = DispatchGroup()
-        
-        
         for item in items {
-            
             guard let type = item.type else {
-                callback(nil, nil)
-                return
+                print("missed itemtype")
+                continue
             }
-            
-            switch type {
-            case .openChoice, .choice, .boolean:
-                    group.enter()
-                    PROQuestionStep.initialise(item) { (step, error) in
-                        if let step = step { steps.append(step) }
-                        group.leave()
+            if item.enableWhen != nil {
+                conditionalItems.append(item)
+            }
+            group.enter()
+            item.rk_answerFormat(callback: { (answerFormat, error) in
+                if let error = error {
+                    print(error)
+                }
+                else {
+                    switch type {
+                    case .display:
+                        let step = ORKInstructionStep(identifier: item.rk_Identifier())
+                        step.detailText = item.rk_InstructionText()
+                        step.title = item.rk_text()
+                        steps.append(step)
+                        break
+                    case .choice, .openChoice, .boolean:
+                        let step = ORKQuestionStep(identifier: item.rk_Identifier(), title: item.rk_text(), text: nil, answer: answerFormat)
+                        steps.append(step)
+                    case .group:
+                        // ::: TODO
+                        break
+                    default:
+                        break
                     }
-            case .group:
-                group.enter()
-                PROFormStep.initialise(item) { (step, error) in
-                    if let step = step { steps.append(step) }
-                    group.leave()
                 }
-            case .display:
-                group.enter()
-                PROInstructionStep.initialise(item) { (step, error) in
-                    if let step = step { steps.append(step) }
-                    group.leave()
-                }
-            case .question:
-                break
-                
-            case .decimal:
-                break
-                
-            case .integer:
-                break
-                
-            case .date:
-                break
-                
-            case .dateTime:
-                break
-                
-            case .time:
-                break
-                
-            case .string:
-                break
-                
-            case .text:
-                break
-                
-            case .url:
-                break
-                
-            case .openChoice:
-                break
-                
-            case .attachment:
-                break
-                
-            case .reference:
-                break
-                
-            case .quantity:
-                break
-                
-            default:
-                break
-       
-            }
-            
+                group.leave()
+            })
         }
         
-//        .global(qos: .default)
+    
+        /*
+        conditionalItems.forEach { (citem) in
+            var predicates = [(NSPredicate, String)]()
+            let questionIds = citem.enableWhen!.map { $0.question!.string }
+            let destinationIdentifier = citem.rk_Identifier()
+            citem.enableWhen!.forEach({ (condition) in
+                let olderStep = condition.question!.string
+                let resultSelector = ORKResultSelector(resultIdentifier: olderStep)
+                var predicate : NSPredicate
+                if let boolean = condition.answerBoolean {
+                    predicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: boolean.bool)
+                    predicates.append((predicate, destinationIdentifier))
+                }
+                else if let coding = condition.answerCoding {
+                    
+                    let value = coding.system!.absoluteString + kDelimiter + coding.code!.string
+                    predicate = ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector, expectedAnswerValue: value as NSCoding & NSCopying & NSObjectProtocol)
+                    predicates.append((predicate, destinationIdentifier))
+                }
+            })
+
+        }
+        */
+        
+        
         group.notify(queue: .main) {
-            callback(steps, nil)
+            callback(steps, rules, nil)
         }
-        
-  
-        
         
     }
 
@@ -212,6 +188,21 @@ extension Questionnaire : InstrumentProtocol     {
 }
 
 extension QuestionnaireItem {
+    
+    
+    public func rule() -> ORKStepNavigationRule? {
+        
+        guard let conditions = enableWhen else {
+            return nil
+        }
+        
+        let condition = conditions.first
+        let resultSelector = ORKResultSelector(resultIdentifier: condition!.question!.string)
+        let predicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: true)
+        let rule = ORKPredicateStepNavigationRule(resultPredicatesAndDestinationStepIdentifiers: [(predicate, rk_Identifier())])
+        return rule
+    }
+    
     
     public func rk_text() -> String? {
         return text?.localized
@@ -311,12 +302,24 @@ extension ValueSet {
 }
 
 
+extension QuestionnaireItemEnableWhen {
+    
+    
+    
+    
+    
+    
+}
+
+
     /*
         Modified with Permission From C3-PRO
         Created by Pascal Pfiffner on 6/26/15.
         Copyright © 2015 Boston Children's Hospital. All rights reserved.
         https://github.com/C3-PRO
     */
+
+
 
 
 extension ORKStepResult {
@@ -391,4 +394,6 @@ extension ORKChoiceQuestionResult {
         return answers
     }
 }
+
+
 
