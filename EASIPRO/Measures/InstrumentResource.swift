@@ -28,19 +28,21 @@ public protocol InstrumentResourceProtocol : class {
 
 public protocol InstrumentProtocol : class {
     
-    var rk_title: String { get }
+    var ip_title: String { get }
     
-    var rk_identifier: String { get }
+    var ip_identifier: String { get }
     
-    var rk_code: SMART.Coding? { get }
+    var ip_code: SMART.Coding? { get }
     
-    var rk_version: String? { get }
+    var ip_version: String? { get }
     
-    func rk_generateSteps(callback: @escaping ((_ steps : [ORKStep]?, _ error: Error?) -> Void))
+    func ip_generateSteps(callback: @escaping ((_ steps : [ORKStep]?, _ error: Error?) -> Void))
     
-    func rk_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
+    func ip_navigableRules(for steps:[ORKStep]?, callback: ((_ rules: [ORKStepNavigationRule]?, _ error: Error?) -> Void))
+    
+    func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
         
-    func rk_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle?
+    func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle?
     
 }
 
@@ -48,19 +50,19 @@ public protocol InstrumentProtocol : class {
 open class InstrumentResource : InstrumentResourceProtocol {
     
     public var title: String {
-        return instrument.rk_title
+        return instrument.ip_title
     }
     
     public var identifier: String {
-        return instrument.rk_identifier
+        return instrument.ip_identifier
     }
     
     public var code: Coding? {
-        return instrument.rk_code
+        return instrument.ip_code
     }
     
     public var version: String? {
-        return instrument.rk_version
+        return instrument.ip_version
     }
     
     public weak var _prescriber: PrescriberType?
