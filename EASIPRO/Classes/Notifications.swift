@@ -10,41 +10,44 @@ import UIKit
 import UserNotifications
 import SwiftFHIR
 
-let currentCenter = UNUserNotificationCenter.current()
-let options : UNAuthorizationOptions = [.badge, .alert, .sound]
-let kPRODueNotificationCategory = "DUEPRO"
+let kPRODueNotificationCategory = "DUE_PRO"
 
 
-public class PRONotifications: NSObject {
+public class PRONotification: NSObject {
+    
+    public static let shared = PRONotification()
+    
+    override public init() {
+        super.init()
+
+    }
     
 
-    
     public class func requestAuthorization(_ callback: @escaping (_ success: Bool) -> Void) {
         
-        
-        currentCenter.requestAuthorization(options: options) { (success, error) in
+        let options : UNAuthorizationOptions = [.badge, .alert, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { (success, error) in
             if !success {
                 callback(false)
             }
             else {
-                let hiddenPreviewsPlaceholder = "%u PRO is due now"
-                let proCategory = UNNotificationCategory(identifier: kPRODueNotificationCategory, actions: [], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: hiddenPreviewsPlaceholder, options: [])
-                currentCenter.setNotificationCategories([proCategory])
+                registerActionsForCategoryDuePRO()
                 callback(true)
             }
         }
     }
     
-    public class func getSettings(_ callback: @escaping (_ settings: UNNotificationSettings?) -> Void) {
-        currentCenter.getNotificationSettings { (settings) in
+    public func getSettings(_ callback: @escaping (_ settings: UNNotificationSettings?) -> Void) {
+        
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             print(settings)
         }
         
-        currentCenter.getNotificationCategories { (categories) in
+        UNUserNotificationCenter.current().getNotificationCategories { (categories) in
             print(categories)
         }
         
-        currentCenter.getPendingNotificationRequests { (pendings) in
+        UNUserNotificationCenter.current().getPendingNotificationRequests { (pendings) in
             print(pendings)
         }
         
@@ -61,6 +64,8 @@ public class PRONotifications: NSObject {
         
     }
     
+
+    
     
     public class func createNotifications(for request: PrescribingResource_Protocol, callback: ((_ success: Bool) -> Void)?)  {
         
@@ -69,12 +74,8 @@ public class PRONotifications: NSObject {
             return
         }
         
-        currentCenter.requestAuthorization(options: options) { (success, error) in
-            if !success {
-                callback?(false)
-            }
-            else {
-                
+        requestAuthorization { (success) in
+            if success {
                 let content = UNMutableNotificationContent()
                 content.title = "Survey Session Due"
                 content.subtitle = request.pro_title!
@@ -90,51 +91,34 @@ public class PRONotifications: NSObject {
                     return UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
                 })
                 
-                
-                for nreq in notificationRequests {
-                    
-                    currentCenter.add(nreq, withCompletionHandler: { (error) in
+                notificationRequests.forEach({ (req) in
+                    UNUserNotificationCenter.current().add(req, withCompletionHandler: { (error) in
                         if let error = error { print(error as Any); callback?(false) }
                         callback?(true)
                     })
-                    
-                    
-                }
-            }
-        }
-                
-
-                /*
-                let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: date)
-                
-                
-                let date = Date(timeIntervalSinceNow: 10)
-                let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
-//                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-
-                
-                let identifier = requestId!
-                let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-                currentCenter.add(request, withCompletionHandler: { (error) in
-                    if let error = error {
-                        // Something went wrong
-                        callback?(false)
-                    }
-                    else {
-                        callback?(true)
-                    }
                 })
                 
-                callback?(true)
+                demoNotification(id: UUID().uuidString, content: content)
             }
- */
+        }
+    }
+    
+    
+    class func demoNotification(id: String, content: UNNotificationContent) {
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error) in
+            if let error = error { print(error as Any) }
+        })
+
+    }
+    
+    class func registerActionsForCategoryDuePRO() {
         
-        
-        
-        
-        
-        
-        
+        let startAction = UNNotificationAction(identifier: "START_SURVEY", title: "Start", options: [.foreground,.authenticationRequired])
+        let duePROCategory = UNNotificationCategory(identifier: kPRODueNotificationCategory, actions: [startAction], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "%u PRO is due now", options: .customDismissAction)
+        UNUserNotificationCenter.current().setNotificationCategories([duePROCategory])
         
         
     }
@@ -144,15 +128,13 @@ public class PRONotifications: NSObject {
 
 }
 
-extension PRONotifications : UNUserNotificationCenterDelegate {
+extension PRONotification : UNUserNotificationCenterDelegate {
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
-    }
-    
-    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         
+        completionHandler()
     }
     
 }

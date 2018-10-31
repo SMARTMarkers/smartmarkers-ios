@@ -125,7 +125,7 @@ open class PrescribingResource : PRBaseProtocol {
     public required init(_ pr: PrescriberType) {
         resource = pr
         schedule = pr.getSchedule()
-        PRONotifications.createNotifications(for: pr, callback: nil)
+        PRONotification.createNotifications(for: pr, callback: nil)
     }
     
     public func coding(for system: String) -> Coding? {
