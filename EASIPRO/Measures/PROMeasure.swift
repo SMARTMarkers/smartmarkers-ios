@@ -11,6 +11,8 @@ import SMART
 import ResearchKit
 
 
+
+
 public protocol PROMeasureProtocol : class {
     
     associatedtype PrescribingClassType : PRBaseProtocol
@@ -81,9 +83,11 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         self.init()
         self.orderedInstrument = _instrument
         //::: TODO- configure responses/measurements based on Instrument.code or Instrument.identifier
-
         if let questionnaire = _instrument?.instrument as? Questionnaire {
             responses = ResourceFetch(QuestionnaireResponse.self, param: ["questionnaire" : questionnaire.id!.string])
+        }
+        else {
+            responses = ResourceFetch(QuestionnaireResponse.self, param: nil)
         }
     }
     
@@ -146,7 +150,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
             callback(nil, nil)
             return
         }
-        instrument.instrument.rk_taskController(for: self) { (taskViewController, error) in
+        instrument.instrument.ip_taskController(for: self) { (taskViewController, error) in
             if let taskViewController = taskViewController {
                 taskViewController.delegate = self
                 callback(taskViewController, nil)
@@ -160,6 +164,8 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     // :::TODO: UpdatePrescriberStatus after the conclusion of a session
     public func updatePrescribingStatus() {
+        
+        
         
     }
     
@@ -176,7 +182,7 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             reason == .completed,
             let patient = patient,
             let server = client?.server,
-            let bundle = orderedInstrument?.instrument.rk_generateResponse(from: taskViewController.result, task: taskViewController.task!)
+            let bundle = orderedInstrument?.instrument.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!)
             else
         {
             print("error: One or All of: No-patient/No-server/No-bundle-to-write/NotCompleted")
@@ -190,7 +196,6 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
         do {
             let prescribingReference = try prescribingResource?.resource?.asRelativeReference()
             let patientReference = try patient.asRelativeReference()
-            
             for entry in bundle.entry! {
                 if let answers = entry.resource as? QuestionnaireResponse {
                     answers.subject = patientReference
@@ -216,17 +221,20 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             let headers = FHIRRequestHeaders([.prefer: "return=representation"])
             handler.add(headers: headers)
             server.performRequest(against: "//", handler: handler, callback: { (response ) in
-                if let response = response as? FHIRServerJSONResponse, let json = response.json , let rbundle = try? SMART.Bundle.init(json: json) {
-                    print(rbundle)
+                if let response = response as? FHIRServerJSONResponse, let json = response.json , let rbundle = try? SMART.Bundle(json: json) {
+
                     let observations = rbundle.entry?.filter{ $0.resource is Observation}.map{ $0.resource as! Observation}
                     if let observations = observations {
                         self.measurements?.add(resources: observations)
+                        self.measurements?._add(observations)
                     }
-                    
                     let answers = rbundle.entry?.filter{ $0.resource is QuestionnaireResponse}.map{ $0.resource as! QuestionnaireResponse}
                     if let answers = answers {
                         self.responses?.add(resources: answers)
+                        self.responses?._add(answers)
+                        
                     }
+                    
                     self.updatePrescribingStatus()
                 }
                 group.leave()
@@ -237,6 +245,7 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             print(error)
         }
         group.notify(queue: .main) {
+            
             self.taskDelegate?.sessionEnded(taskViewController, reason: reason, error: error)
             taskViewController.navigationController?.popViewController(animated: true)
         }
