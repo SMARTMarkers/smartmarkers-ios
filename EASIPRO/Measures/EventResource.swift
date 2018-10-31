@@ -32,7 +32,9 @@ public protocol ResourceFetchProtocol {
 open class ResourceFetch<T: DomainResource & SearchableResourceProtocol> : ResourceFetchProtocol {
     
     public var searchParams: [String : String]?
-    public var records: [Record]?
+    public var records : [Record]?
+    public var _records : Records<T>?
+    
     public var resourceType: T.Type
     
     public init(_ _type: T.Type, _ _code: String, _ _system: String) {
@@ -44,7 +46,13 @@ open class ResourceFetch<T: DomainResource & SearchableResourceProtocol> : Resou
         searchParams = param
     }
     
+    public func _add(_ resources: [T]) {
+        _records?.add(resources)
+    }
+
     public func add(resources: [T]) {
+        
+        if records == nil { records = [Record]() }
         records?.append(contentsOf: resources.map { $0.toRecord() })
     }
     
@@ -55,6 +63,7 @@ open class ResourceFetch<T: DomainResource & SearchableResourceProtocol> : Resou
             if let resources = resources {
                 let records = resources.map { $0.toRecord() }
                 self?.records = records
+                self?._records = Records(records: records)
                 callback?(records, nil)
             }
             else {
@@ -67,7 +76,26 @@ open class ResourceFetch<T: DomainResource & SearchableResourceProtocol> : Resou
     
 }
 
-
+public struct Records<T: DomainResource & SearchableResourceProtocol>{
+    
+    public var records: [Record]
+    
+    mutating func add(_ resource: T) {
+        records.append( resource.toRecord() )
+    }
+    
+    mutating func add(_ resources: [T]) {
+        records.append(contentsOf: resources.map{ $0.toRecord() })
+    }
+    
+    subscript(index: Int) -> Record? {
+        get {
+            return records[index]
+        }
+    }
+    
+    
+}
 
 
 public struct Record {
