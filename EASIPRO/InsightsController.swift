@@ -16,7 +16,7 @@ open class InsightsController: UITableViewController {
 	
 	override open func viewDidLoad() {
         super.viewDidLoad()
-		self.title = "PROM Insights"
+		self.title = "PRO Insights"
 		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(fetchObservations))
 		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done(_:)))
 		tableView.separatorStyle = .none
