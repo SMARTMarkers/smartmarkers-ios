@@ -8,6 +8,7 @@
 
 import Foundation
 import SMART
+import UserNotifications
 
 
 public enum UsageMode  {
@@ -31,6 +32,8 @@ public class SMARTManager : NSObject {
             }
         }
     }
+    
+    
 	
     
     public  internal(set) var patient : Patient? = nil {
@@ -77,6 +80,8 @@ public class SMARTManager : NSObject {
 						 "client_id"   : clientid,
 						 ]
 		client = SMARTManager.client(with: baseURL, settings: settings)
+
+        
     }
     
     public func resetClient() {
@@ -191,7 +196,7 @@ public class SMARTManager : NSObject {
 			callback(nil, nil)
 			return
 		}
-		search(type: Observation.self, params: ["category":"survey", "patient": patient.id!.string], callback: callback)
+		search(type: Observation.self, params: ["category" : "survey", "patient": patient.id!.string], callback: callback)
 	}
     
     public func search<T: DomainResource>(type domainResource: T.Type, params: [String: String], callback : @escaping (_ resources: [T]?, _ serror : Error?) -> Void) {
@@ -290,5 +295,10 @@ public class SMARTManager : NSObject {
     
 }
 
-
+extension SMARTManager  {
+    
+    public func didReceiveLocalNotification(notification: UNNotificationResponse) {
+        
+    }
+}
 
