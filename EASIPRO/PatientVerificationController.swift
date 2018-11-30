@@ -36,14 +36,12 @@ class PatientVerificationController: UIViewController {
         super.viewDidLoad()
 		view.backgroundColor = UIColor.white
 		configureView()
-		
-
     }
 	
 	func moveToPROMeasures() {
 		
 		//Verification is always assumed to be the topMost hence can be popped.
-		
+
         if let navigationController = self.navigationController, navigationController.topViewController == self {
 			navigationController.popViewController(animated: true)
 		}
@@ -53,13 +51,11 @@ class PatientVerificationController: UIViewController {
 		
 		if verify() == false {
 			let alert = UIAlertController(title: "Verification Failed", message: "Incorrect entry, please try again or talk to the practitioner", preferredStyle: .alert)
-			weak var weakalert = alert
-			alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 			alert.addAction(UIAlertAction(title: "DEMO:OVERRIDE", style: .destructive, handler: { [weak self] (_ ) in
 				self?.moveToPROMeasures()
 			}))
 			present(alert, animated: true)
-			return
 		}
 		else {
 			moveToPROMeasures()
@@ -80,7 +76,7 @@ class PatientVerificationController: UIViewController {
 	}
 	
 	func verify() -> Bool {
-		return datePicker.date.fhir_asDate() == patient.birthDate
+        return datePicker.date.fhir_asDate() == patient.birthDate
 	}
 	
 	
@@ -116,7 +112,6 @@ class PatientVerificationController: UIViewController {
 
 		cancelButton.addTarget(self, action: #selector(cancelVerification(_:)), for: .touchUpInside)
 
-		
 		
 		let titleLabel   = EPtitleLabel("Enter your birthday for Verification")
 		let subtitleLabel = EPtitleLabel(patient.ep_MRNumber())
