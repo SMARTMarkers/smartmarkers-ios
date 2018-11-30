@@ -11,7 +11,7 @@ import LocalAuthentication
 
 public class LocalAuth: NSObject {
     
-	public class func verifyDeviceUser(_ msg : String? = nil, _ callback: @escaping (_ successfulAuth: Bool, _ error: Error?) -> Void) {
+    public class func verifyDeviceUser(_ msg : String? = nil, _ callback: @escaping (_ successfulAuth: Bool, _ error: Error?) -> Void) {
         
         let context = LAContext()
         let verifyMsg = msg ?? "Practitioner: Authentication Required"
@@ -21,7 +21,8 @@ public class LocalAuth: NSObject {
                 
                 if success {
                     print("successful authentication")
-                    callback(true, nil)
+                    callback(true, error)
+                    
                 }
                 else       {
                     
@@ -38,7 +39,8 @@ public class LocalAuth: NSObject {
                         print("Authentication failed")
                     }
                     
-                    callback(false, nil)
+                    callback(false, error)
+                    
 
                 }
                 
@@ -47,7 +49,6 @@ public class LocalAuth: NSObject {
         else {
             
             callback(false, error)
-
 
         }
         
