@@ -41,6 +41,8 @@ public protocol PROMeasureProtocol : class {
 
 open class PROMeasure : NSObject, PROMeasureProtocol {
     
+    public var teststatus: String = "begin"
+    
     public weak var taskDelegate: SessionControllerTaskDelegate?
     
     public typealias EventClassType = EventResource
@@ -164,10 +166,10 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     // :::TODO: UpdatePrescriberStatus after the conclusion of a session
     public func updatePrescribingStatus() {
-        
-        
-        
+        self.teststatus = "complete"
     }
+    
+    
     
     
     
@@ -191,7 +193,6 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             return
         }
         
-        let group = DispatchGroup()
         
         do {
             let prescribingReference = try prescribingResource?.resource?.asRelativeReference()
@@ -217,43 +218,34 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             
             
             let handler = FHIRJSONRequestHandler(.POST, resource: bundle)
-            group.enter()
+            
             let headers = FHIRRequestHeaders([.prefer: "return=representation"])
             handler.add(headers: headers)
-            server.performRequest(against: "//", handler: handler, callback: { (response ) in
+            
+            let semaphore = DispatchSemaphore(value: 0)
+            server.performRequest(against: "//", handler: handler, callback: { [weak self] (response) in
                 if let response = response as? FHIRServerJSONResponse, let json = response.json , let rbundle = try? SMART.Bundle(json: json) {
-
                     let observations = rbundle.entry?.filter{ $0.resource is Observation}.map{ $0.resource as! Observation}
                     if let observations = observations {
-                        self.measurements?.add(resources: observations)
-                        self.measurements?._add(observations)
+                        self?.measurements?.add(resources: observations)
                     }
                     let answers = rbundle.entry?.filter{ $0.resource is QuestionnaireResponse}.map{ $0.resource as! QuestionnaireResponse}
                     if let answers = answers {
-                        self.responses?.add(resources: answers)
-                        self.responses?._add(answers)
-                        
+                        self?.responses?.add(resources: answers)
                     }
-                    
-                    self.updatePrescribingStatus()
+                    self?.updatePrescribingStatus()
                 }
-                group.leave()
+                semaphore.signal()
             })
-            
+            semaphore.wait()
         }
         catch {
             print(error)
         }
-        group.notify(queue: .main) {
-            
-            self.taskDelegate?.sessionEnded(taskViewController, reason: reason, error: error)
-            taskViewController.navigationController?.popViewController(animated: true)
-        }
         
         
-        
-        
-        
+        taskDelegate?.sessionEnded(taskViewController, reason: reason, error: error)
+        taskViewController.navigationController?.popViewController(animated: true)
     }
     
     public func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {
