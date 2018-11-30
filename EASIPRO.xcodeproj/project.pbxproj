@@ -16,6 +16,7 @@
 		D436B1D920EE880600CAF2F5 /* QuestionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D820EE880600CAF2F5 /* QuestionStep.swift */; };
 		D436B1DD20F17BE900CAF2F5 /* PROTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1DC20F17BE900CAF2F5 /* PROTask.swift */; };
 		D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */; };
+		D43E089821ADDD7000045680 /* works-with-smart-logo-768x514.png in Resources */ = {isa = PBXBuildFile; fileRef = D43E089721ADDD7000045680 /* works-with-smart-logo-768x514.png */; };
 		D44BD43E20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */; };
 		D451C37D20E463130018766F /* FHIRResourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D451C37C20E463130018766F /* FHIRResourceProtocol.swift */; };
 		D451C37F20E5ABCB0018766F /* PrescribingResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D451C37E20E5ABCB0018766F /* PrescribingResource.swift */; };
@@ -54,6 +55,7 @@
 		D436B1D820EE880600CAF2F5 /* QuestionStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionStep.swift; sourceTree = "<group>"; };
 		D436B1DC20F17BE900CAF2F5 /* PROTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROTask.swift; sourceTree = "<group>"; };
 		D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionNavigationController.swift; sourceTree = "<group>"; };
+		D43E089721ADDD7000045680 /* works-with-smart-logo-768x514.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "works-with-smart-logo-768x514.png"; sourceTree = "<group>"; };
 		D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuestionnaireResponse+ResearchKit.swift"; sourceTree = "<group>"; };
 		D451C37C20E463130018766F /* FHIRResourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRResourceProtocol.swift; sourceTree = "<group>"; };
 		D451C37E20E5ABCB0018766F /* PrescribingResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrescribingResource.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 		D4E75D762036062C000CE95A /* images */ = {
 			isa = PBXGroup;
 			children = (
+				D43E089721ADDD7000045680 /* works-with-smart-logo-768x514.png */,
 				D4E75D7720360649000CE95A /* smartlogo.png */,
 			);
 			path = images;
@@ -310,6 +313,7 @@
 				D465D5A4203DCB8E0057BD23 /* Installation.md in Resources */,
 				D4E75D7820360649000CE95A /* smartlogo.png in Resources */,
 				D4618A4E20616100004E117F /* Readme.md in Resources */,
+				D43E089821ADDD7000045680 /* works-with-smart-logo-768x514.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
