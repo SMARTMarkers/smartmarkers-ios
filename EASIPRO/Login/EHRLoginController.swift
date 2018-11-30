@@ -11,7 +11,7 @@ import Foundation
 // options
 let fhirserverbaseURL = ""
 let viewtitle = "PROF"
-let loginTitle = "LOGIN TO EHR"
+let loginTitle = "LOGIN"
 let hospitalName = 		"SMART Hospital"
 
 
@@ -88,8 +88,10 @@ open class EHRLoginController: UIViewController {
     
     
     class func smartLogo() -> UIImageView {
+        //works-with-smart-logo-768x514
+        //smartlogo
         let currentBundle = Bundle(for: EHRLoginController.self)
-        let imgPath = currentBundle.path(forResource: "smartlogo", ofType: "png")
+        let imgPath = currentBundle.path(forResource: "works-with-smart-logo-768x514", ofType: "png")
         let img = UIImage(contentsOfFile: imgPath!)
         let imgView = UIImageView.init(image: img)
         imgView.frame = CGRect(x: 0, y: 0, width: 150, height: 100)
@@ -113,7 +115,7 @@ open class EHRLoginController: UIViewController {
     class func titleLabel() -> UILabel {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
         titleLabel.font = UIFont.boldSystemFont(ofSize: 30)
-        titleLabel.text = viewtitle
+        titleLabel.text =  Bundle.main.object(forInfoDictionaryKey: "SM_APP_TITLE") as? String
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.adjustsFontSizeToFitWidth = true
