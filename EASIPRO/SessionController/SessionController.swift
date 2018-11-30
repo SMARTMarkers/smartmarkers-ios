@@ -107,7 +107,7 @@ open class SessionController: NSObject, SessionProtocol {
             views.insert(verifyController, at: 0)
         }
 		let sessionNC = SessionNavigationController(views: views, reversed: true)
-		sessionNC.shouldVerifyAfter = practitionerContext
+        sessionNC.shouldVerifyAfter = practitionerContext
 		return sessionNC
 	}
 }

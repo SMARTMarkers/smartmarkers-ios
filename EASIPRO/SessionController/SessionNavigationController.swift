@@ -21,28 +21,37 @@ open class SessionNavigationController: UINavigationController, UINavigationCont
     
     open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         
-        if viewControllers.count < 2 && shouldVerifyAfter {
-            dismissWithDeviceLock()
+        if viewControllers.count <= 1 && shouldVerifyAfter {
+            dismissWithDeviceLock(animated: flag)
         }
         else {
             super.dismiss(animated: flag, completion: completion)
         }
     }
     
+    
     open override func popViewController(animated: Bool) -> UIViewController? {
-        
-        if viewControllers.count < 2 {
-            if shouldVerifyAfter { dismissWithDeviceLock() }
-            else { dismiss(animated: true, completion: nil) }
+
+        if viewControllers.count <= 1 {
+            if shouldVerifyAfter {
+                dismissWithDeviceLock(animated: animated)
+            }
+            else {
+                super.dismiss(animated: animated, completion: nil)
+            }
+            return nil
         }
-        
-        return super.popViewController(animated: true)
+        else {
+            return super.popViewController(animated: animated)
+        }
     }
     
-    func dismissWithDeviceLock() {
+    func dismissWithDeviceLock(animated: Bool) {
         LocalAuth.verifyDeviceUser("Practitioner Verification Required\nPlease Handover device to Practitioner.\n") { [weak self] (success, error) in
             if success {
-                self?.superDismiss(animated: true)
+                DispatchQueue.main.async {
+                        self?.superDismiss(animated: animated)
+                }
             }
         }
     }
