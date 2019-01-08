@@ -85,8 +85,25 @@ extension ORKQuestionResult {
             return slf.sm_TextItemAnswer()
         }
         
+        //Integer
+        if let slf = self as? ORKNumericQuestionResult {
+            return slf.sm_IntegerItemAnswer()
+        }
+        
         
         return nil
+    }
+}
+
+extension ORKNumericQuestionResult {
+    
+    func sm_IntegerItemAnswer() -> [QuestionnaireResponseItemAnswer]? {
+        guard let numericAnswer = numericAnswer else {
+            return nil
+        }
+        let answer = QuestionnaireResponseItemAnswer()
+        answer.valueInteger = FHIRInteger(integerLiteral: numericAnswer.intValue)
+        return [answer]
     }
 }
 

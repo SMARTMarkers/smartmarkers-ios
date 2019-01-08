@@ -171,7 +171,7 @@ extension QuestionnaireItem {
                     nsteps.append(step)
                     break
                     
-                case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string:
+                case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string, .integer:
                     let step = ORKQuestionStep(identifier: self.rk_Identifier(), title: self.rk_text(), text: nil, answer: answerFormat)
                     nsteps.append(step)
                     break
@@ -277,12 +277,16 @@ extension QuestionnaireItem {
         
         switch type {
         case .display:   callback(nil, nil)
-        case .boolean:   callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
-        case .date:      callback(ORKAnswerFormat.dateAnswerFormat(), nil)
+        case .boolean:
+            callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
+        case .date:
+            callback(ORKAnswerFormat.dateAnswerFormat(), nil)
         case .dateTime:  callback(ORKAnswerFormat.dateTime(), nil)
         case .time:      callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
         case .string:    callback(ORKAnswerFormat.textAnswerFormat(), nil)
         case .url:       callback(ORKAnswerFormat.textAnswerFormat(), nil)
+        case .integer:
+            callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
         case .choice:
             if let answerValueSet = options {
                 let style : ORKChoiceAnswerStyle = (repeats?.bool ?? false) ? .multipleChoice : .singleChoice

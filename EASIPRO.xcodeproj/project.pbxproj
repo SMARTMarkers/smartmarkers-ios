@@ -27,6 +27,7 @@
 		D4618A4E20616100004E117F /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = D4618A4D206160FF004E117F /* Readme.md */; };
 		D465D5A4203DCB8E0057BD23 /* Installation.md in Resources */ = {isa = PBXBuildFile; fileRef = D465D5A3203DCB8E0057BD23 /* Installation.md */; };
 		D468AAF621188EFF00AE942F /* FHIRDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */; };
+		D482BA6321C953F800840D2E /* AQServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D482BA6221C953F800840D2E /* AQServer.swift */; };
 		D4C2B2AE208FA55E00262B14 /* InsightsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C2B2AD208FA55E00262B14 /* InsightsController.swift */; };
 		D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C2B2AF208FA59800262B14 /* LineGraphView.swift */; };
 		D4CBBFEA203F72B7002B6AC9 /* QuestionnaireViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */; };
@@ -43,6 +44,7 @@
 		D4E75D8120361EE5000CE95A /* PatientsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D8020361EE5000CE95A /* PatientsViewController.swift */; };
 		D4E75D8520363C0E000CE95A /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D8420363C0E000CE95A /* SessionController.swift */; };
 		D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F0A578209A3CE200481868 /* LineChartView.swift */; };
+		D4FEBDB321DFD50D0057C77D /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEBDB221DFD50D0057C77D /* Common.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +68,7 @@
 		D4618A4D206160FF004E117F /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		D465D5A3203DCB8E0057BD23 /* Installation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Installation.md; sourceTree = "<group>"; };
 		D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRDefinitions.swift; sourceTree = "<group>"; };
+		D482BA6221C953F800840D2E /* AQServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AQServer.swift; sourceTree = "<group>"; };
 		D4C2B2AD208FA55E00262B14 /* InsightsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsController.swift; sourceTree = "<group>"; };
 		D4C2B2AF208FA59800262B14 /* LineGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGraphView.swift; sourceTree = "<group>"; };
 		D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireViewController.swift; sourceTree = "<group>"; };
@@ -84,6 +87,7 @@
 		D4E75D8020361EE5000CE95A /* PatientsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientsViewController.swift; sourceTree = "<group>"; };
 		D4E75D8420363C0E000CE95A /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
 		D4F0A578209A3CE200481868 /* LineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
+		D4FEBDB221DFD50D0057C77D /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +113,7 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
-		D436B1D520EBF89E00CAF2F5 /* QuestionnaireItem */ = {
+		D436B1D520EBF89E00CAF2F5 /* Questionnaire */ = {
 			isa = PBXGroup;
 			children = (
 				D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */,
@@ -117,7 +121,15 @@
 				D436B1DC20F17BE900CAF2F5 /* PROTask.swift */,
 				D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */,
 			);
-			path = QuestionnaireItem;
+			path = Questionnaire;
+			sourceTree = "<group>";
+		};
+		D482BA6121C953AE00840D2E /* AdaptiveQuestionnaire */ = {
+			isa = PBXGroup;
+			children = (
+				D482BA6221C953F800840D2E /* AQServer.swift */,
+			);
+			path = AdaptiveQuestionnaire;
 			sourceTree = "<group>";
 		};
 		D4CBC0062045ACC6002B6AC9 /* FHIR */ = {
@@ -160,8 +172,9 @@
 		D4E75D5F2035E73E000CE95A /* EASIPRO */ = {
 			isa = PBXGroup;
 			children = (
+				D482BA6121C953AE00840D2E /* AdaptiveQuestionnaire */,
 				D40A121A21627D95002F9F53 /* Classes */,
-				D436B1D520EBF89E00CAF2F5 /* QuestionnaireItem */,
+				D436B1D520EBF89E00CAF2F5 /* Questionnaire */,
 				D4CBC0062045ACC6002B6AC9 /* FHIR */,
 				D4E75D8320363BFF000CE95A /* SessionController */,
 				D4E75D7F20361EC2000CE95A /* ListPatients */,
@@ -176,6 +189,7 @@
 				D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */,
 				D4618A43205ED820004E117F /* PatientVerificationController.swift */,
 				D4C2B2AD208FA55E00262B14 /* InsightsController.swift */,
+				D4FEBDB221DFD50D0057C77D /* Common.swift */,
 			);
 			path = EASIPRO;
 			sourceTree = "<group>";
@@ -347,10 +361,12 @@
 				D436B1D920EE880600CAF2F5 /* QuestionStep.swift in Sources */,
 				D451C38520E94DE30018766F /* EventResource.swift in Sources */,
 				D4E75D732035E7AA000CE95A /* EHRLoginController.swift in Sources */,
+				D482BA6321C953F800840D2E /* AQServer.swift in Sources */,
 				D40B19CD20989BA800C18C23 /* Schedule+FHIR.swift in Sources */,
 				D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */,
 				D468AAF621188EFF00AE942F /* FHIRDefinitions.swift in Sources */,
 				D40B19CB20989B9000C18C23 /* Schedule.swift in Sources */,
+				D4FEBDB321DFD50D0057C77D /* Common.swift in Sources */,
 				D42605CE209364FE00853609 /* RoundedButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

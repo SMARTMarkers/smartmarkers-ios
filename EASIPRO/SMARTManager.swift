@@ -184,7 +184,10 @@ public class SMARTManager : NSObject {
     }
     
     public func getQuestionnaires(callback: @escaping(_ questionnaires: [Questionnaire]?, _ error: Error?) -> Void) {
+//        search(type: Questionnaire.self, params: ["_id":"218164"], callback: callback)
         search(type: Questionnaire.self, params: [:], callback: callback)
+
+        
     }
 	
 
