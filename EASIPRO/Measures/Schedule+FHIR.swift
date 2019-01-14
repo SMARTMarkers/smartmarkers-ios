@@ -12,32 +12,32 @@ import SMART
 extension Schedule {
 	
     
-    init?(prescribing resource: ProcedureRequest) {
-        if let occuranceDate = resource.ep_dateTime {
-            self.init(dueDate: occuranceDate)
-        }
-        else if let (start, end, fValue, fUnit) = resource.ep_period_frequency {
-            let period = PeriodBound(start, end)
-            let frequency = Frequency(value: fValue, unit: fUnit)
-            self.init(period: period, freq: frequency)
-        }
-        else { return nil }
-    }
+//    init?(prescribing resource: ProcedureRequest) {
+//        if let occuranceDate = resource.ep_dateTime {
+//            self.init(dueDate: occuranceDate)
+//        }
+//        else if let (start, end, fValue, fUnit) = resource.ep_period_frequency {
+//            let period = PeriodBound(start, end)
+//            let frequency = Frequency(value: fValue, unit: fUnit)
+//            self.init(period: period, freq: frequency)
+//        }
+//        else { return nil }
+//    }
     
     
-	static func initialise(prescribing resource: ProcedureRequest) -> Schedule? {
-		if let occuranceDate = resource.ep_dateTime {
-			return Schedule.init(dueDate: occuranceDate)
-		}
-		else if let (start, end, fValue, fUnit) = resource.ep_period_frequency {
-			let period = PeriodBound(start, end)
-			let frequency = Frequency(value: fValue, unit: fUnit)
-			let schedule = Schedule(period: period, freq: frequency)
-			return schedule
-		}
-		return nil
-	}
-	
+//    static func initialise(prescribing resource: ProcedureRequest) -> Schedule? {
+//        if let occuranceDate = resource.ep_dateTime {
+//            return Schedule.init(dueDate: occuranceDate)
+//        }
+//        else if let (start, end, fValue, fUnit) = resource.ep_period_frequency {
+//            let period = PeriodBound(start, end)
+//            let frequency = Frequency(value: fValue, unit: fUnit)
+//            let schedule = Schedule(period: period, freq: frequency)
+//            return schedule
+//        }
+//        return nil
+//    }
+//    
     
     
     

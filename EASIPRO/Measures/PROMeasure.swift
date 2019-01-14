@@ -27,11 +27,11 @@ public protocol PROMeasureProtocol : class {
     
     var orderedInstrument : InstrumentClassType? { get set }
     
-    var client: Client? { get }
+    var server: Server? { get }
     
     var patient: Patient? { get set }
     
-    func fetchAll(callback : ((_ success: Bool) -> Void)?)
+    func fetchAll(callback : ((_ success: Bool, _ error: Error?) -> Void)?)
     
     var taskDelegate: SessionControllerTaskDelegate? { get set }
     
@@ -61,7 +61,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     open var orderedInstrument : InstrumentClassType?
     
-    public weak var client: Client? = SMARTManager.shared.client
+    public weak var server: Server? = SMARTManager.shared.client.server
     
     public convenience init(_ _prescriberResource: PrescribingResource?) {
         self.init()
@@ -104,25 +104,25 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
                 callback(measures, nil)
             }
             else {
-                print(error as Any)
+                
                 callback(nil, error)
             }
         }
     }
     
-    public func fetchAll(callback : ((_ success: Bool) -> Void)?) {
+    public func fetchAll(callback : ((_ success: Bool, _ error: Error?) -> Void)?) {
         
-        guard let srv = client?.server else {
-            print("no server")
-            callback?(false)
+        guard let srv = server else {
+            callback?(false, SMError.promeasureServerNotSet)
             return
         }
         
         let group = DispatchGroup()
-        
+        var errorInFetch = false
         if let measurements = measurements {
             group.enter()
-            measurements.getEvents(server: srv, callback: { (records, _) in
+            measurements.getEvents(server: srv, callback: { (records, error) in
+                errorInFetch = (error != nil)
                 if let records = records {
                     self.prescribingResource?.schedule?.update(with: records.map{$0.date})
                 }
@@ -133,13 +133,14 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         
         if let pastResponses = responses {
             group.enter()
-            pastResponses.getEvents(server: srv) { (_, _) in
+            pastResponses.getEvents(server: srv) { (_, error) in
+                errorInFetch = (error != nil)
                 group.leave()
             }
         }
         
         group.notify(queue: .global()) {
-            callback?(true)
+            callback?(true, (errorInFetch) ? SMError.promeasureFetchLinkedResources : nil)
         }
         
     }
@@ -148,19 +149,12 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     public func prepareSession(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         guard let instrument = orderedInstrument else {
-            print("error:Instrument not identified")
-            callback(nil, nil)
+            callback(nil, SMError.promeasureOrderedInstrumentMissing)
             return
         }
-        instrument.instrument.ip_taskController(for: self) { (taskViewController, error) in
-            if let taskViewController = taskViewController {
-                taskViewController.delegate = self
-                callback(taskViewController, nil)
-            }
-            else {
-                print("error:")
-                callback(nil, nil)
-            }
+        instrument.taskController(for: self) { (taskViewController, error) in
+            taskViewController?.delegate = self
+            callback(taskViewController, error)
         }
     }
     
@@ -178,23 +172,27 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
 
 extension PROMeasure : ORKTaskViewControllerDelegate {
     
-    public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+    public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error serror: Error?) {
+        
+
         
         guard
             reason == .completed,
             let patient = patient,
-            let server = client?.server,
-            let bundle = orderedInstrument?.instrument.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!)
+            let server = server
             else
         {
-            print("error: One or All of: No-patient/No-server/No-bundle-to-write/NotCompleted")
-            self.taskDelegate?.sessionEnded(taskViewController, reason: reason, error: error)
+            print("error: One or All of: No-patient/No-server/NotCompleted")
+            self.taskDelegate?.sessionEnded(taskViewController, reason: reason, error: serror)
             taskViewController.navigationController?.popViewController(animated: true)
             return
         }
         
         
+        var zerror = serror
+
         do {
+            let bundle = try orderedInstrument!.generateResponse(from: taskViewController.result, task: taskViewController.task!)
             let prescribingReference = try prescribingResource?.resource?.asRelativeReference()
             let patientReference = try patient.asRelativeReference()
             for entry in bundle.entry! {
@@ -218,7 +216,6 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             
             
             let handler = FHIRJSONRequestHandler(.POST, resource: bundle)
-            
             let headers = FHIRRequestHeaders([.prefer: "return=representation"])
             handler.add(headers: headers)
             
@@ -240,11 +237,10 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             semaphore.wait()
         }
         catch {
-            print(error)
+            zerror = error
         }
         
-        
-        taskDelegate?.sessionEnded(taskViewController, reason: reason, error: error)
+        taskDelegate?.sessionEnded(taskViewController, reason: reason, error: zerror)
         taskViewController.navigationController?.popViewController(animated: true)
     }
     
@@ -269,372 +265,3 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
     
     
 }
-
-// LEGACY REFERENCE
-
-/*
-public enum PROMeasureStatus {
-	case completed
-	case aborted
-	case cancelled
-	case active
-	case unknown
-}
-
-public enum PROSessionStatus : String {
-    case upcoming               = "UPCOMING"
-    case due                    = "DUE TODAY"
-    case planConcluded          = "CONCLUDED"
-    case completedCurrent       = "COMPLETED CURRENT SLOT"
-    case unknown                = "UNKNOWN"
-}
-
-*/
-/*
-public protocol PROMResourceProtocol {
-    
-    associatedtype T = Self
-    
-    static func Create(for patient: Patient, callback: @escaping (_ resource: [T]?, _ error: Error?) -> Void)
-}
-
-
-public protocol PROMProtocol {
-	
-	associatedtype PrescribingResourceType
-	
-	associatedtype MeasurementResourceType
-	
-	var prescribingResource : PrescribingResourceType? { get set }
-	
-	var measure: AnyObject? { get set }
-	
-	var measureStatus: PROMeasureStatus { get set }
-	
-	var results : [MeasurementResourceType]? { get set }
-	
-	var title : String { get set }
-	
-	var identifier : String { get set }
-    
-    var sessionStatus: PROSessionStatus { get set }
-	
-    
-	static func FetchPrescribingResources(for patient: Patient, callback: @escaping (_ resource: [Self]?, _ error: Error?) -> Void)
-    
-	
-	func fetchMeasurementResources(callback: ((_ success: Bool) -> Void)?)
-	
-	func status(of prescriber: PrescribingResourceType) -> PROMeasureStatus
-}
-
-
-
-
-public final class PROMeasure2 : PROMProtocol {
-	
-	public typealias MeasurementResource = Observation
-	
-	public typealias PrescribingResource = ProcedureRequest
-
-	public var prescribingResource: ProcedureRequest? {
-		didSet {
-			if let pr = prescribingResource {
-				self.schedule = Schedule.initialise(prescribing: pr)
-				self.measureStatus   = status(of: pr)
-				// todo: in appropriate use of status
-				filterObservations()
-                assignInstrumentCode()
-			}
-		}
-	}
-    
-    func assignInstrumentCode() {
-        
-    }
-    
-    public var prescriber : String? {
-        get {
-            return (prescribingResource?.requester?.agent?.display?.string.uppercased())
-        }
-    }
-	
-	public var measure: AnyObject?
-	
-	public var measureStatus: PROMeasureStatus = .unknown
-    
-    public var sessionStatus: PROSessionStatus = .unknown
-    
-    public var scores : [Double]?
-	
-	public var results: [Observation]? {
-        didSet {
-            results = results?.sorted { $0.effectiveDateTime!.nsDate < $1.effectiveDateTime!.nsDate }
-            filterObservations()
-        }
-	}
-	
-	public var title: String
-	
-	public var identifier: String
-	
-	public var schedule: Schedule?
-	
-	public init(title: String, identifier: String) {
-		self.title = title
-		self.identifier = identifier
-	}
-    
-    public static func FetchPrescribingResources(for patient: Patient, smartManager: SMARTManager, callback: @escaping (_ measures: [PROMeasure2]?, _ error: Error?) -> Void) {
-        //todo: expand search params to get survey category, promis identifiers etc..
-        let searchParams = ["patient" : patient.id!.string]
-        smartManager.search(type: ProcedureRequest.self, params: searchParams) { (resources, error) in
-            if nil != error {
-                print(error.debugDescription)
-                callback(nil, error)
-            }
-            if let resources = resources {
-                let promeasures = resources.map({ (procedureRequest) -> PROMeasure2 in
-                    let title = procedureRequest.ep_titleCode ?? procedureRequest.ep_titleCategory ?? procedureRequest.id!.string
-                    // Every PROMeasure = ProcedureRequest
-                    let identifier = procedureRequest.id!.string
-                    // TODO: standardize measureIdentifier
-                    let prom = PROMeasure2(title: title, identifier: identifier)
-                    prom.prescribingResource = procedureRequest
-                    return prom
-                })
-                callback(promeasures, nil)
-            }
-            else {
-                callback(nil, nil)
-            }
-            
-        }
-    }
-	
-	
-
-	public static func FetchPrescribingResources(for patient: Patient, callback: @escaping (_ resource: [PROMeasure2]?, _ error: Error?) -> Void) {
-        FetchPrescribingResources(for: patient, smartManager: SMARTManager.shared, callback: callback)
-		
-	}
-
-
-	
-	
-	public func fetchMeasurementResources(callback:  ((Bool) -> Void)?) {
-
-		guard let patient = SMARTManager.shared.patient, let pr = prescribingResource else {
-			callback?(false)
-			return
-		}
-		let param = ["patient" : patient.id!.string,
-					 "based-on": pr.id!.string]
-		SMARTManager.shared.search(type: Observation.self, params: param) { [weak self] (observations, error) in
-			if nil != error {
-				callback?(false)
-			}
-			self?.results = observations
-			callback?(self?.results != nil)
-			
-		}
-	}
-	
-	public func status(of prescriber: ProcedureRequest) -> PROMeasureStatus {
-		
-		guard let pstatus = prescriber.status else {
-			return .unknown
-		}
-		switch pstatus {
-			case .completed:
-				return .completed
-			case .cancelled:
-				return .cancelled
-			case .active:
-				return .active
-			default:
-				return .unknown
-		}
-		
-
-	}
-    
-    
-    func filterObservations() {
-        if let res = results {
-            scores = res.map { Double($0.valueString!.string)! }
-        }
-        
-        // if Scheduled, then check slots
-        // TODO: associate results with slotIntervals
-        // Each slot --->> [Observations]
-        if let _ = schedule?.slots {
-            
-            
-            
-            
-            
-            
-        }
-        
-        if measureStatus == .completed || measureStatus == .aborted {
-            sessionStatus = .planConcluded
-        } else if measureStatus == .active {
-            // Compare Observations and things here:
-            // Check if Current Slot is due
-            let hasNext     = schedule?.nextSlot != nil
-            let dueToday    = schedule?.currentSlot != nil
-            let latestScore = results?.last?.effectiveDateTime?.nsDate
-			
-            
-            if !dueToday && !hasNext { sessionStatus = .planConcluded }
-
-            else if dueToday {
-                if latestScore == nil { sessionStatus = .due }
-				// TODO: add Frequency Matching.
-				
-                if let latestScore = latestScore, schedule!.currentSlot!.period.contains(latestScore) {
-                    sessionStatus = (hasNext) ? .completedCurrent : .planConcluded
-                } else {
-                    sessionStatus = .due
-                }
-            }
-            else if hasNext { sessionStatus = .upcoming }
-            
-            
-            
-            
-        } else { sessionStatus = .unknown }
-        
-    }
-	
-	public static func Classify(proms: [PROMeasure2]?) -> [[String:Any]]? {
-		
-		var data = [[String:Any]]()
-
-		if let dues = proms?.filter({ $0.sessionStatus ==  .due}), dues.count > 0 {
-			data.append(["status" : "due", "data" : dues])
-		}
-		if let upcoming = proms?.filter({ $0.sessionStatus == .upcoming || $0.sessionStatus == .completedCurrent }), upcoming.count > 0 {
-			data.append(["status" : "Upcoming", "data" : upcoming])
-		}
-		if let completed = proms?.filter({ $0.sessionStatus == .planConcluded }), completed.count > 0 {
-			data.append(["status" : "Completed", "data" : completed])
-		}
-		
-		return data
-		
-	}
-
-}
-
-extension PROMeasure2 : Equatable {
-    
-    public static func ==(lhs: PROMeasure2, rhs: PROMeasure2) -> Bool {
-        return (lhs.identifier == rhs.identifier)
-    }
-}
-
-
-public protocol PROPrescriberResourceProtocol {
-    
-    associatedtype PrescribingResourceType
-    
-    associatedtype MeasurementResourceType
-    
-    associatedtype EventResourceType
-    
-    var prescribingResource: PrescribingResourceType? { get set }
-    
-    var measurementResources : [MeasurementResourceType]? { get set }
-    
-    var eventResources : [EventResourceType]? { get set }
-    
-    var smartManager : SMARTManager { get }
-    
-    var prescriber : String? { get }
-    
-    
-    init(pr: PrescribingResourceType)
-    
-}
-
-
-
-
-
-extension PROPrescriberResourceProtocol where MeasurementResourceType : DomainResource, PrescribingResourceType : DomainResource {
-    
-    
-    public func fetchObservations(callback: ((Bool) -> Void)? = nil) {
-        guard let p = smartManager.patient, let pr = prescribingResource else {
-            return
-        }
-        var ss  = self
-        
-        let param = ["patient" : p.id!.string,
-                     "based-on": pr.id!.string]
-        
-        let  search = MeasurementResourceType.search(param)
-        search.perform(smartManager.client.server, callback: {  (bundle, ferror) in
-            if let bundle = bundle {
-                let resources = bundle.entry?.filter { $0.resource is MeasurementResourceType}.map { $0.resource as! MeasurementResourceType }
-                ss.measurementResources = resources
-                callback?(ss.measurementResources != nil)
-            }
-        })
-    }
-}
-
-extension PROPrescriberResourceProtocol where PrescribingResourceType : DomainResource {
-    
-    public static func CreateFromResource(for patient: Patient, params: [String: String]? = nil, client: SMART.Client, callback: @escaping (_ resource: [Self]?, _ error : Error?) -> Void) {
-        client.ready { (error) in
-            if nil != error {
-                callback(nil, error)
-                return
-            }
-            let params = ["patient" : patient.id!.string]
-            let search = PrescribingResourceType.search(params)
-            search.perform(client.server, callback: { (bundle, ferror) in
-                if let bundle = bundle {
-                    let resources = bundle.entry?.filter { $0.resource is PrescribingResourceType}.map { Self.init(pr: $0.resource as! PrescribingResourceType) }
-                    callback(resources, nil)
-                }
-                else {
-                    callback(nil, ferror)
-                }
-            })
-        }
-    }
-}
-
-public class PROMeasureBase : Equatable {
-    
-    public var title: String
-    
-    public var identifier: String
-    
-    required public init(title: String, identifier: String) {
-        self.title = title
-        self.identifier = identifier
-    }
-    
-    public var schedule: Schedule?
-    
-    
-    public var status : SlotStatus? {
-        get {
-            return schedule?.status
-        }
-    }
-    
-    public var scores : [Double]?
-    
-    
-    
-    public static func == (lhs: PROMeasureBase, rhs: PROMeasureBase) -> Bool {
-        return (lhs.identifier == rhs.identifier)
-    }
-}
-*/

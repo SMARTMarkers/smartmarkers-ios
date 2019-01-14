@@ -290,7 +290,7 @@ import UIKit
     
     func lineLayers(_ from: CGPoint, _ to: CGPoint) -> CALayer {
         
-        print(to)
+
         let layer = CAShapeLayer()
         var p = to
         p.x -= Constants.circleDiameter / 2
@@ -372,7 +372,7 @@ import UIKit
         }
     }
     private func translateHeightValueToYPosition(value: Float) -> CGFloat {
-        print(mainLayer.frame)
+
         let height: CGFloat =
             CGFloat(value) * (mainLayer.frame.height -  (Constants.bottomBorder + Constants.topBorder))
         return mainLayer.frame.height - (Constants.bottomBorder) - height

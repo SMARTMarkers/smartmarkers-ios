@@ -23,7 +23,6 @@ extension Questionnaire : InstrumentProtocol {
     
     
     public func ip_navigableRules(for steps: [ORKStep]?, callback: (([ORKStepNavigationRule]?, Error?) -> Void)) {
-        
         callback(nil, nil)
     }
     
@@ -178,7 +177,7 @@ extension QuestionnaireItem {
                     
                 case .group:
                     if let subItems = self.item {
-                        print("has Group and Items")
+                        print("case:.group, steps present")
                         for subitem in subItems {
                             subitem.generateSteps(callback: { (steps, rules, err ) in
                                 if let error = error {
@@ -236,6 +235,7 @@ extension QuestionnaireItem {
     }
     
     
+    /*
     public func rule() -> ORKStepNavigationRule? {
         
         guard let conditions = enableWhen else {
@@ -247,7 +247,7 @@ extension QuestionnaireItem {
         let predicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: true)
         let rule = ORKPredicateStepNavigationRule(resultPredicatesAndDestinationStepIdentifiers: [(predicate, rk_Identifier())])
         return rule
-    }
+    }*/
     
     
     public func rk_text() -> String? {
@@ -270,12 +270,13 @@ extension QuestionnaireItem {
     public func rk_answerFormat(callback: @escaping (_ anser: ORKAnswerFormat?, _ error :Error?) -> Void) {
         
         guard let type = type else {
-            print("item type missing")
-            callback(nil, nil)
+            callback(nil, SMError.instrumentQuestionnaireTypeMissing(linkId: linkId!.string))
             return
         }
         
         switch type {
+        case .group:
+            callback(nil, nil)
         case .display:   callback(nil, nil)
         case .boolean:
             callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
@@ -307,8 +308,8 @@ extension QuestionnaireItem {
                 callback (nil, nil)
             }
         default:
-            print("could not deduce Answer type")
-            callback(nil, nil)
+            callback(nil, SMError.instrumentCannotHandleQuestionnaireType(linkId: linkId!.string))
+            
         }
     }
     
@@ -368,7 +369,6 @@ extension ValueSet {
                     choices.append(answerChoice)
                 })
             }
-            
         }
         
         if choices.count > 0 {

@@ -56,7 +56,7 @@ open class SessionNavigationController: UINavigationController, UINavigationCont
         }
     }
     
-    convenience init(views: [UIViewController], reversed: Bool = false) {
+    convenience init(views: [UIViewController], reversed: Bool = false, shouldVerify: Bool = false) {
         self.init()
         setViewControllers( reversed ? views.reversed() : views, animated: false)
         setNavigationBarHidden(true, animated: false)

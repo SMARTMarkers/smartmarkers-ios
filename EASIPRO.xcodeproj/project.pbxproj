@@ -45,6 +45,8 @@
 		D4E75D8520363C0E000CE95A /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D8420363C0E000CE95A /* SessionController.swift */; };
 		D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F0A578209A3CE200481868 /* LineChartView.swift */; };
 		D4FEBDB321DFD50D0057C77D /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEBDB221DFD50D0057C77D /* Common.swift */; };
+		D4FEBDB821E64A610057C77D /* SMError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEBDB721E64A610057C77D /* SMError.swift */; };
+		D4FEBDBA21E7B3EA0057C77D /* RequestProtocol+ProcedureRequest_R3.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEBDB921E7B3EA0057C77D /* RequestProtocol+ProcedureRequest_R3.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +90,8 @@
 		D4E75D8420363C0E000CE95A /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
 		D4F0A578209A3CE200481868 /* LineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
 		D4FEBDB221DFD50D0057C77D /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		D4FEBDB721E64A610057C77D /* SMError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMError.swift; sourceTree = "<group>"; };
+		D4FEBDB921E7B3EA0057C77D /* RequestProtocol+ProcedureRequest_R3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestProtocol+ProcedureRequest_R3.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +194,7 @@
 				D4618A43205ED820004E117F /* PatientVerificationController.swift */,
 				D4C2B2AD208FA55E00262B14 /* InsightsController.swift */,
 				D4FEBDB221DFD50D0057C77D /* Common.swift */,
+				D4FEBDB721E64A610057C77D /* SMError.swift */,
 			);
 			path = EASIPRO;
 			sourceTree = "<group>";
@@ -233,6 +238,7 @@
 				D451C38220E5DE0B0018766F /* InstrumentResource.swift */,
 				D451C38420E94DE30018766F /* EventResource.swift */,
 				D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */,
+				D4FEBDB921E7B3EA0057C77D /* RequestProtocol+ProcedureRequest_R3.swift */,
 			);
 			path = Measures;
 			sourceTree = "<group>";
@@ -342,6 +348,7 @@
 				D436B1D720EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift in Sources */,
 				D4CBBFEA203F72B7002B6AC9 /* QuestionnaireViewController.swift in Sources */,
 				D44BD43E20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift in Sources */,
+				D4FEBDBA21E7B3EA0057C77D /* RequestProtocol+ProcedureRequest_R3.swift in Sources */,
 				D4E75D8120361EE5000CE95A /* PatientsViewController.swift in Sources */,
 				D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */,
 				D451C37F20E5ABCB0018766F /* PrescribingResource.swift in Sources */,
@@ -354,6 +361,7 @@
 				D4618A44205ED820004E117F /* PatientVerificationController.swift in Sources */,
 				D40B19CF2098A3CF00C18C23 /* SMARTManager+Config.swift in Sources */,
 				D451C38320E5DE0B0018766F /* InstrumentResource.swift in Sources */,
+				D4FEBDB821E64A610057C77D /* SMError.swift in Sources */,
 				D451C37D20E463130018766F /* FHIRResourceProtocol.swift in Sources */,
 				D4618A46205F07EC004E117F /* LocalAuth.swift in Sources */,
 				D4CFF03C203C7F9D00A6FB31 /* SMARTManager.swift in Sources */,

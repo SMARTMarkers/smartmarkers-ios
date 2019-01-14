@@ -40,8 +40,10 @@ public protocol InstrumentProtocol : class {
     
     func ip_navigableRules(for steps:[ORKStep]?, callback: ((_ rules: [ORKStepNavigationRule]?, _ error: Error?) -> Void))
     
+    /// Protocol Func to generate ResearchKit's `ORKTaskViewController`
     func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
-        
+    
+    /// Protocol Func to generate a FHIR `Bundle` of result resources. eg. QuestionnaireResponse, Observation
     func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle?
     
 }
@@ -72,6 +74,30 @@ open class InstrumentResource : InstrumentResourceProtocol {
     public required init(_ _instrument: InstrumentProtocol) {
         instrument = _instrument
     }
+    
+    public func taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        instrument.ip_taskController(for: measure) { (taskViewController, error) in
+            if let taskViewController = taskViewController {
+                callback(taskViewController, nil)
+            }
+            else {
+                callback(nil, SMError.instrumentTaskViewControllerNotCreated)
+            }
+        }
+        
+    }
+    
+    public func generateResponse(from result: ORKTaskResult, task: ORKTask) throws ->  SMART.Bundle {
+        
+        if let bundle = instrument.ip_generateResponse(from: result, task: task) {
+            return bundle
+        }
+        else {
+            throw SMError.instrumentResultBundleNotCreated
+        }
+    }
+
+
     
 }
 

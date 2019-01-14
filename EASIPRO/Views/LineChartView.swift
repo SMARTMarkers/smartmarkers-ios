@@ -224,8 +224,8 @@ import UIKit
             //            context.saveGState()
             var highestYP = (nextP.y < p.y) ? nextP : p
             highestYP.x = p.x
-            print(nextP)
-            print(p)
+      
+            
 			
 			let segmentColor = self.segmentColor(points[i])
             let gd = LineChartView.Gradient(for:segmentColor, colorSpace: colorSpace)

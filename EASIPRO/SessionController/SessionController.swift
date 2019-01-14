@@ -24,7 +24,7 @@ public protocol SessionProtocol : class {
     
     associatedtype PROMeasureObjectType : PROMeasureProtocol
     
-    var measures: [PROMeasureObjectType]? { get set }
+    var measures: [PROMeasureObjectType] { get set }
     
     var practitioner: Practitioner? { get }
     
@@ -33,8 +33,6 @@ public protocol SessionProtocol : class {
     var taskDelegate: SessionControllerTaskDelegate? { get set }
     
     var onMeasureCancellation: ((_ measure: PROMeasureObjectType?) -> Void)?  { get set }
-    
-//    var onMeasureCompletion: ((_ result: PROResultObjectType?, _ measure: PROMeasureObjectType?) -> Void)?  { get set }
     
     func prepareSessionContainer(callback: @escaping ((_ container: UIViewController?, _ error: Error?) -> Void))
     
@@ -45,7 +43,7 @@ open class SessionController: NSObject, SessionProtocol {
     
     public typealias PROMeasureObjectType = PROMeasure
 
-    public var measures: [PROMeasure]?
+    public var measures: [PROMeasure]
     
     public var onMeasureCancellation: ((PROMeasure?) -> Void)?
     
@@ -53,61 +51,64 @@ open class SessionController: NSObject, SessionProtocol {
     
     public var patient: Patient?
     
+    public var shouldVerify = false
+    
     public weak var taskDelegate: SessionControllerTaskDelegate?
     
     open func prepareSessionContainer(callback: @escaping ((UIViewController?, Error?) -> Void)) {
         
-        guard let measures = measures else  {
-            return
-        }
         var taskControllers = [ORKTaskViewController]()
 
         let group = DispatchGroup()
-        
+        var errors = [Error]()
         for measure in measures {
             group.enter()
             measure.prepareSession { (taskViewController, error) in
-                print(taskViewController as Any)
+                
                 if let tvc = taskViewController {
                     taskControllers.append(tvc)
                 }
+                else {
+                    if let err = error {
+                        errors.append(err)
+                    }
+                }
+                
                 group.leave()
             }
         }
-      
         
         group.notify(queue: .main) {
             if taskControllers.count > 0 {
                 let sessionNavigationController = self.sessionContainerController(for: taskControllers)
-                callback(sessionNavigationController, nil)
+                callback(sessionNavigationController, (errors.isEmpty) ? nil : SMError.sessionCreatedWithMissingTasks)
             }
             else {
-                callback(nil, nil)
+                callback(nil, SMError.sessionMissingTask)
             }
         }
         
         
     }
     
-    required public init(patient: Patient?, measures: [PROMeasure]?, practitioner : Practitioner?) {
+    required public init(patient: Patient?, measures: [PROMeasure], practitioner : Practitioner?, server : SMART.Server?) {
         self.patient = patient
         self.measures = measures
-        self.measures?.forEach({ (m) in
+        self.measures.forEach({ (m) in
             m.patient = patient
-            m.client = SMARTManager.shared.client
+            m.server = server
         })
         self.practitioner = practitioner
     }
+    
 	
 	open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
         var views : [UIViewController] = taskViewControllers
-		let practitionerContext = SMARTManager.shared.usageMode == .Practitioner
-        if  practitionerContext {
-            let verifyController = PatientVerificationController(patient: patient!)
+        if  shouldVerify, let patient = patient {
+            let verifyController = PatientVerificationController(patient: patient)
             views.insert(verifyController, at: 0)
         }
-		let sessionNC = SessionNavigationController(views: views, reversed: true)
-        sessionNC.shouldVerifyAfter = practitionerContext
+        let sessionNC = SessionNavigationController(views: views, reversed: true, shouldVerify: shouldVerify)
 		return sessionNC
 	}
 }

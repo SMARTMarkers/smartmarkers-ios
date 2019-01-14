@@ -44,7 +44,7 @@ public struct PeriodBound : Equatable {
 		let validEndDate = endDateOrder == .orderedAscending || endDateOrder == .orderedSame
 		
 		
-		print("\(validStartDate) || \(validEndDate)")
+//        print("\(validStartDate) || \(validEndDate)")
 		
 		return validStartDate && validEndDate
 	}

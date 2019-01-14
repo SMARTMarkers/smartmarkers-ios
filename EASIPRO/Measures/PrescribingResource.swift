@@ -29,46 +29,7 @@ public protocol PrescribingResource_Protocol : FHIRResourceProtocol {
 
 }
 
-extension ProcedureRequest : PrescribingResource_Protocol {
-    
-    public func getSchedule() -> Schedule? {
-        return Schedule(prescribing: self)
-    }
-    
-    public var pro_prescriberName: String? {
-        return requester?.agent?.display?.string.uppercased()
-    }
-    
-    public var pro_code: [Coding]? {
-        return code?.coding
-    }
-    
-    public var pro_categoryText: String? {
-        return category?.first?.text?.string
-    }
-    
-    public var pro_title: String? {
-        return self.ep_titleCode ?? self.ep_titleCategory ?? "REQ #\(self.id!.string)"
-    }
-    
-    public func resolveInstrument(callback : @escaping ((_ instrument: InstrumentResourceProtocol?) -> Void)) {
-        if let questionnaireExtension = extensions(forURI: kStructureDefinition_QuestionnaireRequest)?.first {
-            questionnaireExtension.valueReference?.resolve(Questionnaire.self, callback: { (questionnaire) in
-                if let questionnaire = questionnaire {
-                    let instrument = InstrumentResource(questionnaire)
-                    callback(instrument)
-                }
-                else {
-                    callback(nil)
-                }
-            })
-        }
-        else {
-            callback(nil)
-        }
-        
-    }
-}
+
 
 
 public protocol PRBaseProtocol : class {
