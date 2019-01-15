@@ -38,17 +38,12 @@ extension ORKStepResult {
         var items = [QuestionnaireResponseItem]()
         for result in results {
             if let result = result as? ORKQuestionResult {
-                print(result.identifier)
                 if let question = task.step!(withIdentifier: result.identifier) as? ORKQuestionStep, let answers = result.c3_responseItemAnswers(from: question) {
                     
                     let responseItem = QuestionnaireResponseItem(linkId: result.identifier.fhir_string)
-                    print(question.title)
                     responseItem.text = question.title?.fhir_string
                     responseItem.answer = answers
                     items.append(responseItem)
-                    
-                    
-                    print(answers)
                 }
                 
                 

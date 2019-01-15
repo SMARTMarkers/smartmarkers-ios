@@ -136,7 +136,7 @@ extension Questionnaire : InstrumentProtocol {
         }
         
         group.notify(queue: .main) {
-            callback(nsteps, nrules, nil)
+            callback(nsteps.isEmpty ? nil:nsteps, nrules, nil)
         }
         
     }
@@ -230,7 +230,7 @@ extension QuestionnaireItem {
         }
         
         group.notify(queue: .main) {
-            callback(nsteps, nrules, nil)
+            callback(nsteps.isEmpty ? nil : nsteps, nrules, nil)
         }
     }
     
