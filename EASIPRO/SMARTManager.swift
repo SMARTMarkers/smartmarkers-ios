@@ -14,6 +14,7 @@ import UserNotifications
 public enum UsageMode  {
     case Practitioner
     case Patient
+    case Unknown
 }
 
 public class SMARTManager : NSObject {
@@ -23,7 +24,7 @@ public class SMARTManager : NSObject {
     
     public static let shared = SMARTManager()
     
-    public internal(set) var usageMode : UsageMode?
+    public internal(set) var usageMode : UsageMode = .Unknown
     
     public internal(set) var practitioner: Practitioner? = nil {
         didSet {
@@ -47,7 +48,7 @@ public class SMARTManager : NSObject {
     public class func client(with baseURL: URL, settings: [String:String]) -> Client {
         let client = Client(baseURL: baseURL, settings: settings)
         client.authProperties.embedded = true
-        client.authProperties.granularity = .tokenOnly
+        client.authProperties.granularity = .launchContext
         let logger = OAuth2DebugLogger.init()
         logger.level = .trace
         client.server.logger = logger
@@ -113,17 +114,16 @@ public class SMARTManager : NSObject {
     // TODO:
     // Verify IdToken
     
-    public func authorize(callback: @escaping (_ success: Bool) -> Void) {
+    public func authorize(callback: @escaping (_ success: Bool, _ error: Error?) -> Void) {
         
         client.authorize(callback: { [unowned self] (patientResource,  error) in
             
             if let p = patientResource {
                 self.patient = p
             }
-            if  let idToken = self.client.server.idToken,
-                let decoded = self.base64UrlDecode(idToken),
-                let userProfile = decoded["profile"] as? String {
-                let components = userProfile.components(separatedBy: "/")
+            
+            if let idToken = self.client.server.idToken, let decoded = self.base64UrlDecode(idToken), let profile = decoded["profile"] as? String {
+                let components = profile.components(separatedBy: "/")
                 let resourceType = components[0]
                 let resourceId   = components[1]
                 if resourceType == "Practitioner" {
@@ -131,7 +131,7 @@ public class SMARTManager : NSObject {
                         if let practitioner = resource as? Practitioner {
                             self.practitioner = practitioner
                             self.usageMode = .Practitioner
-                            callback(true)
+                            callback(self.patient != nil, nil)
                         }
                     })
                 }
@@ -145,18 +145,16 @@ public class SMARTManager : NSObject {
                                 self.patient = patient
                             }
                             self.usageMode = .Patient
-                            callback(true)
+                            callback(self.patient != nil, nil)
                         }
                     })
                 }
                 else {
-                    //Error
-                    if let e = error {
-                        print(e.localizedDescription)
-                    }
-                    callback(error != nil)
+                    callback(self.patient != nil, SMError.proserverUserNotPractitionerOrPatient(profileType: resourceType))
                 }
-                
+            }
+            else {
+                callback(self.patient != nil, SMError.proserverMissingUserProfile)
             }
         })
     }
@@ -246,6 +244,7 @@ public class SMARTManager : NSObject {
             print("error decoding")
             return nil
         }
+        print(payload)
         return payload
     }
     

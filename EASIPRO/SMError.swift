@@ -12,7 +12,11 @@ public enum SMError : Error, CustomStringConvertible {
     
     // Mark: PROServer
     
-    /// PROServer not ready
+    /// PROServer User Is not Practitioner or Patient
+    case proserverUserNotPractitionerOrPatient(profileType: String)
+    
+    /// PROServer cannot handle FHIR Profi
+    case proserverMissingUserProfile
     
     
     // MARK: PROMeasure
@@ -57,6 +61,11 @@ public enum SMError : Error, CustomStringConvertible {
     public var description: String {
         
         switch self {
+            
+        case .proserverMissingUserProfile:
+            return "PROServer.idToken: Missing Profile- Patient or Practitioner"
+        case .proserverUserNotPractitionerOrPatient(let profileType):
+            return "PROServer cannot handle FHIR Profile Type `\(profileType)`"
             
         case .promeasureOrderedInstrumentMissing:
             return "PROMeasure.orderedInstrument is uninitialized. check"

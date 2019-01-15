@@ -125,7 +125,12 @@ open class EHRLoginController: UIViewController {
     
     
     @objc func login(_ sender: Any) {
-        SMARTManager.shared.authorize { [weak self] (success) in
+        SMARTManager.shared.authorize { [weak self] (success, error) in
+            
+            if let error = error {
+                print(error as Any)
+            }
+            
             if success {
                 DispatchQueue.main.async {
                     let name = (SMARTManager.shared.usageMode == .Practitioner) ? SMARTManager.shared.practitioner?.name?.first?.human : SMARTManager.shared.patient?.humanName
