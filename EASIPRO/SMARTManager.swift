@@ -131,7 +131,7 @@ public class SMARTManager : NSObject {
                         if let practitioner = resource as? Practitioner {
                             self.practitioner = practitioner
                             self.usageMode = .Practitioner
-                            callback(self.patient != nil, nil)
+                            callback(true, nil)
                         }
                     })
                 }
