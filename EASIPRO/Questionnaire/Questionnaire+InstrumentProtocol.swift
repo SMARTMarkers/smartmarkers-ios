@@ -42,15 +42,11 @@ extension SMART.Questionnaire : InstrumentProtocol {
 
                 let taskIdentifier = measure.request?.rq_identifier ?? uuid.uuidString
                 let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
-//                /let task = ORKTask(identifier: taskIdentifier, steps: steps)
-//                task.measure = measure
                 rulestupples?.forEach({ (rule, linkId) in
                     task.setSkip(rule, forStepIdentifier: linkId)
                 })
                 
                 let taskViewController = ORKTaskViewController(task: task, taskRun: uuid)
-//                let taskViewController = PROTaskViewController(task: task, taskRun: uuid)
-//                taskViewController.measure = measure
                 callback(taskViewController, nil)
             }
             else {

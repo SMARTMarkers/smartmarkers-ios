@@ -121,20 +121,6 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         
     }
     
-    /*
-    public class func getPrescriber<T: PrescriberType>(server: Server, Ptype: T.Type, param: [String: String]?, callback: @escaping (([PROMeasure]?, Error?) -> Void)) {
-        Ptype.Get(server: server, param: param) { (prescribingResources, error) in
-            if let prescribingResources = prescribingResources {
-                let measures = prescribingResources.map { PROMeasure(request: $0 as? RequestType) }
-                callback(measures, nil)
-            }
-            else {
-                callback(nil, error)
-            }
-        }
-    }
- */
-    
     public func fetchAll(callback : ((_ success: Bool, _ error: Error?) -> Void)?) {
         
         guard let srv = server else {
@@ -198,9 +184,9 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
         var zerror = serror
 
         do {
-//            let bundle = try orderedInstrument!.generateResponse(from: taskViewController.result, task: taskViewController.task!)
+
             let bundle =  instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!)
-//            let prescribingReference = try prescribingResource?.resource?.asRelativeReference()
+
             //TODO: Request Protocol constraint to DomainResource
             let prescribingReference = try (request as? ProcedureRequest)?.asRelativeReference()
             let patientReference = try patient.asRelativeReference()
@@ -230,25 +216,10 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             let semaphore = DispatchSemaphore(value: 0)
             server.performRequest(against: "//", handler: handler, callback: { [weak self] (response) in
                 if let response = response as? FHIRServerJSONResponse, let json = response.json , let rbundle = try? SMART.Bundle(json: json) {
-                    
-                    
                     let results = rbundle.entry?.filter { $0.resource is ResultType }.map{ $0.resource as! ResultType }
                     if let results = results {
                         self?.results?.add(resources: results)
                     }
-                    
-                    /*
-                    let observations = rbundle.entry?.filter{ $0.resource is Observation}.map{ $0.resource as! Observation}
-                    if let observations = observations {
-                        self?.measurements?.add(resources: observations)
-                    }
-                    let answers = rbundle.entry?.filter{ $0.resource is QuestionnaireResponse}.map{ $0.resource as! QuestionnaireResponse}
-                    if let answers = answers {
-                        self?.responses?.add(resources: answers)
-                    }*/
-                    
-                    
-                    
                     self?.updatePrescribingStatus()
                 }
                 semaphore.signal()

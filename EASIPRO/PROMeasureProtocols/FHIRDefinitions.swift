@@ -31,4 +31,4 @@ let kSDC_adaptive_Questionnaire = "http://hl7.org/fhir/uv/sdc/StructureDefinitio
 
 let kStructureDefinition_QuestionnaireResponseScores = "http://hl7.org/fhir/StructureDefinition/questionnaire-scores"
 let kStructureDefinition_QuestionnaireResponseScoresTheta = "http://hl7.org/fhir/StructureDefinition/questionnaire-scores/theta"
-let kStructureDefinition_QuestionnaireResponseScoresDeviation = "http://hl7.org/fhir/StructureDefinition/questionnaire-scores/deviation"
+let kStructureDefinition_QuestionnaireResponseScoresStandardError = "http://hl7.org/fhir/StructureDefinition/questionnaire-scores/standarderror"
