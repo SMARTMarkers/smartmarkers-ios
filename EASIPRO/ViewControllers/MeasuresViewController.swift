@@ -15,15 +15,17 @@ open class MeasuresViewController :  UITableViewController {
     
     let searchController = UISearchController(searchResultsController: nil)
     
-    open var instruments : [InstrumentResource]?
+    let server = SMARTManager.shared.client.server
     
-    open var _instruments : [InstrumentResource]? {
+    open var instruments : [InstrumentProtocol]?
+    
+    open var _instruments : [InstrumentProtocol]? {
         didSet { instruments = _instruments }
     }
     
     open var selections = [String]()
     
-    open var onSelection: (([InstrumentResource]?) ->Void)?
+    open var onSelection: (([InstrumentProtocol]?) ->Void)?
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -53,11 +55,14 @@ open class MeasuresViewController :  UITableViewController {
     
     
     open func loadQuestionnaires() {
+        
         if nil != instruments { return }
+ 
         markBusy()
-        SMARTManager.shared.getQuestionnaires { [unowned self] (questionnaires, error) in
+        
+        Questionnaire.Instruments(from: server, options: nil) { [unowned self] (questionnaires, error) in
             if let questionnaires = questionnaires {
-                self._instruments = questionnaires.map { InstrumentResource($0) }
+                self._instruments = questionnaires
                 DispatchQueue.main.async {
                     self.markStandby()
                 }
@@ -70,7 +75,7 @@ open class MeasuresViewController :  UITableViewController {
     public func dismissModal(_ sender: AnyObject?) {
         if let onSelection = onSelection {
             if selections.count > 0, let instruments = _instruments {
-                let questionnaires = instruments.filter { selections.contains($0.identifier) }
+                let questionnaires = instruments.filter { selections.contains($0.ip_identifier) }
                 onSelection(questionnaires)
             } else {
                 onSelection(nil)
@@ -107,8 +112,8 @@ open class MeasuresViewController :  UITableViewController {
             cell?.detailTextLabel?.textColor = UIColor.gray
         }
         let instr = instruments![indexPath.row]
-        cell?.textLabel?.text = instr.title
-        cell?.detailTextLabel?.text = instr.code?.code?.string ?? instr.identifier
+        cell?.textLabel?.text = instr.ip_title
+        cell?.detailTextLabel?.text = instr.ip_code?.code?.string ?? instr.ip_identifier
         cell?.accessoryType = (contains(instr)) ? .checkmark : .detailButton
 
         
@@ -137,14 +142,15 @@ open class MeasuresViewController :  UITableViewController {
     
     func contains(_ indexPath: IndexPath) -> (contains: Bool, id: String?) {
         if let instr = instruments?[indexPath.row] {
-            return (contains(instr), instr.identifier)
+            return (contains(instr), instr.ip_identifier)
         }
         return (false, nil)
     }
-    
-    func contains(_ instr: InstrumentResource) -> Bool {
-        return selections.contains(instr.identifier)
+
+    func contains(_ instr: InstrumentProtocol) -> Bool {
+        return selections.contains(instr.ip_identifier)
     }
+
     
     func select(_ indexPath: IndexPath) {
         let (selected, id) = contains(indexPath)
@@ -170,7 +176,7 @@ extension MeasuresViewController : UISearchResultsUpdating {
 
     public func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text?.lowercased(), !searchText.isEmpty {
-            let filtered = _instruments?.filter{ $0.title.lowercased().range(of: searchText) != nil }
+            let filtered = _instruments?.filter{ $0.ip_title.lowercased().range(of: searchText) != nil }
             instruments = filtered
         } else {
             instruments = _instruments

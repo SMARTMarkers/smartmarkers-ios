@@ -46,6 +46,15 @@ public enum SMError : Error, CustomStringConvertible {
     /// QuestionnaireItem type missing
     case instrumentQuestionnaireTypeMissing(linkId: String)
     
+    /// Questionnaire does not have `Items`
+    case instrumentQuestionnaireMissingItems
+    
+    /// Questionnaire.items has duplicate linkIds
+    case instrumentHasDuplicateLinkIds
+    
+    ///Questionnaire.type `choice` should have answer options
+    case instrumentQuestionnaireItemMissingOptions(linkId: String)
+    
     
     // Mark: SessionController
     
@@ -57,15 +66,37 @@ public enum SMError : Error, CustomStringConvertible {
     
     
     
+    // Mark: AdaptiveQuestionnaires
+    
+    /// Error Mapping Questionnaires from R4 to STU3
+    case adaptiveQuestionnaireErrorMappingToSTU3
+    
+    /// QuestionnarieResponse already completed, cannot get perform `next-q` operation
+    case adaptiveQuestionnaireAlreadyCompleted
+    
+    
+    
+    
     
     public var description: String {
         
         switch self {
             
+        // AdaptiveQuestionnaires
+            
+        case .adaptiveQuestionnaireErrorMappingToSTU3:
+            return "AdaptiveQuestionnaire: Error mapping to STU3"
+        case .adaptiveQuestionnaireAlreadyCompleted:
+            return "AdaptiveQuestionnaire: Already completed; cannot perform next-q operation"
+        
+        // PROServer
+            
         case .proserverMissingUserProfile:
             return "PROServer.idToken: Missing Profile- Patient or Practitioner"
         case .proserverUserNotPractitionerOrPatient(let profileType):
             return "PROServer cannot handle FHIR Profile Type `\(profileType)`"
+            
+        // PROMEasure
             
         case .promeasureOrderedInstrumentMissing:
             return "PROMeasure.orderedInstrument is uninitialized. check"
@@ -73,6 +104,8 @@ public enum SMError : Error, CustomStringConvertible {
             return "PROMeasure.server is nil, cannot perform server functions"
         case .promeasureFetchLinkedResources:
             return "PROMeasure: error encountered fetching resources from server"
+            
+        // Instrument
             
         case .instrumentQuestionnaireTypeMissing(let linkId):
             return "Instrument-Questionnaire: type missing for item `linkId`: \(linkId)"
@@ -82,7 +115,14 @@ public enum SMError : Error, CustomStringConvertible {
             return "InstrumentProtocol could not generate a response `SMART.Bundle`"
         case .instrumentCannotHandleQuestionnaireType(let linkId):
             return "InstrumentProtocol could not create step for QuestionnaireItem.type for linkId: \(linkId)"
+        case .instrumentQuestionnaireMissingItems:
+            return "`Questionnaire.item` is empty"
+        case .instrumentHasDuplicateLinkIds:
+            return "Questionnaire.item.linkId(s) should be unique"
+        case .instrumentQuestionnaireItemMissingOptions(let linkId):
+            return "Questionnaire.item.type = choice  must have answer reference for linkId: \(linkId)"
         
+        // SessionController
         case .sessionMissingTask:
             return "SessionController cannot be created, no `TaskViewController`(s) found"
         case .sessionCreatedWithMissingTasks:

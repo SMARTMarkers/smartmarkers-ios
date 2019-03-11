@@ -14,149 +14,62 @@ public typealias RuleTupple = (ORKPredicateSkipStepNavigationRule, String)
 public typealias StepsCallback = (_ steps: [ORKStep]?, _ rules: [RuleTupple]?, _ error: Error?) -> Void
 
 
-extension Questionnaire : InstrumentProtocol {
-    
-    
-    public func ip_generateSteps(callback: @escaping (([ORKStep]?, Error?) -> Void)) {
-        callback(nil, nil)
-    }
-    
-    
-    public func ip_navigableRules(for steps: [ORKStep]?, callback: (([ORKStepNavigationRule]?, Error?) -> Void)) {
-        callback(nil, nil)
-    }
-    
-    
-    public var ip_code: Coding? {
-        return code?.first
-    }
-    
-    
-    
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))  {
-        
-        ip_genereteSteps { (steps, rulestupples, error) in
-            if let steps = steps {
-                let uuid = UUID()
-                let taskIdentifier = measure.prescribingResource?.resource?.pro_identifier ?? uuid.uuidString
-                
-                let task = PROTask(identifier: taskIdentifier, steps: steps)
-                task.measure = measure
-                rulestupples?.forEach({ (rule, linkId) in
-                    task.setSkip(rule, forStepIdentifier: linkId)
-                })
-                
-                let taskViewController = PROTaskViewController(task: task, taskRun: uuid)
-                taskViewController.measure = measure
-                callback(taskViewController, nil)
-            }
-            else {
-                callback(nil, nil)
-            }
-        }
-    }
-    
-    
-    
-    
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+extension Questionnaire  {
 
-        guard let taskResults = result.results as? [ORKStepResult] else {
-            print("No results found")
-            return nil
-        }
-        
-        var itemGroups = [QuestionnaireResponseItem]()
-        for result in taskResults {
-            if let item = result.c3_responseItems(for: task) {
-                itemGroups.append(contentsOf: item)
-            }
-        }
-        
-        let questionnaire = Reference()
-        questionnaire.reference = FHIRString(result.identifier)
-        let answer = QuestionnaireResponse(status: .completed)
-        answer.questionnaire = questionnaire
-        answer.authored = DateTime.now
-        answer.questionnaire?.reference?.string = "Questionnaire/\(id!.string)"
-        answer.item = itemGroups
-        
-        let qrId = "urn:uuid:\(UUID().uuidString)"
-        let entry = BundleEntry()
-        entry.fullUrl = FHIRURL(qrId)
-        entry.resource = answer
-        entry.request = BundleEntryRequest(method: .POST, url: FHIRURL("QuestionnaireResponse")!)
-        let bundle = SMART.Bundle()
-        bundle.entry = [entry]
-        bundle.type = BundleType.transaction
-        return bundle
-        
-        
-    }
-    
-    
-    public var ip_title :String {
-        return ep_displayTitle()
-    }
-    
-    public var ip_version: String? {
-        return version?.string
-    }
-    
-    public var ip_identifier: String {
-        return id!.string
-    }
-    
-    
-    public func ip_genereteSteps(callback: @escaping StepsCallback) {
+    public func sm_genereteSteps(callback: @escaping StepsCallback) {
         
         guard let items = self.item else {
-            callback(nil, nil, nil)
+            callback(nil, nil, SMError.instrumentQuestionnaireMissingItems)
             return
         }
+        
         var nsteps = [ORKStep]()
         var nrules = [RuleTupple]()
         let group = DispatchGroup()
-        for item in items {
-            group.enter()
-            item.generateSteps(callback: { (steps, rules, error) in
-                if let error = error {
-                    print(error as Any)
-                }
-                else {
-                    if let steps = steps {
-                        nsteps.append(contentsOf: steps)
+        let queue = DispatchQueue(label: "stepsQueue")
+        let semaphore = DispatchSemaphore(value: 1)
+        queue.async(group: group) {
+            for item in items {
+                group.enter()
+                item.sm_generateSteps(callback: { (steps, rules, error) in
+                    if let error = error {
+                        print(error as Any)
                     }
-                    if let rules = rules {
-                        nrules.append(contentsOf: rules)
+                    else {
+                        if let steps = steps {
+                            nsteps.append(contentsOf: steps)
+                        }
+                        if let rules = rules {
+                            nrules.append(contentsOf: rules)
+                        }
                     }
-                }
-                group.leave()
-            })
+                    semaphore.signal()
+                    group.leave()
+                })
+                semaphore.wait()
+            }
         }
         
-        group.notify(queue: .main) {
-            callback(nsteps.isEmpty ? nil:nsteps, nrules, nil)
+        
+        group.notify(queue: queue) {
+            DispatchQueue.main.async {
+                callback(nsteps.isEmpty ? nil:nsteps, nrules, nil)
+            }
         }
         
     }
-
-    
 }
 
 extension QuestionnaireItem {
     
     
-    public func generateSteps(callback: @escaping StepsCallback) {
+    public func sm_generateSteps(callback: @escaping StepsCallback) {
         var nsteps = [ORKStep]()
         var nrules = [RuleTupple]()
         var conditionalItems = [QuestionnaireItem]()
-        let group = DispatchGroup()
-        
         if self.enableWhen != nil {
                 conditionalItems.append(self)
         }
-        group.enter()
         self.rk_answerFormat(callback: { (answerFormat, error) in
             if let error = error {
                 print(error)
@@ -170,40 +83,43 @@ extension QuestionnaireItem {
                     nsteps.append(step)
                     break
                     
-                case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string, .integer:
-                    let step = ORKQuestionStep(identifier: self.rk_Identifier(), title: self.rk_text(), text: nil, answer: answerFormat)
+            case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string, .integer:
+                    let step = ORKQuestionStep(identifier: self.rk_Identifier(), title: nil, question: self.rk_text(), answer: answerFormat)
                     nsteps.append(step)
                     break
                     
                 case .group:
                     if let subItems = self.item {
-                        print("case:.group, steps present")
+                        var subSteps = [ORKStep]()
+                        let newgroup = DispatchGroup()
                         for subitem in subItems {
-                            subitem.generateSteps(callback: { (steps, rules, err ) in
-                                if let error = error {
+                            newgroup.enter()
+                            subitem.sm_generateSteps(callback: { (steps, rules, err ) in
+                                if let error = err {
                                     print(error as Any)
                                 }
-                                else {
-                                    if let steps = steps {
-                                        nsteps.append(contentsOf: steps)
-                                    }
-                                    if let rules = rules {
-                                        nrules.append(contentsOf: rules)
-                                    }
+                                else if let steps = steps {
+                                    subSteps.append(contentsOf: steps)
                                 }
+                                newgroup.leave()
                             })
+                            newgroup.wait()
                         }
+                        
+                        let formItems = subSteps.flatMap  { $0.sm_toFormItem()! }
+                        let formSp = ORKFormStep.init(identifier: self.rk_Identifier(), title: self.text?.string, text: self.id!.string)
+                        formSp.formItems = formItems
+                        formSp.footnote = self.sm_questionItem_instructions()
+                        nsteps.append(formSp)
                     }
                     break
                 default:
                     break
                 }
             }
-            group.leave()
         })
         
         conditionalItems.forEach { (citem) in
-            
             let conditions = citem.enableWhen!
             var predicates = [NSPredicate]()
             for cond in conditions {
@@ -221,34 +137,14 @@ extension QuestionnaireItem {
                     predicates.append(skipIfNot)
                 }
             }
-            
             if !predicates.isEmpty {
                 let compoundPredicate = NSCompoundPredicate.init(type: .or, subpredicates: predicates)
                 let rule = ORKPredicateSkipStepNavigationRule(resultPredicate: compoundPredicate)
                 nrules.append((rule, citem.linkId!.string))
             }
         }
-        
-        group.notify(queue: .main) {
-            callback(nsteps.isEmpty ? nil : nsteps, nrules, nil)
-        }
+        callback(nsteps.isEmpty ? nil : nsteps, nrules, nil)
     }
-    
-    
-    /*
-    public func rule() -> ORKStepNavigationRule? {
-        
-        guard let conditions = enableWhen else {
-            return nil
-        }
-        
-        let condition = conditions.first
-        let resultSelector = ORKResultSelector(resultIdentifier: condition!.question!.string)
-        let predicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: true)
-        let rule = ORKPredicateStepNavigationRule(resultPredicatesAndDestinationStepIdentifiers: [(predicate, rk_Identifier())])
-        return rule
-    }*/
-    
     
     public func rk_text() -> String? {
         return text?.localized
@@ -291,13 +187,18 @@ extension QuestionnaireItem {
         case .choice:
             if let answerValueSet = options {
                 let style : ORKChoiceAnswerStyle = (repeats?.bool ?? false) ? .multipleChoice : .singleChoice
+                let dispatchSemaphore = DispatchSemaphore(value: 0)
                 answerValueSet.resolve(ValueSet.self, callback: { (choices) in
                     if let choices = choices, let af = choices.rk_choiceAnswerFormat(style: style) {
                         callback(af, nil)
                     } else {
                         callback(nil, nil)
                     }
+                    dispatchSemaphore.signal()
                 })
+                dispatchSemaphore.wait()
+
+                
             } else if let answerSet = option {
                 let style : ORKChoiceAnswerStyle = (repeats?.bool ?? false) ? .multipleChoice : .singleChoice
                 let choices = answerSet.compactMap ({ $0.rk_choiceAnswerFormat(style: style) })
@@ -318,17 +219,22 @@ extension QuestionnaireItem {
 
 let kDefaultSystem      = "CHOICESYSTEM"
 let kDefaultAnserCode   = "ANSWERCODE"
-let kDelimiter          = "|"
-
+let kDelimiter          = "≠"
 
 extension QuestionnaireItemOption {
     
     public func rk_choiceAnswerFormat(style: ORKChoiceAnswerStyle = .singleChoice) -> ORKTextChoice? {
         
         if let vcoding = valueCoding {
+            
             let system = vcoding.system?.absoluteString ?? kDefaultSystem
             let code = vcoding.code?.string ?? kDefaultAnserCode
-            let value = system + kDelimiter + code
+            var value = system + kDelimiter + code
+            
+            if let display = vcoding.display?.string {
+                value += kDelimiter + display
+            }
+            
             let answerChoice = ORKTextChoice(text: vcoding.display?.string ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol) // ::: TODO exclusive?
             return answerChoice
         }
@@ -353,7 +259,10 @@ extension ValueSet {
             for option in expansion {
                 let system = option.system?.absoluteString ?? kDefaultSystem
                 let code = option.code?.string ?? kDefaultAnserCode
-                let value = system + kDelimiter + code
+                var value = system + kDelimiter + code
+                if let display = option.display?.string {
+                    value += kDelimiter + display
+                }
                 let answerChoice = ORKTextChoice(text: option.display_localized ?? code, detailText: nil, value: value as NSCoding & NSCopying & NSObjectProtocol, exclusive: true)
                 choices.append(answerChoice)
             }
@@ -364,7 +273,11 @@ extension ValueSet {
                 let system = include.system?.absoluteString ?? kDefaultSystem
                 include.concept?.forEach({ (concept) in
                     let code = concept.code?.string ?? kDefaultAnserCode
-                    let value = system + kDelimiter + code
+                    var value = system + kDelimiter + code
+                    
+                    if let display = concept.display?.string {
+                        value += kDelimiter + display
+                    }
                     let answerChoice = ORKTextChoice(text: concept.display_localized ?? code, value: value as NSCoding & NSCopying & NSObjectProtocol)
                     choices.append(answerChoice)
                 })
@@ -376,6 +289,16 @@ extension ValueSet {
         }
         
         return nil
+        
+    }
+}
+
+
+
+
+extension ORKChoiceQuestionResult {
+    
+    public func populateAnswer(into response: inout QuestionnaireResponseR4, for step: ORKStep) {
         
     }
 }

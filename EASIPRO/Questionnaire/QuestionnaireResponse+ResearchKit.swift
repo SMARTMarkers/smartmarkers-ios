@@ -165,12 +165,17 @@ extension ORKChoiceQuestionResult {
             let answer = QuestionnaireResponseItemAnswer()
             let splat = choice.components(separatedBy: kDelimiter)
             let system = splat[0]
-            let code = (splat.count > 1) ? splat[1..<splat.endIndex].joined(separator: String(kDelimiter)) : kDefaultAnserCode
+            let code = (splat.count > 1) ? splat[1] : kDefaultAnserCode
+            let display = (splat.count > 2) ? splat[2] : nil
             answer.valueCoding = Coding()
             answer.valueCoding!.system = FHIRURL(system)
-            answer.valueCoding!.code = FHIRString(code)
+            answer.valueCoding!.code = code.fhir_string
+            answer.valueCoding!.display = display?.fhir_string
             answers.append(answer)
         }
         return answers
     }
 }
+
+
+

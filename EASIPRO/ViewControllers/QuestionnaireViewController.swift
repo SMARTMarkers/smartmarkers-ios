@@ -12,6 +12,9 @@ import ResearchKit
 
 public class QuestionnaireViewController: UITableViewController {
     
+    //TODO Add questionnaires here
+    public var questionnaire: Questionnaire?
+    
     public var questionnaireResponse: QuestionnaireResponse!
     
     private var qrItems: [QuestionnaireResponseItem]!
@@ -27,7 +30,6 @@ public class QuestionnaireViewController: UITableViewController {
         if let date = questionnaireResponse.authored?.nsDate.shortDate {
             title = "Completed on " + date
         }
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSelf))
     }
     

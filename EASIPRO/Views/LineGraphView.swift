@@ -207,7 +207,7 @@ import UIKit
     private let scrollView = UIScrollView()
     private let mainLayer  = CALayer()
     
-    public var dataEntries: [Record]? = nil {
+    public var dataEntries: [ResultProtocol]? = nil {
         didSet {
             addEntries()
         }
@@ -226,11 +226,9 @@ import UIKit
     
     
     public var values : [Double]?  {
-     
         didSet {
             addEntries()
         }
-        
     }
     public var thresholds : [Double]? = [90.0, 80.0, 70.0 ,60.0 ,50.0 ,40.0 ,30.0 ,20.0, 10.0]
     
@@ -245,6 +243,8 @@ import UIKit
             mainLayer.frame = CGRect(origin: .zero, size: contentSize)
             addEntry()
         }
+        
+        
         scrollView.scrollToBottom()
     }
     
@@ -252,15 +252,14 @@ import UIKit
     
     func addEntry() {
         
-        
-        let maxValue = thresholds?.max() ?? dataEntries!.filter { $0.score != nil }.map { Double($0.score!)! }.max()!
+        let maxValue = thresholds?.max() ?? dataEntries!.filter { $0.rp_observation != nil }.map { Double($0.rp_observation!)! }.max()!
         let margins = Constants.bottomBorder + Constants.topBorder
         var prePos : CGPoint = .zero
         
         for i in 0..<dataEntries!.count {
             let xpoint = (Constants.interSegmentLength * CGFloat(i)) + Constants.interSegmentLength
 
-            if let entry = dataEntries![i].score {
+            if let entry = dataEntries![i].rp_observation {
                 let ypoint = CGFloat(Double(entry)!) / (CGFloat(maxValue))
                 let newPoint = CGPoint(x: xpoint, y: translateHeightValueToYPosition(value: Float(ypoint)))
                 let layer = lineLayers(prePos, newPoint)

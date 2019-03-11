@@ -35,8 +35,6 @@ public class SMARTManager : NSObject {
     }
     
     
-	
-    
     public  internal(set) var patient : Patient? = nil {
         didSet {
 			onPatientSelected?()
@@ -81,8 +79,6 @@ public class SMARTManager : NSObject {
 						 "client_id"   : clientid,
 						 ]
 		client = SMARTManager.client(with: baseURL, settings: settings)
-
-        
     }
     
     public func resetClient() {
@@ -182,15 +178,9 @@ public class SMARTManager : NSObject {
     }
     
     public func getQuestionnaires(callback: @escaping(_ questionnaires: [Questionnaire]?, _ error: Error?) -> Void) {
-//        search(type: Questionnaire.self, params: ["_id":"218164"], callback: callback)
         search(type: Questionnaire.self, params: [:], callback: callback)
-
-        
     }
-	
 
-    
-	
 	public func getObservations(callback: @escaping(_ observations: [Observation]?, _ error: Error?) -> Void) {
 		guard let patient = patient else {
 			print("Select Patient")
@@ -229,6 +219,7 @@ public class SMARTManager : NSObject {
     
     private func base64UrlDecode(_ value: String) -> [String: Any]? {
         let comps = value.components(separatedBy: ".")
+        
         var base64 = comps[1]
             .replacingOccurrences(of: "-", with: "+")
             .replacingOccurrences(of: "_", with: "/")
@@ -244,37 +235,11 @@ public class SMARTManager : NSObject {
             print("error decoding")
             return nil
         }
-        print(payload)
+
         return payload
     }
     
     // MARK: Patient/Measures Selectors
-    
-    /*
-    public func switchPatient(over viewController: UIViewController) {
-        
-        let allPatientList = PatientListAll()
-        let patientListViewController = PatientListViewController(list: allPatientList, server: client.server)
-        patientListViewController.title = "Select Patient"
-        patientListViewController.onPatientSelect = { (patient) in
-            self.patient = patient
-        }
-        let navigationController = UINavigationController(rootViewController: patientListViewController)
-        viewController.present(navigationController, animated: true, completion: nil)
-        
-    }
-    */
-    
-    /*
-    public func selectMeasures(callback: @escaping ((_ measuresPicker: UIViewController) -> Void)) {
-        let measuresViewController = MeasuresViewController()
-        /*measuresViewController.onSelection = { measures in
-            self.measures = measures
-        }*/
-        let navigationController = UINavigationController(rootViewController: measuresViewController)
-        callback(navigationController)
-    }
-    */
     
     
     public func selectPatient(callback: @escaping ((_ patientPicker: UIViewController) -> Void)) {
@@ -286,15 +251,6 @@ public class SMARTManager : NSObject {
         let navigationController = UINavigationController(rootViewController: patientPickerViewController)
         callback(navigationController)
     }
-	
-	
-    // MARK PROMeasure
-	
-    
-    
-    
-    
-    
 }
 
 extension SMARTManager  {

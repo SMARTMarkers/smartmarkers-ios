@@ -43,9 +43,6 @@ public struct PeriodBound : Equatable {
 		let validStartDate = (startDateOrder == .orderedDescending) || (startDateOrder == .orderedSame)
 		let validEndDate = endDateOrder == .orderedAscending || endDateOrder == .orderedSame
 		
-		
-//        print("\(validStartDate) || \(validEndDate)")
-		
 		return validStartDate && validEndDate
 	}
     
@@ -131,11 +128,6 @@ public struct Slot {
     mutating func newStatus(_ s: SlotStatus) {
         status = s
     }
-    
-    
-
-    
-    
 }
 
 

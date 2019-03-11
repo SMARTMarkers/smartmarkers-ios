@@ -67,9 +67,9 @@ public class PRONotification: NSObject {
 
     
     
-    public class func createNotifications(for request: PrescribingResource_Protocol, callback: ((_ success: Bool) -> Void)?)  {
+    public class func createNotifications(for request: RequestProtocol, callback: ((_ success: Bool) -> Void)?)  {
         
-        guard let slots = request.getSchedule()?.slots else {
+        guard let slots = request.rq_schedule?.slots else {
             callback?(false)
             return
         }
@@ -78,11 +78,11 @@ public class PRONotification: NSObject {
             if success {
                 let content = UNMutableNotificationContent()
                 content.title = "Survey Session Due"
-                content.subtitle = request.pro_title!
+                content.subtitle = request.rq_title!
                 content.body = "A PRO Session is due today"
                 content.sound = UNNotificationSound.default()
                 content.categoryIdentifier = kPRODueNotificationCategory
-                content.threadIdentifier = request.pro_identifier!
+                content.threadIdentifier = request.rq_identifier
                 let availableSlots = slots.filter({ $0.hasPassed == false })
                 let notificationRequests = availableSlots.map({ (slot) -> UNNotificationRequest in
                     let date = slot.period.start

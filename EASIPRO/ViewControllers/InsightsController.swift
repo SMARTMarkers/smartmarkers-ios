@@ -33,6 +33,7 @@ open class InsightsController: UITableViewController {
 		// TODO: Simplify Extraction. It is kept so for debugging purposes.
 		// sortedObservations need not have `Observation` if not required in its entirety.
 		sortedObservations?.removeAll()
+        
 		SMARTManager.shared.getObservations { [unowned self] (requests, error) in
 			
 			guard let requests = requests else {
