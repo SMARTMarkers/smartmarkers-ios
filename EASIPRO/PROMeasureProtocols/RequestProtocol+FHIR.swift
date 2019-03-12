@@ -11,7 +11,7 @@ import SMART
 
 
 extension ProcedureRequest: RequestProtocol {
-
+   
  
     public var rq_identifier: String {
         return id!.string
@@ -42,12 +42,32 @@ extension ProcedureRequest: RequestProtocol {
     }
     
     public static var rq_fetchParameters: [String : String]? {
-        return ["status": "active"]
+        return ["status": "active,completed"]
     }
     
-    public func rq_updateSchedule(schedule: Schedule) -> Bool {
-        return true
+    
+    
+    public func rq_updated(_ completed: Bool, callback: @escaping ((_ success: Bool) -> Void)) {
+        
+        if completed {
+            self.status = RequestStatus.completed
+            self.update { (error) in
+                if nil == error {
+                    callback(true)
+                }
+                else {
+                    callback(false)
+                }
+            }
+        }
     }
+    
+
+    
+    
+
+    
+    
     
     public func rq_instrumentResolve(callback: @escaping ((InstrumentProtocol?, Error?) -> Void)) {
         if let questionnaireExtension = extensions(forURI: kStructureDefinition_QuestionnaireRequest)?.first {
@@ -69,15 +89,18 @@ extension ProcedureRequest: RequestProtocol {
 
 extension ProcedureRequest {
     
+    
     public func sm_Schedule() -> Schedule? {
         
-        if let occuranceDate = self.ep_dateTime {
-            return Schedule(dueDate: occuranceDate)
+        let slotStatus = (self.status == RequestStatus.completed) ? SlotStatus.completed : nil
+        
+        if let occuranceDate = self.occurrenceDateTime?.nsDate {
+            return Schedule(period: PeriodBound(occuranceDate, nil), frequency: nil, overrideStatus: slotStatus)
         }
         else if let (start, end, fValue, fUnit) = self.ep_period_frequency {
             let period = PeriodBound(start, end)
             let frequence = Frequency(value: fValue, unit: fUnit)
-            return Schedule(period: period, freq: frequence)
+            return Schedule(period: period, frequency: frequence, overrideStatus: slotStatus)
         }
         else {
             return nil
@@ -95,12 +118,6 @@ extension ProcedureRequest {
         return (start, end, freqValue, freqUnit)
     }
     
-    var ep_dateTime : Date? {
-        guard let dateTime = self.occurrenceDateTime else {
-            return nil
-        }
-        
-        let dueDate = dateTime.nsDate
-        return dueDate
-    }
+   
+    
 }

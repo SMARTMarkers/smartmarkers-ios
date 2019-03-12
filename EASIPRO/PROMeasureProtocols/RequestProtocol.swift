@@ -37,14 +37,12 @@ public protocol RequestProtocol :  class, CustomStringConvertible {
     /// Deduced Schedule
     var rq_schedule: Schedule? { get }
     
-    /// asFHIR
-//    var asFHIR: DomainResource? { get }
-    
     /// Fetch Parameters
     static var rq_fetchParameters: [String: String]? { get }
     
-    /// update the schedule
-    func rq_updateSchedule(schedule: Schedule) -> Bool
+    ///::: Should this be a Delegate Protocol?
+    /// Notifies request has been updated
+    func rq_updated(_ completed: Bool, callback: @escaping ((_ success: Bool) -> Void))
     
     /// Requested Instrument
     func rq_instrumentResolve(callback: @escaping ((_ instrument: InstrumentProtocol?, _ error: Error?) -> Void))

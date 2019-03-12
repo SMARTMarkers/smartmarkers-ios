@@ -8,34 +8,41 @@
 
 import Foundation
 
-
-
 public enum SlotStatus : String {
 	
 	case due                    = "due"
 	case upcoming               = "upcoming"
-	case missed                 = "missed"
+	case overdue                 = "overdue"
 	case unknown                = "unkown"
     case completed              = "completed"
 	
 }
 
 
+
+///::: More testing Needed.
+
 public struct PeriodBound : Equatable {
 	
 	public let start   :   Date
-	public let end     :   Date
-	let calender = PROCalender.shared.calender
+	public let end     :   Date?
+	let calender = UTCCalender.shared.calender
 	
+    
 	public static func == (lhs: PeriodBound, rhs: PeriodBound) -> Bool {
 		return (lhs.start == rhs.start) && (lhs.end == rhs.end)
 	}
-	
 	public static func > (lhs: PeriodBound, rhs: PeriodBound) -> Bool {
-		return (lhs.start > rhs.end)
+        let comparableDate = (rhs.end == nil) ? rhs.start : rhs.end!
+		return (lhs.start > comparableDate)
 	}
 	
 	func contains(_ date:Date) -> Bool {
+        
+        guard let end = end else {
+            print("No end date to compare, resorting to start date")
+            return (date < start)
+        }
 		
 		let startDateOrder = calender.compare(date, to: start, toGranularity: .day)
 		let endDateOrder = calender.compare(date, to: end, toGranularity: .day)
@@ -47,20 +54,15 @@ public struct PeriodBound : Equatable {
 	}
     
     func description() -> String {
-        return "\(start.shortDate) –- \(end.shortDate)"
+        return "\(start.shortDate) –- \(end?.shortDate ?? "-noEndDate--")"
     }
 	
-	init(_ start: Date, _ end: Date) {
+	init(_ start: Date, _ end: Date?) {
 		self.start = start
 		self.end   = end
 	}
-	
-	init(duration: UInt64, from date: Date) {
-        // TODO
-		// calculate duration from date: Date
-		// based on number o
-		self.init(Date(), Date())
-	}
+
+    
 }
 
 
@@ -97,11 +99,10 @@ public struct Slot {
     }
     
 	init(period: PeriodBound) {
-            let today = Date()
-            self.period = period
-            current = period.contains(today)
-            hasPassed = !current && (today > period.start)
-        
+        let today = Date()
+        self.period = period
+        current = period.contains(today)
+        hasPassed = !current && (today > (period.end ?? period.start))
         if current {
             status = .due
         }
@@ -109,7 +110,7 @@ public struct Slot {
             status = .upcoming
         }
         if hasPassed {
-            status = .due
+            status = .overdue
         }
         
     }
@@ -117,7 +118,7 @@ public struct Slot {
     
     mutating func satisfied(_ date: Date, _ freq: Frequency?) -> Bool {
         
-        //todo:
+        //::: Add Frequency
         if period.contains(date) {
             status = .completed
             return true
@@ -132,195 +133,117 @@ public struct Slot {
 
 
 public struct Schedule {
-	
-	
-	let calendar = PROCalender.shared.calender
-	
-	/// Today's date
-	let now = Date()
-	
-	/// Instant Date if applicable
-	let instantDate : Date? 
-	
-	var instant : Bool {
-		get { return (instantDate == nil) ? false : true }
-	}
+    
+    /// UTC Calender
+    let calender = UTCCalender.shared.calender
+    
+    /// Today
+    let now = Date()
     
     
-	
-	/// Calculated or set value
-	var periodBound : PeriodBound?
-	
-	/// Slots available for PRO Measurement
-	public var slots : [Slot]?
-	
-	
-	var slotCount : Int? {
-		get { return slots?.count }
-	}
-	
-    //TODO: Frequency per slot calculation?
-    // Default is Frequency: 1
-	/// Frequency of a repeating measurement
-	let frequency: Frequency?
-	
+    /// Activity Duration of the PRO
+    var period: PeriodBound?
+    
+    /// Calculated Slots for PROSession Activity
+    public var slots: [Slot]?
+    
+    public lazy var slotCount: Int = {
+        return slots?.count ?? 0
+    }()
+    
+    /// Current Slot for
+    public lazy var _currentSlot: Slot? = {
+        return slots?.filter({$0.current == true}).first
+    }()
+    
+    
+    var currentSlotIdx: Int?
+    
+    /// Super Status
+    public var superStatus: SlotStatus?
+    
+    /// Current Due Date
+    public var dueDate: Date?
+    
+    /// Repeating Frequency associated with PROSession Activity
+    public var frequency: Frequency?
+    
+    public var status: SlotStatus = .unknown
+    
+    init(period: PeriodBound, frequency: Frequency?, overrideStatus: SlotStatus? = nil) {
+        self.period = period
+        self.frequency = frequency
+        self.superStatus = overrideStatus
+        self.slots = generateSlots()
+        self.dueDate = _currentSlot?.period.start ?? slots?.last?.period.start
+        resetStatus()
+    }
+    
+    mutating func resetStatus() {
+        if slots != nil {
+            self.status = superStatus ?? _currentSlot?.status ?? slots?.last?.status ?? .unknown
+        }
+    }
 
-    var instantStatus : SlotStatus = .unknown
-    
-    public var status: SlotStatus {
-        get {
-            //TODO : instant items can be same day slots.
-            // Enddate could be optional?
-            if instant {
-                return instantStatus
-            }
-            return currentSlot?.status ?? nextSlot?.status ?? previousSlot?.status ?? .unknown
-        }
-    }
-    
-	
-	/// for Internal use, current slot index in slots.array
-	public internal(set) var currentSlotIndex = -1
-	
-	
-	/// next Slot
-	public var nextSlot : Slot? {
-		get {
-			guard let slots = slots, currentSlotIndex < slots.endIndex else { return nil
-			}
-			
-			let nextIdx = slots.index(after: currentSlotIndex)
-			return slots[nextIdx]
-		}
-	}
-	
-	/// Previous Slot
-	public var previousSlot : Slot? {
-		get {
-            guard let slots = slots else { return nil }
-            if currentSlotIndex > slots.startIndex { return slots.last }
-			let previousIdx = slots.index(before: currentSlotIndex)
-			return slots[previousIdx]
-		}
-	}
-	
-	
-	/// Current slot, based on `now`: today's date
-	public var currentSlot : Slot? {
-		get {
-			guard let slots = slots else {
-				return nil
-			}
-			for slot in slots {
-				if slot.current { return slot }
-			}
-			return nil
-		}
-	}
-    
-    // TODO: streamline Due Slots
-    public var dueDate: Date? {
-        get {
-            return instantDate ?? currentSlot?.period.start ?? nextSlot?.period.start ?? previousSlot?.period.start ?? nil
-        }
-    }
-    
-	
-	
-	init(period: PeriodBound, freq: Frequency) {
-		self.periodBound = period
-		self.frequency = freq
-		self.instantDate = nil
-		self.slots = configureSlots()
-		
-	}
-	
-	init(dueDate: Date) {
-		self.instantDate = dueDate
-		self.periodBound = nil
-		self.frequency = nil
-        if now > dueDate || calendar.isDateInToday(dueDate) {
-            instantStatus = .due
-        } else { instantStatus = .upcoming }
-	}
-	
-	
-	
-	
-	/// Requires repeating elements `PeriodBound` and `Frequency`
-	mutating func configureSlots() -> [Slot]? {
-		
-		guard let period = periodBound, let frequency = frequency else {
-			return nil
-		}
-		
-		let diffComponents = calendar.dateComponents([.day], from: period.start, to: period.end)
-		let slotCount = (diffComponents.day! / frequency.unitDays)
-		if slotCount == 0 { return nil }
-		
-		
-		//Create Slots
-		var startSlotDate	= Date()
-		var endSlotDate		= Date()
-		var newSlots		= [Slot]()
-		
-		for i in 1...slotCount {
-			startSlotDate = (i == 1) ? period.start : endSlotDate.addDays(days: 1)
-			endSlotDate = startSlotDate.addDays(days: frequency.unitDays - 1)
-			
-			let slotPeriod = PeriodBound.init(startSlotDate, endSlotDate)
-			let slot = Slot(period: slotPeriod)
-			if slot.current {
-				currentSlotIndex = i-1
-			}
-			
-			newSlots.append(slot)
-		}
-		return newSlots
-	}
-    
-	
-	
-	/// Updates completion status of the slots with corresponding dates
-    public mutating func update(with scoredDates: [Date]) {
-        
-        
-        
-        
-        if slots == nil {
-            
-            //TODO
-            if instant {
-                instantStatus = .completed
-            }
-            return
-        }
-        
-        scoredDates.forEach { (date) in
-            for i in slots!.indices {
-                // TODO: Check schedule satisfied wth Frequency
-                if slots![i].satisfied(date, frequency) {
-                    slots![i].newStatus(.completed)
-                    break
-                }
-                if slots![i].hasPassed {
-                    slots![i].newStatus(.missed)
+    @discardableResult
+    public mutating func update(with completionDates:[Date]) -> Bool {
+        var didUpdate = false
+        if slots != nil {
+            for compDate in completionDates {
+                for i in slots!.indices {
+                    if slots![i].satisfied(compDate, frequency) {
+                        slots![i].newStatus(.completed)
+                        didUpdate = true
+                        break
+                    }
                 }
             }
         }
-	}
+        resetStatus()
+        return didUpdate
+    }
     
-    public func periodString() -> String? {
-        if instant  { return instantDate!.shortDate }
-        if let p = periodBound { return p.description() }
-        return nil
+    
+    mutating func generateSlots() -> [Slot]? {
+        
+        if period?.end == nil {
+            let slot = Slot(period: period!)
+            return [slot]
+        }
+        
+        guard let period = period, let frequency = frequency else {
+            return nil
+        }
+   
+
+        let diffComponents = calender.dateComponents([.day], from: period.start, to: period.end!)
+        let slotCount = (diffComponents.day! / frequency.unitDays)
+        if slotCount == 0 { return nil }
+        //Create Slots
+        var startSlotDate    = Date()
+        var endSlotDate      = Date()
+        var newSlots         = [Slot]()
+        
+        for i in 1...slotCount {
+            startSlotDate = (i == 1) ? period.start : endSlotDate.sm_addDays(days: 1)
+            endSlotDate = startSlotDate.sm_addDays(days: frequency.unitDays - 1)
+            let slotPeriod = PeriodBound(startSlotDate, endSlotDate)
+            let slot = Slot(period: slotPeriod)
+            if slot.current {
+                currentSlotIdx = i-1
+            }
+            newSlots.append(slot)
+        }
+        
+        return newSlots
+
     }
 }
+    
 
-
-class PROCalender {
+class UTCCalender {
 	
-	static var shared = PROCalender()
+	static var shared = UTCCalender()
 	
 	let calender : Calendar
 	init() {
@@ -341,9 +264,9 @@ extension Date {
 	
 	private static let dateFormat: DateFormatter = {
 		let formatter = DateFormatter()
-//        formatter.dateFormat = "EEEE, MMMM dd, yyyy"
+        //formatter.dateFormat = "EEEE, MMMM dd, yyyy"
         formatter.dateStyle = .short
-		formatter.calendar = PROCalender.shared.calender
+		formatter.calendar = UTCCalender.shared.calender
 		return formatter
 	}()
 	
@@ -351,11 +274,8 @@ extension Date {
 		return Date.dateFormat.string(from: self)
 	}
 	
-    
-    
-	
-	func addDays(days: Int) -> Date {
-		let calender = PROCalender.shared.calender
+	func sm_addDays(days: Int) -> Date {
+		let calender = UTCCalender.shared.calender
 		return calender.date(byAdding: .day, value: days, to: self)!
 	}
 }

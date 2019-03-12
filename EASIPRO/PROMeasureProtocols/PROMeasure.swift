@@ -151,10 +151,14 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         }
     }
 
-    
-    // :::TODO: UpdatePrescriberStatus after the conclusion of a session
-    public func updatePrescribingStatus() {
-        self.teststatus = "complete"
+    ////:::PRIORITY
+    public func updateRequest(_ _results: [ResultType]?, callback: @escaping ((_ success: Bool) -> Void)) {
+        guard request != nil, let res = _results else {
+            return
+        }
+        if let completed = schedule?.update(with: res.map{ $0.rp_date }) {
+            request?.rq_updated(completed, callback:callback)
+        }
     }
    
     
@@ -220,7 +224,11 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
                     if let results = results {
                         self?.results?.add(resources: results)
                     }
-                    self?.updatePrescribingStatus()
+                    self?.updateRequest(results, callback: { (success) in
+                        if success {
+                            print("successfully udpated status")
+                        }
+                    })
                 }
                 semaphore.signal()
             })
