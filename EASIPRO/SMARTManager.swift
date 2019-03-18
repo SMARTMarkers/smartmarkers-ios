@@ -19,6 +19,7 @@ public enum UsageMode  {
 
 public class SMARTManager : NSObject {
     
+    public weak var callbackHandler: OAuth2? 
     
     public var client: SMART.Client
     

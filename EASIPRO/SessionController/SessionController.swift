@@ -64,7 +64,6 @@ open class SessionController: NSObject, SessionProtocol {
         for measure in measures {
             group.enter()
             measure.prepareSession { (taskViewController, error) in
-                
                 if let tvc = taskViewController {
                     taskControllers.append(tvc)
                 }
@@ -73,7 +72,6 @@ open class SessionController: NSObject, SessionProtocol {
                         errors.append(err)
                     }
                 }
-                
                 group.leave()
             }
         }

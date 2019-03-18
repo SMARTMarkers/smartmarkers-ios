@@ -8,7 +8,6 @@
 
 import Foundation
 import SMART
-import ResearchKit
 
 public class QuestionnaireViewController: UITableViewController {
     

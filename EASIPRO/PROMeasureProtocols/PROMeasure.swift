@@ -43,6 +43,8 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public var request: RequestType?
     
+    public var oauthSettings: [String:Any]? 
+    
     public var instrument: InstrumentProtocol? {
         didSet {
             results = PROResults(resultRelations: instrument?.ip_resultingFhirResourceType, patient)
@@ -151,7 +153,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         }
     }
 
-    ////:::PRIORITY
+
     public func updateRequest(_ _results: [ResultType]?, callback: @escaping ((_ success: Bool) -> Void)) {
         guard request != nil, let res = _results else {
             return
@@ -171,8 +173,8 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
     
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error serror: Error?) {
         
+        let bundle =  instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!)
 
-        
         guard
             reason == .completed,
             let patient = patient,
@@ -189,12 +191,13 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
 
         do {
 
-            let bundle =  instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!)
 
             //TODO: Request Protocol constraint to DomainResource
             let prescribingReference = try (request as? ProcedureRequest)?.asRelativeReference()
             let patientReference = try patient.asRelativeReference()
             for entry in bundle?.entry ?? [] {
+                
+                //QuestionnaireResponse
                 if let answers = entry.resource as? QuestionnaireResponse {
                     answers.subject = patientReference
                     if let r = prescribingReference {
@@ -203,12 +206,27 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
                         answers.basedOn = basedOns
                     }
                 }
+                
+                //Observation
                 if let observation = entry.resource as? Observation {
                     observation.subject = patientReference
                     if let r = prescribingReference {
                         var basedOns = observation.basedOn ?? [Reference]()
                         basedOns.append(r)
                         observation.basedOn = basedOns
+                    }
+                }
+                
+                //Binary
+                if let binary = entry.resource as? Binary {
+                    binary.securityContext = patientReference
+                }
+                
+                //Media
+                if let media = entry.resource as? Media {
+                    media.subject = patientReference
+                    if let reqReference = prescribingReference {
+                        media.basedOn = [reqReference]
                     }
                 }
             }
@@ -254,8 +272,9 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
     }
     
     public func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
-        let _title = patient?.humanName ?? "PRO Measure"
-        stepViewController.title = _title
+        if stepViewController.title == nil {
+            stepViewController.title = patient?.humanName ?? "Session #\(taskViewController.task!.identifier)"
+        }
     }
     
     
