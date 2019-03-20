@@ -17,12 +17,14 @@ open class MeasuresViewController :  UITableViewController {
     
     let server = SMARTManager.shared.client.server
     
-    open var instruments : [InstrumentProtocol]?
+	open internal(set) var  _title: String?
+	
+	open internal(set) var instruments : [InstrumentProtocol]?
     
-    open var _instruments : [InstrumentProtocol]? {
+    open internal(set) var _instruments : [InstrumentProtocol]? {
         didSet { instruments = _instruments }
     }
-    
+
     open var selections = [String]()
     
     open var onSelection: (([InstrumentProtocol]?) ->Void)?
@@ -30,9 +32,9 @@ open class MeasuresViewController :  UITableViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         tableView.allowsMultipleSelection = true
-        self.title = "PRO-Measures"
+        title = "PRO-Instruments"
         searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Search PRO-Measures"
+        searchController.searchBar.placeholder = "Search Instruments"
         searchController.dimsBackgroundDuringPresentation = false
         searchController.delegate = self
         tableView.tableHeaderView = searchController.searchBar
@@ -44,25 +46,28 @@ open class MeasuresViewController :  UITableViewController {
     
     
     open func markBusy() {
-        self.title = "Loading.."
+		_title = title
+        title = "Loading.."
     }
     
     
     open func markStandby() {
-        self.title = "PRO-Measures"
-        self.tableView.reloadData()
+        tableView.reloadData()
+		title = _title
     }
+	
+	open func set(_ instruments: [InstrumentProtocol]?) {
+		_instruments = instruments
+	}
     
     
     open func loadQuestionnaires() {
-        
+		
         if nil != instruments { return }
- 
         markBusy()
-        
         Questionnaire.Instruments(from: server, options: nil) { [unowned self] (questionnaires, error) in
             if let questionnaires = questionnaires {
-                self._instruments = questionnaires
+				self.set(questionnaires)
                 DispatchQueue.main.async {
                     self.markStandby()
                 }
@@ -137,7 +142,7 @@ open class MeasuresViewController :  UITableViewController {
     override open func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         
         print("More info about the Measure")
-        
+		
     }
     
     func contains(_ indexPath: IndexPath) -> (contains: Bool, id: String?) {
