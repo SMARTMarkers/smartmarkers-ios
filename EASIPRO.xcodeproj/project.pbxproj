@@ -51,6 +51,7 @@
 		D4DFD99A223CC8190097B958 /* PSAT+Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD999223CC8190097B958 /* PSAT+Instrument.swift */; };
 		D4DFD99C22401D260097B958 /* ObservationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD99B22401D260097B958 /* ObservationViewController.swift */; };
 		D4DFD99E224125A60097B958 /* HKClinicalRecordStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD99D224125A60097B958 /* HKClinicalRecordStep.swift */; };
+		D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */; };
 		D4E75D622035E73E000CE95A /* EASIPRO.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E75D602035E73E000CE95A /* EASIPRO.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4E75D732035E7AA000CE95A /* EHRLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D722035E7AA000CE95A /* EHRLoginController.swift */; };
 		D4E75D7820360649000CE95A /* smartlogo.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E75D7720360649000CE95A /* smartlogo.png */; };
@@ -108,6 +109,7 @@
 		D4DFD999223CC8190097B958 /* PSAT+Instrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PSAT+Instrument.swift"; sourceTree = "<group>"; };
 		D4DFD99B22401D260097B958 /* ObservationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationViewController.swift; sourceTree = "<group>"; };
 		D4DFD99D224125A60097B958 /* HKClinicalRecordStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClinicalRecordStep.swift; sourceTree = "<group>"; };
+		D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeOfMotion.swift; sourceTree = "<group>"; };
 		D4E75D5D2035E73E000CE95A /* EASIPRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EASIPRO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4E75D602035E73E000CE95A /* EASIPRO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EASIPRO.h; sourceTree = "<group>"; };
 		D4E75D612035E73E000CE95A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				D4DFD993223C0F730097B958 /* AmslerGridInstrument.swift */,
 				D4DFD997223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift */,
 				D4DFD999223CC8190097B958 /* PSAT+Instrument.swift */,
+				D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */,
 			);
 			path = Instruments;
 			sourceTree = "<group>";
@@ -419,6 +422,7 @@
 				D4B964E22229A74300F46177 /* InstrumentProtocol.swift in Sources */,
 				D4DFD996223C2EB40097B958 /* InstrumentFactory.swift in Sources */,
 				D40CDE9E21FB6078000A1A1C /* QuestionnaireR4.swift in Sources */,
+				D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */,
 				D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */,
 				D4CBC0082045ACF2002B6AC9 /* SMARTMarkers+SwiftFHIR.swift in Sources */,
 				D4618A44205ED820004E117F /* PatientVerificationController.swift in Sources */,
