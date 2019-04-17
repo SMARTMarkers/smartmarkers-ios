@@ -138,7 +138,22 @@ open class ShoulderRangeOfMotion: InstrumentProtocol {
             // TODO:
             // Account for BodySite location.
             let observation = Observation.sm_RangeOfMotion(start: motionResult.start, finish: motionResult.finish, range: motionResult.range, date: motionResult.endDate)
-            observation.bodySite = CodeableConcept.sm_BodySiteShoulder()
+            
+            if limbOption == .both {
+                
+                observation.bodySite = CodeableConcept.sm_BodySiteShoulderBoth()
+                observation.code = CodeableConcept.sm_ShoulderBothRangeOfMotion()
+                
+            }
+            else if limbOption == .left {
+                observation.bodySite = CodeableConcept.sm_BodySiteShoulderLeft()
+                observation.code = CodeableConcept.sm_ShoulderLeftRangeOfMotion()
+            }
+            else if limbOption == .right {
+                observation.bodySite = CodeableConcept.sm_BodySiteShoulderRight()
+                observation.code = CodeableConcept.sm_ShoulderRightRangeOfMotion()
+            }
+            
             let bID = "urn:uuid:\(UUID().uuidString)"
             let entry = BundleEntry()
             entry.fullUrl = FHIRURL(bID)
