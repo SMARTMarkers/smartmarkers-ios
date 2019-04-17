@@ -42,6 +42,7 @@
 		D4CFF01E203C7AE300A6FB31 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4CFF01F203C7AE300A6FB31 /* SMART.framework */; };
 		D4CFF020203C7AF200A6FB31 /* SwiftFHIR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4CFF021203C7AF200A6FB31 /* SwiftFHIR.framework */; };
 		D4CFF03C203C7F9D00A6FB31 /* SMARTManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CFF03B203C7F9D00A6FB31 /* SMARTManager.swift */; };
+		D4DAAD5522662161004F0815 /* RangeOfMotionObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DAAD5422662161004F0815 /* RangeOfMotionObservation.swift */; };
 		D4DFD98B223ABFBF0097B958 /* WebFetchStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */; };
 		D4DFD98E223AC5F40097B958 /* OMRON+InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */; };
 		D4DFD991223AEE0D0097B958 /* BloodPressureObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */; };
@@ -100,6 +101,7 @@
 		D4CFF01F203C7AE300A6FB31 /* SMART.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SMART.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4CFF021203C7AF200A6FB31 /* SwiftFHIR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftFHIR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4CFF03B203C7F9D00A6FB31 /* SMARTManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMARTManager.swift; sourceTree = "<group>"; };
+		D4DAAD5422662161004F0815 /* RangeOfMotionObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeOfMotionObservation.swift; sourceTree = "<group>"; };
 		D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebFetchStep.swift; sourceTree = "<group>"; };
 		D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OMRON+InstrumentProtocol.swift"; sourceTree = "<group>"; };
 		D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureObservation.swift; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 			isa = PBXGroup;
 			children = (
 				D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */,
+				D4DAAD5422662161004F0815 /* RangeOfMotionObservation.swift */,
 			);
 			path = FHIRPresets;
 			sourceTree = "<group>";
@@ -418,6 +421,7 @@
 				D48B320421FFC84600CEA44A /* ResearchKit+Extensions.swift in Sources */,
 				D44C5E1C22009C8E007ACC8E /* QuestionnaireResponseR4.swift in Sources */,
 				D4DFD994223C0F730097B958 /* AmslerGridInstrument.swift in Sources */,
+				D4DAAD5522662161004F0815 /* RangeOfMotionObservation.swift in Sources */,
 				D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */,
 				D4B964E22229A74300F46177 /* InstrumentProtocol.swift in Sources */,
 				D4DFD996223C2EB40097B958 /* InstrumentFactory.swift in Sources */,

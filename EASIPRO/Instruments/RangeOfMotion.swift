@@ -52,9 +52,38 @@ open class KneeRangeOfMotion: InstrumentProtocol {
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         if let motionResult = result.stepResult(forStepIdentifier: "knee.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
+            
+            print(motionResult.startDate)
+            print(motionResult.endDate)
+            print(motionResult.start)
             print(motionResult.finish)
             print(motionResult.maximum)
             print(motionResult.range)
+        
+            let observation = Observation.sm_RangeOfMotion(start: motionResult.start, finish: motionResult.finish, range: motionResult.range, date: motionResult.endDate)
+            
+            if limbOption == ORKPredefinedTaskLimbOption.left {
+                observation.code = CodeableConcept.sm_KneeLeftRangeOfMotion()
+                observation.bodySite = CodeableConcept.sm_BodySiteKneeLeft()
+            }
+            else if limbOption == ORKPredefinedTaskLimbOption.right {
+                observation.code = CodeableConcept.sm_KneeRightRangeOfMotion()
+                observation.bodySite = CodeableConcept.sm_BodySiteKneeRight()
+            }
+            else if limbOption == ORKPredefinedTaskLimbOption.both {
+                observation.bodySite = CodeableConcept.sm_BodySiteKneeBoth()
+                observation.code = CodeableConcept.sm_KneeBothRangeOfMotion()
+            }
+            
+            let bID = "urn:uuid:\(UUID().uuidString)"
+            let entry = BundleEntry()
+            entry.fullUrl = FHIRURL(bID)
+            entry.resource = observation
+            entry.request = BundleEntryRequest(method: .POST, url: FHIRURL("Observation")!)
+            let bundle = SMART.Bundle()
+            bundle.entry = [entry]
+            bundle.type = BundleType.transaction
+            return bundle
         }
         
         
@@ -102,7 +131,27 @@ open class ShoulderRangeOfMotion: InstrumentProtocol {
     }
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+        
+        
+        if let motionResult = result.stepResult(forStepIdentifier: "shoulder.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
+            
+            // TODO:
+            // Account for BodySite location.
+            let observation = Observation.sm_RangeOfMotion(start: motionResult.start, finish: motionResult.finish, range: motionResult.range, date: motionResult.endDate)
+            observation.bodySite = CodeableConcept.sm_BodySiteShoulder()
+            let bID = "urn:uuid:\(UUID().uuidString)"
+            let entry = BundleEntry()
+            entry.fullUrl = FHIRURL(bID)
+            entry.resource = observation
+            entry.request = BundleEntryRequest(method: .POST, url: FHIRURL("Observation")!)
+            let bundle = SMART.Bundle()
+            bundle.entry = [entry]
+            bundle.type = BundleType.transaction
+            return bundle
+            
+        }
         return nil
+        
     }
 }
 

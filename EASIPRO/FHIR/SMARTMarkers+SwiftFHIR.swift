@@ -44,11 +44,19 @@ extension ProcedureRequest {
 
 }
 
-extension CodeableConcept {
+public extension CodeableConcept {
 	
 	public func ep_coding(for systemURI: String) -> Coding? {
 		return self.coding?.filter { $0.system?.absoluteString == systemURI }.first
 	}
+    
+    public class func sm_From(_ codings: [Coding], text: String?) -> CodeableConcept {
+        let cc = CodeableConcept()
+        cc.coding = codings
+        cc.text = text != nil ? FHIRString(text!) : nil
+        return cc
+    }
+    
 }
 
 
@@ -98,5 +106,28 @@ extension SMART.DomainResource {
             throw error
         }
     }
+    
+}
+
+
+public extension SMART.Coding {
+    
+    public class func sm_Coding(_ code: String, _ system: String, _ display: String) -> Coding {
+        let coding = Coding()
+        coding.code = FHIRString(code)
+        coding.display = FHIRString(display)
+        coding.system = FHIRURL(system)
+        return coding
+    }
+    
+    public class func sm_SNOMED(_ code: String, _ display: String) -> Coding {
+        return sm_Coding(code, "http://snomed.info/sct", display)
+    }
+    
+    public class func sm_LOINC(_ code: String, _ display: String) -> Coding {
+        return sm_Coding(code, "http://loinc.org", display)
+    }
+    
+    
     
 }

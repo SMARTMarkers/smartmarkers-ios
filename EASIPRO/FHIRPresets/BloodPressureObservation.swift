@@ -67,24 +67,16 @@ public extension Observation {
 
 public extension Coding {
     
-    public class func sm_Coding(_ code: String, _ system: String, _ display: String) -> Coding {
-        let coding = Coding()
-        coding.code = FHIRString(code)
-        coding.display = FHIRString(display)
-        coding.system = FHIRURL(system)
-        return coding
-    }
-    
     public class func sm_Coding_BP_LOINC() -> Coding {
-        return sm_Coding("55284-4", "http://loinc.org", "Blood Pressure")
+        return sm_LOINC("55284-4", "Blood Pressure")
     }
     
     public class func sm_Coding_SBP_LOINC() -> Coding {
-        return sm_Coding("8462-4", "http://loinc.org", "Diastolic Blood Pressure")
+        return sm_LOINC("8462-4", "Diastolic Blood Pressure")
     }
     
     public class func sm_Coding_DBP_LOINC() -> Coding {
-        return sm_Coding("8480-6", "http://loinc.org", "Systolic Blood Pressure")
+        return sm_LOINC("8480-6", "Systolic Blood Pressure")
     }
     
 }
