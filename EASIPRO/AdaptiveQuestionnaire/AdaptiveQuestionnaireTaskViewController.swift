@@ -194,7 +194,7 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
         if let lastResultStepIdentifer = result.results?.last?.identifier, step.identifier == lastResultStepIdentifer {
             resultsBody(for: result, finishedStep: step, questionnaireResponse: &dynamicResponse)
             let semaphore = DispatchSemaphore(value: 0)
-            try? dynamicResponse?.prettyPrint()
+            try? dynamicResponse?.sm_prettyPrint()
             questionnaire?.next_q(server: server, questionnaireResponse: dynamicResponse, callback: { [weak self] (resource, error) in
                     if let resource = resource as? QuestionnaireResponseR4 {
                         self?.dynamicResponse = resource

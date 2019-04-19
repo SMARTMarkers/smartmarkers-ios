@@ -45,10 +45,22 @@ extension ProcedureRequest {
 }
 
 public extension CodeableConcept {
+    
+    public class func sm_ObservationCategorySurvey() -> CodeableConcept {
+        return sm_From([Coding.sm_Coding("survey", "http://hl7.org/fhir/observation-category", "Survey")], text: "Survey")
+    }
 	
 	public func ep_coding(for systemURI: String) -> Coding? {
 		return self.coding?.filter { $0.system?.absoluteString == systemURI }.first
 	}
+    
+    public class func sm_From(_ instrument: InstrumentProtocol) -> CodeableConcept? {
+        
+        if let coding = instrument.ip_code {
+            return sm_From([coding], text: instrument.ip_title)
+        }
+        return nil
+    }
     
     public class func sm_From(_ codings: [Coding], text: String?) -> CodeableConcept {
         let cc = CodeableConcept()
@@ -95,7 +107,11 @@ extension Patient {
 
 extension SMART.DomainResource {
     
-    public func prettyPrint() throws  {
+    public func sm_resourceType() -> String {
+        return type(of: self).resourceType
+    }
+    
+    public func sm_prettyPrint() throws  {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: try self.asJSON(), options: .prettyPrinted)
             if let jsonString = String(data: jsonData, encoding: .utf8) {
@@ -128,6 +144,32 @@ public extension SMART.Coding {
         return sm_Coding(code, "http://loinc.org", display)
     }
     
+    public class func sm_ResearchKit(_ code: String, _ display: String) -> Coding {
+        return sm_Coding(code, "http://researchkit.org", display)
+    }
     
     
 }
+
+
+
+public extension SMART.Bundle {
+    
+    public class func sm_with(_ resources: [DomainResource]) -> SMART.Bundle {
+        var entries = [BundleEntry]()
+        for resource in resources {
+            let entry = BundleEntry()
+            let bID = "urn:uuid:\(UUID().uuidString)"
+            entry.fullUrl = FHIRURL(bID)
+            entry.resource = resource
+            entry.request = BundleEntryRequest(method: .POST, url: FHIRURL(resource.sm_resourceType())!)
+            entries.append(entry)
+        }
+        let bundle = SMART.Bundle()
+        bundle.entry = entries
+        bundle.type = BundleType.transaction
+        return bundle
+    }
+}
+
+

@@ -74,16 +74,7 @@ open class KneeRangeOfMotion: InstrumentProtocol {
                 observation.bodySite = CodeableConcept.sm_BodySiteKneeBoth()
                 observation.code = CodeableConcept.sm_KneeBothRangeOfMotion()
             }
-            
-            let bID = "urn:uuid:\(UUID().uuidString)"
-            let entry = BundleEntry()
-            entry.fullUrl = FHIRURL(bID)
-            entry.resource = observation
-            entry.request = BundleEntryRequest(method: .POST, url: FHIRURL("Observation")!)
-            let bundle = SMART.Bundle()
-            bundle.entry = [entry]
-            bundle.type = BundleType.transaction
-            return bundle
+            return SMART.Bundle.sm_with([observation])
         }
         
         
@@ -135,8 +126,6 @@ open class ShoulderRangeOfMotion: InstrumentProtocol {
         
         if let motionResult = result.stepResult(forStepIdentifier: "shoulder.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
             
-            // TODO:
-            // Account for BodySite location.
             let observation = Observation.sm_RangeOfMotion(start: motionResult.start, finish: motionResult.finish, range: motionResult.range, date: motionResult.endDate)
             
             if limbOption == .both {
@@ -154,16 +143,7 @@ open class ShoulderRangeOfMotion: InstrumentProtocol {
                 observation.code = CodeableConcept.sm_ShoulderRightRangeOfMotion()
             }
             
-            let bID = "urn:uuid:\(UUID().uuidString)"
-            let entry = BundleEntry()
-            entry.fullUrl = FHIRURL(bID)
-            entry.resource = observation
-            entry.request = BundleEntryRequest(method: .POST, url: FHIRURL("Observation")!)
-            let bundle = SMART.Bundle()
-            bundle.entry = [entry]
-            bundle.type = BundleType.transaction
-            return bundle
-            
+            return SMART.Bundle.sm_with([observation])
         }
         return nil
         
