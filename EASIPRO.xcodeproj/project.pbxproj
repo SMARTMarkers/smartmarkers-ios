@@ -19,6 +19,7 @@
 		D43C71BC2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BB2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift */; };
 		D43C71BE226909050008FF27 /* TowerofHanoiInstrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BD226909050008FF27 /* TowerofHanoiInstrument.swift */; };
 		D43C71C02269FDF50008FF27 /* StroopTestPRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BF2269FDF50008FF27 /* StroopTestPRO.swift */; };
+		D43C71C2226A348C0008FF27 /* TappingSpeedPRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71C1226A348C0008FF27 /* TappingSpeedPRO.swift */; };
 		D43E089821ADDD7000045680 /* works-with-smart-logo-768x514.png in Resources */ = {isa = PBXBuildFile; fileRef = D43E089721ADDD7000045680 /* works-with-smart-logo-768x514.png */; };
 		D44BD43E20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */; };
 		D44C5E1C22009C8E007ACC8E /* QuestionnaireResponseR4.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44C5E1B22009C8E007ACC8E /* QuestionnaireResponseR4.swift */; };
@@ -83,6 +84,7 @@
 		D43C71BB2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialSpanMemoryObservation.swift; sourceTree = "<group>"; };
 		D43C71BD226909050008FF27 /* TowerofHanoiInstrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TowerofHanoiInstrument.swift; sourceTree = "<group>"; };
 		D43C71BF2269FDF50008FF27 /* StroopTestPRO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StroopTestPRO.swift; sourceTree = "<group>"; };
+		D43C71C1226A348C0008FF27 /* TappingSpeedPRO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappingSpeedPRO.swift; sourceTree = "<group>"; };
 		D43E089721ADDD7000045680 /* works-with-smart-logo-768x514.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "works-with-smart-logo-768x514.png"; sourceTree = "<group>"; };
 		D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuestionnaireResponse+ResearchKit.swift"; sourceTree = "<group>"; };
 		D44C5E1B22009C8E007ACC8E /* QuestionnaireResponseR4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireResponseR4.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				D43C71B72268B9360008FF27 /* SpatialSpanMemory.swift */,
 				D43C71BD226909050008FF27 /* TowerofHanoiInstrument.swift */,
 				D43C71BF2269FDF50008FF27 /* StroopTestPRO.swift */,
+				D43C71C1226A348C0008FF27 /* TappingSpeedPRO.swift */,
 			);
 			path = Instruments;
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 				D4DFD994223C0F730097B958 /* AmslerGridInstrument.swift in Sources */,
 				D4DAAD5522662161004F0815 /* RangeOfMotionObservation.swift in Sources */,
 				D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */,
+				D43C71C2226A348C0008FF27 /* TappingSpeedPRO.swift in Sources */,
 				D4B964E22229A74300F46177 /* InstrumentProtocol.swift in Sources */,
 				D4DFD996223C2EB40097B958 /* InstrumentFactory.swift in Sources */,
 				D40CDE9E21FB6078000A1A1C /* QuestionnaireR4.swift in Sources */,
