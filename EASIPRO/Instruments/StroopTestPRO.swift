@@ -10,6 +10,7 @@ import Foundation
 import SMART
 import ResearchKit
 
+// Reference: https://europepmc.org/articles/PMC3828616
 
 open class StroopTestPRO: ActiveInstrumentProtocol {
     
