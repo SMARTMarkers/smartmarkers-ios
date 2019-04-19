@@ -13,7 +13,11 @@ import ResearchKit
 
 open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
     
-    public init() { }
+    let numberOfDisks: UInt!
+    
+    public init(_ numberOfDisks: UInt = 0) {
+        self.numberOfDisks = numberOfDisks
+    }
     
     public var ip_title: String {
         return "Tower of Hanoi Task"
@@ -35,7 +39,7 @@ open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: ip_title, intendedUseDescription: ip_taskDescription, numberOfDisks: 5, options: [])
+        let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: ip_title, intendedUseDescription: ip_taskDescription, numberOfDisks: self.numberOfDisks, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }

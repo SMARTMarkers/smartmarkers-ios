@@ -13,11 +13,11 @@ import ResearchKit
 
 open class TappingSpeedPRO: ActiveInstrumentProtocol {
     
-    var handOption: ORKPredefinedTaskHandOption!
+    let handOption: ORKPredefinedTaskHandOption!
     
-    var duration: TimeInterval!
+    let duration: TimeInterval!
 
-    public init(hand: ORKPredefinedTaskHandOption, duration: TimeInterval = 60) {
+    public init(hand: ORKPredefinedTaskHandOption, duration: TimeInterval = 10) {
         self.handOption = hand
         self.duration = duration
     }

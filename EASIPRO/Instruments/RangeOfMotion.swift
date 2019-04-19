@@ -83,15 +83,14 @@ open class KneeRangeOfMotion: InstrumentProtocol {
 }
 
 
-open class ShoulderRangeOfMotion: InstrumentProtocol {
+open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
     
     var limbOption: ORKPredefinedTaskLimbOption!
     
-    var usageDescription: String?
+    public var ip_taskDescription: String?
     
-    required public init(limbOption: ORKPredefinedTaskLimbOption, usageDescription: String? = nil) {
+    required public init(limbOption: ORKPredefinedTaskLimbOption) {
         self.limbOption = limbOption
-        self.usageDescription = usageDescription
     }
     
     
@@ -116,7 +115,7 @@ open class ShoulderRangeOfMotion: InstrumentProtocol {
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
+        let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: ip_taskDescription, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }

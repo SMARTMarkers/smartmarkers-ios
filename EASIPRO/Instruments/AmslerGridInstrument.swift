@@ -11,13 +11,11 @@ import ResearchKit
 import SMART
 
 
-public class AmslerGridPRO : InstrumentProtocol {
+public class AmslerGridPRO : ActiveInstrumentProtocol {
     
-    public var description: String?
+    public var ip_taskDescription: String?
 
-    public init(_description: String? = nil) {
-        description = _description
-    }
+    public init() { }
     
     public var ip_title: String {
         return "Amsler Grid"
@@ -40,7 +38,7 @@ public class AmslerGridPRO : InstrumentProtocol {
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.ip_identifier, intendedUseDescription: description, options: [])
+        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.ip_identifier, intendedUseDescription: ip_taskDescription, options: [])
         let taskVC = ORKTaskViewController(task: amslerGridTask, taskRun: UUID())
         callback(taskVC, nil)
     }

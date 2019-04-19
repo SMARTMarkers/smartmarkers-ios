@@ -12,9 +12,9 @@ import SMART
 
 open class OMRON: InstrumentProtocol {
     
-    public var settings: [String: Any]?
+    private let settings: [String: Any]!
     
-    public init(authSettings: [String:Any]? = nil) {
+    public init(authSettings: [String:Any]) {
         self.settings = authSettings
     }
     
@@ -40,7 +40,7 @@ open class OMRON: InstrumentProtocol {
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let omronTaskViewController = OmronTaskViewController(oauthSettings: settings!)
+        let omronTaskViewController = OmronTaskViewController(oauthSettings: settings)
         
         callback(omronTaskViewController, nil)
         
@@ -52,15 +52,7 @@ open class OMRON: InstrumentProtocol {
             let diastolic = dict["diastolic"] as! Int
             let systolic  = dict["systolic"]  as! Int
             let bp = Observation.sm_BloodPressure(systolic: systolic, diastolic: diastolic, date: Date())
-            let qrId = "urn:uuid:\(UUID().uuidString)"
-            let entry = BundleEntry()
-            entry.fullUrl = FHIRURL(qrId)
-            entry.resource = bp
-            entry.request = BundleEntryRequest(method: .POST, url: FHIRURL("Observation")!)
-            let bundle = SMART.Bundle()
-            bundle.entry = [entry]
-            bundle.type = BundleType.transaction
-            return bundle
+            return SMART.Bundle.sm_with([bp])
         }
         return nil
     }
