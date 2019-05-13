@@ -58,7 +58,7 @@ open class AdaptiveQuestionnaireTaskViewController: ORKTaskViewController {
 extension SMART.Extension {
     
     convenience init(_ url: FHIRURL, _ dateTime: DateTime?) {
-        self.init(url: url)
+        self.init(url: url.absoluteString.fhir_string)
         self.valueDateTime = dateTime
     }
 }

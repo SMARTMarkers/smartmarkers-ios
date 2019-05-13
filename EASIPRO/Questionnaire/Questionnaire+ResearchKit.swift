@@ -185,7 +185,13 @@ extension QuestionnaireItem {
         case .integer:
             callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
         case .choice:
-            if let answerValueSet = options {
+            if let _ = answerValueSet {
+                
+                //TODO:
+                /*
+                let vsReference = Reference()
+                
+                let vs = ValueSet(
                 let style : ORKChoiceAnswerStyle = (repeats?.bool ?? false) ? .multipleChoice : .singleChoice
                 let dispatchSemaphore = DispatchSemaphore(value: 0)
                 answerValueSet.resolve(ValueSet.self, callback: { (choices) in
@@ -197,9 +203,10 @@ extension QuestionnaireItem {
                     dispatchSemaphore.signal()
                 })
                 dispatchSemaphore.wait()
+                */
 
                 
-            } else if let answerSet = option {
+            } else if let answerSet = answerOption {
                 let style : ORKChoiceAnswerStyle = (repeats?.bool ?? false) ? .multipleChoice : .singleChoice
                 let choices = answerSet.compactMap ({ $0.rk_choiceAnswerFormat(style: style) })
                 let answerFormat = ORKAnswerFormat.choiceAnswerFormat(with: style, textChoices: choices)
@@ -221,7 +228,7 @@ let kDefaultSystem      = "CHOICESYSTEM"
 let kDefaultAnserCode   = "ANSWERCODE"
 let kDelimiter          = "≠"
 
-extension QuestionnaireItemOption {
+extension QuestionnaireItemAnswerOption {
     
     public func rk_choiceAnswerFormat(style: ORKChoiceAnswerStyle = .singleChoice) -> ORKTextChoice? {
         

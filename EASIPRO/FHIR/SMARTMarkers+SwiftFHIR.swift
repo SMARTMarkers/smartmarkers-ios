@@ -30,7 +30,7 @@ extension Appointment {
 	}
 }
 
-extension ProcedureRequest {
+extension ServiceRequest {
 	
     public func ep_coding(for system: String) -> Coding? {
         
@@ -46,15 +46,15 @@ extension ProcedureRequest {
 
 public extension CodeableConcept {
     
-    public class func sm_ObservationCategorySurvey() -> CodeableConcept {
+    class func sm_ObservationCategorySurvey() -> CodeableConcept {
         return sm_From([Coding.sm_Coding("survey", "http://hl7.org/fhir/observation-category", "Survey")], text: "Survey")
     }
 	
-	public func ep_coding(for systemURI: String) -> Coding? {
+    func ep_coding(for systemURI: String) -> Coding? {
 		return self.coding?.filter { $0.system?.absoluteString == systemURI }.first
 	}
     
-    public class func sm_From(_ instrument: InstrumentProtocol) -> CodeableConcept? {
+    class func sm_From(_ instrument: InstrumentProtocol) -> CodeableConcept? {
         
         if let coding = instrument.ip_code {
             return sm_From([coding], text: instrument.ip_title)
@@ -62,7 +62,7 @@ public extension CodeableConcept {
         return nil
     }
     
-    public class func sm_From(_ codings: [Coding], text: String?) -> CodeableConcept {
+    class func sm_From(_ codings: [Coding], text: String?) -> CodeableConcept {
         let cc = CodeableConcept()
         cc.coding = codings
         cc.text = text != nil ? FHIRString(text!) : nil
@@ -128,7 +128,7 @@ extension SMART.DomainResource {
 
 public extension SMART.Coding {
     
-    public class func sm_Coding(_ code: String, _ system: String, _ display: String) -> Coding {
+    class func sm_Coding(_ code: String, _ system: String, _ display: String) -> Coding {
         let coding = Coding()
         coding.code = FHIRString(code)
         coding.display = FHIRString(display)
@@ -136,15 +136,15 @@ public extension SMART.Coding {
         return coding
     }
     
-    public class func sm_SNOMED(_ code: String, _ display: String) -> Coding {
+    class func sm_SNOMED(_ code: String, _ display: String) -> Coding {
         return sm_Coding(code, "http://snomed.info/sct", display)
     }
     
-    public class func sm_LOINC(_ code: String, _ display: String) -> Coding {
+    class func sm_LOINC(_ code: String, _ display: String) -> Coding {
         return sm_Coding(code, "http://loinc.org", display)
     }
     
-    public class func sm_ResearchKit(_ code: String, _ display: String) -> Coding {
+    class func sm_ResearchKit(_ code: String, _ display: String) -> Coding {
         return sm_Coding(code, "http://researchkit.org", display)
     }
     
@@ -155,7 +155,7 @@ public extension SMART.Coding {
 
 public extension SMART.Bundle {
     
-    public class func sm_with(_ resources: [DomainResource]) -> SMART.Bundle {
+    class func sm_with(_ resources: [DomainResource]) -> SMART.Bundle {
         var entries = [BundleEntry]()
         for resource in resources {
             let entry = BundleEntry()

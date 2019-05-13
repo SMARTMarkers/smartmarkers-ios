@@ -10,7 +10,7 @@ import Foundation
 import SMART
 import ResearchKit
 
-
+/*
 extension QuestionnaireR4 {
     
     public func sm_generateResearchKitSteps(callback: @escaping (StepsCallback)) {
@@ -216,7 +216,7 @@ extension QuestionnaireItemR4 {
     
 }
 
-
+*/
 
 extension SMART.Element {
     

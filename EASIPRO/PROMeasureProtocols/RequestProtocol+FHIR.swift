@@ -10,7 +10,7 @@ import Foundation
 import SMART
 
 
-extension ProcedureRequest: RequestProtocol {
+extension ServiceRequest: RequestProtocol {
    
  
     public var rq_identifier: String {
@@ -22,11 +22,24 @@ extension ProcedureRequest: RequestProtocol {
     }
     
     public var rq_requesterName: String? {
-        return requester?.agent?.display?.string.uppercased()
+        
+        if let practitioner = requester?.resolved(Practitioner.self) {
+            return practitioner.name?.first?.human?.uppercased()
+        }
+        
+
+        if let device = requester?.resolved(Device.self) {
+            return "Device #\(device.id!.string)"
+        }
+        
+        return nil
     }
     
     public var rq_requesterEntity: String? {
-        return requester?.onBehalfOf?.display?.string
+        if let org = requester?.resolved(Organization.self) {
+            return org.name?.string
+        }
+        return nil
     }
     
     public var rq_requestDate: Date? {
@@ -87,7 +100,7 @@ extension ProcedureRequest: RequestProtocol {
 
 
 
-extension ProcedureRequest {
+extension ServiceRequest {
     
     
     public func sm_Schedule() -> Schedule? {

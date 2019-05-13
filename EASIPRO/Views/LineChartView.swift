@@ -16,8 +16,8 @@ import UIKit
         static let maxSegmentWidth = 20.0
         static let xBuffer : CGFloat = 40.0
         static let rightMargin : CGFloat = 40.0
-        static let attributes = [NSAttributedStringKey.foregroundColor: UIColor.black,
-                                 NSAttributedStringKey.font: UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.thin)]
+        static let attributes = [NSAttributedString.Key.foregroundColor: UIColor.black,
+                                 NSAttributedString.Key.font: UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.thin)]
     }
     
     

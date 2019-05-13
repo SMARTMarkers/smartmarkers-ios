@@ -39,7 +39,7 @@ open class MeasuresViewController :  UITableViewController {
         searchController.delegate = self
         tableView.tableHeaderView = searchController.searchBar
         definesPresentationContext = true
-        tableView.estimatedRowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = UITableView.automaticDimension
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissModal(_:)))
         self.loadQuestionnaires()
     }
@@ -68,9 +68,9 @@ open class MeasuresViewController :  UITableViewController {
         Questionnaire.Instruments(from: server, options: nil) { [unowned self] (questionnaires, error) in
             if let questionnaires = questionnaires {
 				self.set(questionnaires)
-                DispatchQueue.main.async {
-                    self.markStandby()
-                }
+            }
+            DispatchQueue.main.async {
+                self.markStandby()
             }
         }
     }

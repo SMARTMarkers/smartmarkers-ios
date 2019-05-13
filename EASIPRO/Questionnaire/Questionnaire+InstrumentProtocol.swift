@@ -70,12 +70,12 @@ extension SMART.Questionnaire : InstrumentProtocol {
             }
         }
         
-        let questionnaire = Reference()
-        questionnaire.reference = FHIRString(result.identifier)
+//        let questionnaire = Reference()
+//        questionnaire.reference = FHIRString(result.identifier)
         let answer = QuestionnaireResponse(status: .completed)
-        answer.questionnaire = questionnaire
+        answer.questionnaire = self.url
         answer.authored = DateTime.now
-        answer.questionnaire?.reference?.string = "Questionnaire/\(id!.string)"
+//        answer.questionnaire?.reference?.string = "Questionnaire/\(id!.string)"
         answer.item = itemGroups
         
         let qrId = "urn:uuid:\(UUID().uuidString)"

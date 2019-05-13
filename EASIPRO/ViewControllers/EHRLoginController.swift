@@ -107,7 +107,7 @@ open class EHRLoginController: UIViewController {
         btn.translatesAutoresizingMaskIntoConstraints = false
 		btn.setTitle(loginTitle, for: .normal)
         btn.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        btn.addTarget(self, action: #selector(login(_:)), for: UIControlEvents.touchUpInside)
+        btn.addTarget(self, action: #selector(login(_:)), for: UIControl.Event.touchUpInside)
 
         return btn
     }

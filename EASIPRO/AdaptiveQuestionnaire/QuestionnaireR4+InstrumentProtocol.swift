@@ -10,7 +10,7 @@ import Foundation
 import ResearchKit
 import SMART
 
-
+/*
 extension QuestionnaireR4 : InstrumentProtocol {
     
     
@@ -48,6 +48,7 @@ extension QuestionnaireR4 : InstrumentProtocol {
     
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
         sm_generateResearchKitSteps { (steps, rules, error) in
             if let steps = steps {
                 
@@ -80,4 +81,4 @@ extension QuestionnaireR4 : InstrumentProtocol {
 }
 
 
-
+*/

@@ -15,7 +15,7 @@ open class RoundedButton: UIButton {
     
 	
 	
-	override open func setTitle(_ title: String?, for state: UIControlState) {
+    override open func setTitle(_ title: String?, for state: UIControl.State) {
 		super.setTitle(title, for: state)
 		_title = (state == .normal) ? title : nil
 		
@@ -43,7 +43,7 @@ open class RoundedButton: UIButton {
 		super.tintColorDidChange()
         let titleColor = (tintColor == UIColor.white) ? UIColor.black : UIColor.white
 
-		setTitleColor(titleColor, for: UIControlState())
+        setTitleColor(titleColor, for: UIControl.State())
 		setTitleColor(titleColor, for: .highlighted)
 		setTitleColor(titleColor, for: .selected)
 		setTitleColor(titleColor, for: .normal)

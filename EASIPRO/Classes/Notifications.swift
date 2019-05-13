@@ -59,7 +59,7 @@ public class PRONotification: NSObject {
         let content = UNMutableNotificationContent()
         content.title = title
         content.subtitle = msg
-        content.sound = UNNotificationSound.default()
+        content.sound = UNNotificationSound.default
         
         
     }
@@ -80,7 +80,7 @@ public class PRONotification: NSObject {
                 content.title = "Survey Session Due"
                 content.subtitle = request.rq_title!
                 content.body = "A PRO Session is due today"
-                content.sound = UNNotificationSound.default()
+                content.sound = UNNotificationSound.default
                 content.categoryIdentifier = kPRODueNotificationCategory
                 content.threadIdentifier = request.rq_identifier
                 let availableSlots = slots.filter({ $0.hasPassed == false })

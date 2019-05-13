@@ -47,12 +47,14 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
         
         var components = [ObservationComponent]()
         
+        
+        
         if let lefteye = result.stepResult(forStepIdentifier: "amsler.grid.left"), let gridResult = lefteye.results?.first as? ORKAmslerGridResult, let fhirAttachment = gridResult.sm_toFHIR() {
             let oc = ObservationComponent()
             let cc = CodeableConcept()
             cc.coding = [Coding.sm_Coding("amsler.grid.left", "http://researchkit.org", "Amsler Grid Left Eye")]
             oc.code = cc
-            oc.valueAttachment = fhirAttachment
+            //oc.valueAttachment = fhirAttachment
             components.append(oc)
         }
         
@@ -61,7 +63,7 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
             let cc = CodeableConcept()
             cc.coding = [Coding.sm_Coding("amsler.grid.right", "http://researchkit.org", "Amsler Grid Right Eye")]
             oc.code = cc
-            oc.valueAttachment = fhirAttachment
+            //oc.valueAttachment = fhirAttachment
             components.append(oc)
         }
         
@@ -94,7 +96,7 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
 extension ORKAmslerGridResult {
     
     func sm_toFHIR() -> SMART.Attachment? {
-        guard let img = image, let base64 = UIImagePNGRepresentation(img)?.base64EncodedString() else { return nil }
+        guard let img = image, let base64 = img.pngData()?.base64EncodedString() else { return nil }
         let dt = DateTime.now
         let attachment = SMART.Attachment()
         attachment.data = Base64Binary(value: base64)

@@ -20,8 +20,8 @@ import UIKit
 		static let bottomBorder: 	CGFloat = 10
 		static let colorAlpha: 		CGFloat = 0.3
 		static let circleDiameter: 	CGFloat = 7.0
-		static let attributes = [NSAttributedStringKey.foregroundColor: UIColor.white,
-								 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 10)]
+        static let attributes = [NSAttributedString.Key.foregroundColor: UIColor.white,
+                                 NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10)]
 	}
 	@IBInspectable var startColor: 	UIColor = UIColor(red: 1, green:  0.493272, blue: 0.473998, alpha: 1)
 	@IBInspectable var endColor: 	UIColor = UIColor(red: 1, green:  0.57810, blue: 0, alpha: 1)
@@ -155,13 +155,13 @@ import UIKit
 		
         
 		if let title = title  {
-			(title as NSString).draw(at: CGPoint.init(x: Constants.margin, y: 10) , withAttributes: [NSAttributedStringKey.foregroundColor: UIColor.white,
-																					 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 20)])
+            (title as NSString).draw(at: CGPoint.init(x: Constants.margin, y: 10) , withAttributes: [NSAttributedString.Key.foregroundColor: UIColor.white,
+                                                                                                     NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20)])
 		}
         if let subtitle = subtitle {
             (subtitle as NSString).draw(at: CGPoint(x: Constants.margin, y: 35), withAttributes:
-                [NSAttributedStringKey.foregroundColor: UIColor.lightText,
-                 NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
+                [NSAttributedString.Key.foregroundColor: UIColor.lightText,
+                 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)])
         }
         
 		
@@ -186,8 +186,8 @@ import UIKit
         static let cornerRadiusSize = CGSize(width: 10.0, height: 10.0)
         static let bottomBorder: CGFloat = 10.0
         static let circleDiameter:     CGFloat = 7.0
-        static let attributes = [NSAttributedStringKey.foregroundColor: UIColor.white,
-                                 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 7.0)]
+        static let attributes = [NSAttributedString.Key.foregroundColor: UIColor.white,
+                                 NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 7.0)]
         
         
     }
@@ -401,13 +401,13 @@ import UIKit
                                    end: endPoint,
                                    options: CGGradientDrawingOptions(rawValue: 0))
         if let title = title  {
-            (title as NSString).draw(at: CGPoint.init(x: Constants.margin, y: 10) , withAttributes: [NSAttributedStringKey.foregroundColor: UIColor.white,
-                                                                                                     NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 20)])
+            (title as NSString).draw(at: CGPoint.init(x: Constants.margin, y: 10) , withAttributes: [NSAttributedString.Key.foregroundColor: UIColor.white,
+                                                                                                     NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20)])
         }
         if let subtitle = subTitle {
             (subtitle as NSString).draw(at: CGPoint(x: Constants.margin, y: 35), withAttributes:
-                [NSAttributedStringKey.foregroundColor: UIColor.lightText,
-                 NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15)])
+                [NSAttributedString.Key.foregroundColor: UIColor.lightText,
+                 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)])
         }
         scrollView.frame = CGRect(x: Constants.margin, y: 0, width: frame.size.width - (2 * Constants.margin), height: frame.size.height)
         mainLayer.frame = scrollView.bounds

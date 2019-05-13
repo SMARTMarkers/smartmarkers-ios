@@ -56,7 +56,7 @@ open class ObservationViewController: UITableViewController {
     
     func configure() {
         if let components = observation.component {
-            self.attachments = components.compactMap({ $0.sm_ImageAttachment() })
+//            self.attachments = components.compactMap({ $0.sm_ImageAttachment() })
         }
     }
     
@@ -130,22 +130,6 @@ public struct SMImageAttachemnt {
 }
 
 
-public extension ObservationComponent {
-    
-    public func sm_ImageAttachment() -> SMImageAttachemnt? {
-        
-        if let va = valueAttachment {
-            if va.contentType?.string == "image/png" {
-                let img = UIImage(data: Data(base64Encoded: va.data!.value)!)!
-                let date = va.creation?.nsDate
-                let title = va.title?.string
-                return SMImageAttachemnt(image: img, title: title, date: date)
-            }
-        }
-        
-        return nil
-    }
-    
-}
+
 
 

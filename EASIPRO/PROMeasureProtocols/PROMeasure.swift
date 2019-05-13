@@ -193,7 +193,7 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
 
 
             //TODO: Request Protocol constraint to DomainResource
-            let prescribingReference = try (request as? ProcedureRequest)?.asRelativeReference()
+            let prescribingReference = try (request as? ServiceRequest)?.asRelativeReference()
             let patientReference = try patient.asRelativeReference()
             for entry in bundle?.entry ?? [] {
                 
