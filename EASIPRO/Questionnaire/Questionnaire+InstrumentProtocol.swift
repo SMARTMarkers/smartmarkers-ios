@@ -63,19 +63,17 @@ extension SMART.Questionnaire : InstrumentProtocol {
             return nil
         }
         
+        
         var itemGroups = [QuestionnaireResponseItem]()
         for result in taskResults {
-            if let item = result.c3_responseItems(for: task) {
+            if let item = result.responseItems(for: self, task: task) {
                 itemGroups.append(contentsOf: item)
             }
         }
         
-//        let questionnaire = Reference()
-//        questionnaire.reference = FHIRString(result.identifier)
         let answer = QuestionnaireResponse(status: .completed)
         answer.questionnaire = self.url
         answer.authored = DateTime.now
-//        answer.questionnaire?.reference?.string = "Questionnaire/\(id!.string)"
         answer.item = itemGroups
         
         let qrId = "urn:uuid:\(UUID().uuidString)"

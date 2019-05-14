@@ -25,6 +25,43 @@ extension Questionnaire  {
         
         var nsteps = [ORKStep]()
         var nrules = [RuleTupple]()
+        var errors = [Error]()
+        let group = DispatchGroup()
+        for item in items {
+            group.enter()
+            item.sm_generateSteps(callback: { (steps, rules, error) in
+                if let error = error {
+                    errors.append(error)
+                }
+                else {
+                    if let steps = steps {
+                        nsteps.append(contentsOf: steps)
+                    }
+                    if let rules = rules {
+                        nrules.append(contentsOf: rules)
+                    }
+                }
+                group.leave()
+            })
+        }
+        
+        
+        
+        group.notify(queue: .main) {
+            
+            if nsteps.hasDuplicates() {                errors.append(SMError.instrumentHasDuplicateLinkIds)
+                nsteps.removeAll()
+            }
+            
+            callback(nsteps.isEmpty ? nil : nsteps, nrules, errors.first)
+        }
+        
+    }
+    /*
+        
+        var nsteps = [ORKStep]()
+        var nrules = [RuleTupple]()
+        var errors = [Error]()
         let group = DispatchGroup()
         let queue = DispatchQueue(label: "stepsQueue")
         let semaphore = DispatchSemaphore(value: 1)
@@ -33,7 +70,7 @@ extension Questionnaire  {
                 group.enter()
                 item.sm_generateSteps(callback: { (steps, rules, error) in
                     if let error = error {
-                        print(error as Any)
+                        errors.append(error)
                     }
                     else {
                         if let steps = steps {
@@ -57,7 +94,7 @@ extension Questionnaire  {
             }
         }
         
-    }
+    }*/
 }
 
 extension QuestionnaireItem {
@@ -107,10 +144,13 @@ extension QuestionnaireItem {
                         }
                         
                         let formItems = subSteps.flatMap  { $0.sm_toFormItem()! }
-                        let formSp = ORKFormStep.init(identifier: self.rk_Identifier(), title: self.text?.string, text: self.id!.string)
+                        let formSp = ORKFormStep.init(identifier: self.rk_Identifier(), title: self.text?.string, text: self.id?.string)
                         formSp.formItems = formItems
                         formSp.footnote = self.sm_questionItem_instructions()
                         nsteps.append(formSp)
+                    } else {
+                        //TODO add error:
+                        
                     }
                     break
                 default:

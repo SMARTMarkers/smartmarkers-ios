@@ -28,37 +28,55 @@ import SMART
 
 extension ORKStepResult {
     
-    
-    func c3_responseItems(for task: ORKTask) -> [QuestionnaireResponseItem]? {
+    func responseItems(for questionnaire: Questionnaire?, task: ORKTask) -> [QuestionnaireResponseItem]? {
         
         guard let results = results else {
             return nil
         }
-        
+        let stepIdentifer = identifier
+        let step = task.step?(withIdentifier: stepIdentifer)
         var items = [QuestionnaireResponseItem]()
+        
+        var stepAnswerItems = [QuestionnaireResponseItem]()
         for result in results {
-            if let result = result as? ORKQuestionResult {
-                if let question = task.step!(withIdentifier: result.identifier) as? ORKQuestionStep, let answers = result.c3_responseItemAnswers(from: question) {
-                    
-                    let responseItem = QuestionnaireResponseItem(linkId: result.identifier.fhir_string)
-                    responseItem.text = question.title?.fhir_string
-                    responseItem.answer = answers
-                    items.append(responseItem)
-                }
-                
-                
+            if let res = result as? ORKQuestionResult, let answer = res.sm_FHIRQuestionResult() {
+                let resultStepIdentifer = res.identifier
+                let answerItem = QuestionnaireResponseItem(linkId: resultStepIdentifer.fhir_string)
+                answerItem.answer = answer
+                stepAnswerItems.append(answerItem)
             }
         }
         
-        return items.count > 0 ? items : nil
+        //Is this a FormStep?
+        if let form = step as? ORKFormStep, stepAnswerItems.count > 0 {
+            stepAnswerItems.forEach { (answerItem) in
+                answerItem.text = form.formItems!.filter({ $0.identifier == answerItem.linkId!.string }).first!.text!.fhir_string
+            }
+            let groupItem = QuestionnaireResponseItem(linkId: identifier.fhir_string)
+            groupItem.text = step?.title?.fhir_string
+            groupItem.item = stepAnswerItems
+            items.append(groupItem)
+            return items
+        }
+        
+            //Single Step: Has only One Item
+        else if let question = step as? ORKQuestionStep, stepAnswerItems.count == 1 {
+            stepAnswerItems.first?.text = question.question?.fhir_string
+            return stepAnswerItems
+        }
+        
+
+        return nil
     }
+    
+    
 
 }
 
 
 extension ORKQuestionResult {
     
-    func c3_responseItemAnswers(from step: ORKQuestionStep?) -> [QuestionnaireResponseItemAnswer]? {
+    func sm_FHIRQuestionResult() -> [QuestionnaireResponseItemAnswer]? {
         
         //Choice
         if let slf = self as? ORKChoiceQuestionResult {
@@ -85,8 +103,8 @@ extension ORKQuestionResult {
             return slf.sm_IntegerItemAnswer()
         }
         
-        
         return nil
+        
     }
 }
 
