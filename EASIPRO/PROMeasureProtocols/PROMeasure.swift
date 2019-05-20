@@ -104,9 +104,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
                 let proMeasures = requests.map{ PROMeasure(request: $0) }
                 callback(proMeasures, nil)
             }
-            if let error = error {
-                callback(nil, error)
-            }
+            callback(nil, error)
         }
     }
     
@@ -116,9 +114,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
                 let proMeasures = instruments.map { PROMeasure(instrument: $0) }
                 callback(proMeasures, nil)
             }
-            if let error = error {
-                callback(nil, error)
-            }
+            callback(nil, error)
         }
         
     }

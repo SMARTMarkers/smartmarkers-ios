@@ -15,7 +15,9 @@ open class MeasuresViewController :  UITableViewController {
     
     let searchController = UISearchController(searchResultsController: nil)
     
-    let server = SMARTManager.shared.client.server
+    open lazy var server : SMART.Server = {
+       return SMARTManager.shared.client.server
+    }()
     
 	open internal(set) var  _title: String?
 	
@@ -30,9 +32,9 @@ open class MeasuresViewController :  UITableViewController {
     open var onSelection: (([InstrumentProtocol]?) ->Void)?
     
     override open func viewDidLoad() {
+        title = "PRO-Instruments"
         super.viewDidLoad()
         tableView.allowsMultipleSelection = true
-        title = "PRO-Instruments"
         searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = "Search Instruments"
         searchController.dimsBackgroundDuringPresentation = false
@@ -65,10 +67,15 @@ open class MeasuresViewController :  UITableViewController {
 		
         if nil != instruments { return }
         markBusy()
-        Questionnaire.Instruments(from: server, options: nil) { [unowned self] (questionnaires, error) in
+        Questionnaire.Instruments(from: server, options: ["_summary":"true"]) { [unowned self] (questionnaires, error) in
+            
+            if let error = error {
+                print(error)
+            }
             if let questionnaires = questionnaires {
 				self.set(questionnaires)
             }
+            
             DispatchQueue.main.async {
                 self.markStandby()
             }

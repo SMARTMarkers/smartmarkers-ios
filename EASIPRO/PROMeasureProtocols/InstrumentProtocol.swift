@@ -34,7 +34,7 @@ public protocol InstrumentProtocol : class {
 
 public extension InstrumentProtocol where Self: SMART.DomainResource {
     
-    public static func Instruments(from server: Server, options: [String:String]?, callback: @escaping ((_ instrumentResources: [Self]?, _ error: Error?) -> Void)) {
+    static func Instruments(from server: Server, options: [String:String]?, callback: @escaping ((_ instrumentResources: [Self]?, _ error: Error?) -> Void)) {
         let search = Self.search(options as Any)
         search.pageCount = 100
         search.perform(server) { (bundle, error) in

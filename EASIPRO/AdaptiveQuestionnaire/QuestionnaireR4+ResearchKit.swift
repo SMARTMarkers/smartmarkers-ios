@@ -218,37 +218,3 @@ extension QuestionnaireItemR4 {
 
 */
 
-extension SMART.Element {
-    
-    
-    public func sm_questionItem_instructions() -> String? {
-        return extensions(forURI: kStructureDefinition_QuestionnaireInstruction)?.first?.valueString?.localized
-    }
-    
-    public func sm_questionItem_Help() -> String? {
-        return extensions(forURI: kStructureDefinition_QuestionnaireHelp)?.first?.valueString?.localized
-    }
-    
-}
-
-
-extension ResearchKit.ORKStep {
-    
-    func sm_toFormItem() -> [ORKFormItem]? {
-        
-
-        
-        if let slf = self as? ORKQuestionStep {
-            
-            let formItem = ORKFormItem(identifier: slf.identifier , text: slf.question, answerFormat: slf.answerFormat)
-            
-            return [formItem]
-        }
-        else {
-              let formItem = ORKFormItem(identifier: self.identifier , text: self.text, answerFormat: nil)
-            return [formItem]
-//            return [ORKFormItem(sectionTitle: self.text)]
-            
-        }
-    }
-}

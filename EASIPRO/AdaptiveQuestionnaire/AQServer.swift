@@ -9,42 +9,18 @@
 import Foundation
 import SMART
 
-public class AQFHIRJSONRequestHandler : FHIRJSONRequestHandler {
- 
-    override public func response(response: URLResponse?, data inData: Data?, error: Error?) -> FHIRServerResponse {
-        if let res = response {
-            return AQFHIRServerJSONResponse(handler: self, response: res, data: inData, error: error)
-        }
-        if let error = error {
-            return AQFHIRServerJSONResponse(error: error, handler: self)
-        }
-        return AQFHIRServerJSONResponse(error: FHIRError.noResponseReceived, handler: self)    }
-}
-
-public class AQFHIRServerJSONResponse : FHIRServerJSONResponse {
+public class PROMISServer: AQServer {
     
-    public override func responseResource<T>(ofType: T.Type) throws -> T where T : Resource {
-        
-        guard let json = json else {
-            throw FHIRError.responseNoResourceReceived
-        }
-        var context = FHIRInstantiationContext(strict: false)
-        let resource : T
-        
-        if "QuestionnaireResponse" == json["resourceType"] as? String {
-            resource = QuestionnaireResponseR4(json: json, owner: nil, context: &context) as! T
-        }
-        else {
-            resource = QuestionnaireR4(json: json, owner: nil, context: &context) as! T
-        }
-        try context.validate()
-        return resource
-        
+    public convenience init(base: URL, clientid: String, clientsecret: String) {
+        let settings = [
+            "client_id" : clientid,
+            "client_secret" : clientsecret
+        ]
+        self.init(baseURL: base, auth: settings)
     }
 }
 
-
-public class AQServer : SMART.FHIRMinimalServer {
+public class AQServer : SMART.Server {
     
     var client_id : String?
     
@@ -60,61 +36,35 @@ public class AQServer : SMART.FHIRMinimalServer {
     }
     
     open override func handlerForRequest(withMethod method: FHIRRequestMethod, resource: Resource?) -> FHIRRequestHandler? {
-        let handler = AQFHIRJSONRequestHandler(method, resource: resource)
+        let handler = FHIRJSONRequestHandler(method, resource: resource)
         handler.options.insert(.lenient)
         return handler
     }
     
     public override func configurableRequest(for url: URL) -> URLRequest {
-        var request = URLRequest(url: url)
-        let basic = "\(client_id!):\(client_secret!)"
-        request.setValue("Basic \(basic.sm_base64encoded())", forHTTPHeaderField: "Authorization")
+        var request = super.configurableRequest(for: url)
+        let auth    = String(format: "%@:%@", client_id!, client_secret!)
+        let data    = auth.data(using: .utf8)!
+        let basic   = data.base64EncodedString()
+        request.setValue("Basic \(basic)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/fhir+json", forHTTPHeaderField: "Content-Type")
         return request
     }
 
     
-    public func discover(callback : @escaping (([QuestionnaireR4]?, Error?) -> Void)) {
-        
-        let handler = FHIRJSONRequestHandler(.GET)
-        performRequest(against: "Questionnaire?_summary=true", handler: handler) { (response) in
-            let jsonresponse = response as! FHIRServerJSONResponse
-            
-            if let entries = jsonresponse.json?["entry"] as? [FHIRJSON] {
-                do {
-                    if let questionnaires = try self.summarizeQuestionnairesInSTU3(json: entries) {
-                        callback(questionnaires, nil)
-                    }
-                }
-                catch {
-                    callback(nil, SMError.adaptiveQuestionnaireErrorMappingToSTU3)
-                }
-            }
-            callback(nil, nil)
-        }
-    }
-    
-    func summarizeQuestionnairesInSTU3(json: [FHIRJSON]) throws -> [QuestionnaireR4]? {
-        
-        let qresources = json.map { (jsonObj) -> FHIRJSON in
-            return jsonObj["resource"] as! FHIRJSON
-        }
-        
-        let questionnaires = qresources.map { (jsonResource) -> QuestionnaireR4? in
-            
-            do {
-                let q = try QuestionnaireR4.init(json: jsonResource)
-                return q
-            }
-            catch {
+    public func discover(callback : @escaping (([Questionnaire]?, Error?) -> Void)) {
+        Questionnaire.search(["_summary":"true"]).perform(self) { (bundle, error) in
+            if let error = error {
                 print(error)
-                return nil
             }
-
-            
+            if let bundle = bundle {
+                let questionnaires = bundle.entry?.filter { $0.resource is Questionnaire }.map { $0.resource as! Questionnaire}
+                callback(questionnaires, error)
+            }
+            else {
+                callback(nil, error)
+            }
         }
-        
-        
-        return questionnaires.filter{ $0 != nil } as? [QuestionnaireR4]
     }
 }
 
@@ -126,7 +76,7 @@ public class AQClient {
 
 public extension AQClient {
     
-    public class func test() {
+    class func test() {
         
         let base = "https://mss.fsm.northwestern.edu/AC_API/2018-10/"
         let usr  = "2F984419-5008-4E42-8210-68592B418233"
@@ -140,15 +90,15 @@ public extension AQClient {
     
         
         let server = AQServer(baseURL: URL(string: base)!, auth: settings)
-        QuestionnaireR4.read("96FE494D-F176-4EFB-A473-2AB406610626", server: server, callback: { (questionnaire, error) in
+        Questionnaire.read("96FE494D-F176-4EFB-A473-2AB406610626", server: server, callback: { (questionnaire, error) in
             
-            if let r4 = questionnaire as? QuestionnaireR4 {
+            if let r4 = questionnaire as? Questionnaire {
                 r4.item = nil
-                let qr = try! QuestionnaireResponseR4.sm_body(contained: r4)
+                let qr = try! QuestionnaireResponse.sm_AdaptiveQuestionnaireBody(contained: r4)
                 r4.next_q(server: server, questionnaireResponse: qr) { (resource, error) in
                     do {
-                        if let resource = resource as? QuestionnaireResponseR4 {
-                            if let questionnaire = resource.contained?.first as? QuestionnaireR4 {
+                        if let resource = resource as? QuestionnaireResponse {
+                            if let questionnaire = resource.contained?.first as? Questionnaire {
                                 questionnaire.status = PublicationStatus.active
                                 print(questionnaire.item?.first?.item?[1].answerOption)
                             }
@@ -178,9 +128,9 @@ public extension AQClient {
         
         let server = AQServer(baseURL: URL(string: base)!, auth: settings)
 
-        QuestionnaireR4.read("96FE494D-F176-4EFB-A473-2AB406610626", server: server, callback: { (questionnaire, error) in
+        Questionnaire.read("96FE494D-F176-4EFB-A473-2AB406610626", server: server, callback: { (questionnaire, error) in
             
-            if let r4 = questionnaire as? QuestionnaireR4 {
+            if let r4 = questionnaire as? Questionnaire {
                 
                 
                 

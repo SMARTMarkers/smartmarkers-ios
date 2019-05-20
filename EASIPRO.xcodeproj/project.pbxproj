@@ -33,7 +33,6 @@
 		D482BA6321C953F800840D2E /* AQServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D482BA6221C953F800840D2E /* AQServer.swift */; };
 		D48B31FC21FF84FA00CEA44A /* QuestionnaireR4+InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B31FB21FF84FA00CEA44A /* QuestionnaireR4+InstrumentProtocol.swift */; };
 		D48B31FE21FF850D00CEA44A /* QuestionnaireR4+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B31FD21FF850D00CEA44A /* QuestionnaireR4+ResearchKit.swift */; };
-		D48B320021FFA69A00CEA44A /* QuestionnaireItemR4.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B31FF21FFA69A00CEA44A /* QuestionnaireItemR4.swift */; };
 		D48B320221FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */; };
 		D48B320421FFC84600CEA44A /* ResearchKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */; };
 		D4B964DC22298FF000F46177 /* RequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B964DB22298FF000F46177 /* RequestProtocol.swift */; };
@@ -98,7 +97,6 @@
 		D482BA6221C953F800840D2E /* AQServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AQServer.swift; sourceTree = "<group>"; };
 		D48B31FB21FF84FA00CEA44A /* QuestionnaireR4+InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuestionnaireR4+InstrumentProtocol.swift"; sourceTree = "<group>"; };
 		D48B31FD21FF850D00CEA44A /* QuestionnaireR4+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuestionnaireR4+ResearchKit.swift"; sourceTree = "<group>"; };
-		D48B31FF21FFA69A00CEA44A /* QuestionnaireItemR4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireItemR4.swift; sourceTree = "<group>"; };
 		D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireTaskViewController.swift; sourceTree = "<group>"; };
 		D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResearchKit+Extensions.swift"; sourceTree = "<group>"; };
 		D4B964DB22298FF000F46177 /* RequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProtocol.swift; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 				D482BA6221C953F800840D2E /* AQServer.swift */,
 				D44C5E1B22009C8E007ACC8E /* QuestionnaireResponseR4.swift */,
 				D40CDE9D21FB6078000A1A1C /* QuestionnaireR4.swift */,
-				D48B31FF21FFA69A00CEA44A /* QuestionnaireItemR4.swift */,
 				D48B31FB21FF84FA00CEA44A /* QuestionnaireR4+InstrumentProtocol.swift */,
 				D48B31FD21FF850D00CEA44A /* QuestionnaireR4+ResearchKit.swift */,
 				D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */,
@@ -466,7 +463,6 @@
 				D482BA6321C953F800840D2E /* AQServer.swift in Sources */,
 				D4DFD998223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift in Sources */,
 				D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */,
-				D48B320021FFA69A00CEA44A /* QuestionnaireItemR4.swift in Sources */,
 				D43C71B82268B9360008FF27 /* SpatialSpanMemory.swift in Sources */,
 				D43C71BC2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift in Sources */,
 				D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */,

@@ -8,7 +8,7 @@
 
 import UIKit
 import UserNotifications
-import SwiftFHIR
+import SMART
 
 let kPRODueNotificationCategory = "DUE_PRO"
 

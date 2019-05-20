@@ -10,23 +10,9 @@ import Foundation
 import SMART
 
 
-/**
- Temporary class for supporting Questionnarire R4
- */
-
-
-
-open class QuestionnaireR4: Questionnaire {
+extension Questionnaire {
     
-    
-}
-
-
-
-extension QuestionnaireR4 {
-    
-    
-    public func next_q(server: FHIRMinimalServer, questionnaireResponse: QuestionnaireResponseR4?, options: FHIRRequestOption = [], callback: @escaping FHIRResourceErrorCallback) {
+    public func next_q(server: FHIRMinimalServer, questionnaireResponse: QuestionnaireResponse?, options: FHIRRequestOption = [], callback: @escaping FHIRResourceErrorCallback) {
         
         guard let id = id, let questionnaireResponse = questionnaireResponse else {
             callback(nil, FHIRError.requestNotSent("Questionnaire has no id"))
@@ -49,7 +35,7 @@ extension QuestionnaireR4 {
             if nil == response.error {
                 self._server = server
                 do {
-                    let resource = try response.responseResource(ofType: QuestionnaireResponseR4.self)
+                    let resource = try response.responseResource(ofType: QuestionnaireResponse.self)
                     resource._server = server
                     callback(resource, nil)
                     

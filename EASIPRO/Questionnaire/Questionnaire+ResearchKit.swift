@@ -345,7 +345,40 @@ extension ValueSet {
 
 extension ORKChoiceQuestionResult {
     
-    public func populateAnswer(into response: inout QuestionnaireResponseR4, for step: ORKStep) {
+    public func populateAnswer(into response: inout QuestionnaireResponse, for step: ORKStep) {
         
+    }
+}
+
+
+extension SMART.Element {
+    
+    
+    public func sm_questionItem_instructions() -> String? {
+        return extensions(forURI: kStructureDefinition_QuestionnaireInstruction)?.first?.valueString?.localized
+    }
+    
+    public func sm_questionItem_Help() -> String? {
+        return extensions(forURI: kStructureDefinition_QuestionnaireHelp)?.first?.valueString?.localized
+    }
+    
+}
+
+
+extension ResearchKit.ORKStep {
+    
+    func sm_toFormItem() -> [ORKFormItem]? {
+        
+        if let slf = self as? ORKQuestionStep {
+            
+            let formItem = ORKFormItem(identifier: slf.identifier , text: slf.question, answerFormat: slf.answerFormat)
+            
+            return [formItem]
+        }
+        else {
+            let formItem = ORKFormItem(identifier: self.identifier , text: self.text, answerFormat: nil)
+            return [formItem]
+            
+        }
     }
 }

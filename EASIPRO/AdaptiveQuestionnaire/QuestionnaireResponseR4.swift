@@ -12,52 +12,11 @@ import SMART
 
 
 
-
-open class QuestionnaireResponseR4: QuestionnaireResponse {
+extension QuestionnaireResponse {
     
-    
-    override open func populate(from json: FHIRJSON, context instCtx: inout FHIRInstantiationContext) {
+    public class func sm_AdaptiveQuestionnaireBody(contained questionnaire: Questionnaire, answer: Any? = nil) throws -> QuestionnaireResponse? {
         
-        super.populate(from: json, context: &instCtx)
-        
-        contained = createInstances(of: QuestionnaireR4.self, for: "contained", in: json, context: &instCtx, owner: self) ?? contained
-
-    }
-    
-    
-    override open func decorate(json: inout FHIRJSON, errors: inout [FHIRValidationError]) {
-        
-//        bugWorkaround(json: &json)
-        super.decorate(json: &json, errors: &errors)
-        
-        arrayDecorate(json: &json, withKey: "contained", using: self.contained, errors: &errors)
-
-        
-
-    }
-    
-    func bugWorkaround(json: inout FHIRJSON) {
-        
-        if let item = item {
-            for itm in item {
-                if var ans = itm.answer {
-                    if ans.count > 1 {
-                        ans.remove(at: 0)
-                        itm.answer = ans
-                    }
-                }
-            }
-        }
-        
-    }
-
-}
-
-extension QuestionnaireResponseR4 {
-    
-    public class func sm_body(contained questionnaire: QuestionnaireR4, answer: Any? = nil) throws -> QuestionnaireResponseR4? {
-        
-        let qr = QuestionnaireResponseR4()
+        let qr = QuestionnaireResponse()
         qr.id = FHIRString("rtest")
         
         let meta = Meta()
@@ -71,7 +30,7 @@ extension QuestionnaireResponseR4 {
         qr.status = QuestionnaireResponseStatus.inProgress
         qr.authored = DateTime.now
         
-        let containedQ = QuestionnaireR4()
+        let containedQ = Questionnaire()
         containedQ.meta = questionnaire.meta
         containedQ.meta?.profile = [FHIRURL(kSDC_adaptive_Questionnaire)!]
         containedQ.id = questionnaire.id
