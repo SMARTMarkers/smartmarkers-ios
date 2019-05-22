@@ -169,8 +169,15 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
     
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error serror: Error?) {
         
+        // ***
+        // Bug :Premature firing before conclusion step
+        // ***
+        let stepIdentifier = taskViewController.currentStepViewController!.step!.identifier
+        if stepIdentifier.contains("range.of.motion") { return }
+        // ***
+        
         let bundle =  instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!)
-
+        
         guard
             reason == .completed,
             let patient = patient,
