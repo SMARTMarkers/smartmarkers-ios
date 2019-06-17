@@ -151,22 +151,35 @@ public extension SMART.Coding {
     
 }
 
+extension SMART.DomainResource {
+    
+    func sm_asBundleEntry() -> BundleEntry {
+        let entry = BundleEntry()
+        let uri = "urn:uuid:\(UUID().uuidString)"
+        entry.fullUrl = FHIRURL(uri)
+        entry.resource = self
+        entry.request = BundleEntryRequest(method: .POST, url: FHIRURL(self.sm_resourceType())!)
+        return entry
+    }
+}
+
+extension SMART.BundleEntry {
+    
+    func sm_asReference() -> Reference {
+        let reference = Reference()
+        reference.reference = "\((self.resource as! DomainResource).sm_resourceType())/\(self.fullUrl!.absoluteString)".fhir_string
+        return reference
+    }
+    
+}
+
 
 
 public extension SMART.Bundle {
     
     class func sm_with(_ resources: [DomainResource]) -> SMART.Bundle {
-        var entries = [BundleEntry]()
-        for resource in resources {
-            let entry = BundleEntry()
-            let bID = "urn:uuid:\(UUID().uuidString)"
-            entry.fullUrl = FHIRURL(bID)
-            entry.resource = resource
-            entry.request = BundleEntryRequest(method: .POST, url: FHIRURL(resource.sm_resourceType())!)
-            entries.append(entry)
-        }
         let bundle = SMART.Bundle()
-        bundle.entry = entries
+        bundle.entry = resources.map { $0.sm_asBundleEntry() }
         bundle.type = BundleType.transaction
         return bundle
     }

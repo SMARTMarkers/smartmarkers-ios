@@ -55,7 +55,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public var schedule: Schedule?
     
-    public var teststatus: String = "begin"
+    public var teststatus: String = ""
     
     public weak var taskDelegate: SessionControllerTaskDelegate?
     

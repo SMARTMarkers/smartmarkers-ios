@@ -12,7 +12,7 @@ import SMART
 
 public extension Observation {
     
-    public class func sm_BloodPressure(systolic: Int, diastolic: Int, date: Date) -> Observation {
+    class func sm_BloodPressure(systolic: Int, diastolic: Int, date: Date) -> Observation {
         
         // BP LOINC Coding
         let bp_Coding = Coding.sm_Coding_BP_LOINC()
@@ -67,15 +67,15 @@ public extension Observation {
 
 public extension Coding {
     
-    public class func sm_Coding_BP_LOINC() -> Coding {
+    class func sm_Coding_BP_LOINC() -> Coding {
         return sm_LOINC("55284-4", "Blood Pressure")
     }
     
-    public class func sm_Coding_SBP_LOINC() -> Coding {
+    class func sm_Coding_SBP_LOINC() -> Coding {
         return sm_LOINC("8462-4", "Diastolic Blood Pressure")
     }
     
-    public class func sm_Coding_DBP_LOINC() -> Coding {
+    class func sm_Coding_DBP_LOINC() -> Coding {
         return sm_LOINC("8480-6", "Systolic Blood Pressure")
     }
     

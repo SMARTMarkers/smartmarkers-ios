@@ -36,11 +36,14 @@ extension ORKStepResult {
         let stepIdentifer = identifier
         let step = task.step?(withIdentifier: stepIdentifer)
         var items = [QuestionnaireResponseItem]()
+        let allQuestionnaireItems = questionnaire?.allItemsRecursively()
         
         var stepAnswerItems = [QuestionnaireResponseItem]()
         for result in results {
-            if let res = result as? ORKQuestionResult, let answer = res.sm_FHIRQuestionResult() {
+            if let res = result as? ORKQuestionResult {
                 let resultStepIdentifer = res.identifier
+                let type = allQuestionnaireItems?.filter({ $0.linkId?.string == resultStepIdentifer }).first?.type
+                let answer = res.sm_FHIRQuestionResult(for: type)
                 let answerItem = QuestionnaireResponseItem(linkId: resultStepIdentifer.fhir_string)
                 answerItem.answer = answer
                 stepAnswerItems.append(answerItem)
@@ -76,7 +79,7 @@ extension ORKStepResult {
 
 extension ORKQuestionResult {
     
-    func sm_FHIRQuestionResult() -> [QuestionnaireResponseItemAnswer]? {
+    func sm_FHIRQuestionResult(for type: QuestionnaireItemType?) -> [QuestionnaireResponseItemAnswer]? {
         
         //Choice
         if let slf = self as? ORKChoiceQuestionResult {
@@ -98,8 +101,13 @@ extension ORKQuestionResult {
             return slf.sm_TextItemAnswer()
         }
         
-        //Integer
+        //Integer or Decimal
         if let slf = self as? ORKNumericQuestionResult {
+            
+            if let typ = type {
+                if typ == .integer { return slf.sm_IntegerItemAnswer() }
+                if typ == .decimal { return slf.sm_DecimalItemAnswer() }
+            }
             return slf.sm_IntegerItemAnswer()
         }
         
@@ -116,6 +124,15 @@ extension ORKNumericQuestionResult {
         }
         let answer = QuestionnaireResponseItemAnswer()
         answer.valueInteger = FHIRInteger(integerLiteral: numericAnswer.intValue)
+        return [answer]
+    }
+    
+    func sm_DecimalItemAnswer() -> [QuestionnaireResponseItemAnswer]? {
+        guard let numericAnswer = numericAnswer else {
+            return nil
+        }
+        let answer = QuestionnaireResponseItemAnswer()
+        answer.valueDecimal = FHIRDecimal(numericAnswer.decimalValue)
         return [answer]
     }
 }

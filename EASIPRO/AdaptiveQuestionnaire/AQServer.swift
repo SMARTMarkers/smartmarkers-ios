@@ -81,7 +81,6 @@ public extension AQClient {
         let base = "https://mss.fsm.northwestern.edu/AC_API/2018-10/"
         let usr  = "2F984419-5008-4E42-8210-68592B418233"
         let pass = "21A673E8-9498-4DC2-AAB6-07395029A778"
-        let authType = "client_credentials"
         let settings = [
             "client_id" : usr,
             "client_secret" : pass
@@ -115,12 +114,11 @@ public extension AQClient {
         
     }
     
-    public class func test2(_ vc : UIViewController) {
+    class func test2(_ vc : UIViewController) {
         
         let base = "https://mss.fsm.northwestern.edu/AC_API/2018-10/"
         let usr  = "2F984419-5008-4E42-8210-68592B418233"
         let pass = "21A673E8-9498-4DC2-AAB6-07395029A778"
-        let authType = "client_credentials"
         let settings = [
             "client_id" : usr,
             "client_secret" : pass

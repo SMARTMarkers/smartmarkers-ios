@@ -15,7 +15,7 @@ public enum SMError : Error, CustomStringConvertible {
     /// PROServer User Is not Practitioner or Patient
     case proserverUserNotPractitionerOrPatient(profileType: String)
     
-    /// PROServer cannot handle FHIR Profi
+    /// PROServer cannot handle FHIR Profile
     case proserverMissingUserProfile
     
     
@@ -47,14 +47,16 @@ public enum SMError : Error, CustomStringConvertible {
     case instrumentQuestionnaireTypeMissing(linkId: String)
     
     /// Questionnaire does not have `Items`
-    case instrumentQuestionnaireMissingItems
+    case instrumentQuestionnaireMissingItems(linkId: String)
     
     /// Questionnaire.items has duplicate linkIds
     case instrumentHasDuplicateLinkIds
     
-    ///Questionnaire.type `choice` should have answer options
+    /// Questionnaire.type `choice` should have answer options
     case instrumentQuestionnaireItemMissingOptions(linkId: String)
     
+    /// Questionnaire Missing Calculated Expression
+    case instrumentQuestionnaireMissingCalculatedExpression(linkId: String)
     
     // Mark: SessionController
     
@@ -115,8 +117,8 @@ public enum SMError : Error, CustomStringConvertible {
             return "InstrumentProtocol could not generate a response `SMART.Bundle`"
         case .instrumentCannotHandleQuestionnaireType(let linkId):
             return "InstrumentProtocol could not create step for QuestionnaireItem.type for linkId: \(linkId)"
-        case .instrumentQuestionnaireMissingItems:
-            return "`Questionnaire.item` is empty"
+        case .instrumentQuestionnaireMissingItems(let linkId):
+            return "`Questionnaire.item` is empty for linkId: \(linkId)"
         case .instrumentHasDuplicateLinkIds:
             return "Questionnaire.item.linkId(s) should be unique"
         case .instrumentQuestionnaireItemMissingOptions(let linkId):
@@ -127,6 +129,8 @@ public enum SMError : Error, CustomStringConvertible {
             return "SessionController cannot be created, no `TaskViewController`(s) found"
         case .sessionCreatedWithMissingTasks:
             return "SessionController created with some missing Tasks"
+        case .instrumentQuestionnaireMissingCalculatedExpression(let linkId):
+            return "Questionnaire.item is missing calculated expression for linkId: \(linkId)"
         }
         
     }

@@ -46,28 +46,28 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         var components = [ObservationComponent]()
+        var images = [Media]()
         
-        
-        
-        if let lefteye = result.stepResult(forStepIdentifier: "amsler.grid.left"), let gridResult = lefteye.results?.first as? ORKAmslerGridResult, let fhirAttachment = gridResult.sm_toFHIR() {
+        if let lefteye = result.stepResult(forStepIdentifier: "amsler.grid.left"), let gridResult = lefteye.results?.first as? ORKAmslerGridResult, let media = gridResult.sm_asMedia() {
             let oc = ObservationComponent()
             let cc = CodeableConcept()
             cc.coding = [Coding.sm_Coding("amsler.grid.left", "http://researchkit.org", "Amsler Grid Left Eye")]
             oc.code = cc
-            //oc.valueAttachment = fhirAttachment
             components.append(oc)
+            images.append(media)
         }
         
-        if let righteye = result.stepResult(forStepIdentifier: "amsler.grid.right"), let gridResult = righteye.results?.first as? ORKAmslerGridResult, let fhirAttachment = gridResult.sm_toFHIR() {
+        if let righteye = result.stepResult(forStepIdentifier: "amsler.grid.right"), let gridResult = righteye.results?.first as? ORKAmslerGridResult, let media = gridResult.sm_asMedia() {
             let oc = ObservationComponent()
             let cc = CodeableConcept()
             cc.coding = [Coding.sm_Coding("amsler.grid.right", "http://researchkit.org", "Amsler Grid Right Eye")]
             oc.code = cc
-            //oc.valueAttachment = fhirAttachment
             components.append(oc)
+            images.append(media)
         }
         
         if components.count > 0 {
+            
             let observation = Observation()
             if let coding = self.ip_code {
                 let cc = CodeableConcept()
@@ -76,13 +76,13 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
             }
             observation.status = ObservationStatus.final
             observation.component = components
-            let bID = "urn:uuid:\(UUID().uuidString)"
-            let entry = BundleEntry()
-            entry.fullUrl = FHIRURL(bID)
-            entry.resource = observation
-            entry.request = BundleEntryRequest(method: .POST, url: FHIRURL("Observation")!)
+            var mediaBundleEntries = images.map{ $0.sm_asBundleEntry() }
+            observation.basedOn = mediaBundleEntries.map { $0.sm_asReference() }
+
+            mediaBundleEntries.append(observation.sm_asBundleEntry())
+            
             let bundle = SMART.Bundle()
-            bundle.entry = [entry]
+            bundle.entry = mediaBundleEntries
             bundle.type = BundleType.transaction
             return bundle
         }
@@ -95,7 +95,7 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
 
 extension ORKAmslerGridResult {
     
-    func sm_toFHIR() -> SMART.Attachment? {
+    func sm_Attachment() -> SMART.Attachment? {
         guard let img = image, let base64 = img.pngData()?.base64EncodedString() else { return nil }
         let dt = DateTime.now
         let attachment = SMART.Attachment()
@@ -104,6 +104,14 @@ extension ORKAmslerGridResult {
         attachment.creation = dt
         attachment.title = identifier.fhir_string
         return attachment
+    }
+    
+    func sm_asMedia() -> SMART.Media? {
+        guard let attachment = sm_Attachment() else { return nil }
+        let media = Media()
+        media.content = attachment
+        media.status = .completed
+        return media
     }
     
 }

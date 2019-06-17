@@ -144,9 +144,9 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
     }
     
     open func resultReport(from response: QuestionnaireResponse?) -> String? {
-        if let scores = response?.extensions(forURI: kStructureDefinition_QuestionnaireResponseScores)?.first {
-            let theta = scores.extensions(forURI: kStructureDefinition_QuestionnaireResponseScoresTheta)?.first?.valueDecimal
-            let deviation = scores.extensions(forURI: kStructureDefinition_QuestionnaireResponseScoresStandardError)?.first?.valueDecimal
+        if let scores = response?.extensions(forURI: kSD_QuestionnaireResponseScores)?.first {
+            let theta = scores.extensions(forURI: kSD_QuestionnaireResponseScoresTheta)?.first?.valueDecimal
+            let deviation = scores.extensions(forURI: kSD_QuestionnaireResponseScoresStandardError)?.first?.valueDecimal
             if let theta = theta, let deviation = deviation {
                 let tscore = String(round((Double(theta.decimal.description)! * 10) + 50.0))
                 let standardError =  String(round(Double(deviation.decimal.description)! * 10))

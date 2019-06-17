@@ -55,11 +55,14 @@ open class KneeRangeOfMotion: InstrumentProtocol {
             
             print(motionResult.startDate)
             print(motionResult.endDate)
-            print(motionResult.start)
-            print(motionResult.finish)
-            print(motionResult.maximum)
-            print(motionResult.range)
+//            print(motionResult.start)
+//            print(motionResult.finish)
+//            print(motionResult.maximum)
+//            print(motionResult.range)
+            
+            return nil
         
+            /*
             let observation = Observation.sm_RangeOfMotion(start: motionResult.start, finish: motionResult.finish, range: motionResult.range, date: motionResult.endDate)
             
             if limbOption == ORKPredefinedTaskLimbOption.left {
@@ -75,6 +78,8 @@ open class KneeRangeOfMotion: InstrumentProtocol {
                 observation.code = CodeableConcept.sm_KneeBothRangeOfMotion()
             }
             return SMART.Bundle.sm_with([observation])
+            
+            */
         }
         
         
@@ -122,9 +127,9 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        
-        if let motionResult = result.stepResult(forStepIdentifier: "shoulder.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
-            
+            /*
+         if let motionResult = result.stepResult(forStepIdentifier: "shoulder.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
+
             let observation = Observation.sm_RangeOfMotion(start: motionResult.start, finish: motionResult.finish, range: motionResult.range, date: motionResult.endDate)
             
             if limbOption == .both {
@@ -143,7 +148,8 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
             }
             
             return SMART.Bundle.sm_with([observation])
-        }
+            
+        }*/
         return nil
         
     }

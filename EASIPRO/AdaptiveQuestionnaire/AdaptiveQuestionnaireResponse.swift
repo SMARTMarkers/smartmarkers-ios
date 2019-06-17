@@ -20,11 +20,11 @@ extension QuestionnaireResponse {
         qr.id = FHIRString("rtest")
         
         let meta = Meta()
-        meta.profile = [FHIRURL(kSDC_adaptive_QuestionnaireResponse)!]
+        meta.profile = [FHIRCanonical(kSD_adaptive_QuestionnaireResponse)!]
         qr.meta = meta
         let exts = [
-            Extension(FHIRURL(kSDC_adaptive_QuestionnaireExpiration)!, DateTime.now),
-            Extension(FHIRURL(kSDC_adaptive_QuestionnaireFinished)!, nil)
+            Extension(FHIRURL(kSD_adaptive_QuestionnaireExpiration)!, DateTime.now),
+            Extension(FHIRURL(kSD_adaptive_QuestionnaireFinished)!, nil)
         ]
         qr.extension_fhir = exts
         qr.status = QuestionnaireResponseStatus.inProgress
@@ -32,7 +32,7 @@ extension QuestionnaireResponse {
         
         let containedQ = Questionnaire()
         containedQ.meta = questionnaire.meta
-        containedQ.meta?.profile = [FHIRURL(kSDC_adaptive_Questionnaire)!]
+        containedQ.meta?.profile = [FHIRCanonical(kSD_adaptive_Questionnaire)!]
         containedQ.id = questionnaire.id
         containedQ.url = questionnaire.url
         containedQ.title = questionnaire.title

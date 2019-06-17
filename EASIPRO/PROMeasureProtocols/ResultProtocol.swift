@@ -108,7 +108,7 @@ extension QuestionnaireResponse : ResultProtocol {
     
     public var rp_description: String? {
         if let questionnaire = questionnaire {
-            return "Response For  \(questionnaire.url.lastPathComponent)"
+            return "Response For  \(questionnaire.url!.lastPathComponent)"
         }
         return "QuestionnaireResponse"
     }

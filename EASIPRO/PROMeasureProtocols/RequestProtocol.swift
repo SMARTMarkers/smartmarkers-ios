@@ -51,7 +51,7 @@ public protocol RequestProtocol :  class, CustomStringConvertible {
 
 public extension RequestProtocol {
     
-    public var description : String {
+    var description : String {
         return "PRORequest: \(rq_identifier)"
     }
 }
@@ -59,7 +59,7 @@ public extension RequestProtocol {
 
 public extension RequestProtocol where Self: SMART.DomainResource {
     
-    public static func Requests(from server: Server, options: [String:String]?, callback: @escaping ((_ requestResources: [Self]?, _ error: Error?) -> Void)) {
+    static func Requests(from server: Server, options: [String:String]?, callback: @escaping ((_ requestResources: [Self]?, _ error: Error?) -> Void)) {
         let search = Self.search(options as Any)
         search.pageCount = 100
         search.perform(server) { (bundle, error) in
@@ -73,7 +73,7 @@ public extension RequestProtocol where Self: SMART.DomainResource {
         }
     }
     
-    public var asFHIR : DomainResource? {
+    var asFHIR : DomainResource? {
         return self 
     }
     

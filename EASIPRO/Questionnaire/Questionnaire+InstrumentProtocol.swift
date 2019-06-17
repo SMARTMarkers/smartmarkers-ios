@@ -46,7 +46,7 @@ extension SMART.Questionnaire : InstrumentProtocol {
                     task.setSkip(rule, forStepIdentifier: linkId)
                 })
                 
-                let taskViewController = ORKTaskViewController(task: task, taskRun: uuid)
+                let taskViewController = QuestionnaireTaskViewController(task: task, taskRun: uuid)
                 callback(taskViewController, nil)
             }
             else {
@@ -72,7 +72,7 @@ extension SMART.Questionnaire : InstrumentProtocol {
         }
         
         let answer = QuestionnaireResponse(status: .completed)
-        answer.questionnaire = self.url
+        answer.questionnaire = FHIRCanonical.init(self.url!.absoluteString)
         answer.authored = DateTime.now
         answer.item = itemGroups
         

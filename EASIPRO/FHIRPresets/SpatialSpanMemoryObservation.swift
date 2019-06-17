@@ -12,7 +12,7 @@ import SMART
 
 public extension Observation {
     
-    public class func sm_SpatialSpanMemory(score: Int, date: Date, instrument: InstrumentProtocol?) -> Observation {
+    class func sm_SpatialSpanMemory(score: Int, date: Date, instrument: InstrumentProtocol?) -> Observation {
         
         let observation = Observation()
         if let instr = instrument {
