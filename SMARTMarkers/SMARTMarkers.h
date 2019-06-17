@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 
 //! Project version number for EASIPRO.
-FOUNDATION_EXPORT double EASIPROVersionNumber;
+FOUNDATION_EXPORT double SMARTMarkersVersionNumber;
 
 //! Project version string for EASIPRO.
-FOUNDATION_EXPORT const unsigned char EASIPROVersionString[];
+FOUNDATION_EXPORT const unsigned char SMARTMarkersVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <EASIPRO/PublicHeader.h>
+// In this header, you should import all the public headers of your framework using statements like #import <SMARTMarkers/PublicHeader.h>
 
 

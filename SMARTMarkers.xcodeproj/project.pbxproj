@@ -66,7 +66,7 @@
 		D4DFD99C22401D260097B958 /* ObservationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD99B22401D260097B958 /* ObservationViewController.swift */; };
 		D4DFD99E224125A60097B958 /* HKClinicalRecordStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD99D224125A60097B958 /* HKClinicalRecordStep.swift */; };
 		D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */; };
-		D4E75D622035E73E000CE95A /* EASIPRO.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E75D602035E73E000CE95A /* EASIPRO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4E75D622035E73E000CE95A /* SMARTMarkers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E75D602035E73E000CE95A /* SMARTMarkers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4E75D732035E7AA000CE95A /* EHRLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D722035E7AA000CE95A /* EHRLoginController.swift */; };
 		D4E75D7820360649000CE95A /* smartlogo.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E75D7720360649000CE95A /* smartlogo.png */; };
 		D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D7D20361EB5000CE95A /* MeasuresViewController.swift */; };
@@ -138,8 +138,8 @@
 		D4DFD99B22401D260097B958 /* ObservationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationViewController.swift; sourceTree = "<group>"; };
 		D4DFD99D224125A60097B958 /* HKClinicalRecordStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClinicalRecordStep.swift; sourceTree = "<group>"; };
 		D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeOfMotion.swift; sourceTree = "<group>"; };
-		D4E75D5D2035E73E000CE95A /* EASIPRO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EASIPRO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4E75D602035E73E000CE95A /* EASIPRO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EASIPRO.h; sourceTree = "<group>"; };
+		D4E75D5D2035E73E000CE95A /* SMARTMarkers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SMARTMarkers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4E75D602035E73E000CE95A /* SMARTMarkers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMARTMarkers.h; sourceTree = "<group>"; };
 		D4E75D612035E73E000CE95A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4E75D722035E7AA000CE95A /* EHRLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EHRLoginController.swift; sourceTree = "<group>"; };
 		D4E75D7720360649000CE95A /* smartlogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smartlogo.png; sourceTree = "<group>"; };
@@ -274,7 +274,7 @@
 				D468777D229701D100717D95 /* QuestionnaireExamples */,
 				D4618A4D206160FF004E117F /* Readme.md */,
 				D465D5A3203DCB8E0057BD23 /* Installation.md */,
-				D4E75D5F2035E73E000CE95A /* EASIPRO */,
+				D4E75D5F2035E73E000CE95A /* SMARTMarkers */,
 				D4E75D5E2035E73E000CE95A /* Products */,
 				D4CFF01A203C799F00A6FB31 /* Frameworks */,
 			);
@@ -283,12 +283,12 @@
 		D4E75D5E2035E73E000CE95A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D4E75D5D2035E73E000CE95A /* EASIPRO.framework */,
+				D4E75D5D2035E73E000CE95A /* SMARTMarkers.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D4E75D5F2035E73E000CE95A /* EASIPRO */ = {
+		D4E75D5F2035E73E000CE95A /* SMARTMarkers */ = {
 			isa = PBXGroup;
 			children = (
 				D4DFD992223C0F5B0097B958 /* Instruments */,
@@ -303,14 +303,14 @@
 				D4E75D7A20361E72000CE95A /* ViewControllers */,
 				D4E75D762036062C000CE95A /* images */,
 				D4E75D742035EABD000CE95A /* Views */,
-				D4E75D602035E73E000CE95A /* EASIPRO.h */,
+				D4E75D602035E73E000CE95A /* SMARTMarkers.h */,
 				D4E75D612035E73E000CE95A /* Info.plist */,
 				D4CFF03B203C7F9D00A6FB31 /* SMARTManager.swift */,
 				D4FEBDB221DFD50D0057C77D /* Common.swift */,
 				D4FEBDB721E64A610057C77D /* SMError.swift */,
 				D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */,
 			);
-			path = EASIPRO;
+			path = SMARTMarkers;
 			sourceTree = "<group>";
 		};
 		D4E75D742035EABD000CE95A /* Views */ = {
@@ -378,16 +378,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4E75D622035E73E000CE95A /* EASIPRO.h in Headers */,
+				D4E75D622035E73E000CE95A /* SMARTMarkers.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		D4E75D5C2035E73E000CE95A /* EASIPRO */ = {
+		D4E75D5C2035E73E000CE95A /* SMARTMarkers */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D4E75D652035E73E000CE95A /* Build configuration list for PBXNativeTarget "EASIPRO" */;
+			buildConfigurationList = D4E75D652035E73E000CE95A /* Build configuration list for PBXNativeTarget "SMARTMarkers" */;
 			buildPhases = (
 				D4E75D582035E73E000CE95A /* Sources */,
 				D4E75D592035E73E000CE95A /* Frameworks */,
@@ -398,9 +398,9 @@
 			);
 			dependencies = (
 			);
-			name = EASIPRO;
+			name = SMARTMarkers;
 			productName = EASIPRO;
-			productReference = D4E75D5D2035E73E000CE95A /* EASIPRO.framework */;
+			productReference = D4E75D5D2035E73E000CE95A /* SMARTMarkers.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -419,7 +419,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D4E75D572035E73E000CE95A /* Build configuration list for PBXProject "EASIPRO" */;
+			buildConfigurationList = D4E75D572035E73E000CE95A /* Build configuration list for PBXProject "SMARTMarkers" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -431,7 +431,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D4E75D5C2035E73E000CE95A /* EASIPRO */,
+				D4E75D5C2035E73E000CE95A /* SMARTMarkers */,
 			);
 		};
 /* End PBXProject section */
@@ -647,11 +647,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = EASIPRO/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/SMARTMarkers/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.chip.EASIPRO;
+				PRODUCT_BUNDLE_IDENTIFIER = org.chip.SMARTMarkers;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -670,11 +670,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = EASIPRO/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/SMARTMarkers/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.chip.EASIPRO;
+				PRODUCT_BUNDLE_IDENTIFIER = org.chip.SMARTMarkers;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
@@ -685,7 +685,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D4E75D572035E73E000CE95A /* Build configuration list for PBXProject "EASIPRO" */ = {
+		D4E75D572035E73E000CE95A /* Build configuration list for PBXProject "SMARTMarkers" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D4E75D632035E73E000CE95A /* Debug */,
@@ -694,7 +694,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D4E75D652035E73E000CE95A /* Build configuration list for PBXNativeTarget "EASIPRO" */ = {
+		D4E75D652035E73E000CE95A /* Build configuration list for PBXNativeTarget "SMARTMarkers" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D4E75D662035E73E000CE95A /* Debug */,
