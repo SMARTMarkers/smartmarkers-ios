@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 public typealias RuleTupple = (ORKPredicateSkipStepNavigationRule, String)
-public typealias StepsCallback = (_ steps: [ORKStep]?, _ rules: [RuleTupple]?, _ error: Error?) -> Void
+public typealias StepsCallback = (_ steps: [ORKStep]?, _ rules: [RuleTupple]?, _ error: [Error]?) -> Void
 
 
 
@@ -20,28 +20,29 @@ extension Questionnaire  {
     public func sm_genereteSteps(callback: @escaping StepsCallback) {
         
         guard let items = self.item else {
-            callback(nil, nil, SMError.instrumentQuestionnaireMissingItems(linkId: "root"))
+            callback(nil, nil, [SMError.instrumentQuestionnaireMissingItems(linkId: "root")])
             return
         }
         
         var nsteps = [ORKStep]()
         var nrules = [RuleTupple]()
-        var errors = [Error]()
+        var all_errors = [Error]()
         let group = DispatchGroup()
         for item in items {
             group.enter()
-            item.sm_generateSteps(callback: { (steps, rules, error) in
-                if let error = error {
-                    errors.append(error)
+            item.sm_generateSteps(callback: { (steps, rules, errors) in
+                if let errors = errors {
+                    all_errors.append(contentsOf: errors)
                 }
-                else {
-                    if let steps = steps {
-                        nsteps.append(contentsOf: steps)
-                    }
-                    if let rules = rules {
-                        nrules.append(contentsOf: rules)
-                    }
+                
+                if let steps = steps {
+                    nsteps.append(contentsOf: steps)
                 }
+                
+                if let rules = rules {
+                    nrules.append(contentsOf: rules)
+                }
+                
                 group.leave()
             })
         }
@@ -51,11 +52,11 @@ extension Questionnaire  {
         group.notify(queue: .main) {
             
             if nsteps.hasDuplicates() {
-                errors.append(SMError.instrumentHasDuplicateLinkIds)
+                all_errors.append(SMError.instrumentHasDuplicateLinkIds)
                 nsteps.removeAll()
             }
             
-            callback(nsteps.isEmpty ? nil : nsteps, nrules, errors.first)
+            callback(nsteps.isEmpty ? nil : nsteps, nrules, all_errors.isEmpty ? nil : all_errors)
         }
         
     }
@@ -110,21 +111,27 @@ extension QuestionnaireItem {
         var steps = [ORKStep]()
         var nrules = [RuleTupple]()
         var conditionalItems = [QuestionnaireItem]()
-        var errors = [Error]()
+        var all_errors = [Error]()
         if self.enableWhen != nil {
                 conditionalItems.append(self)
         }
-        self.rk_answerFormat(callback: { (answerFormat, error) in
-            if let error = error {
+        self.rk_answerFormat(callback: { (answerFormat, zerror) in
+            if let error = zerror {
                 print(error)
             }
             else {
                 switch self.type! {
                 case .display:
-                    let step = QuestionnaireItemInstructionStep(identifier: self.rk_Identifier())
-                    step.detailText = self.rk_InstructionText()
-                    step.title = self.rk_text()
-                    steps.append(step)
+                    do {
+                        if let step = try QuestionnaireItemInstructionStep(self) {
+                            step.detailText = self.rk_InstructionText()
+                            step.title = self.rk_text()
+                            steps.append(step)
+                        }
+                    }
+                    catch {
+                        all_errors.append(error)
+                    }
                     break
                     
                 case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string, .integer, .decimal:
@@ -135,7 +142,7 @@ extension QuestionnaireItem {
                         }
                     }
                     catch {
-                        errors.append(error)
+                        all_errors.append(error)
                     }
                     break
                     
@@ -145,16 +152,22 @@ extension QuestionnaireItem {
                         let newgroup = DispatchGroup()
                         for subitem in subItems {
                             newgroup.enter()
-                            subitem.sm_generateSteps(callback: { (steps, rules, err ) in
-                                if let error = err {
-                                    print(error as Any)
+                            subitem.sm_generateSteps(callback: { (steps, rules, errs ) in
+                                if let errs = errs {
+                                    print(errs as Any)
+                                    all_errors.append(contentsOf: errs)
                                 }
-                                else if let steps = steps {
+                                if let steps = steps {
                                     subSteps.append(contentsOf: steps)
                                 }
                                 newgroup.leave()
                             })
                             newgroup.wait()
+                        }
+                        if subSteps.isEmpty {
+                            //TODO: Add Form has no Steps
+                            print("Group: \(self.rk_Identifier()) has could not generate steps")
+                            break
                         }
                         
                         let formItems = subSteps.flatMap  { $0.sm_toFormItem()! }
@@ -165,7 +178,7 @@ extension QuestionnaireItem {
                     } else {
                         
                         //TODO add error:
-                        errors.append(SMError.instrumentQuestionnaireMissingItems(linkId: self.linkId!.string))
+                        all_errors.append(SMError.instrumentQuestionnaireMissingItems(linkId: self.linkId!.string))
                     }
                     break
                 default:
@@ -179,8 +192,8 @@ extension QuestionnaireItem {
                 nrules.append((rule, citem.linkId!.string))
             }
         }
-        
-        callback(steps.isEmpty ? nil : steps, nrules, nil)
+
+        callback(steps.isEmpty ? nil : steps, nrules, all_errors.isEmpty ? nil : all_errors)
     }
     
     public func rk_text() -> String? {
@@ -220,9 +233,8 @@ extension QuestionnaireItem {
         case .decimal:      callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
         case .choice:
             if let answerValueSet = answerValueSet {
-                
                 if answerValueSet.absoluteString == kVS_YesNoDontknow {
-                    //TODO Canonical Resolve :::
+                    callback(ORKAnswerFormat.sm_hl7YesNoDontKnow(), nil)
                 }
                 else {
                     let style: ORKChoiceAnswerStyle = (repeats?.bool ?? false) ? .multipleChoice : .singleChoice
@@ -312,7 +324,21 @@ extension QuestionnaireItemAnswerOption {
     }
 }
 
+extension ORKAnswerFormat {
+    
+    class func sm_hl7YesNoDontKnow() -> ORKAnswerFormat {
+        let textChoices = [
+            sm_AnswerChoice(system: FHIRURL("http://terminology.hl7.org/CodeSystem/v2-0136"), code: "Y", display: "Yes")!,
+            sm_AnswerChoice(system: FHIRURL("http://terminology.hl7.org/CodeSystem/v2-0136"), code: "N", display: "No")!,
+            sm_AnswerChoice(system: FHIRURL("http://terminology.hl7.org/CodeSystem/data-absent-reason"), code: "asked-unknown", display: "Don't Know")!
+        ]
+        
+        return ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: textChoices)
+    }
+}
+
 extension ValueSet {
+    
     
     
     

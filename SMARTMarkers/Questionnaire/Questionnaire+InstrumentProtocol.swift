@@ -72,7 +72,7 @@ extension SMART.Questionnaire : InstrumentProtocol {
         }
         
         let answer = QuestionnaireResponse(status: .completed)
-        answer.questionnaire = FHIRCanonical.init(self.url!.absoluteString)
+        answer.questionnaire = (url != nil) ? FHIRCanonical(url!.absoluteString) : nil
         answer.authored = DateTime.now
         answer.item = itemGroups
         
@@ -98,10 +98,18 @@ extension SMART.Questionnaire : InstrumentProtocol {
 extension Questionnaire {
     
     /// Best possible title for the Questionnaire
-    public func sm_displayTitle() -> String? {
+    func sm_displayTitle() -> String? {
         
         if let name     = name { return name.string }
         if let title    = title    {    return title.string }
+        
+        if let codes = self.code {
+            for code in codes {
+                if let display = code.display {
+                    return display.string
+                }
+            }
+        }
         
         if let identifier = self.identifier {
             for iden in identifier {
@@ -111,13 +119,7 @@ extension Questionnaire {
             }
         }
         
-        if let codes = self.code {
-            for code in codes {
-                if let display = code.display {
-                    return display.string
-                }
-            }
-        }
+        
         
         return self.id?.string
     }

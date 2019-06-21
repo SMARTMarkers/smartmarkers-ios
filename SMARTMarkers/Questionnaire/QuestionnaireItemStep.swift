@@ -74,11 +74,24 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
         }
         
         if let slf = self as? ORKQuestionStep {
-            slf.question = item.rk_text()
+            
+            if let q = item.rk_text() {
+                slf.question = q
+            }
+            else {
+                throw SMError.instrumentQuestionnaireMissingText(linkId: linkId)
+            }
+            
         }
         
         if let slf = self as? ORKInstructionStep {
-            slf.text = item.rk_InstructionText()
+            
+            if let q = item.rk_InstructionText() {
+                slf.text = q
+            }
+            else {
+                throw SMError.instrumentQuestionnaireMissingText(linkId: linkId)
+            }
         }
         
     }
