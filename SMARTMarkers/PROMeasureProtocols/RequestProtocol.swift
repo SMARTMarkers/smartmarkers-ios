@@ -9,9 +9,11 @@
 import Foundation
 import SMART
 
-/**
+/*
+ 
  PRO Request Protocol
- - Extracts PRO Requesting data
+ Fetches and Manages `FHIR` request resource
+ 
  */
 public protocol RequestProtocol :  class, CustomStringConvertible {
     
@@ -47,6 +49,9 @@ public protocol RequestProtocol :  class, CustomStringConvertible {
     /// Requested Instrument
     func rq_instrumentResolve(callback: @escaping ((_ instrument: InstrumentProtocol?, _ error: Error?) -> Void))
     
+    /// Resolve FHIR References if needed;
+    func rq_resolveReferences(callback: @escaping ((Bool) -> Void))
+
 }
 
 public extension RequestProtocol {
@@ -65,7 +70,17 @@ public extension RequestProtocol where Self: SMART.DomainResource {
         search.perform(server) { (bundle, error) in
             if let bundle = bundle {
                 let resources = bundle.entry?.filter { $0.resource is Self }.map { $0.resource as! Self }
-                callback(resources , nil)
+                let group = DispatchGroup()
+                for r in resources ?? [] {
+                    group.enter()
+                    r.rq_resolveReferences(callback: { (completed ) in
+                        group.leave()
+                    })
+                }
+                group.notify(queue: .global(qos: .userInteractive), execute: {
+                    callback(resources, nil)
+                })
+
             }
             else {
                 callback(nil, error)

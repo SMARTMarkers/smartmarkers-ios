@@ -35,19 +35,26 @@ open class EHRLoginController: UIViewController {
 
     func setupViews() {
         let userlbl = EHRLoginController.titleLabel()
-        let btn = EASIPROButton()
+        let cancelBtn = cancelButton()
+        userlbl.numberOfLines = 0
+        userlbl.adjustsFontSizeToFitWidth = true
+        userlbl.lineBreakMode = .byWordWrapping
+        let btn = LoginButton()
         let lbl = EHRLoginController.titleLabel()
         userlbl.text = SMARTManager.shared.practitioner?.name?.first?.human ?? ""
         userlbl.textColor = UIColor.lightGray
         statuslbl = userlbl
 
         let logo = EHRLoginController.smartLogo()
-        let v = [ "btn" : btn,
-                      "tlbl": lbl,
-                      "view"   : view,
-                      "logo": logo,
-                      "user" : userlbl
+        let v = [
+            "cbtn"  : cancelBtn,
+            "btn"   : btn,
+            "tlbl"  : lbl,
+            "view"  : view,
+            "logo"  : logo,
+            "user"  : userlbl
             ] as [String: Any]
+        view.addSubview(cancelBtn)
         view.addSubview(btn)
         view.addSubview(lbl)
         view.addSubview(logo)
@@ -72,12 +79,15 @@ open class EHRLoginController: UIViewController {
                                          attribute: .centerX,
                                          multiplier: 1.0,
                                          constant: 0.0);
+        ac("V:|[cbtn(55)]", v)
+        ac("H:|[cbtn]", v)
         ac("H:|-50-[btn]-50-|", v)
         ac("H:|-50-[tlbl]-50-|", v)
         ac("H:|-50-[user]-50-|", v)
         ac("V:[btn(55)]", v)
         ac("V:[btn]-40-[user]", v)
         ac("V:[tlbl]-20-[btn]", v)
+        ac("V:[user]-20-[logo]", v)
         ac("V:[logo]-30-|", v)
         ac("H:[logo(120)]", v)
         ac("V:[logo(70)]", v)
@@ -99,7 +109,7 @@ open class EHRLoginController: UIViewController {
         return imgView
     }
     
-    func EASIPROButton() -> UIButton {
+    func LoginButton() -> UIButton {
 		
 		let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
 		let btn = RoundedButton(frame: frame)
@@ -110,6 +120,20 @@ open class EHRLoginController: UIViewController {
         btn.addTarget(self, action: #selector(login(_:)), for: UIControl.Event.touchUpInside)
 
         return btn
+    }
+    
+    
+    func cancelButton() -> UIButton {
+        let btn = UIButton(type: .system)
+        btn.frame = CGRect(x: 0, y: 0, width: 70, height: 55)
+        btn.setTitle("Cancel", for: .normal)
+        btn.addTarget(self, action: #selector(cancel(_ :)), for: .touchUpInside)
+        return btn
+    }
+    
+    @objc
+    func cancel(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
     
     class func titleLabel() -> UILabel {
@@ -140,7 +164,9 @@ open class EHRLoginController: UIViewController {
             }
             else {
                 DispatchQueue.main.async {
-                    self?.statuslbl?.text = "Authorization Failed. Try again"
+                    if let error = error {
+                        self?.statuslbl?.text = "Authorization Failed. Try again \(error.asOAuth2Error.localizedDescription)"
+                    }
                 }
             }
         }

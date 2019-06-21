@@ -11,6 +11,9 @@ import SMART
 
 
 extension ServiceRequest: RequestProtocol {
+    
+    
+    
    
  
     public var rq_identifier: String {
@@ -18,14 +21,15 @@ extension ServiceRequest: RequestProtocol {
     }
     
     public var rq_title: String? {
-        return code?.text?.string ?? category?.first?.text?.string ?? "REQ #\(self.id!.string)"
+        return code?.text?.string ?? code?.coding?.first?.display?.string ?? category?.first?.text?.string ?? "REQ #\(self.id!.string)"
     }
     
     public var rq_requesterName: String? {
         
         if let practitioner = requester?.resolved(Practitioner.self) {
-            return practitioner.name?.first?.human?.uppercased()
+            return practitioner.name?.first?.human
         }
+        
         
 
         if let device = requester?.resolved(Device.self) {
@@ -77,10 +81,31 @@ extension ServiceRequest: RequestProtocol {
     
 
     
-    
+    public func rq_resolveReferences(callback: @escaping ((Bool) -> Void)) {
+        
+        guard let ref = requester?.reference?.string else {
+            callback(true)
+            return
+        }
+        
+        if ref.contains("Practitioner/") {
+            requester!.resolve(Practitioner.self, callback: { (_) in
+                callback(true)
+            })
+        }
+            
+        else if ref.contains("Device/") {
+            requester!.resolve(Device.self, callback: { (_ ) in
+                callback(true)
+            })
+        }
+        
+        else {
+            callback(true)
+        }
+        
+    }
 
-    
-    
     
     public func rq_instrumentResolve(callback: @escaping ((InstrumentProtocol?, Error?) -> Void)) {
         if let questionnaireExtension = extensions(forURI: kSD_QuestionnaireRequest)?.first {

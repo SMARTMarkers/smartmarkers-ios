@@ -46,6 +46,9 @@ public enum SMError : Error, CustomStringConvertible {
     /// QuestionnaireItem type missing
     case instrumentQuestionnaireTypeMissing(linkId: String)
     
+    /// Questionnaire Item missing question text
+    case instrumentQuestionnaireMissingText(linkId: String)
+    
     /// Questionnaire does not have `Items`
     case instrumentQuestionnaireMissingItems(linkId: String)
     
@@ -119,6 +122,8 @@ public enum SMError : Error, CustomStringConvertible {
             return "InstrumentProtocol could not create step for QuestionnaireItem.type for linkId: \(linkId)"
         case .instrumentQuestionnaireMissingItems(let linkId):
             return "`Questionnaire.item` is empty for linkId: \(linkId)"
+        case .instrumentQuestionnaireMissingText(let linkId):
+            return "`Questionnaire.item` is missing a question text; linkId: \(linkId)"
         case .instrumentHasDuplicateLinkIds:
             return "Questionnaire.item.linkId(s) should be unique"
         case .instrumentQuestionnaireItemMissingOptions(let linkId):

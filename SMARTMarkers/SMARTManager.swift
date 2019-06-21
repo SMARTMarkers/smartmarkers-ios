@@ -151,7 +151,8 @@ public class SMARTManager : NSObject {
                 }
             }
             else {
-                callback(self.patient != nil, SMError.proserverMissingUserProfile)
+
+                callback(self.patient != nil, error)
             }
         })
     }
