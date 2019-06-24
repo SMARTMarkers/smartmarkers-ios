@@ -61,10 +61,16 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public weak var server: Server? = SMARTManager.shared.client.server
     
-    public convenience init(request: RequestProtocol?) {
+    public convenience init(request: RequestProtocol) {
         self.init()
         self.request = request
-        self.schedule = request?.rq_schedule
+        self.schedule = request.rq_schedule
+        
+        // Default
+        self.results = PROResults(resultRelations: [
+            PROFhirLinkRelationship(Observation.self,           ["based-on": request.rq_identifier]),
+            PROFhirLinkRelationship(QuestionnaireResponse.self, ["based-on": request.rq_identifier])
+            ], patient)
     }
     
     
@@ -157,6 +163,13 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         if let completed = schedule?.update(with: res.map{ $0.rp_date }) {
             request?.rq_updated(completed, callback:callback)
         }
+    }
+    
+    
+    public func generateAndSubmit(result: ORKTaskResult, task: ORKTask, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
+        
+        let bundle = instrument?.ip_generateResponse(from: result, task: task)
+        
     }
    
     
