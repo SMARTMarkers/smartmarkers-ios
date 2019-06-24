@@ -74,6 +74,7 @@ open class PROResults {
         let group = DispatchGroup()
         for type in resultLinks! {
             let search = type.resourceType.search(type.relation as Any)
+            search.pageCount = 100
             group.enter()
             search.perform(server) { [unowned self]  (bundle, error) in
                 if let bundle = bundle, let entries = bundle.entry {
