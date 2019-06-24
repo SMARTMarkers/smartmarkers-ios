@@ -16,6 +16,7 @@ open class HKClinicalRecordRequestStep: ORKQuestionStep {
     
     public override init(identifier: String) {
         super.init(identifier: identifier)
+        
         self.question = "Please select the type of clinical data push to your Research team"
         let choices = [
             ORKTextChoice(text: "Immunizations", detailText: "Requests Immunization data from HealthKit", value: "Immunizations" as NSCoding & NSCopying & NSObjectProtocol, exclusive: false),
@@ -31,9 +32,7 @@ open class HKClinicalRecordRequestStep: ORKQuestionStep {
         super.init(coder: aDecoder)
     }
     
-    open override func stepViewControllerClass() -> AnyClass {
-        return HKClinicalRecordRequestStepViewController.self
-    }
+    
     
     open func authorization() {
         
@@ -43,43 +42,94 @@ open class HKClinicalRecordRequestStep: ORKQuestionStep {
     
 }
 
+@available(iOS 12.0, *)
 open class HKClinicalRecordWaitStep: ORKWaitStep {
     
-    
-}
-
-open class HKClinicalRecordRequestStepViewController: ORKQuestionStepViewController {
-    
-    
-    public var stp: HKClinicalRecordRequestStep {
-        return step as! HKClinicalRecordRequestStep
+    open override func stepViewControllerClass() -> AnyClass {
+        return HKClinicalRecordAuthorizationStepViewController.self
     }
     
+}
+open class HKClinicalRecordAuthorizationStepViewController: ORKWaitStepViewController {
     
-    open override func goForward() {
-        if let rs = result?.results?.first as? ORKChoiceQuestionResult {
-            guard let medicationsType = HKObjectType.clinicalType(forIdentifier: .medicationRecord), let labs = HKObjectType.clinicalType(forIdentifier: .labResultRecord) else {
-                
-                return
-            }
-            let store = HKHealthStore()
-            store.requestAuthorization(toShare: nil, read: [medicationsType, labs]) { (success, error ) in
-                if (success) {
-                    print("successfully shared")
+    var clinicalTypeIdentifier: [HKClinicalTypeIdentifier]! = [.medicationRecord,.labResultRecord]
+    
+    lazy var clinicalTypes: Set<HKClinicalType> = {
+        return Set(self.clinicalTypeIdentifier.map { HKObjectType.clinicalType(forIdentifier: $0)! })
+    }()
+
+    let store = HKHealthStore()
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        
+        print(clinicalTypeIdentifier)
+        print(clinicalTypes)
+        
+
+        store.requestAuthorization(toShare: nil, read:  clinicalTypes) { (success, error) in
+            DispatchQueue.main.async {
+                if success {
+                    self.checkStatus()
                 }
-                super.goForward()
+                else {
+                    self.updateText("Unable to complete authorization")
+                    self.goBackward()
+                }
             }
+            
         }
     }
     
+    func checkStatus() {
+        var authorized = 0
+        
+        let allergyQuery = HKSampleQuery(sampleType: clinicalTypes.first!, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, samples, error) in
+            
+            guard let actualSamples = samples else {
+                // Handle the error here.
+                print("*** An error occurred: \(error?.localizedDescription ?? "nil") ***")
+                return
+            }
+            
+            let allergySamples = actualSamples as? [HKClinicalRecord]
+            print(allergySamples)
+        }
+        
+        store.execute(allergyQuery)
+        
+        
+        for type in clinicalTypes {
+
+            let status = store.authorizationStatus(for: type)
+            if status == .notDetermined {
+                print("not")
+            }
+            
+            if status == .sharingAuthorized {
+                print("allowed")
+                authorized += 1
+            }
+            
+            if status == .sharingDenied {
+                print("denied")
+            }
+            
+        }
+        
+    }
+    
 }
 
 
+
+@available(iOS 12.0, *)
 open class HKDeidentifyStep: ORKQuestionStep {
     
     public override init(identifier: String) {
         super.init(identifier: identifier)
-        self.question = "De-identify as per HIPPA guidelines?"
+        self.title = "Deidentification"
+        self.text = "Identifiable elements will be obfuscated as per HIPPA guidelines before submission."
+        self.question = "Should deidentify?"
         self.answerFormat = ORKAnswerFormat.booleanAnswerFormat()
     }
     
@@ -98,8 +148,9 @@ open class HKClinicalRecordTaskViewController: ORKTaskViewController {
     public convenience init() {
         let steps : [ORKStep] = [
             HKClinicalRecordRequestStep(identifier: "sm.healthkit.request.step"),
-            HKDeidentifyStep(identifier: "sm.healthkit.deidentification")
-            
+            HKClinicalRecordWaitStep(identifier: "smartmarkers.step.healthkit.authorization"),
+            HKDeidentifyStep(identifier: "sm.healthkit.deidentification"),
+            HKClinicalRecordWaitStep(identifier: "smartmarkers.step.healthkit.query")
         ]
         let task  = ORKOrderedTask(identifier: "sm.healthkit.task", steps: steps)
         self.init(task: task, taskRun: UUID())
