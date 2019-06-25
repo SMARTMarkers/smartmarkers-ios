@@ -77,6 +77,7 @@ public extension RequestProtocol where Self: SMART.DomainResource {
                         group.leave()
                     })
                 }
+                
                 group.notify(queue: .global(qos: .userInteractive), execute: {
                     callback(resources, nil)
                 })
