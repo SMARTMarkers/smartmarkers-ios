@@ -77,6 +77,7 @@ open class HKClinicalRecordAuthorizationStepViewController: ORKWaitStepViewContr
             let query = HKSampleQuery(sampleType: ctype, predicate: nil, limit: 100, sortDescriptors: sortDescriptors) {(_, samplesOrNil, error) in
                 DispatchQueue.main.async {
                     guard let samples = samplesOrNil else {
+                        //:::TODO handle error, goForward will still be called.
                         self.handleError(error)
                         return
                     }

@@ -15,6 +15,8 @@ public typealias ResultType = DomainResource & ResultProtocol
 
 public protocol ResultProtocol {
     
+    var rp_resourceType: String { get }
+    var rp_identifier: String { get }
     var rp_title : String? { get }
     var rp_description: String? { get }
     var rp_date: Date { get }
@@ -103,6 +105,18 @@ open class PROResults {
 
 extension QuestionnaireResponse : ResultProtocol {
     
+    public var rp_resourceType: String {
+        return "QuestionnaireResponse"
+    }
+    
+    
+    
+    public var rp_identifier: String {
+        return id?.string ?? ""
+    }
+    
+    
+    
     public var rp_title: String? {
         return "Response #\(id?.string ?? "-")"
     }
@@ -132,6 +146,16 @@ extension QuestionnaireResponse : ResultProtocol {
 
 
 extension Observation : ResultProtocol {
+    public var rp_resourceType: String {
+        return "Observation"
+    }
+    
+    
+    
+    public var rp_identifier: String {
+        return id!.string ?? ""
+    }
+    
     
     
     public var rp_title: String? {

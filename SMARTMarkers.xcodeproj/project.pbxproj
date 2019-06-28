@@ -16,6 +16,7 @@
 		D422E58C22C272E50097E0CF /* HKClinicalRecordResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58B22C272E50097E0CF /* HKClinicalRecordResult.swift */; };
 		D422E58E22C29E360097E0CF /* HKClinicalRecordSubmissionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58D22C29E360097E0CF /* HKClinicalRecordSubmissionStep.swift */; };
 		D422E59022C2A2960097E0CF /* HKClinicalRecordTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58F22C2A2960097E0CF /* HKClinicalRecordTaskViewController.swift */; };
+		D422E59322C675D90097E0CF /* PROResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E59222C675D90097E0CF /* PROResultViewController.swift */; };
 		D42605CE209364FE00853609 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42605CD209364FE00853609 /* RoundedButton.swift */; };
 		D434861922AF08E0001D922C /* FHIRPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434861822AF08E0001D922C /* FHIRPath.swift */; };
 		D436B1D720EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */; };
@@ -94,6 +95,7 @@
 		D422E58B22C272E50097E0CF /* HKClinicalRecordResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClinicalRecordResult.swift; sourceTree = "<group>"; };
 		D422E58D22C29E360097E0CF /* HKClinicalRecordSubmissionStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClinicalRecordSubmissionStep.swift; sourceTree = "<group>"; };
 		D422E58F22C2A2960097E0CF /* HKClinicalRecordTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClinicalRecordTaskViewController.swift; sourceTree = "<group>"; };
+		D422E59222C675D90097E0CF /* PROResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROResultViewController.swift; sourceTree = "<group>"; };
 		D42605CD209364FE00853609 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		D434861822AF08E0001D922C /* FHIRPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRPath.swift; sourceTree = "<group>"; };
 		D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+ResearchKit.swift"; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 				D4E75D8020361EE5000CE95A /* PatientsViewController.swift */,
 				D4E75D7D20361EB5000CE95A /* MeasuresViewController.swift */,
 				D4E75D722035E7AA000CE95A /* EHRLoginController.swift */,
+				D422E59222C675D90097E0CF /* PROResultViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 				D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */,
 				D4E75D8520363C0E000CE95A /* SessionController.swift in Sources */,
 				D40A121C21627DBE002F9F53 /* Notifications.swift in Sources */,
+				D422E59322C675D90097E0CF /* PROResultViewController.swift in Sources */,
 				D468778D229735C700717D95 /* QuestionnaireItemStep.swift in Sources */,
 				D422E58E22C29E360097E0CF /* HKClinicalRecordSubmissionStep.swift in Sources */,
 				D48B320421FFC84600CEA44A /* ResearchKit+Extensions.swift in Sources */,
