@@ -11,7 +11,9 @@ import SMART
 import ResearchKit
 
 
-
+public protocol InstrumentResolver: class {
+    func resolveInstrument(from pro: PROMeasure) -> InstrumentProtocol?
+}
 
 public protocol PROMeasureProtocol : class {
     
@@ -36,6 +38,8 @@ public protocol PROMeasureProtocol : class {
 }
 
 open class PROMeasure : NSObject, PROMeasureProtocol {
+    
+    public weak var instrumentResolver: InstrumentResolver?
 
     public typealias RequestType = RequestProtocol
     
@@ -61,6 +65,8 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public weak var server: Server? = SMARTManager.shared.client.server
     
+    public static var instrumentLibrary: [InstrumentProtocol]?
+    
     public convenience init(request: RequestProtocol) {
         self.init()
         self.request = request
@@ -76,10 +82,17 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     
     open func instrument(callback: @escaping ((_ instrument: InstrumentProtocol?, _ error: Error?) -> Void)) {        
+        
         if let instr = self.instrument {
             callback(instr, nil)
             return
         }
+        
+        if let instrumentResolver = instrumentResolver, let instr = instrumentResolver.resolveInstrument(from: self) {
+            callback(instr, nil)
+            return
+        }
+        
         request?.rq_instrumentResolve(callback: callback)
     }
     
@@ -94,7 +107,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
 
     
     
-    public class func Fetch<T:DomainResource & RequestProtocol>(requestType: T.Type, server: Server, options: [String:String]? = nil, callback: @escaping (([PROMeasure]? , Error?) -> Void)) {
+    public class func Fetch<T:DomainResource & RequestProtocol>(requestType: T.Type, server: Server, options: [String:String]? = nil, instrumentResolver: InstrumentResolver? = nil, callback: @escaping (([PROMeasure]? , Error?) -> Void)) {
 
         var searchParams =  T.rq_fetchParameters ?? [String:String]()
         
@@ -103,11 +116,14 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
                 searchParams[k] = v
             }
         }
-
       
         T.Requests(from: server, options: searchParams) { (requests, error) in
             if let requests = requests {
-                let proMeasures = requests.map{ PROMeasure(request: $0) }
+                let proMeasures = requests.map({ (request) -> PROMeasure in
+                    let pro = PROMeasure(request: request)
+                    pro.instrumentResolver = instrumentResolver
+                    return pro
+                })
                 callback(proMeasures, nil)
             }
             callback(nil, error)

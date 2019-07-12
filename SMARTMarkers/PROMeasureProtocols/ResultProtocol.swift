@@ -92,7 +92,7 @@ open class PROResults {
             }
         }
         
-        group.notify(queue: .main) {
+        group.notify(queue: .global(qos: .default)) {
             callback(self.results, nil)
         }
         
