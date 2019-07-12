@@ -152,7 +152,7 @@ public class SMARTManager : NSObject {
             }
             else {
 
-                callback(self.patient != nil, error)
+                callback(error == nil, error)
             }
         })
     }

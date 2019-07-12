@@ -57,6 +57,7 @@ public class PROResultViewController: UITableViewController {
         if cell == nil {
             cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
             cell?.textLabel?.numberOfLines = 2
+
             cell?.textLabel?.lineBreakMode = .byWordWrapping
             cell?.detailTextLabel?.textColor = view.tintColor
         }

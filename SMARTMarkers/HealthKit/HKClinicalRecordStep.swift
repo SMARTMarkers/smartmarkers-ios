@@ -146,8 +146,9 @@ open class HKClinicalRecordRequestStep: ORKQuestionStep {
     
     public override init(identifier: String) {
         super.init(identifier: identifier)
-        self.title = "Health Records"
-        self.question = "Select clinical record types to submit"
+        self.title = "Authorization"
+        self.text  = "To access health data from your iPhone, please select the type of data you would like to submit to the [EHR]."
+        self.question = "Select clinical record"
         let choices = [
             HKClinicalTypeIdentifier.vitalSignsChoice,
             HKClinicalTypeIdentifier.ImmunizationChoice,

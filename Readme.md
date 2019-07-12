@@ -41,3 +41,8 @@ Download this repo or add as a git submodule to your project. Make sure the subm
 [link-researchkit]: http://researchkit.org
 [link-swift-smart]: https://github.com/smart-on-fhir/Swift-SMART
 
+
+## Todo
+
+1. PGRClient: initWithServer: (SMART.Server); writebackTo(SMART.Server) 
+2. 
