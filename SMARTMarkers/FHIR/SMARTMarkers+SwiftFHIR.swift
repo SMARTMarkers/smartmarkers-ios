@@ -111,17 +111,21 @@ extension SMART.DomainResource {
         return type(of: self).resourceType
     }
     
-    public func sm_prettyPrint() throws  {
+    @discardableResult
+    public func sm_jsonString() throws -> String?  {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: try self.asJSON(), options: .prettyPrinted)
             if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print(jsonString)
+                return jsonString
             }
         }
         catch {
             throw error
         }
+        return nil
     }
+
+        
     
 }
 

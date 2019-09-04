@@ -10,12 +10,12 @@ import UIKit
 
 public class PROResultViewController: UITableViewController {
     
-    public var result: ResultProtocol!
+    public var result: ReportProtocol!
     
     public lazy var data : [(String, String)] = {
         return [
             ("Type",        result.rp_resourceType),
-            ("FHIR ID",     result.rp_identifier),
+            ("FHIR ID",     result.rp_identifier ?? "-NA-"),
             ("Date",        result.rp_date.shortDate),
             ("Description", result.rp_description ?? ""),
             ("Title",       result.rp_title ?? ""),
@@ -23,7 +23,7 @@ public class PROResultViewController: UITableViewController {
         ]
     }()
 
-    public required convenience init(_ _result: ResultProtocol) {
+    public required convenience init(_ _result: ReportProtocol) {
         self.init(style: .grouped)
         result = _result
     }

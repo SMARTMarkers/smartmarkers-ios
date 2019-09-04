@@ -11,7 +11,7 @@ import SMART
 import UserNotifications
 
 
-public enum UsageMode  {
+public enum UserContextMode  {
     case Practitioner
     case Patient
     case Unknown
@@ -25,7 +25,7 @@ public class SMARTManager : NSObject {
     
     public static let shared = SMARTManager()
     
-    public internal(set) var usageMode : UsageMode = .Unknown
+    public internal(set) var usageMode : UserContextMode = .Unknown
     
     public internal(set) var practitioner: Practitioner? = nil {
         didSet {

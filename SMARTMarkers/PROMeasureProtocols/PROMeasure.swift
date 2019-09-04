@@ -51,11 +51,11 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public var instrument: InstrumentProtocol? {
         didSet {
-            results = PROResults(resultRelations: instrument?.ip_resultingFhirResourceType, patient)
+            results = Reports(resultRelations: instrument?.ip_resultingFhirResourceType, patient)
         }
     }
     
-    public var results: PROResults?
+    public var results: Reports?
     
     public var schedule: Schedule?
     
@@ -67,13 +67,18 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public static var instrumentLibrary: [InstrumentProtocol]?
     
+    public lazy var newResults: [SMART.Bundle] = {
+        return [SMART.Bundle]()
+    }()
+    
     public convenience init(request: RequestProtocol) {
+        
         self.init()
         self.request = request
         self.schedule = request.rq_schedule
         
         // Default
-        self.results = PROResults(resultRelations: [
+        self.results = Reports(resultRelations: [
             PROFhirLinkRelationship(Observation.self,           ["based-on": request.rq_identifier]),
             PROFhirLinkRelationship(QuestionnaireResponse.self, ["based-on": request.rq_identifier])
             ], patient)
@@ -104,9 +109,9 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public override init() { }
     
+    
 
-    
-    
+    /// Class functions to build `PROMeasure`s
     public class func Fetch<T:DomainResource & RequestProtocol>(requestType: T.Type, server: Server, options: [String:String]? = nil, instrumentResolver: InstrumentResolver? = nil, callback: @escaping (([PROMeasure]? , Error?) -> Void)) {
 
         var searchParams =  T.rq_fetchParameters ?? [String:String]()
@@ -131,6 +136,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     }
     
     public class func Fetch<T:DomainResource & InstrumentProtocol>(instrumentType: T.Type, server: Server, options: [String:String]? = nil, callback: @escaping (([PROMeasure]? , Error?) -> Void)) {
+        
         T.Instruments(from: server, options: options) { (instruments, error) in
             if let instruments = instruments {
                 let proMeasures = instruments.map { PROMeasure(instrument: $0) }
@@ -138,7 +144,6 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
             }
             callback(nil, error)
         }
-        
     }
     
     public func fetchAll(callback : ((_ success: Bool, _ error: Error?) -> Void)?) {
@@ -172,7 +177,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     }
 
 
-    public func updateRequest(_ _results: [ResultType]?, callback: @escaping ((_ success: Bool) -> Void)) {
+    public func updateRequest(_ _results: [ReportType]?, callback: @escaping ((_ success: Bool) -> Void)) {
         guard request != nil, let res = _results else {
             return
         }
@@ -209,6 +214,7 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
         
         guard
             reason == .completed,
+//            let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!),
             let patient = patient,
             let server = server
             else
@@ -263,6 +269,10 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
                 }
             }
             
+            
+            self.newResults.append(bundle!)
+            
+            
             let handler = FHIRJSONRequestHandler(.POST, resource: bundle)
             let headers = FHIRRequestHeaders([.prefer: "return=representation"])
             handler.add(headers: headers)
@@ -270,7 +280,7 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             let semaphore = DispatchSemaphore(value: 0)
             server.performRequest(against: "//", handler: handler, callback: { [weak self] (response) in
                 if let response = response as? FHIRServerJSONResponse, let json = response.json , let rbundle = try? SMART.Bundle(json: json) {
-                    let results = rbundle.entry?.filter { $0.resource is ResultType }.map{ $0.resource as! ResultType }
+                    let results = rbundle.entry?.filter { $0.resource is ReportType }.map{ $0.resource as! ReportType }
                     if let results = results {
                         self?.results?.add(resources: results)
                     }

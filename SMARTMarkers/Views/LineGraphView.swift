@@ -207,7 +207,7 @@ import UIKit
     private let scrollView = UIScrollView()
     private let mainLayer  = CALayer()
     
-    public var dataEntries: [ResultProtocol]? = nil {
+    public var dataEntries: [ReportProtocol]? = nil {
         didSet {
             addEntries()
         }

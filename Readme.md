@@ -42,7 +42,45 @@ Download this repo or add as a git submodule to your project. Make sure the subm
 [link-swift-smart]: https://github.com/smart-on-fhir/Swift-SMART
 
 
+### Workflow
+
+###### Practitioner - Request Workflwo
+
+1. Launches App
+2. Selects Instrument from List
+  - Show Instrument Metadata
+    - Name, Identifier
+    - Supported Device 
+    - Supported Software
+    - **ACTION**: Create Instrument FHIR resource that has this!
+  - On Selection: App displays Metadata
+3. Practitoner Dispatches Request, with schedule
+
+###### Practitioner - Visualize Workflow
+
+1. Practitioner: Gets list of requests made
+2. App gets the responce back
+3. App displays Response Completion Status
+  - **ACTION**: Need to encode Result
+  
+###### Patient
+1. Patient Receives Request
+2. App: Receives Request, for each request
+  - Resolves Instrument
+  - Checks Instrument Support 
+    - Questionnaire: SDC/IG
+    - ValueSet(coding)
+    - **ACTION** Need method `checkConformance/validateSupportFor:Instrument:`
+        - `SUPPORTED`: Proceed
+        - `NOTSUPPORTED`: On Device not supported, display instrument metadata: 
+            - **ACTION**: `report` To Practitioner
+        
+
 ## Todo
 
 1. PGRClient: initWithServer: (SMART.Server); writebackTo(SMART.Server) 
-2. 
+2. At InstrumentResolve, check if instrument
+    - Is available/not-available
+    - check device type necessary
+3. PROMIS Stateless API Module
+4. 

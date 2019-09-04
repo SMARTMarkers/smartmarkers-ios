@@ -49,7 +49,7 @@ open class StroopTestPRO: ActiveInstrumentProtocol {
         
         if let stroopResults = result.stepResult(forStepIdentifier: ip_identifier)?.results?.map({ $0 as! ORKStroopResult}) {
             let obs = Observation.sm_Stroop(self, result: stroopResults)
-            print(try! obs.sm_prettyPrint())
+            print(try! obs.sm_jsonString())
             return SMART.Bundle.sm_with([obs])
         }
         return nil

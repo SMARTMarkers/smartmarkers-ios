@@ -54,7 +54,7 @@
 		D48BBB5222D6446300FF4023 /* ACModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BBB5122D6446300FF4023 /* ACModel.swift */; };
 		D4B964DC22298FF000F46177 /* RequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B964DB22298FF000F46177 /* RequestProtocol.swift */; };
 		D4B964E22229A74300F46177 /* InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B964E12229A74300F46177 /* InstrumentProtocol.swift */; };
-		D4B964E62229AAD900F46177 /* ResultProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B964E52229AAD900F46177 /* ResultProtocol.swift */; };
+		D4B964E62229AAD900F46177 /* ReportProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B964E52229AAD900F46177 /* ReportProtocol.swift */; };
 		D4C2B2AE208FA55E00262B14 /* InsightsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C2B2AD208FA55E00262B14 /* InsightsController.swift */; };
 		D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C2B2AF208FA59800262B14 /* LineGraphView.swift */; };
 		D4CBBFEA203F72B7002B6AC9 /* QuestionnaireViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */; };
@@ -65,6 +65,10 @@
 		D4CFF020203C7AF200A6FB31 /* SwiftFHIR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4CFF021203C7AF200A6FB31 /* SwiftFHIR.framework */; };
 		D4CFF03C203C7F9D00A6FB31 /* SMARTManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CFF03B203C7F9D00A6FB31 /* SMARTManager.swift */; };
 		D4DAAD5522662161004F0815 /* RangeOfMotionObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DAAD5422662161004F0815 /* RangeOfMotionObservation.swift */; };
+		D4DC5B09231FFA78001878B4 /* ReportProtocol+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B08231FFA78001878B4 /* ReportProtocol+FHIR.swift */; };
+		D4DC5B0B231FFC4F001878B4 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B0A231FFC4F001878B4 /* ReportViewController.swift */; };
+		D4DC5B0D231FFFD7001878B4 /* FHIRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B0C231FFFD7001878B4 /* FHIRViewController.swift */; };
+		D4DC5B0F232029A2001878B4 /* SubmitReportTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B0E232029A2001878B4 /* SubmitReportTableViewController.swift */; };
 		D4DFD98B223ABFBF0097B958 /* WebFetchStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */; };
 		D4DFD98E223AC5F40097B958 /* OMRON+InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */; };
 		D4DFD991223AEE0D0097B958 /* BloodPressureObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */; };
@@ -135,7 +139,7 @@
 		D48BBB5122D6446300FF4023 /* ACModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACModel.swift; sourceTree = "<group>"; };
 		D4B964DB22298FF000F46177 /* RequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProtocol.swift; sourceTree = "<group>"; };
 		D4B964E12229A74300F46177 /* InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentProtocol.swift; sourceTree = "<group>"; };
-		D4B964E52229AAD900F46177 /* ResultProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultProtocol.swift; sourceTree = "<group>"; };
+		D4B964E52229AAD900F46177 /* ReportProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportProtocol.swift; sourceTree = "<group>"; };
 		D4C2B2AD208FA55E00262B14 /* InsightsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsController.swift; sourceTree = "<group>"; };
 		D4C2B2AF208FA59800262B14 /* LineGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGraphView.swift; sourceTree = "<group>"; };
 		D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +150,11 @@
 		D4CFF021203C7AF200A6FB31 /* SwiftFHIR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftFHIR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4CFF03B203C7F9D00A6FB31 /* SMARTManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMARTManager.swift; sourceTree = "<group>"; };
 		D4DAAD5422662161004F0815 /* RangeOfMotionObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeOfMotionObservation.swift; sourceTree = "<group>"; };
+		D4DC5B05231ED258001878B4 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		D4DC5B08231FFA78001878B4 /* ReportProtocol+FHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReportProtocol+FHIR.swift"; sourceTree = "<group>"; };
+		D4DC5B0A231FFC4F001878B4 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
+		D4DC5B0C231FFFD7001878B4 /* FHIRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRViewController.swift; sourceTree = "<group>"; };
+		D4DC5B0E232029A2001878B4 /* SubmitReportTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportTableViewController.swift; sourceTree = "<group>"; };
 		D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebFetchStep.swift; sourceTree = "<group>"; };
 		D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OMRON+InstrumentProtocol.swift"; sourceTree = "<group>"; };
 		D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureObservation.swift; sourceTree = "<group>"; };
@@ -317,6 +326,7 @@
 		D4E75D532035E73E000CE95A = {
 			isa = PBXGroup;
 			children = (
+				D4DC5B05231ED258001878B4 /* TODO.md */,
 				D468777D229701D100717D95 /* QuestionnaireExamples */,
 				D4618A4D206160FF004E117F /* Readme.md */,
 				D465D5A3203DCB8E0057BD23 /* Installation.md */,
@@ -393,6 +403,9 @@
 				D4E75D722035E7AA000CE95A /* EHRLoginController.swift */,
 				D422E59222C675D90097E0CF /* PROResultViewController.swift */,
 				D422E59422C6BE270097E0CF /* RequestViewController.swift */,
+				D4DC5B0A231FFC4F001878B4 /* ReportViewController.swift */,
+				D4DC5B0C231FFFD7001878B4 /* FHIRViewController.swift */,
+				D4DC5B0E232029A2001878B4 /* SubmitReportTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -405,7 +418,8 @@
 				D40B19CA20989B9000C18C23 /* Schedule.swift */,
 				D451C38420E94DE30018766F /* EventMarkerProtocol.swift */,
 				D4FEBDB921E7B3EA0057C77D /* RequestProtocol+FHIR.swift */,
-				D4B964E52229AAD900F46177 /* ResultProtocol.swift */,
+				D4B964E52229AAD900F46177 /* ReportProtocol.swift */,
+				D4DC5B08231FFA78001878B4 /* ReportProtocol+FHIR.swift */,
 				D4B964E12229A74300F46177 /* InstrumentProtocol.swift */,
 				D4B964DB22298FF000F46177 /* RequestProtocol.swift */,
 				D468778A2297062E00717D95 /* Instrument+PROMeasure.swift */,
@@ -521,7 +535,7 @@
 				D4CBBFEA203F72B7002B6AC9 /* QuestionnaireViewController.swift in Sources */,
 				D44BD43E20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift in Sources */,
 				D422E59022C2A2960097E0CF /* HKClinicalRecordTaskViewController.swift in Sources */,
-				D4B964E62229AAD900F46177 /* ResultProtocol.swift in Sources */,
+				D4B964E62229AAD900F46177 /* ReportProtocol.swift in Sources */,
 				D422E58822C242B70097E0CF /* HKClincalRecordSelector.swift in Sources */,
 				D4FEBDBA21E7B3EA0057C77D /* RequestProtocol+FHIR.swift in Sources */,
 				D4E75D8120361EE5000CE95A /* PatientsViewController.swift in Sources */,
@@ -535,9 +549,11 @@
 				D44C5E1C22009C8E007ACC8E /* AdaptiveQuestionnaireResponse.swift in Sources */,
 				D4DFD994223C0F730097B958 /* AmslerGridInstrument.swift in Sources */,
 				D4DAAD5522662161004F0815 /* RangeOfMotionObservation.swift in Sources */,
+				D4DC5B0F232029A2001878B4 /* SubmitReportTableViewController.swift in Sources */,
 				D422E59522C6BE270097E0CF /* RequestViewController.swift in Sources */,
 				D468778F2297419000717D95 /* QuestionnaireTaskViewController.swift in Sources */,
 				D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */,
+				D4DC5B0B231FFC4F001878B4 /* ReportViewController.swift in Sources */,
 				D43C71C2226A348C0008FF27 /* TappingSpeedPRO.swift in Sources */,
 				D4B964E22229A74300F46177 /* InstrumentProtocol.swift in Sources */,
 				D4DFD996223C2EB40097B958 /* InstrumentFactory.swift in Sources */,
@@ -549,6 +565,7 @@
 				D4618A44205ED820004E117F /* PatientVerificationController.swift in Sources */,
 				D4B964DC22298FF000F46177 /* RequestProtocol.swift in Sources */,
 				D43C71C02269FDF50008FF27 /* StroopTestPRO.swift in Sources */,
+				D4DC5B0D231FFFD7001878B4 /* FHIRViewController.swift in Sources */,
 				D4DFD98E223AC5F40097B958 /* OMRON+InstrumentProtocol.swift in Sources */,
 				D4FEBDB821E64A610057C77D /* SMError.swift in Sources */,
 				D4618A46205F07EC004E117F /* LocalAuth.swift in Sources */,
@@ -575,6 +592,7 @@
 				D4DFD99E224125A60097B958 /* HKClinicalRecordStep.swift in Sources */,
 				D4DFD991223AEE0D0097B958 /* BloodPressureObservation.swift in Sources */,
 				D468778B2297062E00717D95 /* Instrument+PROMeasure.swift in Sources */,
+				D4DC5B09231FFA78001878B4 /* ReportProtocol+FHIR.swift in Sources */,
 				D4DFD99C22401D260097B958 /* ObservationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
