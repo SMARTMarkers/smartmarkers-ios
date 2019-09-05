@@ -33,8 +33,8 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
         return nil
     }
     
-    public var ip_resultingFhirResourceType: [PROFhirLinkRelationship]? {
-        return [PROFhirLinkRelationship(Observation.self, ["code": ip_identifier])]
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
+        return [FHIRSearchParamRelationship(Observation.self, ["code": ip_identifier])]
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

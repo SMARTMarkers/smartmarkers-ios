@@ -39,7 +39,7 @@ open class KneeRangeOfMotion: InstrumentProtocol {
         return nil
     }
     
-    public var ip_resultingFhirResourceType: [PROFhirLinkRelationship]? {
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         return nil
     }
     
@@ -115,7 +115,7 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
         return nil
     }
     
-    public var ip_resultingFhirResourceType: [PROFhirLinkRelationship]? {
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         return nil
     }
     

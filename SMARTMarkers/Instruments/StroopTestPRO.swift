@@ -36,7 +36,7 @@ open class StroopTestPRO: ActiveInstrumentProtocol {
     
     public var ip_version: String?
     
-    public var ip_resultingFhirResourceType: [PROFhirLinkRelationship]?
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         

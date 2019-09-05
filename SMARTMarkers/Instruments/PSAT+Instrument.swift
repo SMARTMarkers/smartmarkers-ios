@@ -29,7 +29,7 @@ open class PSATPRO: InstrumentProtocol {
         return nil
     }
     
-    public var ip_resultingFhirResourceType: [PROFhirLinkRelationship]? {
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         return nil
     }
     

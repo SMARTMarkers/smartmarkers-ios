@@ -21,7 +21,7 @@ public protocol InstrumentProtocol : class {
     
     var ip_version: String? { get }
     
-    var ip_resultingFhirResourceType: [PROFhirLinkRelationship]? { get }
+    var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? { get }
     
     /// Protocol Func to generate ResearchKit's `ORKTaskViewController`
     func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))

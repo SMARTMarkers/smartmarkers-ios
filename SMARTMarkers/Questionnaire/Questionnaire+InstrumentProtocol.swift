@@ -28,8 +28,8 @@ extension SMART.Questionnaire : InstrumentProtocol {
         return version?.string
     }
     
-    public var ip_resultingFhirResourceType: [PROFhirLinkRelationship]? {
-        return [PROFhirLinkRelationship(QuestionnaireResponse.self, ["questionnaire": self.id!.string])]
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
+        return [FHIRSearchParamRelationship(QuestionnaireResponse.self, ["questionnaire": self.id!.string])]
 
     }
     

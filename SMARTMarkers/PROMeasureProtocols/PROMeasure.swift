@@ -55,7 +55,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         }
     }
     
-    public var results: Reports?
+    public var results: Reports!
     
     public var schedule: Schedule?
     
@@ -79,8 +79,8 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         
         // Default
         self.results = Reports(resultRelations: [
-            PROFhirLinkRelationship(Observation.self,           ["based-on": request.rq_identifier]),
-            PROFhirLinkRelationship(QuestionnaireResponse.self, ["based-on": request.rq_identifier])
+            FHIRSearchParamRelationship(Observation.self,           ["based-on": request.rq_identifier]),
+            FHIRSearchParamRelationship(QuestionnaireResponse.self, ["based-on": request.rq_identifier])
             ], patient)
     }
     
@@ -158,7 +158,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
             return
         }
         
-        results.fetchResults(server: srv, searchParams: nil) { (results, error) in
+        results.fetch(server: srv, searchParams: nil) { (results, error) in
             callback?(results != nil, error)
         }
     }
@@ -187,11 +187,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     }
     
     
-    public func generateAndSubmit(result: ORKTaskResult, task: ORKTask, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
-        
-        let bundle = instrument?.ip_generateResponse(from: result, task: task)
-        
-    }
+    
    
     
 }
@@ -210,11 +206,9 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
         if stepIdentifier.contains("range.of.motion") { return }
         // ***
         
-        let bundle =  instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!)
-        
         guard
             reason == .completed,
-//            let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!),
+            let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!),
             let patient = patient,
             let server = server
             else
@@ -224,82 +218,23 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             taskViewController.navigationController?.popViewController(animated: true)
             return
         }
-
-        var zerror = serror
-
-        do {
-
-
-            //TODO: Request Protocol constraint to DomainResource
-            let prescribingReference = try (request as? ServiceRequest)?.asRelativeReference()
-            let patientReference = try patient.asRelativeReference()
-            for entry in bundle?.entry ?? [] {
-                
-                //QuestionnaireResponse
-                if let answers = entry.resource as? QuestionnaireResponse {
-                    answers.subject = patientReference
-                    if let r = prescribingReference {
-                        var basedOns = answers.basedOn ?? [Reference]()
-                        basedOns.append(r)
-                        answers.basedOn = basedOns
-                    }
-                }
-                
-                //Observation
-                if let observation = entry.resource as? Observation {
-                    observation.subject = patientReference
-                    if let r = prescribingReference {
-                        var basedOns = observation.basedOn ?? [Reference]()
-                        basedOns.append(r)
-                        observation.basedOn = basedOns
-                    }
-                }
-                
-                //Binary
-                if let binary = entry.resource as? Binary {
-                    binary.securityContext = patientReference
-                }
-                
-                //Media
-                if let media = entry.resource as? Media {
-                    media.subject = patientReference
-                    if let reqReference = prescribingReference {
-                        media.basedOn = [reqReference]
-                    }
-                }
-            }
-            
-            
-            self.newResults.append(bundle!)
-            
-            
-            let handler = FHIRJSONRequestHandler(.POST, resource: bundle)
-            let headers = FHIRRequestHeaders([.prefer: "return=representation"])
-            handler.add(headers: headers)
-            
-            let semaphore = DispatchSemaphore(value: 0)
-            server.performRequest(against: "//", handler: handler, callback: { [weak self] (response) in
-                if let response = response as? FHIRServerJSONResponse, let json = response.json , let rbundle = try? SMART.Bundle(json: json) {
-                    let results = rbundle.entry?.filter { $0.resource is ReportType }.map{ $0.resource as! ReportType }
-                    if let results = results {
-                        self?.results?.add(resources: results)
-                    }
-                    self?.updateRequest(results, callback: { (success) in
-                        if success {
-                            print("successfully udpated status")
-                        }
-                    })
-                }
-                semaphore.signal()
-            })
-            semaphore.wait()
-        }
-        catch {
-            zerror = error
-        }
         
-        taskDelegate?.sessionEnded(taskViewController, reason: reason, error: zerror)
-        taskViewController.navigationController?.popViewController(animated: true)
+        let group = DispatchGroup()
+        group.enter()
+        results?.submitBundle(bundle, server: server, consent: true, patient: patient, request: request, callback: { [weak self] (submitted, error) in
+            self?.updateRequest(self?.results!.reports, callback: { (updatedstatus) in
+                if updatedstatus {
+                    print("successfully updated status")
+                }
+                group.leave()
+            })
+        })
+        
+        group.notify(queue: .main) { [weak self] in
+            self?.taskDelegate?.sessionEnded(taskViewController, reason: reason, error: nil)
+            taskViewController.navigationController?.popViewController(animated: true)
+
+        }
     }
     
     public func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {

@@ -34,7 +34,7 @@ public extension ReportProtocol where Self: ReportType {
 }
 
 
-public struct PROFhirLinkRelationship {
+public struct FHIRSearchParamRelationship {
     
     public let resourceType: ReportType.Type
     public let relation: [String: String]
@@ -59,11 +59,13 @@ open class Reports {
        return [ReportType]()
     }()
     
-    open var types: [ReportType.Type]?
+    open lazy var newBundles: [SMART.Bundle] = {
+        return [SMART.Bundle]()
+    }()
     
-    open var resultLinks: [PROFhirLinkRelationship]?
+    open var resultLinks: [FHIRSearchParamRelationship]?
     
-    public init(resultRelations: [PROFhirLinkRelationship]?, _ patient: Patient?) {
+    public init(resultRelations: [FHIRSearchParamRelationship]?, _ patient: Patient?) {
         self.resultLinks = resultRelations
         self.patient = patient
     }
@@ -79,7 +81,8 @@ open class Reports {
     
     
     
-    open func fetchResults(server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [ReportType]?, _ error: Error?) -> Void)) {
+    
+    open func fetch(server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [ReportType]?, _ error: Error?) -> Void)) {
         
         let group = DispatchGroup()
         for type in resultLinks! {
@@ -106,8 +109,89 @@ open class Reports {
         
     }
     
-    open func showSubmit(with consent: Bool, callback: @escaping ((_ success: Bool, _ error: Bool) -> Void)) {
+    open func add(_ bundle: SMART.Bundle) {
+        newBundles.append(bundle)
+    }
+    
+    
+    open func submitBundle(_ bundle: SMART.Bundle,  server: Server, consent: Bool, patient: Patient, request: RequestProtocol?, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
         
+        var _bundle = bundle
+        
+        Reports.Tag(&_bundle, with: patient, request: request)
+        
+        let handler = FHIRJSONRequestHandler(.POST, resource: _bundle)
+        let headers = FHIRRequestHeaders([.prefer: "return=representation"])
+        handler.add(headers: headers)
+        let semaphore = DispatchSemaphore(value: 0)
+        server.performRequest(against: "//", handler: handler) { [weak self] (response) in
+            
+            if let response = response as? FHIRServerJSONResponse,
+                let json = response.json,
+                let responseBundle = try? SMART.Bundle(json: json) {
+                if let results = responseBundle.entry?.filter({ $0.resource is ReportType}).map({ $0.resource as! ReportType }) {
+                    self?.add(resources: results)
+                    callback(true, nil)
+                }
+                else {
+                    callback(false, SMError.reportUnknownFHIRReportType)
+                }
+            }
+            else {
+                callback(false, SMError.reportSubmissionToServerError)
+            }
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
+    
+    
+    public static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: RequestProtocol?) {
+        
+        do {
+            let patientReference = try patient?.asRelativeReference()
+            let requestReference = try (request as? ServiceRequest)?.asRelativeReference()
+            
+            for entry in bundle.entry ?? [] {
+                
+                //QuestionnaireResponse
+                if let answers = entry.resource as? QuestionnaireResponse {
+                    answers.subject = patientReference
+                    if let r = requestReference {
+                        var basedOns = answers.basedOn ?? [Reference]()
+                        basedOns.append(r)
+                        answers.basedOn = basedOns
+                    }
+                }
+                
+                //Observation
+                if let observation = entry.resource as? Observation {
+                    observation.subject = patientReference
+                    if let r = requestReference {
+                        var basedOns = observation.basedOn ?? [Reference]()
+                        basedOns.append(r)
+                        observation.basedOn = basedOns
+                    }
+                }
+                
+                //Binary
+                if let binary = entry.resource as? Binary {
+                    binary.securityContext = patientReference
+                }
+                
+                //Media
+                if let media = entry.resource as? Media {
+                    media.subject = patientReference
+                    if let reqReference = requestReference {
+                        media.basedOn = [reqReference]
+                    }
+                }
+            }
+        }
+        catch {
+            
+            print(error)
+        }
     }
     
     

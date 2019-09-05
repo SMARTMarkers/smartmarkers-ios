@@ -94,4 +94,9 @@ public extension RequestProtocol where Self: SMART.DomainResource {
     }
     
     
+    func asRelativeReference() throws -> Reference {
+        return try self.asRelativeReference()
+    }
+    
+    
 }

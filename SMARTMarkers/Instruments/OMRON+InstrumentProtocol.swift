@@ -34,7 +34,7 @@ open class OMRON: InstrumentProtocol {
         return "0.1"
     }
     
-    public var ip_resultingFhirResourceType: [PROFhirLinkRelationship]? {
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         return nil
     }
     
