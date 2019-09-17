@@ -107,7 +107,7 @@ extension ServiceRequest: RequestProtocol {
     }
 
     
-    public func rq_instrumentResolve(callback: @escaping ((InstrumentProtocol?, Error?) -> Void)) {
+    public func rq_instrumentResolve(callback: @escaping ((Instrument?, Error?) -> Void)) {
         if let questionnaireExtension = extensions(forURI: kSD_QuestionnaireRequest)?.first {
             questionnaireExtension.valueReference?.resolve(Questionnaire.self, callback: { (questionnaire) in
                 if let questionnaire = questionnaire {

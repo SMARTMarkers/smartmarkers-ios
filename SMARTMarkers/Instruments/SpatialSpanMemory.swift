@@ -42,7 +42,7 @@ open class SpatialSpanMemoryPRO: ActiveInstrumentProtocol {
         return "Spatial Span Memory"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "cognitive.memory.spatialspan"
     }
     
@@ -52,11 +52,13 @@ open class SpatialSpanMemoryPRO: ActiveInstrumentProtocol {
     
     public var ip_version: String?
     
+    public var ip_publisher: String?
+    
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: ip_identifier, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
+        let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: ip_identifier!, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
         
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         

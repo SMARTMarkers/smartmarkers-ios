@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-open class KneeRangeOfMotion: InstrumentProtocol {
+open class KneeRangeOfMotion: Instrument {
     
     var limbOption: ORKPredefinedTaskLimbOption!
     
@@ -27,7 +27,7 @@ open class KneeRangeOfMotion: InstrumentProtocol {
         return "Knee Range of Motion"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "org.researchkit.knee.range.of.motion"
     }
     
@@ -38,6 +38,8 @@ open class KneeRangeOfMotion: InstrumentProtocol {
     public var ip_version: String? {
         return nil
     }
+    
+    public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         return nil
@@ -103,7 +105,7 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
         return "Shoulder Range of Motion"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "org.researchkit.shoulder.range.of.motion"
     }
     
@@ -114,6 +116,8 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
     public var ip_version: String? {
         return nil
     }
+    
+    public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         return nil

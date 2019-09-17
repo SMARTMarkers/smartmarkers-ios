@@ -24,7 +24,7 @@ public extension ORKInstructionStep {
 public extension Array where Element == ORKStep {
     
     
-    func hasDuplicates() -> Bool {
+    func sm_hasDuplicates() -> Bool {
         
         let crossRef = Dictionary(grouping: self, by: {$0.identifier})
         if  crossRef.filter ({ $1.count > 1}).count > 1 {

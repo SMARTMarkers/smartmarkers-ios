@@ -28,28 +28,30 @@ open class TappingSpeedPRO: ActiveInstrumentProtocol {
         return "Tapping Speed Task"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "tappingspeed"
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_ResearchKit(ip_identifier, "Tapping Speed Task")
+        return Coding.sm_ResearchKit(ip_identifier!, "Tapping Speed Task")
     }
     
     public var ip_version: String?
+    
+    public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: ip_identifier, intendedUseDescription: ip_taskDescription, duration: duration, handOptions: handOption, options: [])
+        let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, duration: duration, handOptions: handOption, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let tappingSpeedResults = result.stepResult(forStepIdentifier: ip_identifier)?.results {
+        if let tappingSpeedResults = result.stepResult(forStepIdentifier: ip_identifier!)?.results {
             print(tappingSpeedResults)
         }
         return nil

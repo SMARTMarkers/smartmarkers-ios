@@ -11,19 +11,19 @@ import Foundation
 
 public class Instruments {
     
-    public static func OMRONBloodPressure(settings: [String:Any]) -> InstrumentProtocol? {
+    public static func OMRONBloodPressure(settings: [String:Any]) -> Instrument? {
         return OMRON(authSettings: settings)
     }
     
-    public static var AmslerGrid: InstrumentProtocol? {
+    public static var AmslerGrid: Instrument? {
         return AmslerGridPRO()
     }
     
-    public static var HolePegTestPRO: InstrumentProtocol? {
+    public static var HolePegTestPRO: Instrument? {
         return NineHolePegTestPRO()
     }
     
-    public static var PASATPRO: InstrumentProtocol? {
+    public static var PASATPRO: Instrument? {
         return PSATPRO()
     }
     

@@ -31,7 +31,7 @@ open class AdaptiveQuestionnaireTaskViewController: ORKTaskViewController {
         return (task as! AdaptiveQuestionnaireTask).server
     }
     
-    var questionnaire: InstrumentProtocol {
+    var questionnaire: Instrument {
         return (task as! AdaptiveQuestionnaireTask).questionnaire!
     }
     
@@ -95,7 +95,7 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
         
         steps.insert(introductionStep, at: 0)
         steps.append(conclusionStep)
-        super.init(identifier: instrument.ip_identifier, steps: steps)
+        super.init(identifier: instrument.ip_identifier!, steps: steps)
 
     }
     

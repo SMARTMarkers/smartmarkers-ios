@@ -11,10 +11,3 @@ import Foundation
 
 // Support methods
 
-public extension InstrumentProtocol {
-    
-    func asPROMeasure() -> PROMeasure {
-        return PROMeasure(instrument: self)
-    }
-    
-}

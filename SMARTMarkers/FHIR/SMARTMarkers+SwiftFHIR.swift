@@ -54,7 +54,7 @@ public extension CodeableConcept {
 		return self.coding?.filter { $0.system?.absoluteString == systemURI }.first
 	}
     
-    class func sm_From(_ instrument: InstrumentProtocol) -> CodeableConcept? {
+    class func sm_From(_ instrument: Instrument) -> CodeableConcept? {
         
         if let coding = instrument.ip_code {
             return sm_From([coding], text: instrument.ip_title)
@@ -103,9 +103,7 @@ extension Patient {
 
 
 
-
-
-extension SMART.DomainResource {
+extension SMART.Resource {
     
     public func sm_resourceType() -> String {
         return type(of: self).resourceType
@@ -125,6 +123,11 @@ extension SMART.DomainResource {
         return nil
     }
 
+}
+
+extension SMART.DomainResource {
+    
+    
         
     
 }

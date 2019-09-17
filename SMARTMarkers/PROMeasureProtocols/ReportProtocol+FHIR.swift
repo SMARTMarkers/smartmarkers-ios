@@ -9,6 +9,9 @@
 import Foundation
 import SMART
 
+
+
+
 extension QuestionnaireResponse : ReportProtocol {
     
     public var rp_resourceType: String {
@@ -50,6 +53,7 @@ extension QuestionnaireResponse : ReportProtocol {
 
 
 extension Observation : ReportProtocol {
+    
     public var rp_resourceType: String {
         return "Observation"
     }
@@ -89,6 +93,44 @@ extension Observation : ReportProtocol {
     func observationValueString() -> String? {
         if let v = valueString?.string { return v }
         if let v = valueQuantity { return String(describing: v.value!) }
+        return nil
+    }
+    
+    
+    
+}
+
+extension Media: ReportProtocol {
+    
+    public var rp_resourceType: String {
+        return sm_resourceType()
+    }
+    
+    
+    public var rp_identifier: String? {
+        return id?.string
+    }
+    
+    
+    
+    public var rp_title: String? {
+        return "Response #\(id?.string ?? "-")"
+    }
+    
+    
+    public var rp_description: String? {
+        return "Media"
+    }
+    
+    public var rp_date: Date {
+        return content!.creation!.nsDate
+    }
+    
+    public var rp_observation: String? {
+        return nil
+    }
+    
+    public static func searchParam(from: [DomainResource.Type]?) -> [String : String]? {
         return nil
     }
     

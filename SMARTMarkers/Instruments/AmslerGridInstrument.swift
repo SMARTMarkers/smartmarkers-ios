@@ -21,24 +21,26 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
         return "Amsler Grid"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "amsler.grid"
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_Coding(ip_identifier, "http://researchkit.org", "Amsler Grid")
+        return Coding.sm_Coding(ip_identifier!, "http://researchkit.org", "Amsler Grid")
     }
     
     public var ip_version: String? {
         return nil
     }
     
+    public var ip_publisher: String?
+    
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return [FHIRSearchParamRelationship(Observation.self, ["code": ip_identifier])]
+        return [FHIRSearchParamRelationship(Observation.self, ["code": ip_identifier!])]
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.ip_identifier, intendedUseDescription: ip_taskDescription, options: [])
+        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.ip_identifier!, intendedUseDescription: ip_taskDescription, options: [])
         let taskVC = ORKTaskViewController(task: amslerGridTask, taskRun: UUID())
         callback(taskVC, nil)
     }

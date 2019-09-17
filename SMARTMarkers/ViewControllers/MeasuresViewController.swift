@@ -21,15 +21,15 @@ open class MeasuresViewController :  UITableViewController {
     
 	open internal(set) var  _title: String?
 	
-	open internal(set) var instruments : [InstrumentProtocol]?
+	open internal(set) var instruments : [Instrument]?
     
-    open internal(set) var _instruments : [InstrumentProtocol]? {
+    open internal(set) var _instruments : [Instrument]? {
         didSet { instruments = _instruments }
     }
 
     open var selections = [String]()
     
-    open var onSelection: (([InstrumentProtocol]?) ->Void)?
+    open var onSelection: (([Instrument]?) ->Void)?
     
     override open func viewDidLoad() {
         title = "PRO-Instruments"
@@ -58,7 +58,7 @@ open class MeasuresViewController :  UITableViewController {
 		title = _title
     }
 	
-	open func set(_ instruments: [InstrumentProtocol]?) {
+	open func set(_ instruments: [Instrument]?) {
 		_instruments = instruments
 	}
     
@@ -87,7 +87,7 @@ open class MeasuresViewController :  UITableViewController {
     public func dismissModal(_ sender: AnyObject?) {
         if let onSelection = onSelection {
             if selections.count > 0, let instruments = _instruments {
-                let questionnaires = instruments.filter { selections.contains($0.ip_identifier) }
+                let questionnaires = instruments.filter { selections.contains($0.ip_identifier!) }
                 onSelection(questionnaires)
             } else {
                 onSelection(nil)
@@ -159,8 +159,8 @@ open class MeasuresViewController :  UITableViewController {
         return (false, nil)
     }
 
-    func contains(_ instr: InstrumentProtocol) -> Bool {
-        return selections.contains(instr.ip_identifier)
+    func contains(_ instr: Instrument) -> Bool {
+        return selections.contains(instr.ip_identifier!)
     }
 
     

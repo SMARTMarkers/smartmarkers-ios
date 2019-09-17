@@ -47,6 +47,8 @@ open class SessionController: NSObject, SessionProtocol {
     
     public var onMeasureCancellation: ((PROMeasure?) -> Void)?
     
+    public var onCompletion: ((SessionController) -> Void)?
+    
     public var practitioner: Practitioner?
     
     public var patient: Patient?
@@ -101,12 +103,18 @@ open class SessionController: NSObject, SessionProtocol {
     
 	
 	open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
+        
         var views : [UIViewController] = taskViewControllers
         if  shouldVerify, let patient = patient {
             let verifyController = PatientVerificationController(patient: patient)
             views.insert(verifyController, at: 0)
         }
-        let sessionNC = SessionNavigationController(views: views, reversed: true, shouldVerify: shouldVerify)
+        
+        
+        let sessionNC = SessionNavigationController(views: views, reversed: true, shouldVerify: shouldVerify, sessionEnded: ({
+            self.onCompletion?(self)
+        }))
+        
 		return sessionNC
 	}
 }

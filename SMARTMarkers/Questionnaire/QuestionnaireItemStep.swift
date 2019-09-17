@@ -75,7 +75,7 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
         
         if let slf = self as? ORKQuestionStep {
             
-            if let q = item.rk_text() {
+            if let q = item.text?.localized {
                 slf.question = q
             }
             else {
@@ -86,7 +86,7 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
         
         if let slf = self as? ORKInstructionStep {
             
-            if let q = item.rk_InstructionText() {
+            if let q = item.sm_questionItem_instructions() {
                 slf.text = q
             }
             else {
@@ -153,6 +153,7 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
 }
 
 public class QuestionnaireItemInstructionStep: ORKInstructionStep, QuestionnaireItemStepProtocol {
+    
     public var type: String?
     
     public var calculatedDescription: String?

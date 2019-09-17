@@ -47,7 +47,7 @@ public protocol RequestProtocol :  class, CustomStringConvertible {
     func rq_updated(_ completed: Bool, callback: @escaping ((_ success: Bool) -> Void))
     
     /// Requested Instrument
-    func rq_instrumentResolve(callback: @escaping ((_ instrument: InstrumentProtocol?, _ error: Error?) -> Void))
+    func rq_instrumentResolve(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
     
     /// Resolve FHIR References if needed;
     func rq_resolveReferences(callback: @escaping ((Bool) -> Void))

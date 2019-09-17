@@ -51,7 +51,7 @@ open class Reports {
     //TODO: SORT by Date
     weak var request: RequestProtocol?
     
-    weak var instrument: InstrumentProtocol?
+    weak var instrument: Instrument?
     
     weak var patient: Patient?
     
@@ -65,9 +65,11 @@ open class Reports {
     
     open var resultLinks: [FHIRSearchParamRelationship]?
     
-    public init(resultRelations: [FHIRSearchParamRelationship]?, _ patient: Patient?) {
+    public init(resultRelations: [FHIRSearchParamRelationship]?, _ patient: Patient?, instrument: Instrument?, request: RequestProtocol?) {
         self.resultLinks = resultRelations
         self.patient = patient
+        self.instrument = instrument
+        self.request = request
     }
     
     open func add(resource: ReportType) {
@@ -109,40 +111,40 @@ open class Reports {
         
     }
     
-    open func add(_ bundle: SMART.Bundle) {
+    open func addNewReports(_ bundle: SMART.Bundle) {
         newBundles.append(bundle)
     }
     
     
-    open func submitBundle(_ bundle: SMART.Bundle,  server: Server, consent: Bool, patient: Patient, request: RequestProtocol?, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
+    open func submit(to server: Server, consent: Bool, patient: Patient, request: RequestProtocol?, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
         
-        var _bundle = bundle
-        
-        Reports.Tag(&_bundle, with: patient, request: request)
-        
-        let handler = FHIRJSONRequestHandler(.POST, resource: _bundle)
-        let headers = FHIRRequestHeaders([.prefer: "return=representation"])
-        handler.add(headers: headers)
-        let semaphore = DispatchSemaphore(value: 0)
-        server.performRequest(against: "//", handler: handler) { [weak self] (response) in
-            
-            if let response = response as? FHIRServerJSONResponse,
-                let json = response.json,
-                let responseBundle = try? SMART.Bundle(json: json) {
-                if let results = responseBundle.entry?.filter({ $0.resource is ReportType}).map({ $0.resource as! ReportType }) {
-                    self?.add(resources: results)
-                    callback(true, nil)
-                }
-                else {
-                    callback(false, SMError.reportUnknownFHIRReportType)
-                }
-            }
-            else {
-                callback(false, SMError.reportSubmissionToServerError)
-            }
-            semaphore.signal()
+        guard !newBundles.isEmpty else {
+            callback(false, nil)
+            return
         }
-        semaphore.wait()
+    
+        let group  = DispatchGroup()
+        var errors = [Error]()
+        
+        for bundle in newBundles {
+            var _bundle = bundle
+            Reports.Tag(&_bundle, with: patient, request: request)
+            
+            group.enter()
+            submit(bundle: _bundle, server: server) { (success, error) in
+                if let error = error {
+                    errors.append(error)
+                }
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .global(qos: .default)) {
+            print(errors)
+            callback(true, nil)
+        }
+        
+        
     }
     
     
@@ -195,6 +197,51 @@ open class Reports {
     }
     
     
+    
+    open func submit(bundle: SMART.Bundle, server: Server, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
+        
+        let handler = FHIRJSONRequestHandler(.POST, resource: bundle)
+        let headers = FHIRRequestHeaders([.prefer: "return=representation"])
+        handler.add(headers: headers)
+        let semaphore = DispatchSemaphore(value: 0)
+        server.performRequest(against: "//", handler: handler) { [weak self] (response) in
+            
+            if let response = response as? FHIRServerJSONResponse,
+                let json = response.json,
+                let responseBundle = try? SMART.Bundle(json: json) {
+                if let results = responseBundle.entry?.filter({ $0.resource is ReportType}).map({ $0.resource as! ReportType }) {
+                    self?.add(resources: results)
+                    callback(true, nil)
+                }
+                else {
+                    callback(false, SMError.reportUnknownFHIRReportType)
+                }
+            }
+            else {
+                callback(false, SMError.reportSubmissionToServerError)
+            }
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
+    
+    
 }
 
 
+
+
+extension SMART.Bundle {
+    
+    func sm_ContentSummary() -> String? {
+        
+        let content = entry?.reduce(into: String(), { (bundleString, entry) in
+            let report = entry.resource as? ReportType
+            bundleString += report?.sm_resourceType() ?? "Type: -"
+            bundleString += ": " + (report?.rp_date.shortDate ?? "-")
+            bundleString += "\n"
+        })
+        
+        return content == nil ? nil : String(content!.dropLast())
+    }
+}

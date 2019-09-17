@@ -51,7 +51,7 @@ extension Questionnaire  {
     
         group.notify(queue: .main) {
             
-            if nsteps.hasDuplicates() {
+            if nsteps.sm_hasDuplicates() {
                 all_errors.append(SMError.instrumentHasDuplicateLinkIds)
                 nsteps.removeAll()
             }
@@ -124,8 +124,8 @@ extension QuestionnaireItem {
                 case .display:
                     do {
                         if let step = try QuestionnaireItemInstructionStep(self) {
-                            step.detailText = self.rk_InstructionText()
-                            step.title = self.rk_text()
+                            step.detailText = self.sm_questionItem_instructions()
+                            step.title = self.text?.localized
                             steps.append(step)
                         }
                     }
@@ -195,20 +195,7 @@ extension QuestionnaireItem {
 
         callback(steps.isEmpty ? nil : steps, nrules, all_errors.isEmpty ? nil : all_errors)
     }
-    
-    public func rk_text() -> String? {
-        return text?.localized
-    }
-    
-    public func rk_InstructionText() -> String? {
-        return extensions(forURI: kSD_QuestionnaireInstruction)?.first?.valueString?.localized
-    }
-    
-    public func rk_HelpText() -> String? {
-        return extensions(forURI: kSD_QuestionnaireHelp)?.first?.valueString?.localized
-    }
-    
-    
+
     public func rk_Identifier() -> String {
         return linkId?.string ?? UUID().uuidString
     }
@@ -290,24 +277,7 @@ let kDefaultAnserCode   = "ANSWERCODE"
 let kDelimiter          = "≠"
 
 
-public func sm_AnswerChoice(system: FHIRURL?, code: FHIRString, display: FHIRString?, displayText: String? = nil, detailText: String? = nil) -> ORKTextChoice? {
-    
-    let displayStr = displayText ?? display?.string ?? code.string
-    let answer = system?.absoluteString ?? kDefaultSystem + kDelimiter + code.string
-    let answerChoice = ORKTextChoice(text: displayStr, detailText: detailText, value: answer as NSCoding & NSCopying & NSObjectProtocol, exclusive: true)
-    return answerChoice
-}
 
-
-
-extension Coding {
-    
-    public func sm_textAnswerChoice() -> ORKTextChoice? {
-        
-        return sm_AnswerChoice(system: system, code: code!, display: display)
-        
-    }
-}
 extension QuestionnaireItemAnswerOption {
     
     public func rk_choiceAnswerFormat(style: ORKChoiceAnswerStyle = .singleChoice) -> ORKTextChoice? {
@@ -337,41 +307,6 @@ extension ORKAnswerFormat {
     }
 }
 
-extension ValueSet {
-    
-    
-    
-    
-    public func rk_choiceAnswerFormat(style: ORKChoiceAnswerStyle = .singleChoice) -> ORKAnswerFormat? {
-        
-        var choices = [ORKTextChoice]()
-        
-        if let expansion = expansion?.contains {
-            for option in expansion {
-                if let textChoice = sm_AnswerChoice(system: option.system, code: option.code!, display: option.display, displayText: option.display_localized) {
-                    choices.append(textChoice)
-                }
-            }
-        }
-        
-        else if let includes = compose?.include {
-            for include in includes {
-                include.concept?.forEach({ (concept) in
-                    if let answerChoice = sm_AnswerChoice(system: include.system, code: concept.code!, display: concept.display, displayText: concept.display_localized) {
-                        choices.append(answerChoice)
-                    }
-                })
-            }
-        }
-        
-        if choices.count > 0 {
-            return ORKAnswerFormat.choiceAnswerFormat(with: style, textChoices: choices)
-        }
-        
-        return nil
-        
-    }
-}
 
 
 
@@ -384,18 +319,6 @@ extension ORKChoiceQuestionResult {
 }
 
 
-extension SMART.Element {
-    
-    
-    public func sm_questionItem_instructions() -> String? {
-        return extensions(forURI: kSD_QuestionnaireInstruction)?.first?.valueString?.localized
-    }
-    
-    public func sm_questionItem_Help() -> String? {
-        return extensions(forURI: kSD_QuestionnaireHelp)?.first?.valueString?.localized
-    }
-    
-}
 
 
 extension ResearchKit.ORKStep {
@@ -457,15 +380,4 @@ extension QuestionnaireItemEnableWhen {
     
 }
 
-extension String {
-    
-    func slice(from: String, to: String) -> String? {
-        
-        return (range(of: from)?.upperBound).flatMap { substringFrom in
-            (range(of: to, range: substringFrom..<endIndex)?.lowerBound).map { substringTo in
-                String(self[substringFrom..<substringTo])
-            }
-        }
-    }
-}
 

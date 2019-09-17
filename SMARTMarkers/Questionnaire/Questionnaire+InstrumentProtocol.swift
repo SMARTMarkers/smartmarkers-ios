@@ -10,14 +10,15 @@ import Foundation
 import ResearchKit
 import SMART
 
-extension SMART.Questionnaire : InstrumentProtocol {
+extension SMART.Questionnaire : Instrument {
+    
     
     public var ip_title: String {
         return sm_displayTitle() ?? "--No title--"
     }
     
-    public var ip_identifier: String {
-        return id!.string
+    public var ip_identifier: String? {
+        return id?.string
     }
     
     public var ip_code: Coding? {
@@ -28,9 +29,37 @@ extension SMART.Questionnaire : InstrumentProtocol {
         return version?.string
     }
     
+    public var ip_publisher: String? {
+        return publisher?.string
+    }
+    
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return [FHIRSearchParamRelationship(QuestionnaireResponse.self, ["questionnaire": self.id!.string])]
-
+        
+        if let id = id?.string {
+            return [FHIRSearchParamRelationship(QuestionnaireResponse.self, ["questionnaire": id])]
+        }
+        return nil
+    }
+    
+    public func sm_SessionController(_ sessionIdentifier: String?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        sm_genereteSteps { (steps, rulestupples, error) in
+            if let steps = steps {
+                let uuid = UUID()
+                
+                let taskIdentifier = sessionIdentifier ?? uuid.uuidString
+                let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
+                rulestupples?.forEach({ (rule, linkId) in
+                    task.setSkip(rule, forStepIdentifier: linkId)
+                })
+                
+                let taskViewController = QuestionnaireTaskViewController(task: task, taskRun: uuid)
+                callback(taskViewController, nil)
+            }
+            else {
+                callback(nil, nil)
+            }
+        }
     }
     
     

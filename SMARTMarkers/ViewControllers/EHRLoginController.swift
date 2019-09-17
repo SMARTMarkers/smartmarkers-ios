@@ -39,7 +39,7 @@ open class EHRLoginController: UIViewController {
         userlbl.numberOfLines = 0
         userlbl.adjustsFontSizeToFitWidth = true
         userlbl.lineBreakMode = .byWordWrapping
-        let btn = LoginButton()
+        let btn = UIButton.SMButton(title: loginTitle, target: self, action: #selector(login(_:)))
         let lbl = EHRLoginController.titleLabel()
         userlbl.text = SMARTManager.shared.practitioner?.name?.first?.human ?? ""
         userlbl.textColor = UIColor.lightGray
@@ -109,18 +109,7 @@ open class EHRLoginController: UIViewController {
         return imgView
     }
     
-    func LoginButton() -> UIButton {
-		
-		let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-		let btn = RoundedButton(frame: frame)
-		btn.setTitle(loginTitle, for: .normal)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-		btn.setTitle(loginTitle, for: .normal)
-        btn.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        btn.addTarget(self, action: #selector(login(_:)), for: UIControl.Event.touchUpInside)
-
-        return btn
-    }
+    
     
     
     func cancelButton() -> UIButton {

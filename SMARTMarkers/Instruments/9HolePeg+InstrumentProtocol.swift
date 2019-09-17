@@ -11,13 +11,15 @@ import SMART
 import ResearchKit
 
 
-open class NineHolePegTestPRO: InstrumentProtocol {
+open class NineHolePegTestPRO: Instrument {
     
+    public init() { }
+
     public var ip_title: String {
         return "9 Hole Peg Test"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "9-hole-peg-test"
     }
     
@@ -33,9 +35,11 @@ open class NineHolePegTestPRO: InstrumentProtocol {
         return nil
     }
     
+    public var ip_publisher: String?
+    
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let tsk = ORKNavigableOrderedTask.holePegTest(withIdentifier: ip_identifier, intendedUseDescription: nil, dominantHand: .right, numberOfPegs: 9, threshold: 0.2, rotated: false, timeLimit: 300, options: [])
+        let tsk = ORKNavigableOrderedTask.holePegTest(withIdentifier: ip_identifier!, intendedUseDescription: nil, dominantHand: .right, numberOfPegs: 9, threshold: 0.2, rotated: false, timeLimit: 300, options: [])
         let tvc = ORKTaskViewController(task: tsk, taskRun: UUID())
         callback(tvc, nil)
     }

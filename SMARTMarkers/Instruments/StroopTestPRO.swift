@@ -26,28 +26,30 @@ open class StroopTestPRO: ActiveInstrumentProtocol {
         return "Stroop Test"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "stroop"
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_ResearchKit(ip_identifier, "Stroop Test")
+        return Coding.sm_ResearchKit(ip_identifier!, "Stroop Test")
     }
     
     public var ip_version: String?
+    
+    public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.stroopTask(withIdentifier: ip_identifier, intendedUseDescription: ip_taskDescription, numberOfAttempts: numberOfAttempts, options: [])
+        let task = ORKOrderedTask.stroopTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, numberOfAttempts: numberOfAttempts, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let stroopResults = result.stepResult(forStepIdentifier: ip_identifier)?.results?.map({ $0 as! ORKStroopResult}) {
+        if let stroopResults = result.stepResult(forStepIdentifier: ip_identifier!)?.results?.map({ $0 as! ORKStroopResult}) {
             let obs = Observation.sm_Stroop(self, result: stroopResults)
             print(try! obs.sm_jsonString())
             return SMART.Bundle.sm_with([obs])

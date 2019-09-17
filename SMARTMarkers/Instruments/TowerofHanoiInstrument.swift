@@ -23,17 +23,19 @@ open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
         return "Tower of Hanoi Task"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "towerOfHanoi"
     }
     
     public var ip_taskDescription: String?
     
     public var ip_code: Coding? {
-        return Coding.sm_Coding(ip_identifier, "http://researchkit.org", ip_title)
+        return Coding.sm_Coding(ip_identifier!, "http://researchkit.org", ip_title)
     }
     
     public var ip_version: String?
+    
+    public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
@@ -46,7 +48,7 @@ open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let tohResult = result.stepResult(forStepIdentifier: ip_identifier)?.results?.first as? ORKTowerOfHanoiResult {
+        if let tohResult = result.stepResult(forStepIdentifier: ip_identifier!)?.results?.first as? ORKTowerOfHanoiResult {
             let observation = Observation.sm_TowerOfHanoi(self, result: tohResult)
             return SMART.Bundle.sm_with([observation])
         }

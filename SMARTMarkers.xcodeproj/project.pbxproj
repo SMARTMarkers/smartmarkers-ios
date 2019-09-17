@@ -69,6 +69,10 @@
 		D4DC5B0B231FFC4F001878B4 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B0A231FFC4F001878B4 /* ReportViewController.swift */; };
 		D4DC5B0D231FFFD7001878B4 /* FHIRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B0C231FFFD7001878B4 /* FHIRViewController.swift */; };
 		D4DC5B0F232029A2001878B4 /* SubmitReportTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B0E232029A2001878B4 /* SubmitReportTableViewController.swift */; };
+		D4DC5B12232BEDE3001878B4 /* Questionnaire+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B11232BEDE3001878B4 /* Questionnaire+Extensions.swift */; };
+		D4DC5B14232BEE5C001878B4 /* Element+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B13232BEE5C001878B4 /* Element+Extensions.swift */; };
+		D4DC5B16232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B15232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift */; };
+		D4DC5B1823300EE6001878B4 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B1723300EE6001878B4 /* SessionViewController.swift */; };
 		D4DFD98B223ABFBF0097B958 /* WebFetchStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */; };
 		D4DFD98E223AC5F40097B958 /* OMRON+InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */; };
 		D4DFD991223AEE0D0097B958 /* BloodPressureObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */; };
@@ -155,6 +159,10 @@
 		D4DC5B0A231FFC4F001878B4 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		D4DC5B0C231FFFD7001878B4 /* FHIRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRViewController.swift; sourceTree = "<group>"; };
 		D4DC5B0E232029A2001878B4 /* SubmitReportTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitReportTableViewController.swift; sourceTree = "<group>"; };
+		D4DC5B11232BEDE3001878B4 /* Questionnaire+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+Extensions.swift"; sourceTree = "<group>"; };
+		D4DC5B13232BEE5C001878B4 /* Element+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Element+Extensions.swift"; sourceTree = "<group>"; };
+		D4DC5B15232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+SDCDefinitions.swift"; sourceTree = "<group>"; };
+		D4DC5B1723300EE6001878B4 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
 		D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebFetchStep.swift; sourceTree = "<group>"; };
 		D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OMRON+InstrumentProtocol.swift"; sourceTree = "<group>"; };
 		D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureObservation.swift; sourceTree = "<group>"; };
@@ -231,6 +239,9 @@
 				D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */,
 				D468778C229735C700717D95 /* QuestionnaireItemStep.swift */,
 				D468778E2297419000717D95 /* QuestionnaireTaskViewController.swift */,
+				D4DC5B11232BEDE3001878B4 /* Questionnaire+Extensions.swift */,
+				D4DC5B13232BEE5C001878B4 /* Element+Extensions.swift */,
+				D4DC5B15232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift */,
 			);
 			path = Questionnaire;
 			sourceTree = "<group>";
@@ -432,6 +443,7 @@
 			children = (
 				D4E75D8420363C0E000CE95A /* SessionController.swift */,
 				D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */,
+				D4DC5B1723300EE6001878B4 /* SessionViewController.swift */,
 			);
 			path = SessionController;
 			sourceTree = "<group>";
@@ -529,6 +541,7 @@
 				D422E58A22C25FA00097E0CF /* HealthKit+ResearchKit.swift in Sources */,
 				D43C71BA2268BFCB0008FF27 /* ActiveInstrumentProtocol.swift in Sources */,
 				D43C71BE226909050008FF27 /* TowerofHanoiInstrument.swift in Sources */,
+				D4DC5B12232BEDE3001878B4 /* Questionnaire+Extensions.swift in Sources */,
 				D4C2B2AE208FA55E00262B14 /* InsightsController.swift in Sources */,
 				D436B1D720EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift in Sources */,
 				D422E58C22C272E50097E0CF /* HKClinicalRecordResult.swift in Sources */,
@@ -552,11 +565,13 @@
 				D4DC5B0F232029A2001878B4 /* SubmitReportTableViewController.swift in Sources */,
 				D422E59522C6BE270097E0CF /* RequestViewController.swift in Sources */,
 				D468778F2297419000717D95 /* QuestionnaireTaskViewController.swift in Sources */,
+				D4DC5B16232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift in Sources */,
 				D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */,
 				D4DC5B0B231FFC4F001878B4 /* ReportViewController.swift in Sources */,
 				D43C71C2226A348C0008FF27 /* TappingSpeedPRO.swift in Sources */,
 				D4B964E22229A74300F46177 /* InstrumentProtocol.swift in Sources */,
 				D4DFD996223C2EB40097B958 /* InstrumentFactory.swift in Sources */,
+				D4DC5B14232BEE5C001878B4 /* Element+Extensions.swift in Sources */,
 				D48BBB5222D6446300FF4023 /* ACModel.swift in Sources */,
 				D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift in Sources */,
 				D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */,
@@ -580,6 +595,7 @@
 				D482BA6321C953F800840D2E /* AQServer.swift in Sources */,
 				D4DFD998223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift in Sources */,
 				D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */,
+				D4DC5B1823300EE6001878B4 /* SessionViewController.swift in Sources */,
 				D43C71B82268B9360008FF27 /* SpatialSpanMemory.swift in Sources */,
 				D43C71BC2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift in Sources */,
 				D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */,

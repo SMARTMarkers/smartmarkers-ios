@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-public protocol ActiveInstrumentProtocol: InstrumentProtocol {
+public protocol ActiveInstrumentProtocol: Instrument {
     
     var ip_taskDescription: String? { get set }
     

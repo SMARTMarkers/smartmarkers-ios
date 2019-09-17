@@ -10,7 +10,7 @@ import Foundation
 import ResearchKit
 import SMART
 
-open class OMRON: InstrumentProtocol {
+open class OMRON: Instrument {
     
     private let settings: [String: Any]!
     
@@ -22,7 +22,7 @@ open class OMRON: InstrumentProtocol {
         return "OMRON Blood Pressure"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "omron-blood-pressure"
     }
     
@@ -33,6 +33,8 @@ open class OMRON: InstrumentProtocol {
     public var ip_version: String? {
         return "0.1"
     }
+    
+    public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         return nil

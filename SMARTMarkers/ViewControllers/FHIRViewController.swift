@@ -11,12 +11,12 @@ import SMART
 
 open class FHIRViewController: UIViewController {
     
-    public final var resource: DomainResource?
+    public final var resource: Resource?
     
     var textView: UITextView!
     
     
-    convenience init(_ resource: DomainResource?) {
+    convenience init(_ resource: Resource?) {
         
         self.init()
         self.resource = resource

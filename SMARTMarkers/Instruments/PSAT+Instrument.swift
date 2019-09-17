@@ -11,13 +11,17 @@ import SMART
 import ResearchKit
 
 
-open class PSATPRO: InstrumentProtocol {
+open class PSATPRO: Instrument {
+    
+    public init() {
+        ip_publisher = "ResearchKit, Apple Inc."
+    }
     
     public var ip_title: String {
         return "Paced Auditory Serial Additions Test"
     }
     
-    public var ip_identifier: String {
+    public var ip_identifier: String? {
         return "pasat-pro"
     }
     
@@ -32,6 +36,8 @@ open class PSATPRO: InstrumentProtocol {
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         return nil
     }
+    
+    public var ip_publisher: String?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:ip_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 60, options: [])

@@ -12,7 +12,8 @@ import ResearchKit
 
 
 public protocol InstrumentResolver: class {
-    func resolveInstrument(from pro: PROMeasure) -> InstrumentProtocol?
+    
+    func resolveInstrument(from pro: PROMeasure) -> Instrument?
 }
 
 public protocol PROMeasureProtocol : class {
@@ -21,17 +22,17 @@ public protocol PROMeasureProtocol : class {
 
     var request: RequestType? { get set }
     
-    var instrument: InstrumentProtocol? { get set }
+    var instrument: Instrument? { get set }
     
-    func instrument(callback: @escaping ((_ instrument: InstrumentProtocol?, _ error: Error?) -> Void))
+    func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
  
     var server: Server? { get }
     
     var patient: Patient? { get set }
     
-    func fetchAll(callback : ((_ success: Bool, _ error: Error?) -> Void)?)
+    func fetchReports(from server: Server, callback : ((_ success: Bool, _ error: Error?) -> Void)?)
     
-    var taskDelegate: SessionControllerTaskDelegate? { get set }
+    var sessionDelegate: SessionControllerTaskDelegate? { get set }
     
     func prepareSession(callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
     
@@ -49,44 +50,41 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public var oauthSettings: [String:Any]? 
     
-    public var instrument: InstrumentProtocol? {
+    public var instrument: Instrument? {
         didSet {
-            results = Reports(resultRelations: instrument?.ip_resultingFhirResourceType, patient)
+            reports = Reports(resultRelations: instrument?.ip_resultingFhirResourceType, patient, instrument: instrument, request: request)
         }
     }
     
-    public var results: Reports!
+    public var reports: Reports?
     
-    public var schedule: Schedule?
+    public lazy var schedule: Schedule? = {
+        return request?.rq_schedule
+    }()
     
     public var teststatus: String = ""
     
-    public weak var taskDelegate: SessionControllerTaskDelegate?
+    public weak var sessionDelegate: SessionControllerTaskDelegate?
     
-    public weak var server: Server? = SMARTManager.shared.client.server
+    public weak var server: Server?
     
-    public static var instrumentLibrary: [InstrumentProtocol]?
+    public static var instrumentLibrary: [Instrument]?
     
-    public lazy var newResults: [SMART.Bundle] = {
-        return [SMART.Bundle]()
-    }()
+    public var onSessionCompletion: ((_ reports: SMART.Bundle?, _ error: Error?) -> Void)?
+
+    
+    public var newReports: [SMART.Bundle]? {
+        return reports?.newBundles
+    }
     
     public convenience init(request: RequestProtocol) {
-        
         self.init()
         self.request = request
-        self.schedule = request.rq_schedule
-        
-        // Default
-        self.results = Reports(resultRelations: [
-            FHIRSearchParamRelationship(Observation.self,           ["based-on": request.rq_identifier]),
-            FHIRSearchParamRelationship(QuestionnaireResponse.self, ["based-on": request.rq_identifier])
-            ], patient)
     }
     
     
     
-    open func instrument(callback: @escaping ((_ instrument: InstrumentProtocol?, _ error: Error?) -> Void)) {        
+    open func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void)) {
         
         if let instr = self.instrument {
             callback(instr, nil)
@@ -101,9 +99,11 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         request?.rq_instrumentResolve(callback: callback)
     }
     
-    public convenience init(instrument: InstrumentProtocol?) {
+    public convenience init(instrument: Instrument?) {
         self.init()
         self.instrument = instrument
+        self.reports = Reports(resultRelations: instrument?.ip_resultingFhirResourceType, patient, instrument: instrument, request: request)
+
 
     }
     
@@ -135,7 +135,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         }
     }
     
-    public class func Fetch<T:DomainResource & InstrumentProtocol>(instrumentType: T.Type, server: Server, options: [String:String]? = nil, callback: @escaping (([PROMeasure]? , Error?) -> Void)) {
+    public class func Fetch<T:DomainResource & Instrument>(instrumentType: T.Type, server: Server, options: [String:String]? = nil, callback: @escaping (([PROMeasure]? , Error?) -> Void)) {
         
         T.Instruments(from: server, options: options) { (instruments, error) in
             if let instruments = instruments {
@@ -146,19 +146,20 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
         }
     }
     
-    public func fetchAll(callback : ((_ success: Bool, _ error: Error?) -> Void)?) {
+    public func fetchReports(from server: Server, callback : ((_ success: Bool, _ error: Error?) -> Void)?) {
         
-        guard let srv = server else {
-            callback?(false, SMError.promeasureServerNotSet)
-            return
-        }
+//        guard let srv = server else {
+//            callback?(false, SMError.promeasureServerNotSet)
+//            return
+//        }
         
-        guard let results = results else {
+        guard let reports = reports else {
+            
             callback?(false, SMError.promeasureFetchLinkedResources)
             return
         }
         
-        results.fetch(server: srv, searchParams: nil) { (results, error) in
+        reports.fetch(server: server, searchParams: nil) { (results, error) in
             callback?(results != nil, error)
         }
     }
@@ -178,6 +179,7 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
 
 
     public func updateRequest(_ _results: [ReportType]?, callback: @escaping ((_ success: Bool) -> Void)) {
+        
         guard request != nil, let res = _results else {
             return
         }
@@ -197,6 +199,11 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
 
 extension PROMeasure : ORKTaskViewControllerDelegate {
     
+    public func dismiss(_ taskViewController: ORKTaskViewController) {
+        
+        taskViewController.navigationController?.popViewController(animated: true)
+    }
+    
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error serror: Error?) {
         
         // ***
@@ -206,6 +213,41 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
         if stepIdentifier.contains("range.of.motion") { return }
         // ***
         
+        sessionDelegate?.sessionEnded(taskViewController, reason: reason, error: serror)
+
+        
+        if reason == .discarded {
+            
+            taskViewController.navigationController?.popViewController(animated: true)
+            return
+        }
+        
+        if reason == .failed {
+            
+            taskViewController.navigationController?.popViewController(animated: true)
+            return
+        }
+        
+        if reason == .completed {
+            
+            if let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
+                
+                reports?.addNewReports(bundle)
+                onSessionCompletion?(bundle, nil)
+            }
+            else {
+                onSessionCompletion?(nil, SMError.instrumentResultBundleNotCreated)
+            }
+            taskViewController.navigationController?.popViewController(animated: true)
+        }
+        
+
+        
+        
+        
+        
+        
+        /*
         guard
             reason == .completed,
             let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!),
@@ -235,6 +277,7 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             taskViewController.navigationController?.popViewController(animated: true)
 
         }
+        */
     }
     
     public func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {
@@ -254,6 +297,12 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
         }
     }
     
+    
+    
+}
+
+
+open class PROController: PROMeasure {
     
     
 }

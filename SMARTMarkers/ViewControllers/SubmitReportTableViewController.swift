@@ -7,39 +7,58 @@
 //
 
 import UIKit
+import SMART
 
-public class SubmitReportTableViewController: UITableViewController {
+public class ReportBundleViewController: UITableViewController {
     
-    public final var reports: [Reports]?
+    public final var bundle: SMART.Bundle!
     
-    public final var measures: [PROMeasure]?
+    init(_ bundle: SMART.Bundle) {
+        super.init(style: .grouped)
+        self.bundle = bundle
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
     
     override public func viewDidLoad() {
         
         super.viewDidLoad()
-
     }
-
-    // MARK: - Table view data source
-
+    
+    
     override public func numberOfSections(in tableView: UITableView) -> Int {
-        return measu
+        return 1
     }
 
     override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return bundle.entry?.count ?? 0
     }
 
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+    
+    override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "bCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "bCell")
 
-        // Configure the cell...
-
+        cell.accessoryType = .disclosureIndicator
+        let resource = bundle!.entry![indexPath.row]
+        cell.textLabel?.text = resource.resource?.sm_resourceType()
         return cell
     }
-    */
+    
+    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let resource = bundle!.entry![indexPath.row].resource
+        let view: UIViewController
+        if let resource = resource as? ReportType {
+            view = PROResultViewController(resource)
+        }
+        else {
+            view = FHIRViewController(resource)
+        }
 
+        self.show(view, sender: nil)
+    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
