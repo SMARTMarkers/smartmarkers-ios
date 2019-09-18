@@ -16,13 +16,25 @@ public protocol InstrumentResolver: class {
     func resolveInstrument(from pro: PROMeasure) -> Instrument?
 }
 
-public protocol PROMeasureProtocol : class {
+public protocol PROController: class {
     
-    associatedtype RequestType
-
-    var request: RequestType? { get set }
+    var request: RequestProtocol? { get set }
     
     var instrument: Instrument? { get set }
+    
+    var reports: Reports? { get set }
+
+}
+
+public protocol PROMeasureProtocol: NSObject  {
+    
+
+    var request: RequestProtocol? { get set }
+    
+    var instrument: Instrument? { get set }
+    
+    var reports: Reports? { get set }
+
     
     func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
  
@@ -38,7 +50,7 @@ public protocol PROMeasureProtocol : class {
     
 }
 
-open class PROMeasure : NSObject, PROMeasureProtocol {
+public final class PROMeasure : NSObject, PROMeasureProtocol {
     
     public weak var instrumentResolver: InstrumentResolver?
 
@@ -70,11 +82,11 @@ open class PROMeasure : NSObject, PROMeasureProtocol {
     
     public static var instrumentLibrary: [Instrument]?
     
-    public var onSessionCompletion: ((_ reports: SMART.Bundle?, _ error: Error?) -> Void)?
+    public var onSessionCompletion: ((_ reports: GeneratedReport?, _ error: Error?) -> Void)?
 
     
-    public var newReports: [SMART.Bundle]? {
-        return reports?.newBundles
+    public var newGeneratedReports: [GeneratedReport]? {
+        return reports?.newGeneratedReports
     }
     
     public convenience init(request: RequestProtocol) {
@@ -232,8 +244,9 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             
             if let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
                 
-                reports?.addNewReports(bundle)
-                onSessionCompletion?(bundle, nil)
+                let gr = reports?.addNewReports(bundle, taskId: taskViewController.taskRunUUID.uuidString)
+
+                onSessionCompletion?(gr, nil)
             }
             else {
                 onSessionCompletion?(nil, SMError.instrumentResultBundleNotCreated)
@@ -302,7 +315,3 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
 }
 
 
-open class PROController: PROMeasure {
-    
-    
-}

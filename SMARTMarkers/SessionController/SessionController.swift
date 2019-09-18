@@ -53,6 +53,8 @@ open class SessionController: NSObject, SessionProtocol {
     
     public var patient: Patient?
     
+    public var server: Server?
+    
     public var shouldVerify = false
     
     public weak var taskDelegate: SessionControllerTaskDelegate?
@@ -78,8 +80,19 @@ open class SessionController: NSObject, SessionProtocol {
             }
         }
         
+        
+        
+        
         group.notify(queue: .main) {
             if taskControllers.count > 0 {
+                
+                // SubmissionTask
+                if let _ = self.patient, let _ = self.server {
+                    let submissionTask = SubmissionTaskController(self)
+                    submissionTask.delegate = self
+                    taskControllers.append(submissionTask)
+                }
+                
                 let sessionNavigationController = self.sessionContainerController(for: taskControllers)
                 callback(sessionNavigationController, (errors.isEmpty) ? nil : SMError.sessionCreatedWithMissingTasks)
             }
@@ -94,6 +107,7 @@ open class SessionController: NSObject, SessionProtocol {
     required public init(patient: Patient?, measures: [PROMeasure], practitioner : Practitioner?, server : SMART.Server?) {
         self.patient = patient
         self.measures = measures
+        self.server = server
         self.measures.forEach({ (m) in
             m.patient = patient
             m.server = server
@@ -121,3 +135,13 @@ open class SessionController: NSObject, SessionProtocol {
 
 
 
+extension SessionController: ORKTaskViewControllerDelegate {
+    
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        taskViewController.navigationController?.popViewController(animated: true)
+    }
+    
+    
+    
+}

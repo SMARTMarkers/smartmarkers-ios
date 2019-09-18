@@ -45,6 +45,13 @@ public struct FHIRSearchParamRelationship {
     }
 }
 
+public struct GeneratedReport {
+    
+    let taskId: String
+    let bundle: SMART.Bundle
+    
+}
+
 
 open class Reports {
     
@@ -59,8 +66,8 @@ open class Reports {
        return [ReportType]()
     }()
     
-    open lazy var newBundles: [SMART.Bundle] = {
-        return [SMART.Bundle]()
+    open lazy var newGeneratedReports: [GeneratedReport] = {
+        return [GeneratedReport]()
     }()
     
     open var resultLinks: [FHIRSearchParamRelationship]?
@@ -111,14 +118,17 @@ open class Reports {
         
     }
     
-    open func addNewReports(_ bundle: SMART.Bundle) {
-        newBundles.append(bundle)
+    @discardableResult
+    open func addNewReports(_ bundle: SMART.Bundle,  taskId: String) -> GeneratedReport  {
+        let gr = GeneratedReport(taskId: taskId, bundle: bundle)
+        newGeneratedReports.append(gr)
+        return gr
     }
     
     
     open func submit(to server: Server, consent: Bool, patient: Patient, request: RequestProtocol?, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
         
-        guard !newBundles.isEmpty else {
+        guard !newGeneratedReports.isEmpty else {
             callback(false, nil)
             return
         }
@@ -126,8 +136,8 @@ open class Reports {
         let group  = DispatchGroup()
         var errors = [Error]()
         
-        for bundle in newBundles {
-            var _bundle = bundle
+        for gr in newGeneratedReports {
+            var _bundle = gr.bundle
             Reports.Tag(&_bundle, with: patient, request: request)
             
             group.enter()
@@ -243,5 +253,9 @@ extension SMART.Bundle {
         })
         
         return content == nil ? nil : String(content!.dropLast())
+    }
+    
+    func sm_resourceCount() -> Int {
+        return entry?.count ?? 0
     }
 }

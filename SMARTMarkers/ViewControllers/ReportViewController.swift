@@ -106,7 +106,7 @@ public class ReportViewController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let report = reports[section]
-        let count  = report.newBundles.count
+        let count  = report.newGeneratedReports.count
         return "\(report.instrument?.ip_title ?? " ") #\(count)"
     }
     
@@ -117,7 +117,7 @@ public class ReportViewController: UITableViewController {
     
     override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return reports[section].newBundles.count
+        return reports[section].newGeneratedReports.count
     }
     
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -127,16 +127,16 @@ public class ReportViewController: UITableViewController {
         cell.detailTextLabel?.lineBreakMode = .byWordWrapping
         cell.editingAccessoryType = .detailDisclosureButton
         
-        let new = reports[indexPath.section].newBundles[indexPath.row]
+        let new = reports[indexPath.section].newGeneratedReports[indexPath.row]
         cell.textLabel?.text = ""
-        cell.detailTextLabel?.text = new.sm_ContentSummary()
+        cell.detailTextLabel?.text = new.bundle.sm_ContentSummary()
         return cell
     }
     
     override public func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
       
-        let bundle = reports[indexPath.section].newBundles[indexPath.row]
-        let bundleView = ReportBundleViewController(bundle)
+        let gr = reports[indexPath.section].newGeneratedReports[indexPath.row]
+        let bundleView = ReportBundleViewController(gr.bundle)
         show(bundleView, sender: nil)
     }
     
