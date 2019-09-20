@@ -19,6 +19,7 @@
 		D422E59322C675D90097E0CF /* PROResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E59222C675D90097E0CF /* PROResultViewController.swift */; };
 		D422E59522C6BE270097E0CF /* RequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E59422C6BE270097E0CF /* RequestViewController.swift */; };
 		D42605CE209364FE00853609 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42605CD209364FE00853609 /* RoundedButton.swift */; };
+		D4268F1D2335587E000416A1 /* SMHealthKitRecords.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4268F1C2335587E000416A1 /* SMHealthKitRecords.swift */; };
 		D434861922AF08E0001D922C /* FHIRPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434861822AF08E0001D922C /* FHIRPath.swift */; };
 		D436B1D720EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */; };
 		D436B1D920EE880600CAF2F5 /* Questionnaire+InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D820EE880600CAF2F5 /* Questionnaire+InstrumentProtocol.swift */; };
@@ -110,6 +111,7 @@
 		D422E59222C675D90097E0CF /* PROResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROResultViewController.swift; sourceTree = "<group>"; };
 		D422E59422C6BE270097E0CF /* RequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestViewController.swift; sourceTree = "<group>"; };
 		D42605CD209364FE00853609 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
+		D4268F1C2335587E000416A1 /* SMHealthKitRecords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMHealthKitRecords.swift; sourceTree = "<group>"; };
 		D434861822AF08E0001D922C /* FHIRPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRPath.swift; sourceTree = "<group>"; };
 		D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+ResearchKit.swift"; sourceTree = "<group>"; };
 		D436B1D820EE880600CAF2F5 /* Questionnaire+InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+InstrumentProtocol.swift"; sourceTree = "<group>"; };
@@ -222,7 +224,7 @@
 			path = PROStep;
 			sourceTree = "<group>";
 		};
-		D422E58622C242990097E0CF /* HealthKit */ = {
+		D422E58622C242990097E0CF /* HealthKitClinicalRecords */ = {
 			isa = PBXGroup;
 			children = (
 				D4DFD99D224125A60097B958 /* HKClinicalRecordStep.swift */,
@@ -231,8 +233,9 @@
 				D422E58B22C272E50097E0CF /* HKClinicalRecordResult.swift */,
 				D422E58D22C29E360097E0CF /* HKClinicalRecordSubmissionStep.swift */,
 				D422E58F22C2A2960097E0CF /* HKClinicalRecordTaskViewController.swift */,
+				D4268F1C2335587E000416A1 /* SMHealthKitRecords.swift */,
 			);
-			path = HealthKit;
+			path = HealthKitClinicalRecords;
 			sourceTree = "<group>";
 		};
 		D436B1D520EBF89E00CAF2F5 /* Questionnaire */ = {
@@ -373,7 +376,7 @@
 			isa = PBXGroup;
 			children = (
 				D48BBB5022D6443400FF4023 /* PROMIS */,
-				D422E58622C242990097E0CF /* HealthKit */,
+				D422E58622C242990097E0CF /* HealthKitClinicalRecords */,
 				D422E58322C120140097E0CF /* PROStep */,
 				D4DFD992223C0F5B0097B958 /* Instruments */,
 				D4DFD98F223AEDD50097B958 /* FHIRPresets */,
@@ -581,6 +584,7 @@
 				D4DC5B0F232029A2001878B4 /* SubmitReportTableViewController.swift in Sources */,
 				D422E59522C6BE270097E0CF /* RequestViewController.swift in Sources */,
 				D468778F2297419000717D95 /* QuestionnaireTaskViewController.swift in Sources */,
+				D4268F1D2335587E000416A1 /* SMHealthKitRecords.swift in Sources */,
 				D4DC5B16232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift in Sources */,
 				D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */,
 				D4DC5B0B231FFC4F001878B4 /* ReportViewController.swift in Sources */,

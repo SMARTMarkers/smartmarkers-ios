@@ -10,9 +10,9 @@ import UIKit
 
 public class RequestViewController: UITableViewController {
 
-    public var request: RequestProtocol?
+    public var request: Request?
     
-    public required convenience init(_ request: RequestProtocol? = nil) {
+    public required convenience init(_ request: Request? = nil) {
         self.init(style: .grouped)
         self.request = request
     }

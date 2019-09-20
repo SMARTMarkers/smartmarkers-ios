@@ -12,7 +12,7 @@ public enum SlotStatus : String {
 	
 	case due                    = "due"
 	case upcoming               = "upcoming"
-	case overdue                 = "overdue"
+	case overdue                = "overdue"
 	case unknown                = "unkown"
     case completed              = "completed"
 	

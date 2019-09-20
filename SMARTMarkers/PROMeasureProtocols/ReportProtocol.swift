@@ -33,6 +33,13 @@ public extension ReportProtocol where Self: ReportType {
     }
 }
 
+public extension ReportProtocol where Self: DomainResource {
+    
+    var rp_resourceType: String {
+        return sm_resourceType()
+    }
+}
+
 
 public struct FHIRSearchParamRelationship {
     
@@ -45,10 +52,28 @@ public struct FHIRSearchParamRelationship {
     }
 }
 
-public struct GeneratedReport {
+public class SubmissionBundle {
     
-    let taskId: String
-    let bundle: SMART.Bundle
+    public enum SubmissionStatus: String {
+        case readyToSubmit
+        case submitted
+        case failedToSubmit
+        case discarded
+    }
+    
+    public final let taskId: String
+    public final let bundle: SMART.Bundle
+    public final let requestId: String?
+    public internal(set) var shouldSubmit: Bool = false
+    public internal(set) var status: SubmissionStatus
+    
+    init(taskId: String, bundle: SMART.Bundle, requestId: String? = nil) {
+        self.taskId = taskId
+        self.bundle = bundle
+        self.requestId = requestId
+        self.status = .readyToSubmit
+    }
+    
     
 }
 
@@ -56,7 +81,7 @@ public struct GeneratedReport {
 open class Reports {
     
     //TODO: SORT by Date
-    weak var request: RequestProtocol?
+    weak var request: Request?
     
     weak var instrument: Instrument?
     
@@ -66,13 +91,13 @@ open class Reports {
        return [ReportType]()
     }()
     
-    open lazy var newGeneratedReports: [GeneratedReport] = {
-        return [GeneratedReport]()
+    open lazy var submissionBundle: [SubmissionBundle] = {
+        return [SubmissionBundle]()
     }()
     
     open var resultLinks: [FHIRSearchParamRelationship]?
     
-    public init(resultRelations: [FHIRSearchParamRelationship]?, _ patient: Patient?, instrument: Instrument?, request: RequestProtocol?) {
+    public init(resultRelations: [FHIRSearchParamRelationship]?, _ patient: Patient?, instrument: Instrument?, request: Request?) {
         self.resultLinks = resultRelations
         self.patient = patient
         self.instrument = instrument
@@ -89,7 +114,12 @@ open class Reports {
     }
     
     
-    
+    open func submissionBundle(for taskId: String) -> SubmissionBundle? {
+        
+        return submissionBundle.filter({ (submissionBundle) -> Bool in
+            return submissionBundle.taskId == taskId
+        }).first
+    }
     
     open func fetch(server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [ReportType]?, _ error: Error?) -> Void)) {
         
@@ -119,46 +149,54 @@ open class Reports {
     }
     
     @discardableResult
-    open func addNewReports(_ bundle: SMART.Bundle,  taskId: String) -> GeneratedReport  {
-        let gr = GeneratedReport(taskId: taskId, bundle: bundle)
-        newGeneratedReports.append(gr)
+    open func addNewReports(_ bundle: SMART.Bundle,  taskId: String) -> SubmissionBundle  {
+        let gr = SubmissionBundle(taskId: taskId, bundle: bundle, requestId: nil)
+        submissionBundle.append(gr)
         return gr
     }
     
     
-    open func submit(to server: Server, consent: Bool, patient: Patient, request: RequestProtocol?, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
+    /// Prepare for Submission to `Server`.
+    open func submit(to server: Server, consent: Bool, patient: Patient, request: Request?, callback: @escaping ((_ success: Bool, _ error: [Error]?) -> Void)) {
         
-        guard !newGeneratedReports.isEmpty else {
+        
+        guard !submissionBundle.isEmpty else {
             callback(false, nil)
             return
         }
+        
     
         let group  = DispatchGroup()
         var errors = [Error]()
         
-        for gr in newGeneratedReports {
+        for gr in submissionBundle {
+            
+            if !gr.shouldSubmit {
+                gr.status = .discarded
+                continue
+            }
+            
             var _bundle = gr.bundle
             Reports.Tag(&_bundle, with: patient, request: request)
-            
             group.enter()
             submit(bundle: _bundle, server: server) { (success, error) in
                 if let error = error {
                     errors.append(error)
                 }
+                gr.status = (success) ? .submitted : .failedToSubmit
                 group.leave()
             }
         }
         
         group.notify(queue: .global(qos: .default)) {
-            print(errors)
-            callback(true, nil)
+            callback(errors.isEmpty, errors)
         }
         
         
     }
     
     
-    public static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: RequestProtocol?) {
+    public static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: Request?) {
         
         do {
             let patientReference = try patient?.asRelativeReference()
@@ -197,6 +235,11 @@ open class Reports {
                     if let reqReference = requestReference {
                         media.basedOn = [reqReference]
                     }
+                }
+                
+                // Immunization
+                if let immunization = entry.resource as? Immunization {
+                    immunization.patient = patientReference
                 }
             }
         }
@@ -247,7 +290,7 @@ extension SMART.Bundle {
         
         let content = entry?.reduce(into: String(), { (bundleString, entry) in
             let report = entry.resource as? ReportType
-            bundleString += report?.sm_resourceType() ?? "Type: -"
+            bundleString += report?.sm_resourceType() ?? "Type: \(entry.resource?.sm_resourceType() ?? "-")"
             bundleString += ": " + (report?.rp_date.shortDate ?? "-")
             bundleString += "\n"
         })

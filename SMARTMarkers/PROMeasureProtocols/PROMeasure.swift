@@ -18,7 +18,7 @@ public protocol InstrumentResolver: class {
 
 public protocol PROController: class {
     
-    var request: RequestProtocol? { get set }
+    var request: Request? { get set }
     
     var instrument: Instrument? { get set }
     
@@ -29,7 +29,7 @@ public protocol PROController: class {
 public protocol PROMeasureProtocol: NSObject  {
     
 
-    var request: RequestProtocol? { get set }
+    var request: Request? { get set }
     
     var instrument: Instrument? { get set }
     
@@ -54,7 +54,7 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     
     public weak var instrumentResolver: InstrumentResolver?
 
-    public typealias RequestType = RequestProtocol
+    public typealias RequestType = Request
     
     public var patient: Patient?
     
@@ -82,14 +82,14 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     
     public static var instrumentLibrary: [Instrument]?
     
-    public var onSessionCompletion: ((_ reports: GeneratedReport?, _ error: Error?) -> Void)?
+    public var onSessionCompletion: ((_ reports: SubmissionBundle?, _ error: Error?) -> Void)?
 
     
-    public var newGeneratedReports: [GeneratedReport]? {
-        return reports?.newGeneratedReports
+    public var submissionBundle: [SubmissionBundle]? {
+        return reports?.submissionBundle
     }
     
-    public convenience init(request: RequestProtocol) {
+    public convenience init(request: Request) {
         self.init()
         self.request = request
     }
@@ -124,7 +124,7 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     
 
     /// Class functions to build `PROMeasure`s
-    public class func Fetch<T:DomainResource & RequestProtocol>(requestType: T.Type, server: Server, options: [String:String]? = nil, instrumentResolver: InstrumentResolver? = nil, callback: @escaping (([PROMeasure]? , Error?) -> Void)) {
+    public class func Fetch<T:DomainResource & Request>(requestType: T.Type, server: Server, options: [String:String]? = nil, instrumentResolver: InstrumentResolver? = nil, callback: @escaping (([PROMeasure]? , Error?) -> Void)) {
 
         var searchParams =  T.rq_fetchParameters ?? [String:String]()
         

@@ -81,7 +81,7 @@ public class ReportViewController: UITableViewController {
             group.enter()
             report.submit(to: server, consent: true, patient: patient, request: nil) { (success, error) in
                 if let error = error {
-                    errors.append(error)
+                    errors.append(contentsOf: error)
                 }
                 group.leave()
             }
@@ -106,7 +106,7 @@ public class ReportViewController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let report = reports[section]
-        let count  = report.newGeneratedReports.count
+        let count  = report.submissionBundle.count
         return "\(report.instrument?.ip_title ?? " ") #\(count)"
     }
     
@@ -117,7 +117,7 @@ public class ReportViewController: UITableViewController {
     
     override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return reports[section].newGeneratedReports.count
+        return reports[section].submissionBundle.count
     }
     
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -127,7 +127,7 @@ public class ReportViewController: UITableViewController {
         cell.detailTextLabel?.lineBreakMode = .byWordWrapping
         cell.editingAccessoryType = .detailDisclosureButton
         
-        let new = reports[indexPath.section].newGeneratedReports[indexPath.row]
+        let new = reports[indexPath.section].submissionBundle[indexPath.row]
         cell.textLabel?.text = ""
         cell.detailTextLabel?.text = new.bundle.sm_ContentSummary()
         return cell
@@ -135,7 +135,7 @@ public class ReportViewController: UITableViewController {
     
     override public func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
       
-        let gr = reports[indexPath.section].newGeneratedReports[indexPath.row]
+        let gr = reports[indexPath.section].submissionBundle[indexPath.row]
         let bundleView = ReportBundleViewController(gr.bundle)
         show(bundleView, sender: nil)
     }

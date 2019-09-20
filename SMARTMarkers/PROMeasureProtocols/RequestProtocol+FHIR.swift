@@ -10,7 +10,7 @@ import Foundation
 import SMART
 
 
-extension ServiceRequest: RequestProtocol {
+extension ServiceRequest: Request {
     
     
     

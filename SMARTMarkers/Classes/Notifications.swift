@@ -67,7 +67,7 @@ public class PRONotification: NSObject {
 
     
     
-    public class func createNotifications(for request: RequestProtocol, callback: ((_ success: Bool) -> Void)?)  {
+    public class func createNotifications(for request: Request, callback: ((_ success: Bool) -> Void)?)  {
         
         guard let slots = request.rq_schedule?.slots else {
             callback?(false)

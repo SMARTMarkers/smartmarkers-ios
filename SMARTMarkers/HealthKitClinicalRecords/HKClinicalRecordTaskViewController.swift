@@ -26,7 +26,7 @@ open class HKClinicalRecordTaskViewController: ORKTaskViewController {
             HKClinicalRecordRequestStep(identifier: ksm_step_authreview),
             HKClinicalRecordWaitStep(identifier: ksm_step_auth),
             HKClinicalRecordSelectorStep(identifier: ksm_step_review),
-            HKClinicalRecordSubmissionStep(identifier: ksm_step_submission), //wait
+//            HKClinicalRecordSubmissionStep(identifier: ksm_step_submission), //wait
             ORKCompletionStep(identifier: ksm_step_completion, _title: "Submitted", _detailText: "Selected data has been submitted")
         ]
         let task  = ORKNavigableOrderedTask(identifier: "sm.healthkit.task", steps: steps)

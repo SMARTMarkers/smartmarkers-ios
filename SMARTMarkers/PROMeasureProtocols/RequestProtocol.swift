@@ -15,7 +15,7 @@ import SMART
  Fetches and Manages `FHIR` request resource
  
  */
-public protocol RequestProtocol :  class, CustomStringConvertible {
+public protocol Request :  class, CustomStringConvertible {
     
     
     /// Request identifier
@@ -54,7 +54,7 @@ public protocol RequestProtocol :  class, CustomStringConvertible {
 
 }
 
-public extension RequestProtocol {
+public extension Request {
     
     var description : String {
         return "PRORequest: \(rq_identifier)"
@@ -62,7 +62,7 @@ public extension RequestProtocol {
 }
 
 
-public extension RequestProtocol where Self: SMART.DomainResource {
+public extension Request where Self: SMART.DomainResource {
     
     static func Requests(from server: Server, options: [String:String]?, callback: @escaping ((_ requestResources: [Self]?, _ error: Error?) -> Void)) {
         let search = Self.search(options as Any)
