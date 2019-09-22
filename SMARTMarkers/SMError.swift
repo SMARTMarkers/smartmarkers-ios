@@ -10,6 +10,8 @@ import Foundation
 
 public enum SMError : Error, CustomStringConvertible {
     
+    case undefined
+    
     // Mark: PROServer
     
     /// PROServer User Is not Practitioner or Patient
@@ -34,7 +36,7 @@ public enum SMError : Error, CustomStringConvertible {
     // MARK: ReportProtocol
     
     /// Report could not be submitted
-    case reportSubmissionToServerError
+    case reportSubmissionToServerError(serverError: Error)
     
     /// FHIR Resources received are not `ReportProtocol` conformant
     case reportUnknownFHIRReportType
@@ -68,6 +70,9 @@ public enum SMError : Error, CustomStringConvertible {
     /// Questionnaire Missing Calculated Expression
     case instrumentQuestionnaireMissingCalculatedExpression(linkId: String)
     
+    /// HealthKit Resource Type not supported
+    case instrumentHealthKitClinicalRecordTypeNotSupported(type: String)
+    
     // Mark: SessionController
     
     /// SessionController has no taskViewControllers
@@ -94,6 +99,8 @@ public enum SMError : Error, CustomStringConvertible {
         
         switch self {
             
+        case .undefined:
+            return "Undefined"
         // AdaptiveQuestionnaires
             
         case .adaptiveQuestionnaireErrorMappingToSTU3:
@@ -119,8 +126,8 @@ public enum SMError : Error, CustomStringConvertible {
             
         // Reports
             
-        case .reportSubmissionToServerError:
-            return "Reports could not be submitted to the FHIR Server"
+        case .reportSubmissionToServerError(let serverError):
+            return "Reports could not be submitted to the FHIR Server \(serverError)"
         case .reportUnknownFHIRReportType:
             return "FHIR resources retrieved are not conformant to ReportProtocol"
             
@@ -142,6 +149,8 @@ public enum SMError : Error, CustomStringConvertible {
             return "Questionnaire.item.linkId(s) should be unique"
         case .instrumentQuestionnaireItemMissingOptions(let linkId):
             return "Questionnaire.item.type = choice  must have answer reference for linkId: \(linkId)"
+        case .instrumentHealthKitClinicalRecordTypeNotSupported(let type):
+            return "HealthKit Clinical Record type `\(type)` not supported"
         
         // SessionController
         case .sessionMissingTask:

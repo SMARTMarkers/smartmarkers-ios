@@ -17,10 +17,8 @@ extension HKClinicalTypeIdentifier {
         return ORKTextChoice(text: "Immunizations", detailText: "Requests Immunization data from HealthKit" , value: HKClinicalTypeIdentifier.immunizationRecord as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
     }
     
-
-    
     public static var LabRecordChoice: ORKTextChoice {
-        return ORKTextChoice(text: "Laboratory Tests", detailText: "Requests Laboratory Tests data from HealthKit" , value: HKClinicalTypeIdentifier.labResultRecord as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
+        return ORKTextChoice(text: "Lab Tests", detailText: "Requests Laboratory Tests data from HealthKit" , value: HKClinicalTypeIdentifier.labResultRecord as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
     }
     
     public static var MedicationsChoice: ORKTextChoice {
@@ -45,7 +43,7 @@ extension HKClinicalTypeIdentifier {
     
     public static var vitalSignsChoice: ORKTextChoice {
         
-        return ORKTextChoice(text: "Procedures", detailText: "Requests Vital Signs data from HealthKit" , value: HKClinicalTypeIdentifier.vitalSignRecord as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
+        return ORKTextChoice(text: "Vital Signs", detailText: "Requests Vital Signs data from HealthKit" , value: HKClinicalTypeIdentifier.vitalSignRecord as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
     }
     
     

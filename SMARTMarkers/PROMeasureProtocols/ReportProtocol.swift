@@ -241,6 +241,26 @@ open class Reports {
                 if let immunization = entry.resource as? Immunization {
                     immunization.patient = patientReference
                 }
+                
+                
+                // AllergyIntolerance
+                if let allergyIntolerance = entry.resource as? AllergyIntolerance {
+                    allergyIntolerance.patient = patientReference
+                }
+                
+                
+                // Condition
+                if let condition = entry.resource as? Condition {
+                    condition.subject = patientReference
+                }
+                
+                // MedicationRequest
+                if let medicationRequest = entry.resource as? MedicationRequest {
+                    medicationRequest.subject = patientReference
+                    print(try medicationRequest.asJSON())
+                }
+                
+                
             }
         }
         catch {
@@ -271,7 +291,7 @@ open class Reports {
                 }
             }
             else {
-                callback(false, SMError.reportSubmissionToServerError)
+                callback(false, SMError.reportSubmissionToServerError(serverError: response.error ?? SMError.undefined))
             }
             semaphore.signal()
         }
