@@ -91,9 +91,24 @@ extension DomainResource {
 extension Procedure {
     
     func sm__populate(from dstu2: FHIRJSON, source: URL?) throws {
+        
         var ctx = FHIRInstantiationContext()
         populate(from: dstu2, context: &ctx)
-        print(ctx.errors)
+        
+        id = nil
+        
+        if let performr = (dstu2["performer"] as? [FHIRJSON])?.first {
+            if let actr = performr["actor"] as? FHIRJSON {
+                let p = ProcedurePerformer()
+                p.actor = try? Reference(json: actr).using(source: source)
+                p.function = try? CodeableConcept(json: performr["role"] as? FHIRJSON ?? [:])
+                performer = [p]
+            }
+        }
+        
+        if let cencounter = dstu2["encounter"] as? FHIRJSON {
+            encounter = try Reference(json: cencounter).using(source: source)
+        }
     }
     
 }

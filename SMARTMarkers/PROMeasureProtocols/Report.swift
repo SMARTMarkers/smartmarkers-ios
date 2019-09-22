@@ -257,7 +257,12 @@ open class Reports {
                 // MedicationRequest
                 if let medicationRequest = entry.resource as? MedicationRequest {
                     medicationRequest.subject = patientReference
-                    print(try medicationRequest.asJSON())
+                }
+                
+                
+                // Procedure
+                if let procedure = entry.resource as? Procedure {
+                    procedure.subject = patientReference
                 }
                 
                 
@@ -291,6 +296,7 @@ open class Reports {
                 }
             }
             else {
+                print(response.error)
                 callback(false, SMError.reportSubmissionToServerError(serverError: response.error ?? SMError.undefined))
             }
             semaphore.signal()
