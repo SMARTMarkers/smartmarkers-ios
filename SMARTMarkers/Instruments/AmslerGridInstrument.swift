@@ -79,7 +79,7 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
             observation.status = ObservationStatus.final
             observation.component = components
             var mediaBundleEntries = images.map{ $0.sm_asBundleEntry() }
-            observation.basedOn = mediaBundleEntries.map { $0.sm_asReference() }
+            observation.derivedFrom = mediaBundleEntries.map { $0.sm_asReference() }
 
             mediaBundleEntries.append(observation.sm_asBundleEntry())
             
