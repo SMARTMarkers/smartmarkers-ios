@@ -265,6 +265,10 @@ open class Reports {
                     procedure.subject = patientReference
                 }
                 
+                // DocumentReference
+                if let documentReference = entry.resource as? DocumentReference {
+                    documentReference.subject = patientReference
+                }
                 
             }
         }

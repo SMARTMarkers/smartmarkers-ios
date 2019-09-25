@@ -144,6 +144,7 @@ open class HKDeidentifyStep: ORKQuestionStep {
 open class HKClinicalRecordRequestStep: ORKQuestionStep {
     
     
+    
     public override init(identifier: String) {
         super.init(identifier: identifier)
         self.title = "Authorization"

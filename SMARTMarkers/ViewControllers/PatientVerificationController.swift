@@ -13,7 +13,7 @@ class PatientVerificationController: UIViewController {
 
 	let patient : Patient
     
-    let context = SMARTManager.shared.usageMode
+    //let context = SMARTManager.shared.usageMode
 	
 	let datePicker = UIDatePicker()
 	
@@ -64,15 +64,15 @@ class PatientVerificationController: UIViewController {
 
 	@objc func cancelVerification(_ sender: Any?) {
 		
-        if context != .Patient {
+//        if context != .Patient {
             LocalAuth.verifyDeviceUser { [weak self] (success, error) in
                 if success {
                     self?.dismiss(animated: true)
                 }
             }
-        } else {
-            dismiss(animated: true)
-        }
+        //} else {
+          //  dismiss(animated: true)
+        //}
 	}
 	
 	func verify() -> Bool {

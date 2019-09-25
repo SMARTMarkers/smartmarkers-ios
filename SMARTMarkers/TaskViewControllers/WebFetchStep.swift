@@ -64,7 +64,7 @@ open class WebFetchStepViewController: ORKTableStepViewController {
 
 open class WebFetchStep: ORKTableStep {
     
-    public var auth: SMART.OAuth2?
+    public weak var auth: OAuth2?
     
     public weak var stepViewController: ORKStepViewController?
     
@@ -74,12 +74,10 @@ open class WebFetchStep: ORKTableStep {
     
     public var onSuccessCallback: ((_ stepResult: ORKResult?, _ json: [String: Any]?) -> Void)?
     
-    public init(_ identifier: String, title: String?, authSettings: [String: Any]?) {
+    public init(_ identifier: String, title: String?, auth: OAuth2?) {
         super.init(identifier: identifier)
-        if let authSettings = authSettings {
-            self.auth = OAuth2CodeGrant(settings: authSettings)
-            self.auth?.logger = OAuth2DebugLogger(.trace)
-        }
+        self.auth = auth
+        
         self.title = title
         self.isBulleted = true
     }
@@ -108,7 +106,7 @@ open class WebFetchStep: ORKTableStep {
     
     
     open func authorize(callback: @escaping ((_ success: Bool)->Void)) {
-        SMARTManager.shared.callbackHandler = auth
+
         auth!.authConfig.authorizeContext = stepViewController
         auth!.authConfig.authorizeEmbedded = true
         auth!.authorize(callback: { [weak self] (json, error) in

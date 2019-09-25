@@ -13,6 +13,9 @@ import SMART
 
 public class AmslerGridPRO : ActiveInstrumentProtocol {
     
+    static let amslerGridRightEye = "amsler.grid.right"
+    static let amslerGridLeftEye  = "amsler.grid.left"
+    
     public var ip_taskDescription: String?
 
     public init() { }
@@ -26,7 +29,7 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_Coding(ip_identifier!, "http://researchkit.org", "Amsler Grid")
+        return Coding.sm_ResearchKit(ip_identifier!, "Amsler Grid")
     }
     
     public var ip_version: String? {
@@ -53,7 +56,7 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
         if let lefteye = result.stepResult(forStepIdentifier: "amsler.grid.left"), let gridResult = lefteye.results?.first as? ORKAmslerGridResult, let media = gridResult.sm_asMedia() {
             let oc = ObservationComponent()
             let cc = CodeableConcept()
-            cc.coding = [Coding.sm_Coding("amsler.grid.left", "http://researchkit.org", "Amsler Grid Left Eye")]
+            cc.coding = [Coding.sm_ResearchKit(AmslerGridPRO.amslerGridLeftEye, "Amsler Grid Left Eye")]
             oc.code = cc
             components.append(oc)
             images.append(media)
@@ -62,7 +65,7 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
         if let righteye = result.stepResult(forStepIdentifier: "amsler.grid.right"), let gridResult = righteye.results?.first as? ORKAmslerGridResult, let media = gridResult.sm_asMedia() {
             let oc = ObservationComponent()
             let cc = CodeableConcept()
-            cc.coding = [Coding.sm_Coding("amsler.grid.right", "http://researchkit.org", "Amsler Grid Right Eye")]
+            cc.coding = [Coding.sm_ResearchKit(AmslerGridPRO.amslerGridRightEye, "Amsler Grid Right Eye")]
             oc.code = cc
             components.append(oc)
             images.append(media)

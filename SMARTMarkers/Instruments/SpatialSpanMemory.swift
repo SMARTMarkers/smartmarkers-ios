@@ -54,7 +54,12 @@ open class SpatialSpanMemoryPRO: ActiveInstrumentProtocol {
     
     public var ip_publisher: String?
     
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
+        if let token = ip_code?.sm_searchableToken() {
+            return [FHIRSearchParamRelationship(Observation.self, ["code": token])]
+        }
+        return nil
+    }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
@@ -69,10 +74,10 @@ open class SpatialSpanMemoryPRO: ActiveInstrumentProtocol {
         
         if let spatialMemoryResult = result.stepResult(forStepIdentifier: "cognitive.memory.spatialspan")?.firstResult as? ORKSpatialSpanMemoryResult {
             
-            let score = spatialMemoryResult.score
-//            let gameRecord = spatialMemoryResult.gameRecords
-//            let gamesCount = spatialMemoryResult.numberOfGames
-//            let failCount  = spatialMemoryResult.numberOfFailures
+            let score       = spatialMemoryResult.score
+            let gameRecords = spatialMemoryResult.gameRecords
+            let gamesCount = spatialMemoryResult.numberOfGames
+            let failCount  = spatialMemoryResult.numberOfFailures
             
             let observation = Observation.sm_SpatialSpanMemory(score: score, date: spatialMemoryResult.endDate, instrument: self)
             return SMART.Bundle.sm_with([observation])
@@ -81,5 +86,20 @@ open class SpatialSpanMemoryPRO: ActiveInstrumentProtocol {
         return nil
     }
     
+    
+}
+
+
+extension ORKSpatialSpanMemoryResult {
+    
+    
+}
+
+extension ORKSpatialSpanMemoryGameRecord {
+    
+}
+
+
+extension ORKSpatialSpanMemoryGameTouchSample {
     
 }

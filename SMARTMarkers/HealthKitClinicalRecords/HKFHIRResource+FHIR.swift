@@ -232,6 +232,11 @@ extension Observation {
     func sm__populate(from dstu2: FHIRJSON, source: URL?) throws {
 
         do {
+            
+            var ctx = FHIRInstantiationContext()
+            populate(from: dstu2, context: &ctx)
+            
+            
             if let cat = dstu2["category"] as? FHIRJSON {
                 category =  [try CodeableConcept(json: cat)]
             }
@@ -253,6 +258,7 @@ extension Observation {
             if let oissued = dstu2["issued"] as? String {
                 issued = Instant(string: oissued)
             }
+            
         }
         catch {
             print(error)
@@ -266,6 +272,10 @@ extension Immunization {
     
     func sm__populate(from dstu2: FHIRJSON, source: URL?) throws {
         
+        let immunizationFunctionCodingSystem                = "http://terminology.hl7.org/CodeSystem/v2-0443"
+        let immunizationFunctionCodeOrderingProvider        = "OP"
+        let immunizationFunctionCodeOrderingProviderDisplay = "Ordering Provider"
+        
         status = .completed
         
         if let vc = try? CodeableConcept(json: dstu2["vaccineCode"] as! FHIRJSON) {
@@ -276,8 +286,12 @@ extension Immunization {
             occurrenceString = FHIRString(occuranceDate)
         }
         
-        if let _ = dstu2["requester"] as? FHIRJSON {
-            
+        if let requester = dstu2["requester"] as? FHIRJSON {
+            let performr = ImmunizationPerformer()
+            performr.actor = try? Reference(json: requester).using(source: source)
+            let coding = Coding.sm_Coding(immunizationFunctionCodingSystem, immunizationFunctionCodeOrderingProvider, immunizationFunctionCodeOrderingProviderDisplay)
+            performr.function = CodeableConcept.sm_From([coding], text: nil)
+            performer = [performr]
         }
         
         if let cencounter = dstu2["encounter"] as? FHIRJSON {

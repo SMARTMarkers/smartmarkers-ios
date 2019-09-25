@@ -42,7 +42,8 @@ open class KneeRangeOfMotion: Instrument {
     public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return nil
+        
+        return [FHIRSearchParamRelationship(Observation.self, ["code":ip_code!.code!.string])]
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
@@ -55,33 +56,28 @@ open class KneeRangeOfMotion: Instrument {
         
         if let motionResult = result.stepResult(forStepIdentifier: "knee.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
             
-            print(motionResult.startDate)
-            print(motionResult.endDate)
-//            print(motionResult.start)
-//            print(motionResult.finish)
-//            print(motionResult.maximum)
-//            print(motionResult.range)
+            if motionResult.flexed == 0.0 && motionResult.extended == 0.0 {
+                return nil
+            }
             
-            return nil
-        
-            /*
-            let observation = Observation.sm_RangeOfMotion(start: motionResult.start, finish: motionResult.finish, range: motionResult.range, date: motionResult.endDate)
+            let observation = Observation.sm_RangeOfMotion(flexed: motionResult.flexed, extended: motionResult.extended, date: motionResult.endDate)
             
-            if limbOption == ORKPredefinedTaskLimbOption.left {
-                observation.code = CodeableConcept.sm_KneeLeftRangeOfMotion()
-                observation.bodySite = CodeableConcept.sm_BodySiteKneeLeft()
+            if limbOption == .both {
+                
+                observation.bodySite = CodeableConcept.sm_BodySiteShoulderBoth()
+                observation.code = CodeableConcept.sm_ShoulderBothRangeOfMotion()
             }
-            else if limbOption == ORKPredefinedTaskLimbOption.right {
-                observation.code = CodeableConcept.sm_KneeRightRangeOfMotion()
-                observation.bodySite = CodeableConcept.sm_BodySiteKneeRight()
+                
+            else if limbOption == .left {
+                observation.bodySite = CodeableConcept.sm_BodySiteShoulderLeft()
+                observation.code = CodeableConcept.sm_ShoulderLeftRangeOfMotion()
             }
-            else if limbOption == ORKPredefinedTaskLimbOption.both {
-                observation.bodySite = CodeableConcept.sm_BodySiteKneeBoth()
-                observation.code = CodeableConcept.sm_KneeBothRangeOfMotion()
+            else if limbOption == .right {
+                observation.bodySite = CodeableConcept.sm_BodySiteShoulderRight()
+                observation.code = CodeableConcept.sm_ShoulderRightRangeOfMotion()
             }
+            
             return SMART.Bundle.sm_with([observation])
-            
-            */
         }
         
         
@@ -100,7 +96,6 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
         self.limbOption = limbOption
     }
     
-    
     public var ip_title: String {
         return "Shoulder Range of Motion"
     }
@@ -117,10 +112,15 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
         return nil
     }
     
-    public var ip_publisher: String?
+    public var ip_publisher: String? {
+        return "ResearchKit, Apple Inc"
+    }
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return nil
+        
+        return [
+            FHIRSearchParamRelationship(Observation.self, ["code":ip_code!.code!.string])
+        ]
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
@@ -131,29 +131,34 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-            /*
          if let motionResult = result.stepResult(forStepIdentifier: "shoulder.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
+            
+            if motionResult.flexed == 0.0 && motionResult.extended == 0.0 {
+                return nil
+            }
 
-            let observation = Observation.sm_RangeOfMotion(start: motionResult.start, finish: motionResult.finish, range: motionResult.range, date: motionResult.endDate)
+            let observation = Observation.sm_RangeOfMotion(flexed: motionResult.flexed, extended: motionResult.extended, date: motionResult.endDate)
             
             if limbOption == .both {
                 
                 observation.bodySite = CodeableConcept.sm_BodySiteShoulderBoth()
                 observation.code = CodeableConcept.sm_ShoulderBothRangeOfMotion()
-                
             }
+                
             else if limbOption == .left {
                 observation.bodySite = CodeableConcept.sm_BodySiteShoulderLeft()
                 observation.code = CodeableConcept.sm_ShoulderLeftRangeOfMotion()
             }
             else if limbOption == .right {
-                observation.bodySite = CodeableConcept.sm_BodySiteShoulderRight()
+                observation.bodySite = CodeableConcept  .sm_BodySiteShoulderRight()
                 observation.code = CodeableConcept.sm_ShoulderRightRangeOfMotion()
             }
             
             return SMART.Bundle.sm_with([observation])
             
-        }*/
+        }
+        
+        
         return nil
         
     }

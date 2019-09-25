@@ -35,7 +35,7 @@ extension ServiceRequest {
     public func ep_coding(for system: String) -> Coding? {
         
         if let codeConcept = code {
-            return codeConcept.ep_coding(for: system)
+            return codeConcept.sm_coding(for: system)
         }
         return nil
     }
@@ -50,7 +50,7 @@ public extension CodeableConcept {
         return sm_From([Coding.sm_Coding("survey", "http://hl7.org/fhir/observation-category", "Survey")], text: "Survey")
     }
 	
-    func ep_coding(for systemURI: String) -> Coding? {
+    func sm_coding(for systemURI: String) -> Coding? {
 		return self.coding?.filter { $0.system?.absoluteString == systemURI }.first
 	}
     
@@ -153,6 +153,12 @@ public extension SMART.Coding {
     
     class func sm_ResearchKit(_ code: String, _ display: String) -> Coding {
         return sm_Coding(code, "http://researchkit.org", display)
+    }
+    
+    func sm_searchableToken() -> String? {
+        
+        guard let code = code else { return nil }
+        return system != nil ? "\(system!.absoluteString)|\(code.string)" : code.string
     }
     
     

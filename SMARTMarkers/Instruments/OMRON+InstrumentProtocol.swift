@@ -12,10 +12,13 @@ import SMART
 
 open class OMRON: Instrument {
     
-    private let settings: [String: Any]!
+    public internal(set) final var auth: OAuth2!
     
     public init(authSettings: [String:Any]) {
-        self.settings = authSettings
+
+        self.auth = OAuth2CodeGrant(settings: authSettings)
+        self.auth.forgetTokens()
+        self.auth.logger = OAuth2DebugLogger(.trace)
     }
     
     public var ip_title: String {
@@ -42,8 +45,7 @@ open class OMRON: Instrument {
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let omronTaskViewController = OmronTaskViewController(oauthSettings: settings)
-        
+        let omronTaskViewController = OmronTaskViewController(auth: auth)
         callback(omronTaskViewController, nil)
         
     }

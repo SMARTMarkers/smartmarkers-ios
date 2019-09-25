@@ -112,7 +112,6 @@ extension Media: ReportProtocol {
     }
     
     
-    
     public var rp_title: String? {
         return "Response #\(id?.string ?? "-")"
     }

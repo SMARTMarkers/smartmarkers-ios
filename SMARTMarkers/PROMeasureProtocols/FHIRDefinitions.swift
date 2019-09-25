@@ -18,5 +18,6 @@ let kSD_Variable = "http://hl7.org/fhir/StructureDefinition/variable"
 let kLoincSystemKey = "http://loinc.org"
 let kHL7ConditionVerificationStatus = "http://terminology.hl7.org/CodeSystem/condition-ver-status"
 let kHL7ConditionClinicalStatus = "http://terminology.hl7.org/CodeSystem/condition-clinical"
+let kHL7ObservationCategory = "http://terminology.hl7.org/CodeSystem/observation-category"
 
 

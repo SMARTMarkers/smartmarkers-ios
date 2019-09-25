@@ -12,19 +12,45 @@ import Foundation
 public class Instruments {
     
     public static func OMRONBloodPressure(settings: [String:Any]) -> Instrument? {
-        return OMRON(authSettings: settings)
+        
+        let omron = OMRON(authSettings: settings)
+        return omron
     }
     
-    public static var AmslerGrid: Instrument? {
+    public static var AmslerGrid: Instrument {
         return AmslerGridPRO()
     }
     
-    public static var HolePegTestPRO: Instrument? {
+    public static var HolePegTestPRO: Instrument {
         return NineHolePegTestPRO()
     }
     
-    public static var PASATPRO: Instrument? {
+    public static var PASATPRO: Instrument {
         return PSATPRO()
+    }
+    
+    public static var LeftKneeRangeOfMotion: Instrument {
+        return SMARTMarkers.KneeRangeOfMotion(limbOption: .left)
+    }
+    
+    public static var RightKneeRangeOfMotion: Instrument {
+        return SMARTMarkers.KneeRangeOfMotion(limbOption: .right)
+    }
+    
+    public static var LeftShoulderRangeOfMotion: Instrument {
+        return SMARTMarkers.ShoulderRangeOfMotion(limbOption: .left)
+    }
+    
+    public static var RightShoulderRangeOfMotion: Instrument {
+        return SMARTMarkers.ShoulderRangeOfMotion(limbOption: .right)
+    }
+    
+    public static var SpatialSpanMemory: Instrument {
+        return SpatialSpanMemoryPRO()
+    }
+    
+    public static var iOSHealthRecords: Instrument {
+        return SMHealthKitRecords()
     }
     
 }

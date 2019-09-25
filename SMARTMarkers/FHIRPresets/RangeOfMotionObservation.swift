@@ -13,11 +13,30 @@ public extension Observation {
     
     //https://zulip-uploads.s3.amazonaws.com/10155/asOP7kN_xL_McwtgOiTLTtcc/NoninBtle.json?Signature=H%2BTjf8NLt%2BC1172L5ynFOSVwhkY%3D&Expires=1555427590&AWSAccessKeyId=AKIAIEVMBCAT2WD3M5KQ
     
+    class func sm_RangeOfMotion(flexed: Double, extended: Double, date: Date) -> Observation {
+        
+        let observation = Observation()
+        observation.effectiveDateTime = date.fhir_asDateTime()
+        observation.status = .final
+        
+        let flexedComponent = ObservationComponent()
+        flexedComponent.valueQuantity = Quantity.sm_Angle(flexed)
+        
+        let extendedComponent = ObservationComponent()
+        extendedComponent.valueQuantity = Quantity.sm_Angle(extended)
+        
+        observation.component = [flexedComponent, extendedComponent]
+        
+        return observation
+        
+
+    }
+    
     class func sm_RangeOfMotion(start: Double, finish: Double, range: Double, date:Date) -> Observation {
         
         let observation = Observation()
         observation.effectiveDateTime = date.fhir_asDateTime()
-        observation.status = ObservationStatus.final
+        observation.status = .final
         let quantityStart = Quantity.sm_Angle(start)
         let componentStart = ObservationComponent()
         componentStart.valueQuantity = quantityStart

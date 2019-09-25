@@ -19,7 +19,11 @@ public enum UserContextMode  {
 
 public class SMARTManager : NSObject {
     
-    public weak var callbackHandler: OAuth2? 
+    public weak var callbackHandler: OAuth2? {
+        didSet {
+            print("set")
+        }
+    }
     
     public var client: SMART.Client
     

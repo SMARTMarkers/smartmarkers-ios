@@ -13,11 +13,12 @@ import SMART
 
 open class OMRONStep: WebFetchStep {
     
-    init(oauthSettings: OAuth2JSON) {
-        super.init("OMRONFetchStep", title: "OMRON Blood Pressure", authSettings: oauthSettings)
+    init(auth: OAuth2) {
+        super.init("OMRONFetchStep", title: "OMRON Blood Pressure", auth:  auth)
         self.request = URLRequest(url: URL(string: "https://ohi-api.numerasocial.com/api/measurement")!)
         request?.httpMethod = "POST"
         request?.httpBody = "since=2016-03-03".data(using: .utf8)
+    
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -97,15 +98,14 @@ open class OmronStepViewController: WebFetchStepViewController {
 
 open class OmronTaskViewController: ORKTaskViewController {
     
-    var oauthSettings: [String: Any]?
     
-    public init(oauthSettings: [String: Any]) {
+    public init(auth: OAuth2) {
         
-        let introStep = ORKInstructionStep(identifier: "intro", _title: "OMRON Blood Pressure", _detailText: "This task will guide you through the process of securely fetching your latest Blood Pressure saved in your OMRON Cloud Account and submitting it to your Medical Record.\n\nNext steps:\n\n1. Will seek your authorization to access the Blood Pressure data\n\n2. Select which records you want to submit.\n\n3. Submission Report")
+        let introStep = ORKInstructionStep(identifier: "intro", _title: "OMRON Blood Pressure", _detailText: "This task will guide you through the process of securely fetching your latest Blood Pressure saved in your OMRON Cloud Account.\n\nNext steps:\n\n1. Will seek your authorization to access the Blood Pressure data\n\n2. Select which records you want to submit.\n\n3. Submission Report")
         
-        let success = ORKCompletionStep(identifier: "success", _title: "OMRON Blood Pressure", _detailText: "Successfully submitted.")
+        let success = ORKCompletionStep(identifier: "success", _title: "OMRON Blood Pressure", _detailText: "Successfully retrieved blood pressure record.\n\nThank you.")
         
-        let omronStep = OMRONStep(oauthSettings: oauthSettings)
+        let omronStep = OMRONStep(auth: auth)
         
         let steps = [introStep, omronStep, success]
         

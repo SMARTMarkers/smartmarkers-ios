@@ -15,6 +15,7 @@ public protocol ActiveInstrumentProtocol: Instrument {
     
     var ip_taskDescription: String? { get set }
     
+    
 }
 
 public extension ActiveInstrumentProtocol {

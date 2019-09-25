@@ -21,7 +21,6 @@ open class HKClinicalRecordTaskViewController: ORKTaskViewController {
     
     public convenience init() {
         
-        
         let steps : [ORKStep] = [
             HKClinicalRecordRequestStep(identifier: ksm_step_authreview),
             HKClinicalRecordWaitStep(identifier: ksm_step_auth),
@@ -33,6 +32,7 @@ open class HKClinicalRecordTaskViewController: ORKTaskViewController {
         self.view.tintColor = UIColor.red
         task.setStepModifier(HKClnicalStepModifier(), forStepIdentifier: ksm_step_review)
         task.setStepModifier(HKClinicalAuthorizationStepModifier(), forStepIdentifier: ksm_step_auth)
+        
     }
 }
 
