@@ -54,7 +54,23 @@ public struct FHIRSearchParamRelationship {
 
 public class SubmissionBundle {
     
-    public enum SubmissionStatus: String {
+    public enum SubmissionStatus: String, CustomStringConvertible {
+        
+        public var description: String {
+            get {
+                switch self {
+                case .readyToSubmit:
+                    return "Ready"
+                case .submitted:
+                    return "Submitted"
+                case .failedToSubmit:
+                    return "Failed to Submit"
+                case .discarded:
+                    return "Discarded"
+                }
+            }
+        }
+        
         case readyToSubmit
         case submitted
         case failedToSubmit
@@ -300,7 +316,6 @@ open class Reports {
                 }
             }
             else {
-                print(response.error)
                 callback(false, SMError.reportSubmissionToServerError(serverError: response.error ?? SMError.undefined))
             }
             semaphore.signal()

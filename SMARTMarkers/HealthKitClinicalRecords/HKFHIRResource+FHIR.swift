@@ -15,14 +15,14 @@ extension HKFHIRResourceType {
     
     func as_FHIRResource<T: DomainResource>() -> T {
         
-        if self == .allergyIntolerance  { return AllergyIntolerance() as! T }
-        if self == .immunization        { return Immunization() as! T }
-        if self == .observation         { return Observation() as! T }
-        if self == .condition           { return Condition() as! T }
-        if self == .medicationDispense  { return MedicationDispense() as! T }
-        if self == .medicationOrder     { return MedicationRequest() as! T }
-        if self == .medicationStatement { return MedicationStatement() as! T }
-        return                                   Procedure() as! T
+        if self == .allergyIntolerance  { return AllergyIntolerance()   as! T }
+        if self == .immunization        { return Immunization()         as! T }
+        if self == .observation         { return Observation()          as! T }
+        if self == .condition           { return Condition()            as! T }
+        if self == .medicationDispense  { return MedicationDispense()   as! T }
+        if self == .medicationOrder     { return MedicationRequest()    as! T }
+        if self == .medicationStatement { return MedicationStatement()  as! T }
+        return                                   Procedure()            as! T
     }
 }
 
@@ -221,7 +221,6 @@ extension AllergyIntolerance {
         
         var ctx = FHIRInstantiationContext()
         populate(from: dstu2, context: &ctx)
-        print(ctx.errors)
 
     }
 }

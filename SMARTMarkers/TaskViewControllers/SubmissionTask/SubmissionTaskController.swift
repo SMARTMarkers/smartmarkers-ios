@@ -16,6 +16,9 @@ let kSM_Submission_Consent      = "smartmarkers.submission.consent"
 let kSM_Submission_Completion   = "smartmarkers.submission.completion"
 let kSM_Submission_InProgress   = "smartmarkers.submission.inprogress"
 let kSM_Submission_Errors       = "smartmarkers.submission.errors"
+let kSM_Submission_Aborted      = "smartmarkers.submission.aborted"
+let kSM_Submission_Result       = "smartmarkers.submission.result"
+
 
 open class SubmissionTaskController: ORKTaskViewController {
     
@@ -44,9 +47,11 @@ public final class SubmissionTask: ORKNavigableOrderedTask {
         let steps = [
             SMSubmissionPermitStep(identifier: kSM_Submission_Review),
             SMSubmissionServerNotice(identifier: kSM_Submission_Consent),
+            ORKInstructionStep(identifier: kSM_Submission_Aborted, _title: "Cancelled", _detailText: "Submission was aborted"),
             SMSubmissionInProgressStep(identifier: kSM_Submission_InProgress),
             SMSubmissionErrorNotice(identifier: kSM_Submission_Errors),
             ORKCompletionStep(identifier: kSM_Submission_Completion, _title: "Submitted", _detailText: "Thank You"),
+
         ]
         
        
@@ -54,7 +59,27 @@ public final class SubmissionTask: ORKNavigableOrderedTask {
         steps.forEach { (s) in
             s.task = self
         }
-        setSkip(SkipErrorNotice(), forStepIdentifier: kSM_Submission_Errors)
+        
+        let selector = ORKResultSelector(resultIdentifier: kSM_Submission_Consent)
+        let resultPredicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: selector, expectedAnswer: false)
+        let progressSelector = ORKResultSelector(stepIdentifier: kSM_Submission_InProgress, resultIdentifier: kSM_Submission_Result)
+        let errorPredicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: progressSelector, expectedAnswer: true)
+        let errorPredicateNull = ORKResultPredicate.predicateForNilQuestionResult(with: progressSelector)
+        let cancelledNoticeSkipPredicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: selector, expectedAnswer: true)
+
+        let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [errorPredicate, errorPredicateNull, resultPredicate])
+        
+        let skipErrorStepRule =  ORKPredicateSkipStepNavigationRule(resultPredicate: compoundPredicate)
+        setSkip(skipErrorStepRule, forStepIdentifier: kSM_Submission_Errors)
+
+
+
+        let navigationRule = ORKPredicateSkipStepNavigationRule(resultPredicate: resultPredicate)
+        let navigationRule2 = ORKPredicateSkipStepNavigationRule(resultPredicate: cancelledNoticeSkipPredicate)
+
+        setSkip(navigationRule, forStepIdentifier: kSM_Submission_InProgress)
+        setSkip(navigationRule, forStepIdentifier: kSM_Submission_Completion)
+        setSkip(navigationRule2, forStepIdentifier: kSM_Submission_Aborted)
         setStepModifier(SMSubmissionErrorNoticeModifier(), forStepIdentifier: kSM_Submission_Errors)
     }
     

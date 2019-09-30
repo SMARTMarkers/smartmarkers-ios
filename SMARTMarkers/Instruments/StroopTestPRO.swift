@@ -85,7 +85,7 @@ extension ORKStroopResult {
         let duration = Duration()
         duration.value = FHIRDecimal(Decimal(floatLiteral: testDuration))
         component.code = CodeableConcept.sm_From([Coding.sm_ResearchKit("stroop", "stroop test result")], text: nil)
-        duration.code = FHIRString("seconds")
+        duration.code = FHIRString("second")
         duration.system = FHIRURL("http://unitsofmeasure.org")
         component.valueQuantity = duration
         return component

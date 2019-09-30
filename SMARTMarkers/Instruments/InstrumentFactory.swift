@@ -9,6 +9,7 @@
 import Foundation
 
 
+
 public class Instruments {
     
     public static func OMRONBloodPressure(settings: [String:Any]) -> Instrument? {
@@ -53,5 +54,12 @@ public class Instruments {
         return SMHealthKitRecords()
     }
     
+    public static var TappingSpeedLeft: Instrument {
+        return SMARTMarkers.TappingSpeed(hand: .both)
+    }
+    
+    public static var TappingSpeedRight: Instrument {
+        return SMARTMarkers.TappingSpeed(hand: .right)
+    }
 }
 

@@ -28,13 +28,11 @@ public protocol PROController: class {
 
 public protocol PROMeasureProtocol: NSObject  {
     
-
     var request: Request? { get set }
     
     var instrument: Instrument? { get set }
     
     var reports: Reports? { get set }
-
     
     func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
  
@@ -44,7 +42,7 @@ public protocol PROMeasureProtocol: NSObject  {
     
     func fetchReports(from server: Server, callback : ((_ success: Bool, _ error: Error?) -> Void)?)
     
-    var sessionDelegate: SessionControllerTaskDelegate? { get set }
+//    var sessionDelegate: SessionControllerTaskDelegate? { get set }
     
     func prepareSession(callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
     
@@ -76,7 +74,9 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     
     public var teststatus: String = ""
     
-    public weak var sessionDelegate: SessionControllerTaskDelegate?
+//    public weak var sessionDelegate: SessionControllerTaskDelegate?
+    
+    public weak var _sessionController: SessionController?
     
     public weak var server: Server?
     
@@ -160,11 +160,6 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     
     public func fetchReports(from server: Server, callback : ((_ success: Bool, _ error: Error?) -> Void)?) {
         
-//        guard let srv = server else {
-//            callback?(false, SMError.promeasureServerNotSet)
-//            return
-//        }
-        
         guard let reports = reports else {
             
             callback?(false, SMError.promeasureFetchLinkedResources)
@@ -225,7 +220,8 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
         if stepIdentifier.contains("range.of.motion") { return }
         // ***
         
-        sessionDelegate?.sessionEnded(taskViewController, reason: reason, error: serror)
+        
+//        _sessionController?.delegate?.sessionEnded(taskViewController, taskViewController: <#ORKTaskViewController#>, reason: reason, error: serror)
 
         
         if reason == .discarded {
@@ -253,44 +249,6 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
             }
             taskViewController.navigationController?.popViewController(animated: true)
         }
-        
-
-        
-        
-        
-        
-        
-        /*
-        guard
-            reason == .completed,
-            let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!),
-            let patient = patient,
-            let server = server
-            else
-        {
-            print("error: One or All of: No-patient/No-server/NotCompleted")
-            self.taskDelegate?.sessionEnded(taskViewController, reason: reason, error: serror)
-            taskViewController.navigationController?.popViewController(animated: true)
-            return
-        }
-        
-        let group = DispatchGroup()
-        group.enter()
-        results?.submitBundle(bundle, server: server, consent: true, patient: patient, request: request, callback: { [weak self] (submitted, error) in
-            self?.updateRequest(self?.results!.reports, callback: { (updatedstatus) in
-                if updatedstatus {
-                    print("successfully updated status")
-                }
-                group.leave()
-            })
-        })
-        
-        group.notify(queue: .main) { [weak self] in
-            self?.taskDelegate?.sessionEnded(taskViewController, reason: reason, error: nil)
-            taskViewController.navigationController?.popViewController(animated: true)
-
-        }
-        */
     }
     
     public func taskViewController(_ taskViewController: ORKTaskViewController, recorder: ORKRecorder, didFailWithError error: Error) {

@@ -11,7 +11,12 @@ import SMART
 import ResearchKit
 
 
-open class TappingSpeedPRO: ActiveInstrumentProtocol {
+open class TappingSpeed: ActiveInstrumentProtocol {
+    
+    static let resultStepIdentifiers = [
+            "tapping.left",
+            "tapping.right"
+        ]
     
     let handOption: ORKPredefinedTaskHandOption!
     
@@ -51,14 +56,51 @@ open class TappingSpeedPRO: ActiveInstrumentProtocol {
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let tappingSpeedResults = result.stepResult(forStepIdentifier: ip_identifier!)?.results {
-            print(tappingSpeedResults)
+        var documentReferences = [DocumentReference]()
+        for id in TappingSpeed.resultStepIdentifiers {
+            
+            guard let tappingResult = result.stepResult(forStepIdentifier: id)?.firstResult as? ORKTappingIntervalResult else {
+                continue
+            }
+            
+            let hand = (id.hasSuffix("right")) ? "Right" : "Left"
+            let title = "Tapping Finger \(hand)"
+            let code = Coding.sm_ResearchKit(tappingResult.identifier, title)
+            let concept = CodeableConcept.sm_From([code], text: title)
+            let dateTime = DateTime.now
+            
+            let ob = Observation()
+            ob.code = concept
+            ob.status = .final
+            
+            // Category
+            let activity = Coding.sm_Coding("activity", kHL7ObservationCategory, "Activity")
+            ob.category = [CodeableConcept.sm_From([activity], text: "Activity")]
+            
+            if let samples = tappingResult.samples?.map({ $0.sm_asCSVString() }) {
+                let csv = ORKTappingSample.csvHeader + "\n" + samples.joined(separator: "\n")
+                let document = DocumentReference.sm_Reference(title: title, concept: concept, creationDateTime: dateTime, csvString: csv)
+                documentReferences.append(document)
+            }
+
         }
+        
+        if !documentReferences.isEmpty {
+            
+            return SMART.Bundle.sm_with(documentReferences)
+            
+        }
+        
         return nil
     }
+}
+
+extension ORKTappingSample {
     
+    static let csvHeader = "buttonserial,timestamp,duration,location-x,location-y"
     
-    
-    
-    
+    func sm_asCSVString() -> String {
+        
+        return "\(buttonIdentifier.rawValue),\(timestamp),\(duration),\(location.x),\(location.y)"
+    }
 }

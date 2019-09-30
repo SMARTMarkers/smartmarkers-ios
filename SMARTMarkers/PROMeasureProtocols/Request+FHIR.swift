@@ -12,10 +12,6 @@ import SMART
 
 extension ServiceRequest: Request {
     
-    
-    
-   
- 
     public var rq_identifier: String {
         return id!.string
     }

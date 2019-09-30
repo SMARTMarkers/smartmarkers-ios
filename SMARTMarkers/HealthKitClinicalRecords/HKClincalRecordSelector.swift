@@ -24,7 +24,7 @@ class HKClinicalRecordSelectorStep: ORKFormStep {
         
         super.init(identifier: identifier)
         self.text = "This is your health data stored on your device. Please select the category of records to submit"
-        self.footnote = "Data requested is intended to be shared with Sync4Science"
+        self.footnote = ""
         
         
     }
@@ -52,7 +52,7 @@ extension HKClinicalRecordResult {
     
     func textChoice() -> ORKTextChoice {
         
-        let clinicalType = HKObjectType.clinicalType(forIdentifier: HKClinicalTypeIdentifier(rawValue: self.identifier))!.categoryDisplayName
+        let clinicalType = HKObjectType.clinicalType(forIdentifier: HKClinicalTypeIdentifier(rawValue: identifier))!.categoryDisplayName
         
         return ORKTextChoice(text: clinicalType, detailText: "Records:  #\(clinicalRecords?.count ?? 0)", value: identifier as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
         

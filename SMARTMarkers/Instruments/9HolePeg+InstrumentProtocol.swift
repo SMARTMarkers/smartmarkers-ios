@@ -86,7 +86,10 @@ open class NineHolePegTestPRO: Instrument {
         print(csvString)
         
         let observation = Observation.sm_pegHoleTest(totalTime: totalTime, totalDistance: totalDistance, success: totalSuccesses, failures: totalFailures, effective: datetime)
-        let documentEntry = DocumentReference.sm_Reference(creationDateTime: datetime, csvString: csvString).sm_asBundleEntry()
+        let code = Coding.sm_ResearchKit("hole.peg.test", "9 Peg Hole Test")
+        let concept = CodeableConcept.sm_From([code], text: nil)
+
+        let documentEntry = DocumentReference.sm_Reference(title: "Hole Peg Test Samples", concept: concept, creationDateTime: datetime, csvString: csvString).sm_asBundleEntry()
         observation.derivedFrom = [documentEntry.sm_asReference()]
         
         let bundle = SMART.Bundle()
@@ -161,12 +164,12 @@ extension ORKHolePegTestSample {
 
 extension Attachment {
     
-    class func sm_withCSV(csvString: String, creationDateTime: DateTime) -> Attachment {
+    class func sm_withCSV(title: String, csvString: String, creationDateTime: DateTime) -> Attachment {
         
         let attachment = Attachment()
         attachment.contentType  = FHIRString("text/csv")
         attachment.creation     = creationDateTime
-        attachment.title        = "Hole Peg Test Samples"
+        attachment.title        = FHIRString(title)
         attachment.data         = Base64Binary(value: csvString.sm_base64encoded())
         return attachment
     }
@@ -175,12 +178,14 @@ extension Attachment {
 
 extension DocumentReference {
     
-    class func sm_Reference(creationDateTime: DateTime, csvString: String) -> DocumentReference {
+    class func sm_Reference(title: String, concept: CodeableConcept, creationDateTime: DateTime, csvString: String) -> DocumentReference {
         let documentReference = DocumentReference()
-        let attachment = Attachment.sm_withCSV(csvString: csvString, creationDateTime: creationDateTime)
+        let attachment = Attachment.sm_withCSV(title: title, csvString: csvString, creationDateTime: creationDateTime)
         documentReference.content = [DocumentReferenceContent(attachment: attachment)]
         documentReference.status = .current
         documentReference.docStatus = .final
+        documentReference.description_fhir = title.fhir_string
+        documentReference.type = concept
         return documentReference
     }
 }

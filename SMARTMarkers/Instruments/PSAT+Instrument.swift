@@ -41,19 +41,41 @@ open class PSATPRO: Instrument {
         return "ResearchKit, Apple Inc"
     }
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:ip_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 60, options: [])
+        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:ip_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        guard let psatResult = result.stepResult(forStepIdentifier: "")?.firstResult as? ORKPSATResult else {
+        guard let psatResult = result.stepResult(forStepIdentifier: "psat")?.firstResult as? ORKPSATResult else {
             return nil
         }
+        let psat_code = (psatResult.interStimulusInterval == 2.0) ? "psat-2" : "psat-3"
+        let isAuditory = psatResult.stimulusDuration == 0.0 ? "PSAT Auditory" : "PSAT Visual"
+        let code = Coding.sm_ResearchKit(psat_code, isAuditory)
+        let concept = CodeableConcept.sm_From([code], text: isAuditory)
+
         
+        let dateTime = DateTime.now
         
-        return nil
+        var csv = ORKPSATSample.csvHeader + "\n"
+        var totalTime = 0.0
+        for sample in psatResult.samples ?? [] {
+            csv += sample.sm_csvString() + "\n"
+            totalTime += sample.time
+        }
+        
+        let observation = psatResult.sm_asFHIR(title: self.ip_title, totalTime: totalTime)
+        
+        let documentEntry = DocumentReference.sm_Reference(title: "PSAT Test Samples", concept: concept, creationDateTime: dateTime, csvString: csv).sm_asBundleEntry()
+        observation.derivedFrom = [documentEntry.sm_asReference()]
+        
+        let bundle = SMART.Bundle()
+        bundle.entry = [observation.sm_asBundleEntry(), documentEntry]
+        bundle.type = BundleType.transaction
+
+        return bundle
     }
     
     
@@ -61,31 +83,36 @@ open class PSATPRO: Instrument {
 }
 
 
+
+
 extension ORKPSATResult {
     
-    func sm_asFHIR() -> Observation {
+    func sm_asFHIR(title: String, totalTime: TimeInterval) -> Observation {
         
         let psat_code = (interStimulusInterval == 2.0) ? "psat-2" : "psat-3"
-        
         let isAuditory = stimulusDuration == 0.0
         
-        let code = Coding.sm_ResearchKit(psat_code, "9 Peg Hole Test")
+        let code = Coding.sm_ResearchKit(psat_code, title)
 
-        
         let ob = Observation()
+        ob.code = CodeableConcept.sm_From([code], text: title)
         
         ob.status = .final
-        
-
         
         // Category
         let activity = Coding.sm_Coding("activity", kHL7ObservationCategory, "Activity")
         ob.category = [CodeableConcept.sm_From([activity], text: "Activity")]
         
-        ob.valueInteger = FHIRInteger(integerLiteral: totalCorrect)
         
-        
-        
+        // Total Correct
+        let numerator = Quantity()
+        numerator.value = FHIRDecimal(integerLiteral: totalCorrect)
+        let denominator = Quantity()
+        denominator.value = FHIRDecimal(integerLiteral: length)
+        let ratio = Ratio()
+        ratio.numerator = numerator
+        ratio.denominator = denominator
+        ob.valueRatio = ratio
         
         return ob
     }
@@ -93,9 +120,11 @@ extension ORKPSATResult {
 
 extension ORKPSATSample {
     
+    static let csvHeader = "correct,answer,digit,time"
+    
     func sm_csvString() -> String {
         
-        return ""
+        return "\(isCorrect ? 1 : 0),\(answer),\(digit),\(time.description)"
         
     }
     

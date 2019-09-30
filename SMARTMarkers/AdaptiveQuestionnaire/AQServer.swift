@@ -130,8 +130,6 @@ public extension AQClient {
             
             if let r4 = questionnaire as? Questionnaire {
                 
-                
-                
                 r4.ip_taskController(for: PROMeasure(), callback: { (taskViewController, error) in
 
                     if let tvc = taskViewController {

@@ -11,6 +11,106 @@ import ResearchKit
 import SMART
 
 
+public protocol SessionDelegate: class {
+    
+    func sessionEnded(_ session: SessionController, taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason, error: Error?)
+    
+    func sessionShouldBegin(_ session: SessionController, taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason, error: Error?) -> Bool
+    
+}
+
+open class SessionController: NSObject {
+    
+    let identifier: String
+    
+    var measures: [PROMeasure]
+    
+    var patient: Patient?
+    
+    var server: Server?
+    
+    var verifyUser: Bool
+    
+    public init(_ measures: [PROMeasure], patient: Patient?, server: Server?, verifyUser: Bool = false) {
+        
+        self.identifier = UUID().uuidString
+        self.measures = measures
+        self.patient = patient
+        self.verifyUser = verifyUser
+        self.server = server
+    }
+    
+    weak var delegate: SessionDelegate?
+    
+    public var onCancellation: ((_ proMeasure: PROMeasureProtocol) -> Void)?
+    
+    public var onCompletion: (( _ session: SessionController) -> Void)?
+    
+    
+    open func prepareController(callback: @escaping ((_ controller: UIViewController?, _ error: Error?) -> Void)) {
+        
+        var taskControllers = [ORKTaskViewController]()
+        
+        let group = DispatchGroup()
+        var errors = [Error]()
+        for measure in measures {
+            
+            measure._sessionController = self
+            group.enter()
+            measure.prepareSession { (taskViewController, error) in
+                if let tvc = taskViewController {
+                    taskControllers.append(tvc)
+                }
+                else {
+                    if let err = error {
+                        errors.append(err)
+                    }
+                }
+                group.leave()
+            }
+        }
+        
+        
+        
+        
+        group.notify(queue: .main) {
+            if taskControllers.count > 0 {
+                
+                // SubmissionTask
+                if let _ = self.patient, let _ = self.server {
+                    let submissionTask = SubmissionTaskController(self)
+                    submissionTask.delegate = self
+                    taskControllers.append(submissionTask)
+                }
+                
+                let sessionNavigationController = self.sessionContainerController(for: taskControllers)
+                callback(sessionNavigationController, (errors.isEmpty) ? nil : SMError.sessionCreatedWithMissingTasks)
+            }
+            else {
+                callback(nil, SMError.sessionMissingTask)
+            }
+        }
+    }
+    
+    open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> UINavigationController {
+        
+        var views : [UIViewController] = taskViewControllers
+        if  verifyUser, let patient = patient {
+            let verifyController = PatientVerificationController(patient: patient)
+            views.insert(verifyController, at: 0)
+        }
+        
+        let sessionNC = SessionNavigationController(views: views, reversed: true, shouldVerify: verifyUser, sessionEnded: ({
+            self.onCompletion?(self)
+        }))
+        
+        return sessionNC
+    }
+
+}
+
+
+/*
 public protocol SessionControllerTaskDelegate : class  {
     
     func sessionEnded(_ taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason, error: Error?)
@@ -39,7 +139,8 @@ public protocol SessionProtocol : class {
 
 }
 
-open class SessionController: NSObject, SessionProtocol {
+
+open class SessionControll: NSObject, SessionProtocol {
     
     public typealias PROMeasureObjectType = PROMeasure
 
@@ -134,6 +235,7 @@ open class SessionController: NSObject, SessionProtocol {
 }
 
 
+*/
 
 extension SessionController: ORKTaskViewControllerDelegate {
     
@@ -141,7 +243,4 @@ extension SessionController: ORKTaskViewControllerDelegate {
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         taskViewController.navigationController?.popViewController(animated: true)
     }
-    
-    
-    
 }

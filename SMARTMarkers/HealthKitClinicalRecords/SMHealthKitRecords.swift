@@ -50,27 +50,30 @@ public class SMHealthKitRecords: Instrument {
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let dataResults = result.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [HKClinicalRecordResult] {
-            
-            var domainResources = [DomainResource]()
-            for healthKitRecord in dataResults  {
-                do {
-                    if let resources = try healthKitRecord.clinicalRecords?.compactMap ({ try $0.fhirResource?.sm_asR4() }) {
-                        domainResources.append(contentsOf: resources)
-                    }
-                }
-                catch {
-                    print(error)
-                }
-            }
-            
-            domainResources.forEach { (d) in
-                print(d.sm_resourceType())
-                print(try? d.asJSON())
-            }
-            
-            return domainResources.isEmpty ? nil : SMART.Bundle.sm_with(domainResources)
+        guard let choice = result.stepResult(forStepIdentifier: ksm_step_review)?.results?.first as? ORKChoiceQuestionResult,
+        let dataResults = result.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [HKClinicalRecordResult] else {
+            return nil
         }
-        return nil
+        
+        
+        let clinicalTypes = (choice.choiceAnswers as! [String]).map { HKObjectType.clinicalType(forIdentifier: HKClinicalTypeIdentifier(rawValue: $0))! }
+        
+        var fhirResources = [DomainResource]()
+        var errors = [Error]()
+        
+        for type in clinicalTypes {
+            if let healthKitRecord = dataResults.filter ({ $0.identifier == type.identifier }).first {
+                do {
+                    if let resources = try healthKitRecord.clinicalRecords?.compactMap({ try $0.fhirResource?.sm_asR4() }) {
+                        fhirResources.append(contentsOf: resources)
+                    }
+                } catch {
+                    errors.append(error)
+                }
+            }
+        }
+        
+        return fhirResources.isEmpty ? nil : SMART.Bundle.sm_with(fhirResources)
+
     }
 }

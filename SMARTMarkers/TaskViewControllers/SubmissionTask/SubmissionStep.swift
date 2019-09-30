@@ -111,7 +111,7 @@ class SMSubmissionInProgressStepVeiwController: ORKWaitStepViewController {
             
             group.notify(queue: .main) {
                 let success = nerrors.isEmpty
-                let succesResult = ORKBooleanQuestionResult(identifier: "submissionResult")
+                let succesResult = ORKBooleanQuestionResult(identifier: kSM_Submission_Result)
                 succesResult.booleanAnswer = success ? 1 : 0
                 self.addResult(succesResult)
                 self.goForward()
@@ -146,18 +146,8 @@ open class SMSubmissionErrorNotice: ORKInstructionStep {
     
 }
 
-open class SkipErrorNotice: ORKSkipStepNavigationRule {
-    
-    open override func stepShouldSkip(with taskResult: ORKTaskResult) -> Bool {
-        
-        if let result = taskResult.stepResult(forStepIdentifier: kSM_Submission_InProgress)?.firstResult as? ORKBooleanQuestionResult {
-            let skip = result.booleanAnswer == 1
-            return skip
-        }
-        
-        return false
-    }
-}
+
+
 
 open class SMSubmissionErrorNoticeModifier: ORKStepModifier {
     
@@ -201,9 +191,11 @@ extension Reports {
         }
         
         let choices = submissionBundle.map { (gr) -> ORKTextChoice in
-            let content = gr.bundle.sm_ContentSummary()!
+            let content = gr.bundle.sm_ContentSummary()! + "\n\nStatus: \(gr.status)" + "\nTaskId: \(gr.taskId)"
                 let count  = gr.bundle.sm_resourceCount()
-            return ORKTextChoice(text: gr.status.rawValue + " Task: \(gr.taskId)", detailText: content, value: gr.taskId as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
+
+            
+            return ORKTextChoice(text: "#\(count) Resources", detailText: content, value: gr.taskId as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
         }
         
         return ORKTextChoiceAnswerFormat(style: .multipleChoice, textChoices: choices)

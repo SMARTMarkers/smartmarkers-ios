@@ -86,6 +86,17 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
     }
     
     required public init(instrument: Questionnaire, server: FHIRMinimalServer, steps: [ORKStep]) {
+        /*
+         todo:
+         1. Add throws; Questionnaire should have adapt extension, else should throw.
+         2. No need of Initializing a Server, that should come from `Questionnaire`.
+         3. No need of Steps either,
+         4. Add `var responses: [QuestionnaireResponse](); append every new incoming QR, discard step if not.
+         so
+         
+         - init(questionnaire: Questionnaire) throws
+ 
+         */
         self.questionnaire = instrument
         self.server = server
         var steps = steps
@@ -221,3 +232,5 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
         return super.step(after: step, with: result)
     }
 }
+
+
