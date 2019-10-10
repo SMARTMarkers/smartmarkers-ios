@@ -21,7 +21,7 @@ public protocol SessionDelegate: class {
 
 open class SessionController: NSObject {
     
-    let identifier: String
+    public let identifier: String
     
     var measures: [PROMeasure]
     
@@ -30,6 +30,8 @@ open class SessionController: NSObject {
     var server: Server?
     
     var verifyUser: Bool
+    
+    var errors: [Error]?
     
     public init(_ measures: [PROMeasure], patient: Patient?, server: Server?, verifyUser: Bool = false) {
         
@@ -100,11 +102,12 @@ open class SessionController: NSObject {
             views.insert(verifyController, at: 0)
         }
         
-        let sessionNC = SessionNavigationController(views: views, reversed: true, shouldVerify: verifyUser, sessionEnded: ({
-            self.onCompletion?(self)
-        }))
+        let container = SessionNavigationController(views: views, reversed: true, verifyUser: verifyUser, session: self)
+//        ({
+//            self.onCompletion?(self)
+//        }))
         
-        return sessionNC
+        return container
     }
 
 }

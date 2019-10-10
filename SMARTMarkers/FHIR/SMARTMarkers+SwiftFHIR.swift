@@ -69,6 +69,12 @@ public extension CodeableConcept {
         return cc
     }
     
+    class func sm_Activity() -> CodeableConcept {
+        
+        let activity = Coding.sm_Coding("activity", kHL7ObservationCategory, "Activity")
+        return CodeableConcept.sm_From([activity], text: "Activity")
+    }
+    
 }
 
 

@@ -15,6 +15,8 @@ open class SessionNavigationController: UINavigationController, UINavigationCont
     
     var sessionEnded: (() -> Void)?
     
+    weak var session: SessionController?
+    
     
     func superDismiss(animated: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: animated, completion: completion)
@@ -28,7 +30,9 @@ open class SessionNavigationController: UINavigationController, UINavigationCont
                 dismissWithDeviceLock(animated: animated)
             }
             else {
-                super.dismiss(animated: animated, completion: sessionEnded)
+                super.dismiss(animated: animated, completion: ({ [weak self] in
+                    self?.session?.onCompletion?(self!.session!)
+                }))
             }
             return nil
         }
@@ -47,9 +51,9 @@ open class SessionNavigationController: UINavigationController, UINavigationCont
         }
     }
     
-    convenience init(views: [UIViewController], reversed: Bool = false, shouldVerify: Bool = false, sessionEnded: (() -> Void)?) {
+    convenience init(views: [UIViewController], reversed: Bool = false, verifyUser: Bool = false, session: SessionController?) {
         self.init()
-        self.sessionEnded = sessionEnded
+        self.session = session
         setViewControllers( reversed ? views.reversed() : views, animated: false)
         setNavigationBarHidden(true, animated: false)
         delegate = self

@@ -40,6 +40,7 @@ open class HKClinicalRecordAuthorizationStepViewController: ORKWaitStepViewContr
     
     open override func viewDidAppear(_ animated: Bool) {
         
+        super.viewDidAppear(animated)
         
         store.getRequestStatusForAuthorization(toShare: Set(), read: clinicalTypes) { (status, error) in
             if status == .shouldRequest {
