@@ -44,7 +44,7 @@ open class StepActivity: Activity {
         self.init(period)
     }
     
-    public func fetch2(_ _store: HKHealthStore? = nil, callback: @escaping ((Any?, Error?) -> Void)) {
+    public func fetch(_ _store: HKHealthStore? = nil, callback: @escaping ((Any?, Error?) -> Void)) {
         
         store = _store
         
@@ -56,27 +56,6 @@ open class StepActivity: Activity {
             self.executeQuery(callback: callback)
         })
         
-    }
-    
-    public func fetch(_ _store: HKHealthStore?, callback: @escaping ((Bool, Error?) -> Void)) {
-        
-        store = _store
-        
-        store?.requestAuthorization(toShare: nil, read: Set([StepActivity.hkSampleType]), completion: { (success, error) in
-            
-            if !success {
-                callback(success, error)
-            }
-            
-            self.executeQuery(callback: { [weak self] (samples, err) in
-                
-                self?.value = samples
-                print(self?.value)
-                
-                callback((err != nil), err)
-            })
-            
-        })
     }
     
     public func executeQuery(callback: @escaping ((_ sample: Any?, _ error: Error?) -> Void)) {

@@ -17,7 +17,7 @@ public protocol Activity: class {
     
     var value: Any? { get set }
         
-    func fetch2(_ _store: HKHealthStore?, callback: @escaping ((Any?, Error?) -> Void))
+    func fetch(_ _store: HKHealthStore?, callback: @escaping ((Any?, Error?) -> Void))
 }
 
 public struct ActivityPeriod {

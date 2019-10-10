@@ -127,7 +127,7 @@ open class ActivityFetchStepController: ORKWaitStepViewController {
         let store = HKHealthStore()
         print(stp.activity?.period)
         
-        stp.activity?.fetch2(store, callback: { [weak self] (samples, error) in
+        stp.activity?.fetch(store, callback: { [weak self] (samples, error) in
             
             if let samples = samples as? [HKQuantitySample] {
                 let sampleType = stp.activity!.type.description
