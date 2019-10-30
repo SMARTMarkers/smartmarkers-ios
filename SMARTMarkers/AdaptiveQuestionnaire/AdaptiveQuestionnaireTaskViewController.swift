@@ -32,9 +32,9 @@ open class AdaptiveQuestionnaireTaskViewController: ORKTaskViewController {
     }
     
     var questionnaire: Instrument {
-        return (task as! AdaptiveQuestionnaireTask).questionnaire!
+        return (task as! AdaptiveQuestionnaireTask).adaptiveQuestionnaire!
     }
-    
+
     required public init(questionnaire: Questionnaire, server: SMART.FHIRMinimalServer, _taskIdentifier: String, steps: [ORKStep]) {
         self.taskIdentifier = _taskIdentifier
         let task = AdaptiveQuestionnaireTask(instrument: questionnaire, server: server, steps: steps)
@@ -69,7 +69,13 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
     
     public var server: SMART.FHIRMinimalServer
     
-    public var questionnaire: Questionnaire?
+    public var _responses = [QuestionnaireResponse]()
+    
+    var latestResponse: QuestionnaireResponse? {
+        return _responses.last
+    }
+    
+    public var adaptiveQuestionnaire: Questionnaire?
     
     public var expirationTime: DateTime?
     
@@ -97,7 +103,7 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
          - init(questionnaire: Questionnaire) throws
  
          */
-        self.questionnaire = instrument
+        self.adaptiveQuestionnaire = instrument
         self.server = server
         var steps = steps
         let instructions = "\(instrument.ip_title)\nThis is a computer adaptive test. All questions are mandatory. Results will be dispatched to the EHR"
@@ -117,33 +123,36 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
     
 
     @discardableResult
-    func resultsBody(for result: ORKTaskResult, finishedStep: ORKStep?, questionnaireResponse: inout QuestionnaireResponse?) -> Bool {
+    func resultsBody(for result: ORKTaskResult, finishedStep: ORKStep?, questionnaireResponse:  QuestionnaireResponse?) -> QuestionnaireResponse? {
         
-        guard let finished = finishedStep, let stepResult = result.stepResult(forStepIdentifier: finished.identifier) else {
-            return false
+        if questionnaireResponse == nil {
+            return try! QuestionnaireResponse.sm_AdaptiveQuestionnaireBody(contained: adaptiveQuestionnaire!)
+        }
+        guard let answered = finishedStep, let stepResult = result.stepResult(forStepIdentifier: answered.identifier) else {
+            return nil
         }
         
         if let choiceResult = stepResult.results?.first as? ORKChoiceQuestionResult {
             if let answers = choiceResult.c3_responseItems() {
-                if let _ = questionnaireResponse?.item?.filter({$0.linkId?.string == finished.identifier}).first {
+                if let _ = questionnaireResponse?.item?.filter({$0.linkId?.string == answered.identifier}).first {
                     print("already added")
-                    return false
+                    return nil
                 }
                 let qrItem = QuestionnaireResponseItem()
-                qrItem.linkId = finished.identifier.fhir_string
+                qrItem.linkId = answered.identifier.fhir_string
                 qrItem.answer = answers
                 if let q = questionnaireResponse?.contained?.first as? Questionnaire {
-                    if let item = q.item?.filter({$0.linkId?.string == finished.identifier}).first {
+                    if let item = q.item?.filter({$0.linkId?.string == answered.identifier}).first {
                         qrItem.extension_fhir = item.extension_fhir
                     }
                 }
                 var dynamicItems = questionnaireResponse?.item ?? [QuestionnaireResponseItem]()
                 dynamicItems.append(qrItem)
                 questionnaireResponse?.item = dynamicItems
-                return true
+                return questionnaireResponse
             }
         }
-        return true
+        return nil
     }
     
     open func continueTo(_ to: ORKStep,_ from: ORKStep) {
@@ -190,10 +199,11 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
         guard let step = step else {
             return super.step(after: nil, with: result)
         }
-
+ 
+        
         // First Step, initialize empty QuestionnaireResponse
         if step.identifier == StepId.introduction.rawValue, nil == dynamicResponse {
-            dynamicResponse = try! QuestionnaireResponse.sm_AdaptiveQuestionnaireBody(contained: questionnaire!)
+            dynamicResponse = try! QuestionnaireResponse.sm_AdaptiveQuestionnaireBody(contained: adaptiveQuestionnaire!)
         }
         
         // Last Step, nothing further
@@ -203,11 +213,12 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
         
         // Did Tap "Next Button"?
         if let lastResultStepIdentifer = result.results?.last?.identifier, step.identifier == lastResultStepIdentifer {
-            resultsBody(for: result, finishedStep: step, questionnaireResponse: &dynamicResponse)
+            dynamicResponse = resultsBody(for: result, finishedStep: step, questionnaireResponse: _responses.last)
             let semaphore = DispatchSemaphore(value: 0)
             print(try? dynamicResponse?.sm_jsonString() ?? "")
-            questionnaire?.next_q(server: server, questionnaireResponse: dynamicResponse, callback: { [weak self] (resource, error) in
+            adaptiveQuestionnaire?.next_q(server: server, questionnaireResponse: dynamicResponse, callback: { [weak self] (resource, error) in
                     if let resource = resource as? QuestionnaireResponse {
+                        self?._responses.append(resource)
                         self?.dynamicResponse = resource
                         if self?.dynamicResponse?.status == QuestionnaireResponseStatus.completed {
                             self?.concludeAfter(step.identifier, response: self?.dynamicResponse)

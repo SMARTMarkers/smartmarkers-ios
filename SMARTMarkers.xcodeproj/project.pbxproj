@@ -10,6 +10,7 @@
 		D40A121C21627DBE002F9F53 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40A121B21627DBE002F9F53 /* Notifications.swift */; };
 		D40B19CB20989B9000C18C23 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40B19CA20989B9000C18C23 /* Schedule.swift */; };
 		D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift */; };
+		D41A2E6F235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41A2E6E235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift */; };
 		D422E58522C120540097E0CF /* PROWaitStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58422C120540097E0CF /* PROWaitStep.swift */; };
 		D422E58822C242B70097E0CF /* HKClincalRecordSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58722C242B70097E0CF /* HKClincalRecordSelector.swift */; };
 		D422E58A22C25FA00097E0CF /* HealthKit+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58922C25FA00097E0CF /* HealthKit+ResearchKit.swift */; };
@@ -22,7 +23,7 @@
 		D4268F1F23368C43000416A1 /* HKFHIRResource+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4268F1E23368C43000416A1 /* HKFHIRResource+FHIR.swift */; };
 		D434861922AF08E0001D922C /* FHIRPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434861822AF08E0001D922C /* FHIRPath.swift */; };
 		D436B1D720EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */; };
-		D436B1D920EE880600CAF2F5 /* Questionnaire+InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D820EE880600CAF2F5 /* Questionnaire+InstrumentProtocol.swift */; };
+		D436B1D920EE880600CAF2F5 /* Questionnaire+Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */; };
 		D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */; };
 		D43C71B82268B9360008FF27 /* SpatialSpanMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71B72268B9360008FF27 /* SpatialSpanMemory.swift */; };
 		D43C71BA2268BFCB0008FF27 /* ActiveInstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71B92268BFCB0008FF27 /* ActiveInstrumentProtocol.swift */; };
@@ -37,6 +38,10 @@
 		D4618A44205ED820004E117F /* PatientVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4618A43205ED820004E117F /* PatientVerificationController.swift */; };
 		D4618A46205F07EC004E117F /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4618A45205F07EB004E117F /* LocalAuth.swift */; };
 		D4618A4E20616100004E117F /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = D4618A4D206160FF004E117F /* Readme.md */; };
+		D4623EDA2368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json in Resources */ = {isa = PBXBuildFile; fileRef = D4623ED82368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json */; };
+		D4623EDB2368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json in Resources */ = {isa = PBXBuildFile; fileRef = D4623ED92368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json */; };
+		D4623EDD2368B64200230C5B /* dynamicquestionnaire.json in Resources */ = {isa = PBXBuildFile; fileRef = D4623EDC2368B64200230C5B /* dynamicquestionnaire.json */; };
+		D4623EDF2368BA6A00230C5B /* dynamicquestionnaire_valuecoding.json in Resources */ = {isa = PBXBuildFile; fileRef = D4623EDE2368BA6A00230C5B /* dynamicquestionnaire_valuecoding.json */; };
 		D465D5A4203DCB8E0057BD23 /* Installation.md in Resources */ = {isa = PBXBuildFile; fileRef = D465D5A3203DCB8E0057BD23 /* Installation.md */; };
 		D46877842297022B00717D95 /* LifelinesQuestionnaireR4.json in Resources */ = {isa = PBXBuildFile; fileRef = D468777E2297022B00717D95 /* LifelinesQuestionnaireR4.json */; };
 		D46877852297022B00717D95 /* qr4.json in Resources */ = {isa = PBXBuildFile; fileRef = D468777F2297022B00717D95 /* qr4.json */; };
@@ -90,7 +95,6 @@
 		D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */; };
 		D4E75D622035E73E000CE95A /* SMARTMarkers.h in Headers */ = {isa = PBXBuildFile; fileRef = D4E75D602035E73E000CE95A /* SMARTMarkers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4E75D732035E7AA000CE95A /* EHRLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D722035E7AA000CE95A /* EHRLoginController.swift */; };
-		D4E75D7820360649000CE95A /* smartlogo.png in Resources */ = {isa = PBXBuildFile; fileRef = D4E75D7720360649000CE95A /* smartlogo.png */; };
 		D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D7D20361EB5000CE95A /* MeasuresViewController.swift */; };
 		D4E75D8120361EE5000CE95A /* PatientsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D8020361EE5000CE95A /* PatientsViewController.swift */; };
 		D4E75D8520363C0E000CE95A /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E75D8420363C0E000CE95A /* SessionController.swift */; };
@@ -104,6 +108,7 @@
 		D40A121B21627DBE002F9F53 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		D40B19CA20989B9000C18C23 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireOperation.swift; sourceTree = "<group>"; };
+		D41A2E6E235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireTask.swift; sourceTree = "<group>"; };
 		D422E58422C120540097E0CF /* PROWaitStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROWaitStep.swift; sourceTree = "<group>"; };
 		D422E58722C242B70097E0CF /* HKClincalRecordSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClincalRecordSelector.swift; sourceTree = "<group>"; };
 		D422E58922C25FA00097E0CF /* HealthKit+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HealthKit+ResearchKit.swift"; sourceTree = "<group>"; };
@@ -116,7 +121,7 @@
 		D4268F1E23368C43000416A1 /* HKFHIRResource+FHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HKFHIRResource+FHIR.swift"; sourceTree = "<group>"; };
 		D434861822AF08E0001D922C /* FHIRPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRPath.swift; sourceTree = "<group>"; };
 		D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+ResearchKit.swift"; sourceTree = "<group>"; };
-		D436B1D820EE880600CAF2F5 /* Questionnaire+InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+InstrumentProtocol.swift"; sourceTree = "<group>"; };
+		D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+Instrument.swift"; sourceTree = "<group>"; };
 		D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionNavigationController.swift; sourceTree = "<group>"; };
 		D43C71B72268B9360008FF27 /* SpatialSpanMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialSpanMemory.swift; sourceTree = "<group>"; };
 		D43C71B92268BFCB0008FF27 /* ActiveInstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveInstrumentProtocol.swift; sourceTree = "<group>"; };
@@ -131,6 +136,10 @@
 		D4618A43205ED820004E117F /* PatientVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientVerificationController.swift; sourceTree = "<group>"; };
 		D4618A45205F07EB004E117F /* LocalAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalAuth.swift; sourceTree = "<group>"; };
 		D4618A4D206160FF004E117F /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
+		D4623ED82368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json"; sourceTree = "<group>"; };
+		D4623ED92368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json"; sourceTree = "<group>"; };
+		D4623EDC2368B64200230C5B /* dynamicquestionnaire.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dynamicquestionnaire.json; sourceTree = "<group>"; };
+		D4623EDE2368BA6A00230C5B /* dynamicquestionnaire_valuecoding.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dynamicquestionnaire_valuecoding.json; sourceTree = "<group>"; };
 		D465D5A3203DCB8E0057BD23 /* Installation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Installation.md; sourceTree = "<group>"; };
 		D468777E2297022B00717D95 /* LifelinesQuestionnaireR4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LifelinesQuestionnaireR4.json; sourceTree = "<group>"; };
 		D468777F2297022B00717D95 /* qr4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = qr4.json; sourceTree = "<group>"; };
@@ -187,7 +196,6 @@
 		D4E75D602035E73E000CE95A /* SMARTMarkers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMARTMarkers.h; sourceTree = "<group>"; };
 		D4E75D612035E73E000CE95A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4E75D722035E7AA000CE95A /* EHRLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EHRLoginController.swift; sourceTree = "<group>"; };
-		D4E75D7720360649000CE95A /* smartlogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smartlogo.png; sourceTree = "<group>"; };
 		D4E75D7D20361EB5000CE95A /* MeasuresViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasuresViewController.swift; sourceTree = "<group>"; };
 		D4E75D8020361EE5000CE95A /* PatientsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientsViewController.swift; sourceTree = "<group>"; };
 		D4E75D8420363C0E000CE95A /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
@@ -245,8 +253,9 @@
 		D436B1D520EBF89E00CAF2F5 /* Questionnaire */ = {
 			isa = PBXGroup;
 			children = (
+				D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */,
 				D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */,
-				D436B1D820EE880600CAF2F5 /* Questionnaire+InstrumentProtocol.swift */,
+				D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */,
 				D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */,
 				D468778E2297419000717D95 /* QuestionnaireTaskViewController.swift */,
 				D4DC5B11232BEDE3001878B4 /* Questionnaire+Extensions.swift */,
@@ -269,6 +278,10 @@
 		D468777D229701D100717D95 /* QuestionnaireExamples */ = {
 			isa = PBXGroup;
 			children = (
+				D4623EDC2368B64200230C5B /* dynamicquestionnaire.json */,
+				D4623EDE2368BA6A00230C5B /* dynamicquestionnaire_valuecoding.json */,
+				D4623ED92368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json */,
+				D4623ED82368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json */,
 				D46877812297022B00717D95 /* adaptivePROMIS.json */,
 				D46877822297022B00717D95 /* adaptivePROMISDep.json */,
 				D46877802297022B00717D95 /* bmi_r4.json */,
@@ -286,6 +299,7 @@
 				D44C5E1B22009C8E007ACC8E /* AdaptiveQuestionnaireResponse.swift */,
 				D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift */,
 				D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */,
+				D41A2E6E235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift */,
 			);
 			path = AdaptiveQuestionnaire;
 			sourceTree = "<group>";
@@ -412,7 +426,6 @@
 				D4CFF03B203C7F9D00A6FB31 /* SMARTManager.swift */,
 				D4FEBDB221DFD50D0057C77D /* Common.swift */,
 				D4FEBDB721E64A610057C77D /* SMError.swift */,
-				D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */,
 			);
 			path = SMARTMarkers;
 			sourceTree = "<group>";
@@ -431,7 +444,6 @@
 			isa = PBXGroup;
 			children = (
 				D43E089721ADDD7000045680 /* works-with-smart-logo-768x514.png */,
-				D4E75D7720360649000CE95A /* smartlogo.png */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -550,12 +562,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				D46877862297022B00717D95 /* bmi_r4.json in Resources */,
+				D4623EDF2368BA6A00230C5B /* dynamicquestionnaire_valuecoding.json in Resources */,
 				D46877892297022B00717D95 /* bmiquestionnaire_r3.json in Resources */,
 				D465D5A4203DCB8E0057BD23 /* Installation.md in Resources */,
 				D46877882297022B00717D95 /* adaptivePROMISDep.json in Resources */,
-				D4E75D7820360649000CE95A /* smartlogo.png in Resources */,
 				D46877872297022B00717D95 /* adaptivePROMIS.json in Resources */,
+				D4623EDD2368B64200230C5B /* dynamicquestionnaire.json in Resources */,
 				D46877842297022B00717D95 /* LifelinesQuestionnaireR4.json in Resources */,
+				D4623EDA2368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json in Resources */,
+				D4623EDB2368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json in Resources */,
 				D4618A4E20616100004E117F /* Readme.md in Resources */,
 				D43E089821ADDD7000045680 /* works-with-smart-logo-768x514.png in Resources */,
 				D46877852297022B00717D95 /* qr4.json in Resources */,
@@ -625,13 +640,14 @@
 				D4CFF03C203C7F9D00A6FB31 /* SMARTManager.swift in Sources */,
 				D4DFD98B223ABFBF0097B958 /* WebFetchStep.swift in Sources */,
 				D4CBC00C2046F1C3002B6AC9 /* PROMeasure.swift in Sources */,
-				D436B1D920EE880600CAF2F5 /* Questionnaire+InstrumentProtocol.swift in Sources */,
+				D436B1D920EE880600CAF2F5 /* Questionnaire+Instrument.swift in Sources */,
 				D422E58522C120540097E0CF /* PROWaitStep.swift in Sources */,
 				D4E75D732035E7AA000CE95A /* EHRLoginController.swift in Sources */,
 				D482BA6321C953F800840D2E /* AQServer.swift in Sources */,
 				D4C69A5D23465C98006C6520 /* ActivityTaskViewController.swift in Sources */,
 				D4DFD998223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift in Sources */,
 				D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */,
+				D41A2E6F235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift in Sources */,
 				D43C71B82268B9360008FF27 /* SpatialSpanMemory.swift in Sources */,
 				D43C71BC2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift in Sources */,
 				D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */,

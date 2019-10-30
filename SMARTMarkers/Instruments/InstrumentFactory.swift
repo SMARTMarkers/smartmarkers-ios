@@ -18,6 +18,10 @@ public class Instruments {
         return omron
     }
     
+    public static var TowerOfHanoi: Instrument {
+        return TowerOfHanoiPRO()
+    }
+    
     public static var AmslerGrid: Instrument {
         return AmslerGridPRO()
     }
@@ -60,6 +64,10 @@ public class Instruments {
     
     public static var TappingSpeedRight: Instrument {
         return SMARTMarkers.TappingSpeed(hand: .right)
+    }
+    
+    public static var StepCounts: Instrument {
+        return SMARTMarkers.StepReport()
     }
 }
 

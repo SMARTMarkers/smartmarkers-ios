@@ -131,15 +131,7 @@ extension SMART.Resource {
 
 }
 
-extension SMART.DomainResource {
-    
-    
-        
-    
-}
-
-
-public extension SMART.Coding {
+extension SMART.Coding {
     
     class func sm_Coding(_ code: String, _ system: String, _ display: String) -> Coding {
         let coding = Coding()
@@ -194,7 +186,7 @@ extension SMART.BundleEntry {
 
 
 
-public extension SMART.Bundle {
+extension SMART.Bundle {
     
     class func sm_with(_ resources: [DomainResource]) -> SMART.Bundle {
         let bundle = SMART.Bundle()

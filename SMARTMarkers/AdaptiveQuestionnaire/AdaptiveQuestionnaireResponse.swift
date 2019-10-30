@@ -11,6 +11,39 @@ import SMART
 
 
 
+extension AdaptiveQuestionnaire {
+    
+    public func ResponseBody(responseIdentifier: String, answer: Any? = nil) -> QuestionnaireResponse? {
+        
+        let qr = QuestionnaireResponse()
+        qr.id = FHIRString(responseIdentifier)
+
+        let meta = Meta()
+        meta.profile = [FHIRCanonical(kSD_adaptive_QuestionnaireResponse)!]
+        qr.meta = meta
+        let exts = [
+            Extension(FHIRURL(kSD_adaptive_QuestionnaireExpiration)!, DateTime.now),
+            Extension(FHIRURL(kSD_adaptive_QuestionnaireFinished)!, nil)
+        ]
+        qr.extension_fhir = exts
+        qr.status = QuestionnaireResponseStatus.inProgress
+        qr.authored = DateTime.now
+        
+        let containedQ = Questionnaire()
+        containedQ.meta = meta
+        containedQ.meta?.profile = [FHIRCanonical(kSD_adaptive_Questionnaire)!]
+        containedQ.id = id
+        containedQ.url = url
+        containedQ.title = title
+        containedQ.status = status
+        containedQ.subjectType = subjectType
+        
+        containedQ.item = []
+        qr.contained = [containedQ]
+        return qr
+    }
+    
+}
 
 extension QuestionnaireResponse {
     

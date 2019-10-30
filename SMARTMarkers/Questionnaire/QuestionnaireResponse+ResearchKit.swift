@@ -184,6 +184,8 @@ extension ORKBooleanQuestionResult {
 }
 
 
+
+
 extension ORKChoiceQuestionResult {
     
     func c3_responseItems() -> [QuestionnaireResponseItemAnswer]? {
@@ -198,14 +200,26 @@ extension ORKChoiceQuestionResult {
         var answers = [QuestionnaireResponseItemAnswer]()
         for choice in choices {
             let answer = QuestionnaireResponseItemAnswer()
-            let splat = choice.components(separatedBy: kDelimiter)
-            let system = splat[0]
-            let code = (splat.count > 1) ? splat[1] : kDefaultAnserCode
-            let display = (splat.count > 2) ? splat[2] : nil
-            answer.valueCoding = Coding()
-            answer.valueCoding!.system = FHIRURL(system)
-            answer.valueCoding!.code = code.fhir_string
-            answer.valueCoding!.display = display?.fhir_string
+            let components = choice.components(separatedBy: kDelimiter)
+            
+            
+            if components.count < 2 {
+                
+                // valueString
+                answer.valueString = components.first!.fhir_string
+            }
+            else {
+                
+                // valueCoding
+                let system = components[0]
+                let code = components[1]
+                let display = (components.count > 2) ? components[2] : nil
+                answer.valueCoding = Coding()
+                answer.valueCoding!.system = FHIRURL(system)
+                answer.valueCoding!.code = code.fhir_string
+                answer.valueCoding!.display = display?.fhir_string
+                
+            }
             answers.append(answer)
         }
         return answers

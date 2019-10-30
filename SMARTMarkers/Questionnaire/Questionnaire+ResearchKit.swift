@@ -134,7 +134,7 @@ extension QuestionnaireItem {
                     }
                     break
                     
-                case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string, .integer, .decimal:
+                case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string, .integer, .decimal, .text:
                     do {
                         if let step = try QuestionnaireItemStep(self) {
                             step.answerFormat = answerFormat
@@ -208,16 +208,26 @@ extension QuestionnaireItem {
         }
         
         switch type {
-        case .group:        callback(nil, nil)
-        case .display:      callback(nil, nil)
-        case .boolean:      callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
-        case .date:         callback(ORKAnswerFormat.dateAnswerFormat(), nil)
-        case .dateTime:     callback(ORKAnswerFormat.dateTime(), nil)
-        case .time:         callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
-        case .string:       callback(ORKAnswerFormat.textAnswerFormat(), nil)
-        case .url:          callback(ORKAnswerFormat.textAnswerFormat(), nil)
-        case .integer:      callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
-        case .decimal:      callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
+        case .group:
+            callback(nil, nil)
+        case .display:
+            callback(nil, nil)
+        case .boolean:
+            callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
+        case .date:
+            callback(ORKAnswerFormat.dateAnswerFormat(), nil)
+        case .dateTime:
+            callback(ORKAnswerFormat.dateTime(), nil)
+        case .time:
+            callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
+        case .string, .text:
+            callback(ORKAnswerFormat.textAnswerFormat(), nil)
+        case .url:
+            callback(ORKAnswerFormat.textAnswerFormat(), nil)
+        case .integer:
+            callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
+        case .decimal:
+            callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
         case .choice:
             if let answerValueSet = answerValueSet {
                 if answerValueSet.absoluteString == kVS_YesNoDontknow {
@@ -282,12 +292,12 @@ extension QuestionnaireItemAnswerOption {
     
     public func rk_choiceAnswerFormat(style: ORKChoiceAnswerStyle = .singleChoice) -> ORKTextChoice? {
         
-        if let vcoding = valueCoding {
-            return vcoding.sm_textAnswerChoice()
+        if let valueCoding = valueCoding {
+            return valueCoding.sm_textAnswerChoice()
         }
         
-        if let str = valueString?.string {
-            return ORKTextChoice(text: str, value: str as NSCoding & NSCopying & NSObjectProtocol) // ::: TODO exclusive?
+        if let string = valueString?.string {
+            return ORKTextChoice(text: string, value: string as NSCoding & NSCopying & NSObjectProtocol) // ::: TODO exclusive?
         }
         
         return nil
@@ -296,11 +306,12 @@ extension QuestionnaireItemAnswerOption {
 
 extension ORKAnswerFormat {
     
+    // kVS_YesNoDontknow = "http://hl7.org/fhir/ValueSet/yesnodontknow"
     class func sm_hl7YesNoDontKnow() -> ORKAnswerFormat {
         let textChoices = [
-            sm_AnswerChoice(system: FHIRURL("http://terminology.hl7.org/CodeSystem/v2-0136"), code: "Y", display: "Yes")!,
-            sm_AnswerChoice(system: FHIRURL("http://terminology.hl7.org/CodeSystem/v2-0136"), code: "N", display: "No")!,
-            sm_AnswerChoice(system: FHIRURL("http://terminology.hl7.org/CodeSystem/data-absent-reason"), code: "asked-unknown", display: "Don't Know")!
+            ORKTextChoice.sm_AnswerChoice(system: "http://terminology.hl7.org/CodeSystem/v2-0136", code: "Y", display: "Yes")!,
+            ORKTextChoice.sm_AnswerChoice(system: "http://terminology.hl7.org/CodeSystem/v2-0136", code: "N", display: "No")!,
+            ORKTextChoice.sm_AnswerChoice(system: "http://terminology.hl7.org/CodeSystem/data-absent-reason", code: "asked-unknown", display: "Don't Know")!
         ]
         
         return ORKAnswerFormat.choiceAnswerFormat(with: .singleChoice, textChoices: textChoices)

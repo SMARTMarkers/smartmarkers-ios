@@ -89,6 +89,7 @@ public extension AQClient {
     
         
         let server = AQServer(baseURL: URL(string: base)!, auth: settings)
+       
         Questionnaire.read("96FE494D-F176-4EFB-A473-2AB406610626", server: server, callback: { (questionnaire, error) in
             
             if let r4 = questionnaire as? Questionnaire {
@@ -125,22 +126,28 @@ public extension AQClient {
         ]
         
         let server = AQServer(baseURL: URL(string: base)!, auth: settings)
+        //96FE494D-F176-4EFB-A473-2AB406610626
+        AdaptiveQuestionnaire.read("96FE494D-F176-4EFB-A473-2AB406610626", server: server, options: [.lenient]) { (questionnaire, error) in
 
-        Questionnaire.read("96FE494D-F176-4EFB-A473-2AB406610626", server: server, callback: { (questionnaire, error) in
-            
-            if let r4 = questionnaire as? Questionnaire {
-                
-                r4.ip_taskController(for: PROMeasure(), callback: { (taskViewController, error) in
-
-                    if let tvc = taskViewController {
-                        vc.present(tvc, animated: true, completion: nil)
-                    }
-                })
+            if let q = questionnaire {
+                do {
+                    var json = try q.asJSON()
+                    json.removeValue(forKey: "meta")
+                    let aq = try AdaptiveQuestionnaire(json: json)
+                    aq.next_q2(server: server, answer: nil, forQuestionnaireItemLinkId: nil, options: [], callback: { (resource, error) in
+                        print(resource)
+                        print(error)
+                        
+                    })
+                }
+                catch {
+                    print(error)
+                }
             }
+         
             
-            
-        })
-        
+        }
+       
         
         
         

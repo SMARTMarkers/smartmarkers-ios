@@ -29,10 +29,7 @@ extension QuestionnaireResponse : ReportProtocol {
     }
     
     public var rp_description: String? {
-        if let questionnaire = questionnaire {
-            return "Response For  \(questionnaire.url?.lastPathComponent)"
-        }
-        return "QuestionnaireResponse"
+        return "QuestionnaireResponse ID: \(id?.string ?? "-")"
     }
     
     public var rp_date: Date {

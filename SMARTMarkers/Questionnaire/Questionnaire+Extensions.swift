@@ -12,21 +12,19 @@ import ResearchKit
 
 
 
-public func sm_AnswerChoice(system: FHIRURL?, code: FHIRString, display: FHIRString?, displayText: String? = nil, detailText: String? = nil) -> ORKTextChoice? {
-    
-    let displayStr = displayText ?? display?.string ?? code.string
-    let answer = system?.absoluteString ?? kDefaultSystem + kDelimiter + code.string
-    let answerChoice = ORKTextChoice(text: displayStr, detailText: detailText, value: answer as NSCoding & NSCopying & NSObjectProtocol, exclusive: true)
-    return answerChoice
-}
+
+
 
 
 
 extension Coding {
     
-    public func sm_textAnswerChoice() -> ORKTextChoice? {
+    func sm_textAnswerChoice() -> ORKTextChoice? {
         
-        return sm_AnswerChoice(system: system, code: code!, display: display)
+        guard let code = code?.string else {
+            return nil
+        }
+        return ORKTextChoice.sm_AnswerChoice(system: system?.absoluteString, code: code, display: display?.string, displayText: nil, detailText: nil)
     }
 }
 
@@ -39,7 +37,7 @@ extension ValueSet {
         
         if let expansion = expansion?.contains {
             for option in expansion {
-                if let textChoice = sm_AnswerChoice(system: option.system, code: option.code!, display: option.display, displayText: option.display_localized) {
+                if let textChoice = ORKTextChoice.sm_AnswerChoice(system: option.system?.absoluteString, code: option.code!.string, display: option.display?.string, displayText: option.display_localized) {
                     choices.append(textChoice)
                 }
             }
@@ -48,7 +46,7 @@ extension ValueSet {
         else if let includes = compose?.include {
             for include in includes {
                 include.concept?.forEach({ (concept) in
-                    if let answerChoice = sm_AnswerChoice(system: include.system, code: concept.code!, display: concept.display, displayText: concept.display_localized) {
+                    if let answerChoice = ORKTextChoice.sm_AnswerChoice(system: include.system?.absoluteString, code: concept.code!.string, display: concept.display?.string, displayText: concept.display_localized) {
                         choices.append(answerChoice)
                     }
                 })

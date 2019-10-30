@@ -24,6 +24,7 @@ extension Questionnaire {
         }
         
         handler.options.insert(.lenient)
+        
 
         //todo:
         /*
@@ -35,7 +36,13 @@ extension Questionnaire {
         
         
         
+        
         server.performRequest(against: path, handler: handler) { (response) in
+            
+            print(response.error)
+            print(response.outcome)
+            print(response.body)
+
             
             if nil == response.error {
                 self._server = server
@@ -54,7 +61,6 @@ extension Questionnaire {
                 callback(nil, response.error)
             }
         }
-        
     }
 }
 
