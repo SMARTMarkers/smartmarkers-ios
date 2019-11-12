@@ -30,7 +30,7 @@ open class OMRON: Instrument {
     
     public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
-    public init(authSettings: [String:Any], usageDescription: String? = nil) {
+    public init(authSettings: [String:Any], usageDescription: String? = nil, callbackHandler: inout OAuth2?) {
 
         self.auth = OAuth2CodeGrant(settings: authSettings)
         self.auth.forgetTokens()
@@ -42,6 +42,7 @@ open class OMRON: Instrument {
         self.sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])
         ]
+        callbackHandler = self.auth
         
     }
     
