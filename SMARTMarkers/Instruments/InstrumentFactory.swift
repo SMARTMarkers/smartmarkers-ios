@@ -7,67 +7,118 @@
 //
 
 import Foundation
+import SMART
 
 
-
-public class Instruments {
+public enum Instruments {
     
-    public static func OMRONBloodPressure(settings: [String:Any]) -> Instrument? {
+    public enum HealthKit: String, CaseIterable, CustomStringConvertible {
         
-        let omron = OMRON(authSettings: settings)
-        return omron
+        case StepCount                  = "stepCount"
+        case HealthRecords              = "healthRecords"
+        
+        public var description: String {
+            switch self {
+            case .HealthRecords:
+                return "iOS Health Records"
+            case .StepCount:
+                return "HealthKit Step Count"
+            }
+        }
+        
+        public var instrument: Instrument {
+            switch self {
+            case .StepCount:
+                return StepReport()
+            case .HealthRecords:
+                return SMHealthKitRecords()
+            }
+        }
     }
     
-    public static var TowerOfHanoi: Instrument {
-        return TowerOfHanoiPRO()
+   
+    public enum Web: String, CaseIterable {
+        
+        case omronBloodPressure             = "omronBloodPressure"
+        
+        public func instrument(authSettings: [String: Any]) -> Instrument {
+            switch self {
+            case .omronBloodPressure:
+                return OMRON(authSettings: authSettings)
+            }
+        }
+        
+        public var coding: Coding {
+            switch self {
+            case .omronBloodPressure:
+                return Coding.sm_Coding(self.rawValue, "http://omronhealthcare.com", "Omron Blood Pressure")
+            }
+        }
     }
     
-    public static var AmslerGrid: Instrument {
-        return AmslerGridPRO()
-    }
     
-    public static var HolePegTestPRO: Instrument {
-        return NineHolePegTestPRO()
-    }
-    
-    public static var PASATPRO: Instrument {
-        return PSATPRO()
-    }
-    
-    public static var LeftKneeRangeOfMotion: Instrument {
-        return SMARTMarkers.KneeRangeOfMotion(limbOption: .left)
-    }
-    
-    public static var RightKneeRangeOfMotion: Instrument {
-        return SMARTMarkers.KneeRangeOfMotion(limbOption: .right)
-    }
-    
-    public static var LeftShoulderRangeOfMotion: Instrument {
-        return SMARTMarkers.ShoulderRangeOfMotion(limbOption: .left)
-    }
-    
-    public static var RightShoulderRangeOfMotion: Instrument {
-        return SMARTMarkers.ShoulderRangeOfMotion(limbOption: .right)
-    }
-    
-    public static var SpatialSpanMemory: Instrument {
-        return SpatialSpanMemoryPRO()
-    }
-    
-    public static var iOSHealthRecords: Instrument {
-        return SMHealthKitRecords()
-    }
-    
-    public static var TappingSpeedLeft: Instrument {
-        return SMARTMarkers.TappingSpeed(hand: .both)
-    }
-    
-    public static var TappingSpeedRight: Instrument {
-        return SMARTMarkers.TappingSpeed(hand: .right)
-    }
-    
-    public static var StepCounts: Instrument {
-        return SMARTMarkers.StepReport()
+    public enum ActiveTasks: String, CaseIterable, CustomStringConvertible {
+            
+            case amslerGrid                     = "amslergrid"
+            case towerOfHanoi                   = "towerOfHanoi"
+            case nineHolePegTest                = "holePegTest"
+            case psat_2                         = "psat-2"
+//            case psat_3                         = "psat-3"
+            case rangeOfMotion_shoulder_right   = "rangeofmotion.shoulder.right"
+            case rangeOfMotion_shoulder_left    = "rangeofmotion.shoulder.left"
+            case rangeOfMotion_knee_right       = "rangeofmotion.knee.right"
+            case rangeOfMotion_knee_left        = "rangeofmotion.knee.left"
+            case FingerTappingSpeed             = "fingertappingspeed.both"
+            case FingerTappingSpeed_Left        = "fingertappingspeed.left"
+            case FingerTappingSpeed_Right       = "fingertappingspeed.right"
+            case spatialSpanMemory              = "spatialSpanMemory"
+            case StroopTest                     = "stroopTest"
+            
+            
+            public var instrument: Instrument {
+                switch self {
+                    case .amslerGrid:
+                        return AmslerGridPRO()
+                    case .nineHolePegTest:
+                        return NineHolePegTestPRO()
+                    case .psat_2:
+                        return PSATPRO()
+//                    case .psat_3:
+//                        fatalError()
+                    case .towerOfHanoi:
+                        return TowerOfHanoiPRO()
+                    case .rangeOfMotion_shoulder_left:
+                        return ShoulderRangeOfMotion(limbOption: .left)
+                    case .rangeOfMotion_shoulder_right:
+                        return ShoulderRangeOfMotion(limbOption: .right)
+                    case .rangeOfMotion_knee_left:
+                        return KneeRangeOfMotion(limbOption: .left)
+                    case .rangeOfMotion_knee_right:
+                        return KneeRangeOfMotion(limbOption: .right)
+                    case .FingerTappingSpeed:
+                        return TappingSpeed(hand: .both)
+                    case .FingerTappingSpeed_Left:
+                        return TappingSpeed(hand: .left)
+                    case .FingerTappingSpeed_Right:
+                        return TappingSpeed(hand: .right)
+                    case .spatialSpanMemory:
+                        return SpatialSpanMemoryPRO()
+                    case .StroopTest:
+                        return StroopTestPRO()
+                }
+            }
+            
+            public var description: String {
+                //TODO
+                return self.rawValue
+            }
+            
+            
+            public var coding: Coding {
+                switch self {
+                default:
+                    return Coding.sm_ResearchKit(self.rawValue, self.description)
+                }
+        }
     }
 }
-

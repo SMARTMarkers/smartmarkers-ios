@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
+open class TowerOfHanoiPRO: Instrument {
     
     let numberOfDisks: UInt!
     
@@ -29,7 +29,7 @@ open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
     public var ip_taskDescription: String?
     
     public var ip_code: Coding? {
-        return Coding.sm_Coding(ip_identifier!, "http://researchkit.org", ip_title)
+        return SMARTMarkers.Instruments.ActiveTasks.towerOfHanoi.coding
     }
     
     public var ip_version: String?
@@ -40,14 +40,14 @@ open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: ip_title, intendedUseDescription: ip_taskDescription, numberOfDisks: self.numberOfDisks, options: [])
+        let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, numberOfDisks: self.numberOfDisks, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: ip_title, intendedUseDescription: ip_taskDescription, numberOfDisks: self.numberOfDisks, options: [])
+        let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, numberOfDisks: self.numberOfDisks, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }

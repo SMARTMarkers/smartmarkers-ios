@@ -26,7 +26,6 @@
 		D436B1D920EE880600CAF2F5 /* Questionnaire+Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */; };
 		D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */; };
 		D43C71B82268B9360008FF27 /* SpatialSpanMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71B72268B9360008FF27 /* SpatialSpanMemory.swift */; };
-		D43C71BA2268BFCB0008FF27 /* ActiveInstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71B92268BFCB0008FF27 /* ActiveInstrumentProtocol.swift */; };
 		D43C71BC2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BB2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift */; };
 		D43C71BE226909050008FF27 /* TowerofHanoiInstrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BD226909050008FF27 /* TowerofHanoiInstrument.swift */; };
 		D43C71C02269FDF50008FF27 /* StroopTestPRO.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BF2269FDF50008FF27 /* StroopTestPRO.swift */; };
@@ -88,12 +87,12 @@
 		D4DC5B1A233260FF001878B4 /* SubmissionTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B19233260FF001878B4 /* SubmissionTaskController.swift */; };
 		D4DC5B1D23326267001878B4 /* SubmissionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B1C23326267001878B4 /* SubmissionStep.swift */; };
 		D4DFD98B223ABFBF0097B958 /* WebFetchStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */; };
-		D4DFD98E223AC5F40097B958 /* OMRON+InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */; };
+		D4DFD98E223AC5F40097B958 /* OMRON+Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD98D223AC5F40097B958 /* OMRON+Instrument.swift */; };
 		D4DFD991223AEE0D0097B958 /* BloodPressureObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */; };
-		D4DFD994223C0F730097B958 /* AmslerGridInstrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD993223C0F730097B958 /* AmslerGridInstrument.swift */; };
+		D4DFD994223C0F730097B958 /* AmslerGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD993223C0F730097B958 /* AmslerGrid.swift */; };
 		D4DFD996223C2EB40097B958 /* InstrumentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD995223C2EB40097B958 /* InstrumentFactory.swift */; };
-		D4DFD998223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD997223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift */; };
-		D4DFD99A223CC8190097B958 /* PSAT+Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD999223CC8190097B958 /* PSAT+Instrument.swift */; };
+		D4DFD998223C3EC20097B958 /* 9HolePeg.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD997223C3EC20097B958 /* 9HolePeg.swift */; };
+		D4DFD99A223CC8190097B958 /* PSAT.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD999223CC8190097B958 /* PSAT.swift */; };
 		D4DFD99C22401D260097B958 /* ObservationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD99B22401D260097B958 /* ObservationViewController.swift */; };
 		D4DFD99E224125A60097B958 /* HKClinicalRecordStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD99D224125A60097B958 /* HKClinicalRecordStep.swift */; };
 		D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */; };
@@ -128,7 +127,6 @@
 		D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+Instrument.swift"; sourceTree = "<group>"; };
 		D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionNavigationController.swift; sourceTree = "<group>"; };
 		D43C71B72268B9360008FF27 /* SpatialSpanMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialSpanMemory.swift; sourceTree = "<group>"; };
-		D43C71B92268BFCB0008FF27 /* ActiveInstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveInstrumentProtocol.swift; sourceTree = "<group>"; };
 		D43C71BB2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialSpanMemoryObservation.swift; sourceTree = "<group>"; };
 		D43C71BD226909050008FF27 /* TowerofHanoiInstrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TowerofHanoiInstrument.swift; sourceTree = "<group>"; };
 		D43C71BF2269FDF50008FF27 /* StroopTestPRO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StroopTestPRO.swift; sourceTree = "<group>"; };
@@ -191,12 +189,12 @@
 		D4DC5B19233260FF001878B4 /* SubmissionTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmissionTaskController.swift; sourceTree = "<group>"; };
 		D4DC5B1C23326267001878B4 /* SubmissionStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmissionStep.swift; sourceTree = "<group>"; };
 		D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebFetchStep.swift; sourceTree = "<group>"; };
-		D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OMRON+InstrumentProtocol.swift"; sourceTree = "<group>"; };
+		D4DFD98D223AC5F40097B958 /* OMRON+Instrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OMRON+Instrument.swift"; sourceTree = "<group>"; };
 		D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureObservation.swift; sourceTree = "<group>"; };
-		D4DFD993223C0F730097B958 /* AmslerGridInstrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmslerGridInstrument.swift; sourceTree = "<group>"; };
+		D4DFD993223C0F730097B958 /* AmslerGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmslerGrid.swift; sourceTree = "<group>"; };
 		D4DFD995223C2EB40097B958 /* InstrumentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentFactory.swift; sourceTree = "<group>"; };
-		D4DFD997223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "9HolePeg+InstrumentProtocol.swift"; sourceTree = "<group>"; };
-		D4DFD999223CC8190097B958 /* PSAT+Instrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PSAT+Instrument.swift"; sourceTree = "<group>"; };
+		D4DFD997223C3EC20097B958 /* 9HolePeg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 9HolePeg.swift; sourceTree = "<group>"; };
+		D4DFD999223CC8190097B958 /* PSAT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSAT.swift; sourceTree = "<group>"; };
 		D4DFD99B22401D260097B958 /* ObservationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationViewController.swift; sourceTree = "<group>"; };
 		D4DFD99D224125A60097B958 /* HKClinicalRecordStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClinicalRecordStep.swift; sourceTree = "<group>"; };
 		D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeOfMotion.swift; sourceTree = "<group>"; };
@@ -230,6 +228,10 @@
 		D40A121A21627D95002F9F53 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D4CBC0062045ACC6002B6AC9 /* FHIR */,
+				D4DFD98F223AEDD50097B958 /* FHIRPresets */,
+				D45790F722386F79001E4E8D /* TaskViewControllers */,
+				D422E58322C120140097E0CF /* PROStep */,
 				D4618A45205F07EB004E117F /* LocalAuth.swift */,
 				D40A121B21627DBE002F9F53 /* Notifications.swift */,
 			);
@@ -339,6 +341,7 @@
 		D4CBC0062045ACC6002B6AC9 /* FHIR */ = {
 			isa = PBXGroup;
 			children = (
+				D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */,
 				D4CBC0072045ACF2002B6AC9 /* SMARTMarkers+SwiftFHIR.swift */,
 				D434861822AF08E0001D922C /* FHIRPath.swift */,
 			);
@@ -377,20 +380,67 @@
 		D4DFD992223C0F5B0097B958 /* Instruments */ = {
 			isa = PBXGroup;
 			children = (
-				D43C71B92268BFCB0008FF27 /* ActiveInstrumentProtocol.swift */,
+				D48BBB5022D6443400FF4023 /* PROMIS */,
+				D4B964E12229A74300F46177 /* Instrument.swift */,
 				D4DFD995223C2EB40097B958 /* InstrumentFactory.swift */,
-				D45790F822386FA0001E4E8D /* OmronTaskViewController.swift */,
-				D4DFD98D223AC5F40097B958 /* OMRON+InstrumentProtocol.swift */,
-				D4DFD993223C0F730097B958 /* AmslerGridInstrument.swift */,
-				D4DFD997223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift */,
-				D4DFD999223CC8190097B958 /* PSAT+Instrument.swift */,
+				D436B1D520EBF89E00CAF2F5 /* Questionnaire */,
+				D482BA6121C953AE00840D2E /* AdaptiveQuestionnaire */,
+				D4E3D217237B064500BDBCF2 /* ActiveTasks */,
+				D4E3D218237B067800BDBCF2 /* Activity */,
+				D4E3D219237B068F00BDBCF2 /* Web */,
+				D422E58622C242990097E0CF /* HealthKitClinicalRecords */,
+			);
+			path = Instruments;
+			sourceTree = "<group>";
+		};
+		D4E3D217237B064500BDBCF2 /* ActiveTasks */ = {
+			isa = PBXGroup;
+			children = (
+				D4DFD993223C0F730097B958 /* AmslerGrid.swift */,
+				D4DFD997223C3EC20097B958 /* 9HolePeg.swift */,
+				D4DFD999223CC8190097B958 /* PSAT.swift */,
 				D4DFD9A52260C7570097B958 /* RangeOfMotion.swift */,
 				D43C71B72268B9360008FF27 /* SpatialSpanMemory.swift */,
 				D43C71BD226909050008FF27 /* TowerofHanoiInstrument.swift */,
 				D43C71BF2269FDF50008FF27 /* StroopTestPRO.swift */,
 				D43C71C1226A348C0008FF27 /* TappingSpeedPRO.swift */,
 			);
-			path = Instruments;
+			path = ActiveTasks;
+			sourceTree = "<group>";
+		};
+		D4E3D218237B067800BDBCF2 /* Activity */ = {
+			isa = PBXGroup;
+			children = (
+				D4C69A5523439F6E006C6520 /* HealthKitActivity */,
+			);
+			path = Activity;
+			sourceTree = "<group>";
+		};
+		D4E3D219237B068F00BDBCF2 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				D45790F822386FA0001E4E8D /* OmronTaskViewController.swift */,
+				D4DFD98D223AC5F40097B958 /* OMRON+Instrument.swift */,
+			);
+			path = Web;
+			sourceTree = "<group>";
+		};
+		D4E3D21A237B082200BDBCF2 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				D4B964DB22298FF000F46177 /* Request.swift */,
+				D4FEBDB921E7B3EA0057C77D /* Request+FHIR.swift */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
+		D4E3D21B237B082B00BDBCF2 /* Reports */ = {
+			isa = PBXGroup;
+			children = (
+				D4B964E52229AAD900F46177 /* Report.swift */,
+				D4DC5B08231FFA78001878B4 /* Report+FHIR.swift */,
+			);
+			path = Reports;
 			sourceTree = "<group>";
 		};
 		D4E75D532035E73E000CE95A = {
@@ -417,18 +467,11 @@
 		D4E75D5F2035E73E000CE95A /* SMARTMarkers */ = {
 			isa = PBXGroup;
 			children = (
-				D4C69A5523439F6E006C6520 /* HealthKitActivity */,
-				D48BBB5022D6443400FF4023 /* PROMIS */,
-				D422E58622C242990097E0CF /* HealthKitClinicalRecords */,
-				D422E58322C120140097E0CF /* PROStep */,
+				D4E3D21B237B082B00BDBCF2 /* Reports */,
+				D4E3D21A237B082200BDBCF2 /* Requests */,
 				D4DFD992223C0F5B0097B958 /* Instruments */,
-				D4DFD98F223AEDD50097B958 /* FHIRPresets */,
-				D45790F722386F79001E4E8D /* TaskViewControllers */,
-				D436B1D520EBF89E00CAF2F5 /* Questionnaire */,
-				D482BA6121C953AE00840D2E /* AdaptiveQuestionnaire */,
+				D4E75D8320363BFF000CE95A /* Session */,
 				D40A121A21627D95002F9F53 /* Classes */,
-				D4CBC0062045ACC6002B6AC9 /* FHIR */,
-				D4E75D8320363BFF000CE95A /* SessionController */,
 				D4E75D7C20361E86000CE95A /* PROMeasureProtocols */,
 				D4E75D7A20361E72000CE95A /* ViewControllers */,
 				D4E75D762036062C000CE95A /* images */,
@@ -482,25 +525,19 @@
 		D4E75D7C20361E86000CE95A /* PROMeasureProtocols */ = {
 			isa = PBXGroup;
 			children = (
-				D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */,
 				D4CBC00B2046F1C3002B6AC9 /* PROMeasure.swift */,
 				D40B19CA20989B9000C18C23 /* Schedule.swift */,
-				D4B964DB22298FF000F46177 /* Request.swift */,
-				D4FEBDB921E7B3EA0057C77D /* Request+FHIR.swift */,
-				D4B964E52229AAD900F46177 /* Report.swift */,
-				D4DC5B08231FFA78001878B4 /* Report+FHIR.swift */,
-				D4B964E12229A74300F46177 /* Instrument.swift */,
 			);
 			path = PROMeasureProtocols;
 			sourceTree = "<group>";
 		};
-		D4E75D8320363BFF000CE95A /* SessionController */ = {
+		D4E75D8320363BFF000CE95A /* Session */ = {
 			isa = PBXGroup;
 			children = (
 				D4E75D8420363C0E000CE95A /* SessionController.swift */,
 				D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */,
 			);
-			path = SessionController;
+			path = Session;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -601,7 +638,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D422E58A22C25FA00097E0CF /* HealthKit+ResearchKit.swift in Sources */,
-				D43C71BA2268BFCB0008FF27 /* ActiveInstrumentProtocol.swift in Sources */,
 				D43C71BE226909050008FF27 /* TowerofHanoiInstrument.swift in Sources */,
 				D4DC5B12232BEDE3001878B4 /* Questionnaire+Extensions.swift in Sources */,
 				D4C2B2AE208FA55E00262B14 /* InsightsController.swift in Sources */,
@@ -626,7 +662,7 @@
 				D468778D229735C700717D95 /* QuestionnaireItemStep.swift in Sources */,
 				D48B320421FFC84600CEA44A /* ResearchKit+Extensions.swift in Sources */,
 				D44C5E1C22009C8E007ACC8E /* AdaptiveQuestionnaireResponse.swift in Sources */,
-				D4DFD994223C0F730097B958 /* AmslerGridInstrument.swift in Sources */,
+				D4DFD994223C0F730097B958 /* AmslerGrid.swift in Sources */,
 				D4DAAD5522662161004F0815 /* RangeOfMotionObservation.swift in Sources */,
 				D4DC5B0F232029A2001878B4 /* SubmitReportTableViewController.swift in Sources */,
 				D422E59522C6BE270097E0CF /* RequestViewController.swift in Sources */,
@@ -649,7 +685,7 @@
 				D4B964DC22298FF000F46177 /* Request.swift in Sources */,
 				D43C71C02269FDF50008FF27 /* StroopTestPRO.swift in Sources */,
 				D4DC5B0D231FFFD7001878B4 /* FHIRViewController.swift in Sources */,
-				D4DFD98E223AC5F40097B958 /* OMRON+InstrumentProtocol.swift in Sources */,
+				D4DFD98E223AC5F40097B958 /* OMRON+Instrument.swift in Sources */,
 				D4FEBDB821E64A610057C77D /* SMError.swift in Sources */,
 				D4618A46205F07EC004E117F /* LocalAuth.swift in Sources */,
 				D434861922AF08E0001D922C /* FHIRPath.swift in Sources */,
@@ -661,13 +697,13 @@
 				D4E75D732035E7AA000CE95A /* EHRLoginController.swift in Sources */,
 				D482BA6321C953F800840D2E /* AQServer.swift in Sources */,
 				D4C69A5D23465C98006C6520 /* ActivityTaskViewController.swift in Sources */,
-				D4DFD998223C3EC20097B958 /* 9HolePeg+InstrumentProtocol.swift in Sources */,
+				D4DFD998223C3EC20097B958 /* 9HolePeg.swift in Sources */,
 				D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */,
 				D41A2E6F235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift in Sources */,
 				D43C71B82268B9360008FF27 /* SpatialSpanMemory.swift in Sources */,
 				D43C71BC2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift in Sources */,
 				D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */,
-				D4DFD99A223CC8190097B958 /* PSAT+Instrument.swift in Sources */,
+				D4DFD99A223CC8190097B958 /* PSAT.swift in Sources */,
 				D468AAF621188EFF00AE942F /* FHIRDefinitions.swift in Sources */,
 				D48B320221FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift in Sources */,
 				D40B19CB20989B9000C18C23 /* Schedule.swift in Sources */,

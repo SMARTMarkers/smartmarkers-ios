@@ -23,12 +23,15 @@ open class ActivityReportTask: ORKNavigableOrderedTask {
     
     public init(activity: Activity) {
         
+        let introStep = ORKInstructionStep(identifier: "intro", _title: activity.type.description, _detailText: "This task will guide you through the process of  fetching your latest \(activity.type.description) saved in your Health app.\n\nNext steps:\n\n1. Will seek your authorization to access the Blood Pressure data\n\n2. Select which records you want to submit.\n\n3. Submission Report")
+
         self.activity  = activity
         let dateStep   = ActivityDateSelectorStep(activity)
         let fetchStep  = ActivityFetch(activity)
         let conclusion = ORKCompletionStep(identifier: ksm_step_completion, _title: "Completed", _detailText: nil)
         
         let steps = [
+            introStep,
             dateStep,
             fetchStep,
             conclusion

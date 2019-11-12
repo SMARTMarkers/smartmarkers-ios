@@ -72,7 +72,9 @@ extension Observation : ReportProtocol {
     }
     
     public var rp_description: String? {
-        return "Observation [Survey]"
+        
+        let meta = category?.first?.coding?.first?.display ?? category?.first?.coding?.first?.code ?? ""
+        return "Observation [\(meta)]"
     }
     
     public var rp_date: Date {

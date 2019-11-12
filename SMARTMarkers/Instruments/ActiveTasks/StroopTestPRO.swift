@@ -12,7 +12,7 @@ import ResearchKit
 
 // Reference: https://europepmc.org/articles/PMC3828616
 
-open class StroopTestPRO: ActiveInstrumentProtocol {
+open class StroopTestPRO: Instrument {
     
     var numberOfAttempts: Int!
     
@@ -30,7 +30,7 @@ open class StroopTestPRO: ActiveInstrumentProtocol {
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_ResearchKit(ip_identifier!, "Stroop Test")
+        return SMARTMarkers.Instruments.ActiveTasks.StroopTest.coding
     }
     
     public var ip_version: String?

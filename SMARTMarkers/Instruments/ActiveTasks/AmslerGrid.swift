@@ -11,7 +11,7 @@ import ResearchKit
 import SMART
 
 
-public class AmslerGridPRO : ActiveInstrumentProtocol {
+public class AmslerGridPRO : Instrument {
     
     static let amslerGridRightEye = "amsler.grid.right"
     static let amslerGridLeftEye  = "amsler.grid.left"
@@ -31,7 +31,7 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_ResearchKit(ip_identifier!, "Amsler Grid")
+        return SMARTMarkers.Instruments.ActiveTasks.amslerGrid.coding
     }
     
     public var ip_version: String? {

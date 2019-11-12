@@ -31,7 +31,13 @@ open class KneeRangeOfMotion: Instrument {
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_Coding("knee.range.of.motion", "http://researchkit.org", "Range of Motion Knee")
+        
+        if limbOption == .left {
+            return SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_knee_left.coding
+        }
+        else {
+            return SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_knee_right.coding
+        }
     }
     
     public var ip_version: String? {
@@ -93,7 +99,7 @@ open class KneeRangeOfMotion: Instrument {
 }
 
 
-open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
+open class ShoulderRangeOfMotion: Instrument {
     
     var limbOption: ORKPredefinedTaskLimbOption!
     

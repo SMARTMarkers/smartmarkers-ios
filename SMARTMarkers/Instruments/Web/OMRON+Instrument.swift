@@ -20,6 +20,7 @@ open class OMRON: Instrument {
         self.auth.forgetTokens()
         self.auth.logger = OAuth2DebugLogger(.trace)
         self.ip_title = "OMRON Blood Pressure"
+        
     }
     
     public var ip_title: String
@@ -29,7 +30,8 @@ open class OMRON: Instrument {
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_Coding("omron-blood-pressure", "http://omronhealthcare.com", "OMRON Blood Pressure")
+        
+        return SMARTMarkers.Instruments.Web.omronBloodPressure.coding
     }
     
     public var ip_version: String? {
@@ -62,7 +64,7 @@ open class OMRON: Instrument {
         if let dict = result.stepResult(forStepIdentifier: "OMRONFetchStep")?.firstResult?.userInfo {
             let diastolic = dict["diastolic"] as! Int
             let systolic  = dict["systolic"]  as! Int
-            let bp = Observation.sm_BloodPressure(systolic: systolic, diastolic: diastolic, date: Date())
+            let bp = Observation.sm_BloodPressure(systolic: systolic, diastolic: diastolic, date: Date(), sourceCode: ip_code!)
             return SMART.Bundle.sm_with([bp])
         }
         return nil

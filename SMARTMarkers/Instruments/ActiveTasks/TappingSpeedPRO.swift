@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-open class TappingSpeed: ActiveInstrumentProtocol {
+open class TappingSpeed: Instrument {
     
     static let resultStepIdentifiers = [
             "tapping.left",
@@ -37,7 +37,16 @@ open class TappingSpeed: ActiveInstrumentProtocol {
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_ResearchKit(ip_identifier!, "Tapping Speed Task")
+        
+        if handOption == .left {
+            return SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Left.coding
+        }
+        else if handOption == .right {
+            return SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Right.coding
+        }
+        else {
+            return SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed.coding
+        }
     }
     
     public var ip_version: String?

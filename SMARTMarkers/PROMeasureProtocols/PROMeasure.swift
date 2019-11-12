@@ -13,8 +13,6 @@ import ResearchKit
 
 public protocol InstrumentResolver: class {
     
-    func resolveInstrument(from pro: PROMeasure) -> Instrument?
-    
     func resolveInstrument(in controller: PDController) -> Instrument?
     
 }
@@ -42,10 +40,12 @@ public final class PDController: NSObject {
         return request?.rq_schedule
     }()
     
-    convenience public init(_ _instrument: Instrument) {
+    convenience public init(_ instrument: Instrument) {
         
         self.init()
-        self.instrument = _instrument
+        self.instrument = instrument
+        self.reports = Reports(instrument, for: nil, request: request)
+
     }
     
     convenience public init(_ _request: Request) {
@@ -115,21 +115,28 @@ public final class PDController: NSObject {
                 })
                 
                 let group = DispatchGroup()
-                controllers.forEach({ (controller) in
+                for i in 0..<controllers.count {
+                    let controller = controllers[i]
+                    print("--\(i): INSTR")
                     group.enter()
-                    controller.instrument(callback: { (resolved, error) in
-                        controller.instrument = resolved
+                    controller.instrument(callback: { (instr, error) in
+                        controller.instrument = instr
+                        print("--\(i): INSTR-RESOLVED")
                         group.leave()
                     })
+                    
+                    print("--\(i): REPORTS")
                     group.enter()
                     controller.reports(for: patient, server: server, callback: { (_, _) in
+                        print("--\(i): REPORTS FETCHED")
                         group.leave()
                     })
-                })
+                }
 
-                group.notify(queue: .main, execute: {
+                group.notify(queue: DispatchQueue.global(qos: .background)) {
+                    print("===ALLDONE")
                     callback(controllers, nil)
-                })
+                }
 
             }
             else {
@@ -276,20 +283,18 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
         self.request = request
     }
     
+    
+    
     open func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void)) {
         
         if let instr = self.instrument {
             callback(instr, nil)
             return
         }
-        
-        if let instrumentResolver = instrumentResolver, let instr = instrumentResolver.resolveInstrument(from: self) {
-            callback(instr, nil)
-            return
-        }
-        
+
         request?.rq_instrumentResolve(callback: callback)
     }
+    
     
     public convenience init(instrument: Instrument) {
         

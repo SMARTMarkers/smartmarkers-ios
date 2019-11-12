@@ -102,12 +102,25 @@ extension ServiceRequest: Request {
 
     
     public func rq_instrumentResolve(callback: @escaping ((Instrument?, Error?) -> Void)) {
+        
         if let questionnaireExtension = extensions(forURI: kSD_QuestionnaireRequest)?.first {
             questionnaireExtension.valueReference?.resolve(Questionnaire.self, callback: { (questionnaire) in
                 if let questionnaire = questionnaire {
                     callback(questionnaire, nil)
                 }
+                else {
+                    callback(nil, SMError.promeasureOrderedInstrumentMissing)
+                }
             })
+        }
+        else if let coding = ep_coding(for: "http://researchkit.org") {
+            
+            if let instr = Instruments.ActiveTasks.init(rawValue: coding.code!.string)?.instrument {
+                callback(instr, nil)
+            }
+            else {
+                callback(nil, SMError.promeasureOrderedInstrumentMissing)
+            }
         }
         else {
             callback(nil, SMError.promeasureOrderedInstrumentMissing)

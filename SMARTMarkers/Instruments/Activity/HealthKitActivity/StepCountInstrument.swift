@@ -29,7 +29,9 @@ open class StepReport: Instrument {
     
     public var ip_publisher: String?
     
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
+        return [FHIRSearchParamRelationship(Observation.self, ["code": ip_code!.sm_searchableToken()!])]
+    }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         

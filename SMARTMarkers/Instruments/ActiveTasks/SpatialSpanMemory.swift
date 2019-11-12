@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-open class SpatialSpanMemoryPRO: ActiveInstrumentProtocol {
+open class SpatialSpanMemoryPRO: Instrument {
     
     let initialSpan: Int
     
@@ -45,7 +45,7 @@ open class SpatialSpanMemoryPRO: ActiveInstrumentProtocol {
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_ResearchKit("cognitive.memory.spatialspan", "Spatial Span Memory")
+        return SMARTMarkers.Instruments.ActiveTasks.spatialSpanMemory.coding
     }
     
     public var ip_version: String?

@@ -133,10 +133,10 @@ extension SMART.Resource {
 
 extension SMART.Coding {
     
-    class func sm_Coding(_ code: String, _ system: String, _ display: String) -> Coding {
+    class func sm_Coding(_ code: String, _ system: String, _ display: String?) -> Coding {
         let coding = Coding()
-        coding.code = FHIRString(code)
-        coding.display = FHIRString(display)
+        coding.code = code.fhir_string
+        coding.display = display?.fhir_string
         coding.system = FHIRURL(system)
         return coding
     }
@@ -149,7 +149,7 @@ extension SMART.Coding {
         return sm_Coding(code, "http://loinc.org", display)
     }
     
-    class func sm_ResearchKit(_ code: String, _ display: String) -> Coding {
+    class func sm_ResearchKit(_ code: String, _ display: String?) -> Coding {
         return sm_Coding(code, "http://researchkit.org", display)
     }
     
