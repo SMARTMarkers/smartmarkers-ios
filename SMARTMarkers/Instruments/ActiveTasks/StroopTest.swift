@@ -12,50 +12,55 @@ import ResearchKit
 
 // Reference: https://europepmc.org/articles/PMC3828616
 
-open class StroopTestPRO: Instrument {
+open class StroopTest: Instrument {
     
     var numberOfAttempts: Int!
     
-    public init(attempts: Int = 10) {
-        numberOfAttempts = attempts
-        ip_title = "Stroop Test"
-    }
-
-    public var ip_taskDescription: String?
+    public var sm_title: String
     
-    public var ip_title: String
+    public var sm_identifier: String?
     
-    public var ip_identifier: String? {
-        return "stroop"
-    }
+    public var sm_code: Coding?
     
-    public var ip_code: Coding? {
-        return SMARTMarkers.Instruments.ActiveTasks.StroopTest.coding
-    }
+    public var sm_version: String?
     
-    public var ip_version: String?
+    public var sm_publisher: String?
     
-    public var ip_publisher: String?
+    public var sm_type: InstrumentCategoryType?
     
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+    public var usageDescription: String?
+    
+    public init(attempts: Int = 10, usageDescription: String? = nil) {
         
-        let task = ORKOrderedTask.stroopTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, numberOfAttempts: numberOfAttempts, options: [])
+        self.numberOfAttempts = attempts
+        self.usageDescription = usageDescription
+        self.sm_title = "Stroop Test"
+        self.sm_identifier = "stroop"
+        self.sm_code = SMARTMarkers.Instruments.ActiveTasks.StroopTest.coding
+        self.sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
+        
+    }
+    
+    
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        let task = ORKOrderedTask.stroopTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, numberOfAttempts: numberOfAttempts, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 
-        let task = ORKOrderedTask.stroopTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, numberOfAttempts: numberOfAttempts, options: [])
+        let task = ORKOrderedTask.stroopTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, numberOfAttempts: numberOfAttempts, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let stroopResults = result.stepResult(forStepIdentifier: ip_identifier!)?.results?.map({ $0 as! ORKStroopResult}) {
+        if let stroopResults = result.stepResult(forStepIdentifier: sm_identifier!)?.results?.map({ $0 as! ORKStroopResult}) {
             let obs = Observation.sm_Stroop(self, result: stroopResults)
             print(try! obs.sm_jsonString())
             return SMART.Bundle.sm_with([obs])
@@ -67,7 +72,7 @@ open class StroopTestPRO: Instrument {
 
 extension Observation {
     
-    class func sm_Stroop(_ instrument: StroopTestPRO, result: [ORKStroopResult]) -> Observation {
+    class func sm_Stroop(_ instrument: StroopTest, result: [ORKStroopResult]) -> Observation {
         
         let observation = Observation()
         observation.effectiveDateTime = result.last!.endDate.fhir_asDateTime()

@@ -56,8 +56,8 @@ public extension CodeableConcept {
     
     class func sm_From(_ instrument: Instrument) -> CodeableConcept? {
         
-        if let coding = instrument.ip_code {
-            return sm_From([coding], text: instrument.ip_title)
+        if let coding = instrument.sm_code {
+            return sm_From([coding], text: instrument.sm_title)
         }
         return nil
     }

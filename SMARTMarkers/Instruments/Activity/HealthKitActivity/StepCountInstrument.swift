@@ -14,26 +14,27 @@ import ResearchKit
 open class StepReport: Instrument {
     
     public init() {
-        ip_title = "Step Count (HealthKit)"
+        sm_type = .Device
+        sm_title = "Step Count (HealthKit)"
+        sm_code = Coding.sm_LOINC("41950-7", "Number of steps in 24 hour Measured")
+        sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
     }
     
-    public var ip_title: String
+    public var sm_title: String
     
-    public var ip_identifier: String?
+    public var sm_identifier: String?
     
-    public var ip_code: Coding? {
-        return Coding.sm_LOINC("41950-7", "Number of steps in 24 hour Measured")
-    }
+    public var sm_code: Coding?
     
-    public var ip_version: String?
+    public var sm_version: String?
     
-    public var ip_publisher: String?
+    public var sm_publisher: String?
     
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return [FHIRSearchParamRelationship(Observation.self, ["code": ip_code!.sm_searchableToken()!])]
-    }
+    public var sm_type: InstrumentCategoryType?
     
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let sa = StepActivity(Date(), nil)
         sa.store = HKHealthStore()
@@ -49,7 +50,7 @@ open class StepReport: Instrument {
         callback(activityTaskView, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         if let stepCountResult = result.stepResult(forStepIdentifier: "kSM.activity.fetch.StepCount")?.firstResult as? SMQuantitySampleResult {
             

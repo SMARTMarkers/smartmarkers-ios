@@ -17,42 +17,41 @@ open class KneeRangeOfMotion: Instrument {
     
     var usageDescription: String?
     
+    public var sm_title: String
+    
+    public var sm_identifier: String?
+
+    public var sm_code: Coding?
+    
+    public var sm_version: String?
+    
+    public var sm_publisher: String?
+    
+    public var sm_type: InstrumentCategoryType?
+
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    
     required public init(limbOption: ORKPredefinedTaskLimbOption, usageDescription: String? = nil) {
+        
+        self.sm_type = .ActiveTask
         self.limbOption = limbOption
         self.usageDescription = usageDescription
-        self.ip_title = (limbOption == .left) ? "Left Knee Range of Motion" : "Right Knee Range of Motion"
-    }
-    
-    
-    public var ip_title: String
-    
-    public var ip_identifier: String? {
-        return "org.researchkit.knee.range.of.motion"
-    }
-    
-    public var ip_code: Coding? {
+        self.sm_identifier = "org.researchkit.knee.range.of.motion"
         
         if limbOption == .left {
-            return SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_knee_left.coding
+            sm_title = "Left Knee Range of Motion"
+            sm_code  = SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_knee_left.coding
         }
         else {
-            return SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_knee_right.coding
+            sm_title = "Right Knee Range of Motion"
+            sm_code = SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_knee_right.coding
         }
+        sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
     }
     
-    public var ip_version: String? {
-        return nil
-    }
     
-    public var ip_publisher: String?
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        
-        return [FHIRSearchParamRelationship(Observation.self, ["code":ip_code!.sm_searchableToken()!])]
-    }
-    
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
@@ -60,12 +59,12 @@ open class KneeRangeOfMotion: Instrument {
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
+        let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         if let motionResult = result.stepResult(forStepIdentifier: "knee.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
             
@@ -103,69 +102,57 @@ open class ShoulderRangeOfMotion: Instrument {
     
     var limbOption: ORKPredefinedTaskLimbOption!
     
-    public var ip_taskDescription: String?
+    var usageDescription: String?
     
-    required public init(limbOption: ORKPredefinedTaskLimbOption) {
+    public var sm_title: String
+    
+    public var sm_identifier: String?
+    
+    public var sm_code: Coding?
+    
+    public var sm_version: String?
+    
+    public var sm_publisher: String?
+    
+    public var sm_type: InstrumentCategoryType?
+    
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    
+    required public init(limbOption: ORKPredefinedTaskLimbOption, usageDescription: String? = nil) {
+
         self.limbOption = limbOption
-        self.ip_title = (limbOption == .left) ? "Left Shoulder Range of Motion" : "Right Should Range of Motion"
-    }
-    
-    public var ip_title: String
-    
-    public var ip_identifier: String? {
+        self.usageDescription = usageDescription
+        self.sm_identifier = "org.researchkit.knee.range.of.motion"
+        self.sm_type = .ActiveTask
+
         
-        if limbOption == ORKPredefinedTaskLimbOption.left {
-            return "org.researchkit.shoulder.left.rangeofmotion"
+        if limbOption == .left {
+            sm_title = "Left Shoulder Range of Motion"
+            sm_code  = SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_shoulder_left.coding
+            sm_identifier = "org.researchkit.shoulder.left.rangeofmotion"
         }
         else {
-            return "org.researchkit.shoulder.right.rangeofmotion"
+            sm_title = "Right Should Range of Motion"
+            sm_code = SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_shoulder_right.coding
+            sm_identifier = "org.researchkit.shoulder.right.rangeofmotion"
         }
+        sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
     }
     
-    public var ip_code: Coding? {
-        
-        let code: String
-        
-        if limbOption == ORKPredefinedTaskLimbOption.left {
-            
-            code = "shoulder.left.rangeofmotion"
-        }
-        else {
-            code = "shoulder.right.rangeofmotion"
-        }
-        
-        return Coding.sm_Coding(code, "http://researchkit.org", "Range of Motion Shoulder")
-    }
-    
-    public var ip_version: String? {
-        return nil
-    }
-    
-    public var ip_publisher: String? {
-        return "ResearchKit, Apple Inc"
-    }
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        
-        return [
-            FHIRSearchParamRelationship(Observation.self, ["code":ip_code!.code!.string])
-        ]
-    }
-    
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: ip_taskDescription, options: [])
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: ip_taskDescription, options: [])
+        let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
          if let motionResult = result.stepResult(forStepIdentifier: "shoulder.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
             

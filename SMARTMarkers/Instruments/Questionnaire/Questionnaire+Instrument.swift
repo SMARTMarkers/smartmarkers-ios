@@ -10,53 +10,58 @@ import Foundation
 import ResearchKit
 import SMART
 
-extension SMART.Questionnaire : Instrument {
+extension SMART.Questionnaire: Instrument {
     
-    public var ip_title: String {
+    public var sm_title: String {
+        get { return sm_displayTitle() ?? "FHIR Questionnaire" }
+        set { }
+    }
+    
+    public var sm_type: InstrumentCategoryType? {
+        set {  }
+        get { return  .survey }
+    }
+    
+    public var sm_identifier: String? {
+        set {  }
+        get { return id?.string }
+    }
+    
+    public var sm_code: Coding? {
+        set {  }
+        get { return code?.first }
+    }
+    
+    public var sm_version: String? {
+        set {  }
+        get { return version?.string }
+    }
+    
+    public var sm_publisher: String? {
+        set {  }
+        get { return publisher?.string }
+    }
+    
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
+        set { }
         get {
-            return sm_displayTitle() ?? "--No title--"
-        }
-        set {
+            var searchParam = [String]()
             
+            if let id = id?.string {
+                searchParam.append(id)
+            }
+            
+            if let url = url?.absoluteString {
+                searchParam.append(url)
+            }
+            
+            if !searchParam.isEmpty {
+                return [
+                    FHIRSearchParamRelationship(QuestionnaireResponse.self, ["questionnaire": searchParam.joined(separator: ",")])
+                ]
+            }
+            return nil
         }
-    }
-    
-    public var ip_identifier: String? {
-        return id?.string
-    }
-    
-    public var ip_code: Coding? {
-        return code?.first
-    }
-    
-    public var ip_version: String? {
-        return version?.string
-    }
-    
-    public var ip_publisher: String? {
-        return publisher?.string
-    }
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        
-        var searchParam = [String]()
-        
-        if let id = id?.string {
-            searchParam.append(id)
-        }
-        
-        if let url = url?.absoluteString {
-            searchParam.append(url)
-        }
-        
-        if !searchParam.isEmpty {
-            return [
-                FHIRSearchParamRelationship(QuestionnaireResponse.self, ["questionnaire": searchParam.joined(separator: ",")])
-            ]
-        }
-        
-        
-        return nil
     }
     
     public func sm_SessionController(_ sessionIdentifier: String?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
@@ -81,7 +86,7 @@ extension SMART.Questionnaire : Instrument {
     }
     
     
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))  {
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))  {
         
         sm_genereteSteps { (steps, rulestupples, error) in
             if let steps = steps {
@@ -124,7 +129,7 @@ extension SMART.Questionnaire : Instrument {
     }
     
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         guard let taskResults = result.results as? [ORKStepResult] else {
             print("No results found")

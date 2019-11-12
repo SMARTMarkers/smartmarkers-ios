@@ -11,56 +11,53 @@ import ResearchKit
 import SMART
 
 
-public class AmslerGridPRO : Instrument {
+public class AmslerGrid : Instrument {
     
     static let amslerGridRightEye = "amsler.grid.right"
     static let amslerGridLeftEye  = "amsler.grid.left"
     
-    public var ip_taskDescription: String?
+    public var sm_taskDescription: String?
     
-    public var ip_title: String
+    public var sm_title: String
+    
+    public var sm_type: InstrumentCategoryType?
 
-
+    public var sm_identifier: String?
+    
+    public var sm_code: Coding?
+    
+    public var sm_version: String?
+    
+    public var sm_publisher: String?
+    
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    
     public init() {
-        ip_title = "Amsler Grid"
-    }
-    
-    
-    public var ip_identifier: String? {
-        return "amsler.grid"
-    }
-    
-    public var ip_code: Coding? {
-        return SMARTMarkers.Instruments.ActiveTasks.amslerGrid.coding
-    }
-    
-    public var ip_version: String? {
-        return nil
-    }
-    
-    public var ip_publisher: String?
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return [
-            FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|\(ip_identifier!)"]),
+        sm_title        = "Amsler Grid"
+        sm_type         = .ActiveTask
+        sm_identifier   = "amslergrid"
+        sm_code         = SMARTMarkers.Instruments.ActiveTasks.amslerGrid.coding
+        sm_resultingFhirResourceType = [
+            FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|\(sm_identifier!)"]),
             FHIRSearchParamRelationship(Media.self,       ["subject": ""]) // Left Empty to be filled later.
         ]
     }
     
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.ip_identifier!, intendedUseDescription: ip_taskDescription, options: [])
+    
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.sm_identifier!, intendedUseDescription: sm_taskDescription, options: [])
         let taskVC = ORKTaskViewController(task: amslerGridTask, taskRun: UUID())
         callback(taskVC, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.ip_identifier!, intendedUseDescription: ip_taskDescription, options: [])
+        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.sm_identifier!, intendedUseDescription: sm_taskDescription, options: [])
         let taskVC = ORKTaskViewController(task: amslerGridTask, taskRun: UUID())
         callback(taskVC, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         var components = [ObservationComponent]()
         var images = [Media]()
@@ -68,7 +65,7 @@ public class AmslerGridPRO : Instrument {
         if let lefteye = result.stepResult(forStepIdentifier: "amsler.grid.left"), let gridResult = lefteye.results?.first as? ORKAmslerGridResult, let media = gridResult.sm_asMedia() {
             let oc = ObservationComponent()
             let cc = CodeableConcept()
-            cc.coding = [Coding.sm_ResearchKit(AmslerGridPRO.amslerGridLeftEye, "Amsler Grid Left Eye")]
+            cc.coding = [Coding.sm_ResearchKit(AmslerGrid.amslerGridLeftEye, "Amsler Grid Left Eye")]
             oc.code = cc
             let note = Annotation()
             note.text = "Amsler Grid Left Eye"
@@ -80,7 +77,7 @@ public class AmslerGridPRO : Instrument {
         if let righteye = result.stepResult(forStepIdentifier: "amsler.grid.right"), let gridResult = righteye.results?.first as? ORKAmslerGridResult, let media = gridResult.sm_asMedia() {
             let oc = ObservationComponent()
             let cc = CodeableConcept()
-            cc.coding = [Coding.sm_ResearchKit(AmslerGridPRO.amslerGridRightEye, "Amsler Grid Right Eye")]
+            cc.coding = [Coding.sm_ResearchKit(AmslerGrid.amslerGridRightEye, "Amsler Grid Right Eye")]
             oc.code = cc
             let note = Annotation()
             note.text = "Amsler Grid Right Eye"
@@ -92,7 +89,7 @@ public class AmslerGridPRO : Instrument {
         if components.count > 0 {
             
             let observation = Observation()
-            if let coding = self.ip_code {
+            if let coding = self.sm_code {
                 let cc = CodeableConcept()
                 cc.coding = [coding]
                 observation.code = cc

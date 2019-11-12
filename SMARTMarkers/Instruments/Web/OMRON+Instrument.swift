@@ -14,39 +14,39 @@ open class OMRON: Instrument {
     
     public internal(set) final var auth: OAuth2!
     
-    public init(authSettings: [String:Any]) {
+    var usageDescription: String?
+    
+    public var sm_title: String
+    
+    public var sm_identifier: String?
+    
+    public var sm_code: Coding?
+    
+    public var sm_version: String?
+    
+    public var sm_publisher: String?
+    
+    public var sm_type: InstrumentCategoryType?
+    
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    
+    public init(authSettings: [String:Any], usageDescription: String? = nil) {
 
         self.auth = OAuth2CodeGrant(settings: authSettings)
         self.auth.forgetTokens()
         self.auth.logger = OAuth2DebugLogger(.trace)
-        self.ip_title = "OMRON Blood Pressure"
-        
-    }
-    
-    public var ip_title: String
-    
-    public var ip_identifier: String? {
-        return "omron-blood-pressure"
-    }
-    
-    public var ip_code: Coding? {
-        
-        return SMARTMarkers.Instruments.Web.omronBloodPressure.coding
-    }
-    
-    public var ip_version: String? {
-        return "0.1"
-    }
-    
-    public var ip_publisher: String?
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return [
-            FHIRSearchParamRelationship(Observation.self, ["code": ip_code!.sm_searchableToken()!])
+        self.sm_title = "OMRON Blood Pressure"
+        self.sm_identifier = "omron-blood-pressure"
+        self.sm_code = SMARTMarkers.Instruments.Web.omronBloodPressure.coding
+        self.sm_type = .WebRepository
+        self.sm_resultingFhirResourceType = [
+            FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])
         ]
+        
     }
     
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+    
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let omronTaskViewController = OmronTaskViewController(auth: auth)
         callback(omronTaskViewController, nil)
@@ -59,12 +59,12 @@ open class OMRON: Instrument {
         callback(omronTaskViewController, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         if let dict = result.stepResult(forStepIdentifier: "OMRONFetchStep")?.firstResult?.userInfo {
             let diastolic = dict["diastolic"] as! Int
             let systolic  = dict["systolic"]  as! Int
-            let bp = Observation.sm_BloodPressure(systolic: systolic, diastolic: diastolic, date: Date(), sourceCode: ip_code!)
+            let bp = Observation.sm_BloodPressure(systolic: systolic, diastolic: diastolic, date: Date(), sourceCode: sm_code!)
             return SMART.Bundle.sm_with([bp])
         }
         return nil

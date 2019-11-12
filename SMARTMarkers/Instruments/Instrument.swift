@@ -12,7 +12,8 @@ import ResearchKit
 
 
 public enum InstrumentCategoryType: String, Equatable {
-    case PRO
+    
+    case survey
     case ActiveTask
     case Device
     case WebRepository
@@ -22,32 +23,35 @@ public enum InstrumentCategoryType: String, Equatable {
 public protocol Instrument : class {
     
     /// Display friendly title for the instrument
-    var ip_title: String { get set }
+    var sm_title: String { get set }
     
     /// Instrument identifier
-    var ip_identifier: String? { get }
+    var sm_identifier: String? { get set }
+    
+    /// Instrument Category
+    var sm_type: InstrumentCategoryType? { get set }
     
     /// Instrument ontological code in `SMART.Coding`
-    var ip_code: SMART.Coding? { get }
+    var sm_code: SMART.Coding? { get set }
     
     /// Instrument Version
-    var ip_version: String? { get }
+    var sm_version: String? { get set }
     
     /// Publisher
-    var ip_publisher: String? { get }
+    var sm_publisher: String? { get set }
     
 
     /// Output resource types; can be used to fetch historical resources from the `SMART.Server`
-    var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? { get }
+    var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]? { get set }
     
     /// Protocol Func to generate ResearchKit's `ORKTaskViewController`
-    func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
+    func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
     
     /// Protocol function to create a ResearchKit's survey task controller (`ORKTaskViewController`)
     func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
     
     /// Protocol Func to generate a FHIR `Bundle` of result resources. eg. QuestionnaireResponse, Observation
-    func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle?
+    func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle?
     
 }
 
@@ -78,10 +82,10 @@ public class InstrumentViewController: UITableViewController {
     
     public lazy var data : [(String, String)] = {
         return [
-            ("Title",       instrument.ip_title),
-            ("Identifier",  instrument.ip_identifier ?? "-NA-"),
-            ("Version",     instrument.ip_version ?? "-NA-"),
-            ("Publisher",   instrument.ip_publisher ?? "-NA-")
+            ("Title",       instrument.sm_title),
+            ("Identifier",  instrument.sm_identifier ?? "-NA-"),
+            ("Version",     instrument.sm_version ?? "-NA-"),
+            ("Publisher",   instrument.sm_publisher ?? "-NA-")
         ]
     }()
     

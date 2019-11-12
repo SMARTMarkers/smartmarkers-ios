@@ -87,7 +87,7 @@ open class MeasuresViewController :  UITableViewController {
     public func dismissModal(_ sender: AnyObject?) {
         if let onSelection = onSelection {
             if selections.count > 0, let instruments = _instruments {
-                let questionnaires = instruments.filter { selections.contains($0.ip_identifier!) }
+                let questionnaires = instruments.filter { selections.contains($0.sm_identifier!) }
                 onSelection(questionnaires)
             } else {
                 onSelection(nil)
@@ -124,8 +124,8 @@ open class MeasuresViewController :  UITableViewController {
             cell?.detailTextLabel?.textColor = UIColor.gray
         }
         let instr = instruments![indexPath.row]
-        cell?.textLabel?.text = instr.ip_title
-        cell?.detailTextLabel?.text = instr.ip_code?.code?.string ?? instr.ip_identifier
+        cell?.textLabel?.text = instr.sm_title
+        cell?.detailTextLabel?.text = instr.sm_code?.code?.string ?? instr.sm_identifier
         cell?.accessoryType = (contains(instr)) ? .checkmark : .detailButton
 
         
@@ -154,13 +154,13 @@ open class MeasuresViewController :  UITableViewController {
     
     func contains(_ indexPath: IndexPath) -> (contains: Bool, id: String?) {
         if let instr = instruments?[indexPath.row] {
-            return (contains(instr), instr.ip_identifier)
+            return (contains(instr), instr.sm_identifier)
         }
         return (false, nil)
     }
 
     func contains(_ instr: Instrument) -> Bool {
-        return selections.contains(instr.ip_identifier!)
+        return selections.contains(instr.sm_identifier!)
     }
 
     
@@ -188,7 +188,7 @@ extension MeasuresViewController : UISearchResultsUpdating {
 
     public func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text?.lowercased(), !searchText.isEmpty {
-            let filtered = _instruments?.filter{ $0.ip_title.lowercased().range(of: searchText) != nil }
+            let filtered = _instruments?.filter{ $0.sm_title.lowercased().range(of: searchText) != nil }
             instruments = filtered
         } else {
             instruments = _instruments

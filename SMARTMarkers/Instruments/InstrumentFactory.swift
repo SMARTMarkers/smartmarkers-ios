@@ -78,15 +78,15 @@ public enum Instruments {
             public var instrument: Instrument {
                 switch self {
                     case .amslerGrid:
-                        return AmslerGridPRO()
+                        return AmslerGrid()
                     case .nineHolePegTest:
-                        return NineHolePegTestPRO()
+                        return NineHolePegTest()
                     case .psat_2:
-                        return PSATPRO()
+                        return PASAT()
 //                    case .psat_3:
 //                        fatalError()
                     case .towerOfHanoi:
-                        return TowerOfHanoiPRO()
+                        return TowerOfHanoi()
                     case .rangeOfMotion_shoulder_left:
                         return ShoulderRangeOfMotion(limbOption: .left)
                     case .rangeOfMotion_shoulder_right:
@@ -102,9 +102,9 @@ public enum Instruments {
                     case .FingerTappingSpeed_Right:
                         return TappingSpeed(hand: .right)
                     case .spatialSpanMemory:
-                        return SpatialSpanMemoryPRO()
+                        return SpatialSpanMemory()
                     case .StroopTest:
-                        return StroopTestPRO()
+                        return SMARTMarkers.StroopTest()
                 }
             }
             

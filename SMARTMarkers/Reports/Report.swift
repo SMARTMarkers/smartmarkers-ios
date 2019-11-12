@@ -137,7 +137,7 @@ open class Reports {
     
     open func fetch(for patient: Patient?, server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [ReportType]?, _ error: Error?) -> Void)) {
      
-        guard let resultParams = instrument.ip_resultingFhirResourceType else {
+        guard let resultParams = instrument.sm_resultingFhirResourceType else {
             callback(nil, SMError.reportUnknownFHIRReportType)
             return
         }

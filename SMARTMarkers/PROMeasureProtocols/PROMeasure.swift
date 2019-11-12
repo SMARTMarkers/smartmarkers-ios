@@ -195,7 +195,7 @@ extension PDController: ORKTaskViewControllerDelegate {
         
         if reason == .completed {
             
-            if let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
+            if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
                 let gr = reports?.addNewReports(bundle, taskId: taskViewController.taskRunUUID.uuidString)
                 onSessionCompletion?(gr, nil)
             }
@@ -361,7 +361,7 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
             return
         }
         
-        instrument.ip_taskController(for: self) { (taskViewController, error) in
+        instrument.sm_taskController(for: self) { (taskViewController, error) in
             taskViewController?.delegate = self
             callback(taskViewController, error)
         }
@@ -431,7 +431,7 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
         
         if reason == .completed {
             
-            if let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
+            if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
                 
                 let gr = reports?.addNewReports(bundle, taskId: taskViewController.taskRunUUID.uuidString)
 

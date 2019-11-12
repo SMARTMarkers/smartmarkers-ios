@@ -176,7 +176,7 @@ extension PDController {
     func sm_asFormItem() -> ORKFormItem {
         
         let reportChoices = reports?.sm_asTextChoiceAnswerFormat()
-        let formItem = ORKFormItem(identifier: instrument?.ip_title ?? "PRO #", text: instrument?.ip_title, answerFormat: reportChoices)
+        let formItem = ORKFormItem(identifier: instrument?.sm_title ?? "PRO #", text: instrument?.sm_title, answerFormat: reportChoices)
         formItem.isOptional = true
         return formItem
     }

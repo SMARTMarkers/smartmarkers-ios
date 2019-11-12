@@ -11,50 +11,49 @@ import SMART
 import ResearchKit
 
 
-open class PSATPRO: Instrument {
+open class PASAT: Instrument {
     
+    public var sm_title: String
+
+    public var sm_identifier: String?
+    
+    public var sm_version: String?
+    
+    public var sm_code: Coding?
+    
+    public var sm_publisher: String?
+    
+    public var sm_type: InstrumentCategoryType?
+    
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+
     public init() {
-        ip_title = "Paced Auditory Serial Additions Test"
-    }
-    
-    public var ip_title: String
-    
-    public var ip_identifier: String? {
-        return "pasat-pro"
-    }
-    
-    public var ip_code: Coding? {
-        return nil
-    }
-    
-    public var ip_version: String? {
-        return nil
-    }
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        
-        return [
+        sm_title = "Paced Auditory Serial Additions Test"
+        sm_identifier = "pasat"
+        sm_code = SMARTMarkers.Instruments.ActiveTasks.psat_2.coding
+        sm_type = .ActiveTask
+        sm_publisher = "ResearchKit.org"
+        sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|psat-2,http://researchkit.org|psat-3"])
-        ]
+            ]
+        
     }
     
-    public var ip_publisher: String? {
-        return "ResearchKit, Apple Inc"
-    }
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:ip_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
+    
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:sm_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:ip_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
+        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:sm_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         guard let psatResult = result.stepResult(forStepIdentifier: "psat")?.firstResult as? ORKPSATResult else {
             return nil
@@ -74,7 +73,7 @@ open class PSATPRO: Instrument {
             totalTime += sample.time
         }
         
-        let observation = psatResult.sm_asFHIR(title: self.ip_title, totalTime: totalTime)
+        let observation = psatResult.sm_asFHIR(title: self.sm_title, totalTime: totalTime)
         
         let documentEntry = DocumentReference.sm_Reference(title: "PSAT Test Samples", concept: concept, creationDateTime: dateTime, csvString: csv).sm_asBundleEntry()
         observation.derivedFrom = [documentEntry.sm_asReference()]

@@ -107,7 +107,7 @@ public class ReportViewController: UITableViewController {
     public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let report = reports[section]
         let count  = report.submissionBundle.count
-        return "\(report.instrument?.ip_title ?? " ") #\(count)"
+        return "\(report.instrument?.sm_title ?? " ") #\(count)"
     }
     
     override public func numberOfSections(in tableView: UITableView) -> Int {

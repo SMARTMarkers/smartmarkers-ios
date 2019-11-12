@@ -55,7 +55,7 @@ class PROSubmissionWaitStepViewController: ORKWaitStepViewController {
             return
         }
         
-        if let bundle = proMeasure.instrument?.ip_generateResponse(from: result, task: task) {
+        if let bundle = proMeasure.instrument?.sm_generateResponse(from: result, task: task) {
             
         }
         

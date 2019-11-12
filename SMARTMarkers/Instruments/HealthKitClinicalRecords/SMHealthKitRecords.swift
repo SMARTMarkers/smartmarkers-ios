@@ -13,37 +13,27 @@ import SMART
 @available(iOS 12.0, *)
 public class SMHealthKitRecords: Instrument {
     
+    public var sm_title: String
+    
+    public var sm_identifier: String?
+    
+    public var sm_code: Coding?
+    
+    public var sm_version: String?
+    
+    public var sm_publisher: String?
+    
+    public var sm_type: InstrumentCategoryType?
+    
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    
     public init() {
-        ip_title = "HealthKit Clinical Record"
+        sm_title = "HealthKit Clinical Record"
+        sm_type = .unknown
+        sm_identifier = "com.apple.healthkit.clinicalrecords"
     }
     
-    public var ip_type: InstrumentCategoryType {
-        return .unknown
-    }
-    
-    public var ip_title: String
-    
-    public var ip_identifier: String? {
-        return "com.apple.healthkit.clinicalrecords"
-    }
-    
-    public var ip_code: Coding? {
-        return nil
-    }
-    
-    public var ip_version: String? {
-        return nil
-    }
-    
-    public var ip_publisher: String? {
-        return nil
-    }
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return nil
-    }
-    
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let taskViewController = HKClinicalRecordTaskViewController()
         callback(taskViewController, nil)
@@ -56,7 +46,7 @@ public class SMHealthKitRecords: Instrument {
         callback(taskViewController, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         guard let choice = result.stepResult(forStepIdentifier: ksm_step_review)?.results?.first as? ORKChoiceQuestionResult,
         let dataResults = result.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [HKClinicalRecordResult] else {

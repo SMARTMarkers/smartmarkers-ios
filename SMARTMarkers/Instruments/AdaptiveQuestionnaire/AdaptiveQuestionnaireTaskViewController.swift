@@ -106,13 +106,13 @@ public class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask  {
         self.adaptiveQuestionnaire = instrument
         self.server = server
         var steps = steps
-        let instructions = "\(instrument.ip_title)\nThis is a computer adaptive test. All questions are mandatory. Results will be dispatched to the EHR"
+        let instructions = "\(instrument.sm_title)\nThis is a computer adaptive test. All questions are mandatory. Results will be dispatched to the EHR"
         let introductionStep = ORKInstructionStep(identifier: StepId.introduction.rawValue, _title: "Starting Survey", _detailText: instructions)
         let conclusionStep = ORKCompletionStep(identifier: StepId.conclusion.rawValue)
         
         steps.insert(introductionStep, at: 0)
         steps.append(conclusionStep)
-        super.init(identifier: instrument.ip_identifier!, steps: steps)
+        super.init(identifier: instrument.sm_identifier!, steps: steps)
 
     }
     

@@ -92,7 +92,7 @@ open class AdaptiveQuestionnaireTask2: ORKNavigableOrderedTask {
         
         self.adaptiveQuestionnaire = adaptiveQuestionnaire
         
-        let identifier = adaptiveQuestionnaire.ip_identifier ?? UUID().uuidString
+        let identifier = adaptiveQuestionnaire.sm_identifier ?? UUID().uuidString
         
         super.init(identifier: identifier, steps: nil)
         

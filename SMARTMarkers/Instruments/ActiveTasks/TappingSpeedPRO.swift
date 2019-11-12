@@ -21,89 +21,117 @@ open class TappingSpeed: Instrument {
     let handOption: ORKPredefinedTaskHandOption!
     
     let duration: TimeInterval!
+    
+    public var sm_title: String
+    
+    public var sm_identifier: String?
+    
+    public var sm_code: Coding?
+    
+    public var sm_version: String?
+    
+    public var sm_publisher: String?
+    
+    public var sm_type: InstrumentCategoryType?
+    
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    
+    public var usageDescription: String?
 
-    public init(hand: ORKPredefinedTaskHandOption, duration: TimeInterval = 10) {
+    public init(hand: ORKPredefinedTaskHandOption, duration: TimeInterval = 10, usageDescription: String? = nil) {
         self.handOption = hand
         self.duration = duration
-        self.ip_title = "Tapping Speed Task"
-    }
-    
-    public var ip_taskDescription: String?
-    
-    public var ip_title: String
-    
-    public var ip_identifier: String? {
-        return "tappingspeed"
-    }
-    
-    public var ip_code: Coding? {
+        self.usageDescription = usageDescription
+        self.sm_title = "Tapping Speed Task"
+        self.sm_identifier = "tappingspeed"
         
-        if handOption == .left {
-            return SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Left.coding
+        if hand == .right {
+            self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Right.coding
         }
-        else if handOption == .right {
-            return SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Right.coding
+        else if hand == .left {
+            self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Left.coding
         }
         else {
-            return SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed.coding
+            self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed.coding
         }
+
+        // TODO: Link Observation with DocumentReference
+        self.sm_resultingFhirResourceType = [
+            FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!]),
+            FHIRSearchParamRelationship(DocumentReference.self, ["code": sm_code!.sm_searchableToken()!])
+        ]
     }
     
-    public var ip_version: String?
-    
-    public var ip_publisher: String?
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
-    
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, duration: duration, handOptions: handOption, options: [])
+        let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, duration: duration, handOptions: handOption, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, duration: duration, handOptions: handOption, options: [])
+        let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, duration: duration, handOptions: handOption, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        var documentReferences = [DocumentReference]()
+        var resources = [BundleEntry]()
+        let dateTime = DateTime.now
+
         for id in TappingSpeed.resultStepIdentifiers {
             
             guard let tappingResult = result.stepResult(forStepIdentifier: id)?.firstResult as? ORKTappingIntervalResult else {
                 continue
             }
             
-            let hand = (id.hasSuffix("right")) ? "Right" : "Left"
-            let title = "Tapping Finger \(hand)"
-            let code = Coding.sm_ResearchKit(tappingResult.identifier, title)
-            let concept = CodeableConcept.sm_From([code], text: title)
-            let dateTime = DateTime.now
-            
-            let ob = Observation()
-            ob.code = concept
-            ob.status = .final
-            
-            // Category
-            let activity = Coding.sm_Coding("activity", kHL7ObservationCategory, "Activity")
-            ob.category = [CodeableConcept.sm_From([activity], text: "Activity")]
-            
             if let samples = tappingResult.samples?.map({ $0.sm_asCSVString() }) {
+                
+                let hand = (id.hasSuffix("right")) ? "Right" : "Left"
+                let title = "Tapping Finger \(hand)"
                 let csv = ORKTappingSample.csvHeader + "\n" + samples.joined(separator: "\n")
+                let concept = CodeableConcept.sm_From([sm_code!], text: "Finger Tapping Speed")
                 let document = DocumentReference.sm_Reference(title: title, concept: concept, creationDateTime: dateTime, csvString: csv)
-                documentReferences.append(document)
+                let bundleEntry = BundleEntry()
+                bundleEntry.resource = document
+                let uuid = "urn:uuid:\(UUID().uuidString)"
+                bundleEntry.fullUrl = FHIRURL(uuid)
+                resources.append(bundleEntry)
             }
 
         }
         
-        if !documentReferences.isEmpty {
+        if !resources.isEmpty {
             
-            return SMART.Bundle.sm_with(documentReferences)
+            let references = resources.map { (entry) -> Reference in
+                let reference = Reference()
+                reference.reference = "DocumentReference/\(entry.fullUrl!.absoluteString)".fhir_string
+                return reference
+            }
             
+            let ob = Observation()
+            ob.code = CodeableConcept.sm_From([sm_code!], text: "Finger Tapping Speed")
+            ob.status = .final
+            ob.effectiveDateTime = dateTime
+            // Category
+            let activity = Coding.sm_Coding("activity", kHL7ObservationCategory, "Activity")
+            ob.category = [CodeableConcept.sm_From([activity], text: "Activity")]
+            ob.derivedFrom = references
+            
+            //Observtion Entry
+            let observationBundleEntry = BundleEntry()
+            observationBundleEntry.resource = ob
+            let uuid = "urn:uuid:\(UUID().uuidString)"
+            observationBundleEntry.fullUrl = FHIRURL(uuid)
+            resources.append(observationBundleEntry)
+            
+            
+            let bundle = SMART.Bundle()
+            bundle.entry = resources
+            bundle.type = BundleType.transaction
+            return bundle
         }
         
         return nil

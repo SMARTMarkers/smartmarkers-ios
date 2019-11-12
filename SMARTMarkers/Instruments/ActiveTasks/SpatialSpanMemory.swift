@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-open class SpatialSpanMemoryPRO: Instrument {
+open class SpatialSpanMemory: Instrument {
     
     let initialSpan: Int
     
@@ -25,43 +25,36 @@ open class SpatialSpanMemoryPRO: Instrument {
     
     let maxConsecutiveFailures: Int
     
+    public var sm_title: String
+    
+    public var sm_identifier: String?
+    
+    public var sm_code: Coding?
+    
+    public var sm_version: String?
+    
+    public var sm_publisher: String?
+    
+    public var sm_type: InstrumentCategoryType?
+    
+    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    
     public init(initialSpan: Int = 3, minimumSpan: Int = 3, maximumSpan: Int = 15, playSpeed: TimeInterval = 1.0, maximumTests: Int = 5, maximumConsecutiveFailures: Int = 3) {
-        
         self.initialSpan = initialSpan
         self.minimumSpan = minimumSpan
         self.maximumSpan = maximumSpan
         self.playSpeed = playSpeed
         self.maxTests = maximumTests
         self.maxConsecutiveFailures = maximumConsecutiveFailures
-        self.ip_title = "Spatial Span Memory"
+        self.sm_title = "Spatial Span Memory"
+        self.sm_identifier = "cognitive.memory.spatialspan"
+        self.sm_code = SMARTMarkers.Instruments.ActiveTasks.spatialSpanMemory.coding
+        self.sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
     }
     
-    public var ip_taskDescription: String?
-    
-    public var ip_title: String
-    
-    public var ip_identifier: String? {
-        return "cognitive.memory.spatialspan"
-    }
-    
-    public var ip_code: Coding? {
-        return SMARTMarkers.Instruments.ActiveTasks.spatialSpanMemory.coding
-    }
-    
-    public var ip_version: String?
-    
-    public var ip_publisher: String?
-    
-    public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        if let token = ip_code?.sm_searchableToken() {
-            return [FHIRSearchParamRelationship(Observation.self, ["code": token])]
-        }
-        return nil
-    }
-    
-    public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: ip_identifier!, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
+        let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: sm_identifier!, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
         
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         
@@ -70,14 +63,14 @@ open class SpatialSpanMemoryPRO: Instrument {
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: ip_identifier!, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
+        let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: sm_identifier!, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
         
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         
         callback(taskViewController, nil)
     }
     
-    public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+    public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         if let spatialMemoryResult = result.stepResult(forStepIdentifier: "cognitive.memory.spatialspan")?.firstResult as? ORKSpatialSpanMemoryResult {
             
