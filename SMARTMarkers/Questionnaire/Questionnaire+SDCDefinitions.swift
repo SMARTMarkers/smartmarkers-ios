@@ -8,8 +8,8 @@
 
 import Foundation
 
-/// Structure Definition to resolve `Questionnaire` reference embedded in `ProcedureRequest`
-let kSD_QuestionnaireRequest = "http://hl7.org/fhir/StructureDefinition/procedurerequest-questionnaireRequest"
+/// Structure Definition to resolve `Questionnaire` reference embedded in `ServiceRequest`
+let kSD_QuestionnaireRequest = "http://hl7.org/fhir/StructureDefinition/servicerequest-questionnaireRequest"
 let kSD_QuestionnaireInstruction = "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction"
 let kSD_QuestionnaireHelp = "http://hl7.org/fhir/StructureDefinition/questionnaire-help"
 let kSD_QuestionnaireCalculatedExpression = "http://hl7.org/fhir/StructureDefinition/questionnaire-calculatedExpression"

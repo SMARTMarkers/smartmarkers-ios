@@ -25,8 +25,6 @@ extension ServiceRequest: Request {
         if let practitioner = requester?.resolved(Practitioner.self) {
             return practitioner.name?.first?.human
         }
-        
-        
 
         if let device = requester?.resolved(Device.self) {
             return "Device #\(device.id!.string)"

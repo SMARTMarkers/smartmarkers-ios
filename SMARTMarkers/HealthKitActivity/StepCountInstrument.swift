@@ -14,12 +14,10 @@ import ResearchKit
 open class StepReport: Instrument {
     
     public init() {
-        
+        ip_title = "Step Count (HealthKit)"
     }
     
-    public var ip_title: String {
-        return "Step Count (HealthKit)"
-    }
+    public var ip_title: String
     
     public var ip_identifier: String?
     
@@ -34,6 +32,14 @@ open class StepReport: Instrument {
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        let sa = StepActivity(Date(), nil)
+        sa.store = HKHealthStore()
+        let activityTaskView = ActivityTaskViewController(activity: sa)
+        callback(activityTaskView, nil)
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let sa = StepActivity(Date(), nil)
         sa.store = HKHealthStore()

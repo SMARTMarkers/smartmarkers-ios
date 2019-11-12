@@ -1,7 +1,6 @@
 {
   "resourceType": "Questionnaire",
   "title": "Cancer Quality Forum Questionnaire 2012",
-  "id" : "16718", 
   "status": "draft",
   "subjectType": [
     "Patient"

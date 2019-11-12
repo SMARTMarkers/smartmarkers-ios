@@ -228,7 +228,7 @@ extension QuestionnaireItem {
             callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
         case .decimal:
             callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
-        case .choice:
+        case .choice, .openChoice:
             if let answerValueSet = answerValueSet {
                 if answerValueSet.absoluteString == kVS_YesNoDontknow {
                     callback(ORKAnswerFormat.sm_hl7YesNoDontKnow(), nil)
@@ -361,7 +361,8 @@ extension QuestionnaireItemEnableWhen {
             return ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: bool.bool)
         }
         else if let coding = answerCoding {
-            let value = coding.system!.absoluteString + kDelimiter + coding.code!.string
+            // TODO
+            let value = (coding.system?.absoluteString ?? "") + kDelimiter + coding.code!.string
             return ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector, expectedAnswerValue: value as NSCoding & NSCopying & NSObjectProtocol)
         }
         

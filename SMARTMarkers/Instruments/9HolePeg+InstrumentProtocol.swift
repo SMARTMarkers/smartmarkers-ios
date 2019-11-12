@@ -20,18 +20,18 @@ open class NineHolePegTestPRO: Instrument {
         ORKHolePegTestNonDominantRemoveStepIdentifier
     ]
     
-    public init() { }
-
-    public var ip_title: String {
-        return "9 Hole Peg Test"
+    public init() {
+        ip_title = "9 Hole Peg Test"
     }
+
+    public var ip_title: String
     
     public var ip_identifier: String? {
         return "9-hole-peg-test"
     }
     
     public var ip_code: Coding? {
-        return nil
+        return Coding.sm_ResearchKit("hole.peg.test", "9 Peg Hole Test")
     }
     
     public var ip_version: String? {
@@ -39,12 +39,22 @@ open class NineHolePegTestPRO: Instrument {
     }
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return nil
+        
+        return [
+            FHIRSearchParamRelationship(Observation.self, ["code": ip_code!.sm_searchableToken()!])
+        ]
     }
     
     public var ip_publisher: String?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        let tsk = ORKNavigableOrderedTask.holePegTest(withIdentifier: ip_identifier!, intendedUseDescription: nil, dominantHand: .left, numberOfPegs: 1, threshold: 0.2, rotated: false, timeLimit: 300, options: [])
+        let tvc = ORKTaskViewController(task: tsk, taskRun: UUID())
+        callback(tvc, nil)
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let tsk = ORKNavigableOrderedTask.holePegTest(withIdentifier: ip_identifier!, intendedUseDescription: nil, dominantHand: .left, numberOfPegs: 1, threshold: 0.2, rotated: false, timeLimit: 300, options: [])
         let tvc = ORKTaskViewController(task: tsk, taskRun: UUID())
@@ -86,7 +96,7 @@ open class NineHolePegTestPRO: Instrument {
         print(csvString)
         
         let observation = Observation.sm_pegHoleTest(totalTime: totalTime, totalDistance: totalDistance, success: totalSuccesses, failures: totalFailures, effective: datetime)
-        let code = Coding.sm_ResearchKit("hole.peg.test", "9 Peg Hole Test")
+        let code = ip_code!
         let concept = CodeableConcept.sm_From([code], text: nil)
 
         let documentEntry = DocumentReference.sm_Reference(title: "Hole Peg Test Samples", concept: concept, creationDateTime: datetime, csvString: csvString).sm_asBundleEntry()

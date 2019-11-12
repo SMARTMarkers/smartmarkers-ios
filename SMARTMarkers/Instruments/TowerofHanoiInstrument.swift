@@ -17,11 +17,10 @@ open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
     
     public init(_ numberOfDisks: UInt = 0) {
         self.numberOfDisks = numberOfDisks
+        self.ip_title = "Tower of Hanoi"
     }
     
-    public var ip_title: String {
-        return "Tower of Hanoi Task"
-    }
+    public var ip_title: String
     
     public var ip_identifier: String? {
         return "towerOfHanoi"
@@ -40,6 +39,13 @@ open class TowerOfHanoiPRO: ActiveInstrumentProtocol {
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: ip_title, intendedUseDescription: ip_taskDescription, numberOfDisks: self.numberOfDisks, options: [])
+        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        callback(taskViewController, nil)
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: ip_title, intendedUseDescription: ip_taskDescription, numberOfDisks: self.numberOfDisks, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())

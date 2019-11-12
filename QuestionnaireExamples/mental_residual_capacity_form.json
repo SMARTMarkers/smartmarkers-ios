@@ -1,0 +1,2020 @@
+{
+  "code": [
+    {
+      "code": "46611-0",
+      "display": "Mental residual functional capacity (RFC) assessment form"
+    }
+  ],
+  "title": "Mental residual functional capacity (RFC) assessment form",
+  "resourceType": "Questionnaire",
+  "status": "draft",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7"
+    ]
+  },
+  "item": [
+    {
+      "type": "group",
+      "code": [
+        {
+          "code": "45965-1",
+          "display": "Name"
+        }
+      ],
+      "required": false,
+      "linkId": "/45965-1",
+      "text": "Name",
+      "item": [
+        {
+          "type": "string",
+          "code": [
+            {
+              "code": "45394-4",
+              "display": "Last name"
+            }
+          ],
+          "required": false,
+          "linkId": "/45965-1/45394-4",
+          "text": "Last name"
+        },
+        {
+          "type": "string",
+          "code": [
+            {
+              "code": "45392-8",
+              "display": "First name"
+            }
+          ],
+          "required": false,
+          "linkId": "/45965-1/45392-8",
+          "text": "First name"
+        },
+        {
+          "type": "string",
+          "code": [
+            {
+              "code": "45393-6",
+              "display": "Middle initial"
+            }
+          ],
+          "required": false,
+          "linkId": "/45965-1/45393-6",
+          "text": "Middle initial"
+        },
+        {
+          "type": "string",
+          "code": [
+            {
+              "code": "45395-1",
+              "display": "Name suffix"
+            }
+          ],
+          "required": false,
+          "linkId": "/45965-1/45395-1",
+          "text": "Name suffix"
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "45396-9",
+          "display": "Social security number"
+        }
+      ],
+      "required": false,
+      "linkId": "/45396-9",
+      "text": "Social security number"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "46635-9",
+          "display": "Categories"
+        }
+      ],
+      "required": false,
+      "linkId": "/46635-9",
+      "text": "Categories",
+      "item": [
+        {
+          "text": "From IB of th PRTF",
+          "type": "display",
+          "linkId": "/46635-9-help",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "text": "Help-Button",
+                "coding": [
+                  {
+                    "code": "help",
+                    "display": "Help-Button",
+                    "system": "http://hl7.org/fhir/questionnaire-item-control"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "code": [
+        {
+          "code": "46612-8",
+          "display": "Summary conclusions"
+        }
+      ],
+      "required": false,
+      "linkId": "/46612-8",
+      "text": "Summary conclusions",
+      "item": [
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46613-6",
+              "display": "Remembers locations & worklike procedures"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46613-6",
+          "text": "Remembers locations & worklike procedures",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46614-4",
+              "display": "Understands & remembers very short & simple instructions"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46614-4",
+          "text": "Understands & remembers very short & simple instructions",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46615-1",
+              "display": "Understands & remembers detailed instructions"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46615-1",
+          "text": "Understands & remembers detailed instructions",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46616-9",
+              "display": "Carries out very short & simple instructions"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46616-9",
+          "text": "Carries out very short & simple instructions",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46617-7",
+              "display": "Carries out detailed instructions"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ],
+                "text": "Radio Button"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46617-7",
+          "text": "Carries out detailed instructions",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46618-5",
+              "display": "Maintains attention & concentration for extended periods"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46618-5",
+          "text": "Maintains attention & concentration for extended periods",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46619-3",
+              "display": "Performs activities within a schedule, maintains regular attendance, is punctual within customary tolerances"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "radio-button",
+                    "display": "Radio Button"
+                  }
+                ],
+                "text": "Radio Button"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46619-3",
+          "text": "Performs activities within a schedule, maintains regular attendance, is punctual within customary tolerances",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46620-1",
+              "display": "Sustains an ordinary routine without special supervision"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46620-1",
+          "text": "Sustains an ordinary routine without special supervision",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46621-9",
+              "display": "Works in coordination with or proximity to others without being distracted by them"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46621-9",
+          "text": "Works in coordination with or proximity to others without being distracted by them",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46622-7",
+              "display": "Makes simple work-related decisions"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46622-7",
+          "text": "Makes simple work-related decisions",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46623-5",
+              "display": "Completes normal workday & week WO interruptions from psych symptoms & performs at consistent pace WO unreasonable number & length of rests"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46623-5",
+          "text": "Completes normal workday & week WO interruptions from psych symptoms & performs at consistent pace WO unreasonable number & length of rests",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46624-3",
+              "display": "Interacts appropriately with the general public"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46624-3",
+          "text": "Interacts appropriately with the general public",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46625-0",
+              "display": "Asks simple questions or request assistance"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46625-0",
+          "text": "Asks simple questions or request assistance",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46626-8",
+              "display": "Accepts instructions & respond appropriately to criticism from supervisors"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46626-8",
+          "text": "Accepts instructions & respond appropriately to criticism from supervisors",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46627-6",
+              "display": "Gets along with coworkers or peers WO distracting them or exhibiting behavioral extremes"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46627-6",
+          "text": "Gets along with coworkers or peers WO distracting them or exhibiting behavioral extremes",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46628-4",
+              "display": "Maintains socially appropriate behavior & adheres to basic standards of neatness & cleanliness"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46628-4",
+          "text": "Maintains socially appropriate behavior & adheres to basic standards of neatness & cleanliness",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46629-2",
+              "display": "Responds appropriately to changes in the work setting"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46629-2",
+          "text": "Responds appropriately to changes in the work setting",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46630-0",
+              "display": "Aware of normal hazards & take appropriate precautions"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46630-0",
+          "text": "Aware of normal hazards & take appropriate precautions",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46631-8",
+              "display": "Travels in unfamiliar places or use public transportation"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46631-8",
+          "text": "Travels in unfamiliar places or use public transportation",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "code": [
+            {
+              "code": "46632-6",
+              "display": "Sets realistic goals or make plans independently of others"
+            }
+          ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "drop-down",
+                    "display": "Drop down"
+                  }
+                ],
+                "text": "Drop down"
+              }
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46632-6",
+          "text": "Sets realistic goals or make plans independently of others",
+          "answerOption": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "1"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6459-7",
+                "display": "Not significantly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "2"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6460-5",
+                "display": "Moderately limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "3"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6461-3",
+                "display": "Markedly limited"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "4"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6462-1",
+                "display": "No evidence of limitation in this category"
+              }
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+                  "valueString": "5"
+                }
+              ],
+              "valueCoding": {
+                "code": "LA6463-9",
+                "display": "Not ratable on available evidence"
+              }
+            }
+          ]
+        },
+        {
+          "type": "string",
+          "code": [
+            {
+              "code": "46633-4",
+              "display": "Remarks"
+            }
+          ],
+          "required": false,
+          "linkId": "/46612-8/46633-4",
+          "text": "Remarks",
+          "item": [
+            {
+              "text": "If you checked box 5 for any of the preceding items or if any other documentation deficiencies were identified, you MUST specify what additional documentation is needed. Cite the item number(s), as well as any other specific deficiency, and indicate the development to be undertaken.",
+              "type": "display",
+              "linkId": "/46612-8/46633-4-help",
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                  "valueCodeableConcept": {
+                    "text": "Help-Button",
+                    "coding": [
+                      {
+                        "code": "help",
+                        "display": "Help-Button",
+                        "system": "http://hl7.org/fhir/questionnaire-item-control"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "This section is for recording summary conclusions derived from the evidence in file.  Each mental activity is to be within the context of the individual's capacity to sustain that activity over a normal workday and workweek, on an ongoing basis. Detailed explanation of the degree of limitation for each category (A through D), as well as any other assessment information you deem appropriate, is to be recorded in Section III (Functional Capacity Assessment).\r\nIf rating category 5 is checked for any of the following items, you MUST specify in Section II the evidence that is needed to make the assessment. II you conclude that the record is so inadequately documented that no accurate functional capacity assessment can be made, indicate in Section II what development is necessary, but DO NOT COMPLETE SECTION III.",
+          "type": "display",
+          "linkId": "/46612-8-help",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "text": "Help-Button",
+                "coding": [
+                  {
+                    "code": "help",
+                    "display": "Help-Button",
+                    "system": "http://hl7.org/fhir/questionnaire-item-control"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "46634-2",
+          "display": "Functional capacity assessment"
+        }
+      ],
+      "required": false,
+      "linkId": "/46634-2",
+      "text": "Functional capacity assessment",
+      "item": [
+        {
+          "text": "Record in this section the elaborations on the preceding capacities, Complete this section ONLY after the SUMMARY CONCLUSIONS section has been completed- Explain your summary conclusions in narrative form. Include any information which clarifies limitation or Junction. Be especially careful to explain conclusions that differ from those Of treating medical sources or from the individual's allegations.",
+          "type": "display",
+          "linkId": "/46634-2-help",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "text": "Help-Button",
+                "coding": [
+                  {
+                    "code": "help",
+                    "display": "Help-Button",
+                    "system": "http://hl7.org/fhir/questionnaire-item-control"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "date",
+      "code": [
+        {
+          "code": "46636-7",
+          "display": "Date form completed"
+        }
+      ],
+      "required": false,
+      "linkId": "/46636-7",
+      "text": "Date form completed"
+    }
+  ]
+}

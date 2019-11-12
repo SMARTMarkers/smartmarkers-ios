@@ -12,12 +12,12 @@ import SMART
 
 public extension Observation {
     
-    class func sm_BloodPressure(systolic: Int, diastolic: Int, date: Date) -> Observation {
+    class func sm_BloodPressure(systolic: Int, diastolic: Int, date: Date, sourceCode: Coding? = nil) -> Observation {
         
         // BP LOINC Coding
         let bp_Coding = Coding.sm_Coding_BP_LOINC()
         let bp_CodableConcept = CodeableConcept()
-        bp_CodableConcept.coding = [bp_Coding]
+        bp_CodableConcept.coding = (sourceCode == nil) ? [bp_Coding] : [bp_Coding, sourceCode!]
         
         //Category
         let categoryCoding = Coding()

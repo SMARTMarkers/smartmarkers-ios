@@ -14,12 +14,10 @@ import ResearchKit
 open class PSATPRO: Instrument {
     
     public init() {
-        
+        ip_title = "Paced Auditory Serial Additions Test"
     }
     
-    public var ip_title: String {
-        return "Paced Auditory Serial Additions Test"
-    }
+    public var ip_title: String
     
     public var ip_identifier: String? {
         return "pasat-pro"
@@ -34,13 +32,23 @@ open class PSATPRO: Instrument {
     }
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return nil
+        
+        return [
+            FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|psat-2,http://researchkit.org|psat-3"])
+        ]
     }
     
     public var ip_publisher: String? {
         return "ResearchKit, Apple Inc"
     }
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:ip_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
+        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        callback(taskViewController, nil)
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
         let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:ip_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)

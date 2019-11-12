@@ -12,9 +12,13 @@ import SMART
 
 extension SMART.Questionnaire : Instrument {
     
-    
     public var ip_title: String {
-        return sm_displayTitle() ?? "--No title--"
+        get {
+            return sm_displayTitle() ?? "--No title--"
+        }
+        set {
+            
+        }
     }
     
     public var ip_identifier: String? {
@@ -35,9 +39,23 @@ extension SMART.Questionnaire : Instrument {
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         
+        var searchParam = [String]()
+        
         if let id = id?.string {
-            return [FHIRSearchParamRelationship(QuestionnaireResponse.self, ["questionnaire": id])]
+            searchParam.append(id)
         }
+        
+        if let url = url?.absoluteString {
+            searchParam.append(url)
+        }
+        
+        if !searchParam.isEmpty {
+            return [
+                FHIRSearchParamRelationship(QuestionnaireResponse.self, ["questionnaire": searchParam.joined(separator: ",")])
+            ]
+        }
+        
+        
         return nil
     }
     
@@ -70,6 +88,27 @@ extension SMART.Questionnaire : Instrument {
                 let uuid = UUID()
 
                 let taskIdentifier = measure.request?.rq_identifier ?? uuid.uuidString
+                let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
+                rulestupples?.forEach({ (rule, linkId) in
+                    task.setSkip(rule, forStepIdentifier: linkId)
+                })
+                
+                let taskViewController = QuestionnaireTaskViewController(task: task, taskRun: uuid)
+                callback(taskViewController, nil)
+            }
+            else {
+                callback(nil, nil)
+            }
+        }
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        sm_genereteSteps { (steps, rulestupples, error) in
+            
+            if let steps = steps {
+                let uuid = UUID()
+                let taskIdentifier = uuid.uuidString
                 let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
                 rulestupples?.forEach({ (rule, linkId) in
                     task.setSkip(rule, forStepIdentifier: linkId)

@@ -1,0 +1,272 @@
+{
+  "code": [
+    {
+      "code": "34552-0",
+      "display": "2D echocardiogram panel"
+    }
+  ],
+  "title": "2D echocardiogram panel",
+  "resourceType": "Questionnaire",
+  "status": "draft",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7"
+    ]
+  },
+  "item": [
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "18010-9",
+          "display": "Aorta Diam US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "cm",
+            "display": "cm",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/18010-9",
+      "text": "Aorta Diam US",
+      "item": [
+        {
+          "text": "This is nonspecific, Ao root is default Ao diam",
+          "type": "display",
+          "linkId": "/18010-9-help",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "text": "Help-Button",
+                "coding": [
+                  {
+                    "code": "help",
+                    "display": "Help-Button",
+                    "system": "http://hl7.org/fhir/questionnaire-item-control"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "18018-2",
+          "display": "LVOT Diam US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "cm",
+            "display": "cm",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/18018-2",
+      "text": "LVOT Diam US"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "20307-5",
+          "display": "RVOT Diam 2D US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "cm",
+            "display": "cm",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/20307-5",
+      "text": "RVOT Diam 2D US"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "29468-6",
+          "display": "LA Diam AP sys 2D US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "mm",
+            "display": "mm",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/29468-6",
+      "text": "LA Diam AP sys 2D US"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "18083-6",
+          "display": "LV Diam dias, short 2D US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "cm",
+            "display": "cm",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/18083-6",
+      "text": "LV Diam dias, short 2D US"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "18085-1",
+          "display": "LV Diam sys, short 2D US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "cm",
+            "display": "cm",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/18085-1",
+      "text": "LV Diam sys, short 2D US"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "29442-1",
+          "display": "LVPW Thickness diastole 2D US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "mm",
+            "display": "mm",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/29442-1",
+      "text": "LVPW Thickness diastole 2D US"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "29430-6",
+          "display": "IVS Thickness diastole 2D US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "mm",
+            "display": "mm",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/29430-6",
+      "text": "IVS Thickness diastole 2D US"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "8806-2",
+          "display": "LV EF 2D Echo"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "%",
+            "display": "%",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/8806-2",
+      "text": "LV EF 2D Echo"
+    },
+    {
+      "type": "decimal",
+      "code": [
+        {
+          "code": "29434-8",
+          "display": "LV FS 2D US"
+        }
+      ],
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+          "valueCoding": {
+            "code": "%",
+            "display": "%",
+            "system": "http://unitsofmeasure.org"
+          }
+        }
+      ],
+      "required": false,
+      "linkId": "/29434-8",
+      "text": "LV FS 2D US"
+    },
+    {
+      "type": "string",
+      "code": [
+        {
+          "code": "18147-9",
+          "display": "US Cent CV Study [Imp]"
+        }
+      ],
+      "required": false,
+      "linkId": "/18147-9",
+      "text": "US Cent CV Study [Imp]"
+    }
+  ]
+}

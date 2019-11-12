@@ -25,13 +25,12 @@ open class TappingSpeed: ActiveInstrumentProtocol {
     public init(hand: ORKPredefinedTaskHandOption, duration: TimeInterval = 10) {
         self.handOption = hand
         self.duration = duration
+        self.ip_title = "Tapping Speed Task"
     }
     
     public var ip_taskDescription: String?
     
-    public var ip_title: String {
-        return "Tapping Speed Task"
-    }
+    public var ip_title: String
     
     public var ip_identifier: String? {
         return "tappingspeed"
@@ -48,6 +47,13 @@ open class TappingSpeed: ActiveInstrumentProtocol {
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, duration: duration, handOptions: handOption, options: [])
+        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        callback(taskViewController, nil)
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, duration: duration, handOptions: handOption, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())

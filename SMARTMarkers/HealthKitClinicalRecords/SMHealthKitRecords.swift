@@ -13,13 +13,15 @@ import SMART
 @available(iOS 12.0, *)
 public class SMHealthKitRecords: Instrument {
     
-    
-    
-    public init() { }
-    
-    public var ip_title: String {
-        return "HealthKit Clinical Record"
+    public init() {
+        ip_title = "HealthKit Clinical Record"
     }
+    
+    public var ip_type: InstrumentCategoryType {
+        return .unknown
+    }
+    
+    public var ip_title: String
     
     public var ip_identifier: String? {
         return "com.apple.healthkit.clinicalrecords"
@@ -46,6 +48,12 @@ public class SMHealthKitRecords: Instrument {
         let taskViewController = HKClinicalRecordTaskViewController()
         callback(taskViewController, nil)
         
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        let taskViewController = HKClinicalRecordTaskViewController()
+        callback(taskViewController, nil)
     }
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {

@@ -52,6 +52,10 @@
 		D468778D229735C700717D95 /* QuestionnaireItemStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468778C229735C700717D95 /* QuestionnaireItemStep.swift */; };
 		D468778F2297419000717D95 /* QuestionnaireTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468778E2297419000717D95 /* QuestionnaireTaskViewController.swift */; };
 		D468AAF621188EFF00AE942F /* FHIRDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */; };
+		D48113B82373BBA00062B3D9 /* genevariant_reporting_panel.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113B72373BBA00062B3D9 /* genevariant_reporting_panel.json */; };
+		D48113BB2373C5E40062B3D9 /* ecg_panel.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113B92373C5E40062B3D9 /* ecg_panel.json */; };
+		D48113BC2373C5E40062B3D9 /* mental_residual_capacity_form.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113BA2373C5E40062B3D9 /* mental_residual_capacity_form.json */; };
+		D48113BE2373CAC00062B3D9 /* surgeon_general.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113BD2373CAC00062B3D9 /* surgeon_general.json */; };
 		D482BA6321C953F800840D2E /* AQServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D482BA6221C953F800840D2E /* AQServer.swift */; };
 		D48B320221FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */; };
 		D48B320421FFC84600CEA44A /* ResearchKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */; };
@@ -150,6 +154,10 @@
 		D468778C229735C700717D95 /* QuestionnaireItemStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireItemStep.swift; sourceTree = "<group>"; };
 		D468778E2297419000717D95 /* QuestionnaireTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireTaskViewController.swift; sourceTree = "<group>"; };
 		D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRDefinitions.swift; sourceTree = "<group>"; };
+		D48113B72373BBA00062B3D9 /* genevariant_reporting_panel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = genevariant_reporting_panel.json; sourceTree = "<group>"; };
+		D48113B92373C5E40062B3D9 /* ecg_panel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ecg_panel.json; sourceTree = "<group>"; };
+		D48113BA2373C5E40062B3D9 /* mental_residual_capacity_form.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mental_residual_capacity_form.json; sourceTree = "<group>"; };
+		D48113BD2373CAC00062B3D9 /* surgeon_general.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = surgeon_general.json; sourceTree = "<group>"; };
 		D482BA6221C953F800840D2E /* AQServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AQServer.swift; sourceTree = "<group>"; };
 		D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireTaskViewController.swift; sourceTree = "<group>"; };
 		D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResearchKit+Extensions.swift"; sourceTree = "<group>"; };
@@ -278,6 +286,10 @@
 		D468777D229701D100717D95 /* QuestionnaireExamples */ = {
 			isa = PBXGroup;
 			children = (
+				D48113BD2373CAC00062B3D9 /* surgeon_general.json */,
+				D48113B72373BBA00062B3D9 /* genevariant_reporting_panel.json */,
+				D48113B92373C5E40062B3D9 /* ecg_panel.json */,
+				D48113BA2373C5E40062B3D9 /* mental_residual_capacity_form.json */,
 				D4623EDC2368B64200230C5B /* dynamicquestionnaire.json */,
 				D4623EDE2368BA6A00230C5B /* dynamicquestionnaire_valuecoding.json */,
 				D4623ED92368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json */,
@@ -565,15 +577,19 @@
 				D4623EDF2368BA6A00230C5B /* dynamicquestionnaire_valuecoding.json in Resources */,
 				D46877892297022B00717D95 /* bmiquestionnaire_r3.json in Resources */,
 				D465D5A4203DCB8E0057BD23 /* Installation.md in Resources */,
+				D48113BB2373C5E40062B3D9 /* ecg_panel.json in Resources */,
 				D46877882297022B00717D95 /* adaptivePROMISDep.json in Resources */,
 				D46877872297022B00717D95 /* adaptivePROMIS.json in Resources */,
+				D48113B82373BBA00062B3D9 /* genevariant_reporting_panel.json in Resources */,
 				D4623EDD2368B64200230C5B /* dynamicquestionnaire.json in Resources */,
 				D46877842297022B00717D95 /* LifelinesQuestionnaireR4.json in Resources */,
 				D4623EDA2368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json in Resources */,
 				D4623EDB2368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json in Resources */,
+				D48113BE2373CAC00062B3D9 /* surgeon_general.json in Resources */,
 				D4618A4E20616100004E117F /* Readme.md in Resources */,
 				D43E089821ADDD7000045680 /* works-with-smart-logo-768x514.png in Resources */,
 				D46877852297022B00717D95 /* qr4.json in Resources */,
+				D48113BC2373C5E40062B3D9 /* mental_residual_capacity_form.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

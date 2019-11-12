@@ -86,7 +86,9 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
         
         if let slf = self as? ORKInstructionStep {
             
-            if let q = item.sm_questionItem_instructions() {
+            
+            
+            if let q = item.sm_questionItem_instructions() ?? item.text?.localized {
                 slf.text = q
             }
             else {

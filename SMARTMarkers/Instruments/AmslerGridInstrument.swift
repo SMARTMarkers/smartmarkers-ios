@@ -17,12 +17,14 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
     static let amslerGridLeftEye  = "amsler.grid.left"
     
     public var ip_taskDescription: String?
-
-    public init() { }
     
-    public var ip_title: String {
-        return "Amsler Grid"
+    public var ip_title: String
+
+
+    public init() {
+        ip_title = "Amsler Grid"
     }
+    
     
     public var ip_identifier: String? {
         return "amsler.grid"
@@ -39,10 +41,20 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
     public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return [FHIRSearchParamRelationship(Observation.self, ["code": ip_identifier!])]
+        return [
+            FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|\(ip_identifier!)"]),
+            FHIRSearchParamRelationship(Media.self,       ["subject": ""]) // Left Empty to be filled later.
+        ]
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.ip_identifier!, intendedUseDescription: ip_taskDescription, options: [])
+        let taskVC = ORKTaskViewController(task: amslerGridTask, taskRun: UUID())
+        callback(taskVC, nil)
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
         let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.ip_identifier!, intendedUseDescription: ip_taskDescription, options: [])
         let taskVC = ORKTaskViewController(task: amslerGridTask, taskRun: UUID())
         callback(taskVC, nil)
@@ -58,6 +70,9 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
             let cc = CodeableConcept()
             cc.coding = [Coding.sm_ResearchKit(AmslerGridPRO.amslerGridLeftEye, "Amsler Grid Left Eye")]
             oc.code = cc
+            let note = Annotation()
+            note.text = "Amsler Grid Left Eye"
+            media.note = [note]
             components.append(oc)
             images.append(media)
         }
@@ -67,6 +82,9 @@ public class AmslerGridPRO : ActiveInstrumentProtocol {
             let cc = CodeableConcept()
             cc.coding = [Coding.sm_ResearchKit(AmslerGridPRO.amslerGridRightEye, "Amsler Grid Right Eye")]
             oc.code = cc
+            let note = Annotation()
+            note.text = "Amsler Grid Right Eye"
+            media.note = [note]
             components.append(oc)
             images.append(media)
         }
@@ -116,6 +134,7 @@ extension ORKAmslerGridResult {
         let media = Media()
         media.content = attachment
         media.status = .completed
+        media.type = CodeableConcept.sm_From([Coding.sm_Coding("image", "http://terminology.hl7.org/CodeSystem/media-type", "Image")], text: "Image")
         return media
     }
     

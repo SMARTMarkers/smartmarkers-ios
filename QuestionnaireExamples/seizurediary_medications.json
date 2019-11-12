@@ -1,0 +1,85 @@
+{
+    "resourceType" : "Questionnaire",
+    "status" : "active",
+    "title" : "Seizure Medications List",
+    "date" : "2018-08-01",
+    "version" : "0.1",
+    "code" : [
+	    {
+		    "system" : "https://neurology.com/loddenkemper",
+		    "code"   : "medications-epilpsy",
+		    "display" : "Medications List"
+	    }
+    ],
+    "identifier": [
+        {
+          "use": "official",
+          "system": "https://neurology.com/loddenkemper",
+          "value": "medications-epilepsy"
+        }
+      ],
+    "item" : [
+	{
+		"linkId" : "Introduction",
+		"type" : "display",
+		"text" : "Medications List",
+		"readOnly" : "true",
+		"extension" : [
+			{
+				"url" : "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+				"valueString" : "Let us know what medications you are on for the seizure."
+			}
+		]
+	},
+        {
+            "linkId" : "RES_MED",
+            "type" : "choice",
+            "repeats" : true, 
+            "text" : "Please select any rescue medications or interventions given.",
+            "options" : { 
+                "reference" : "#rescueMedicationList"
+            }
+        }
+    ],
+    "contained" : [
+        {
+            "id" : "rescueMedicationList",
+            "resourceType" : "ValueSet",
+            "name" : "Rescue Medication List",
+            "status" : "active",
+            "compose" : {
+                "include" : [
+                    {
+                        "system" : "http://rxnorm.org",
+                        "concept" : [ 
+                            {
+                                "code" : "Diazepam",
+                                "display" : "Diazepam (Valium, Diastat)"
+                            },
+                            {
+                                "code" : "Midazolam",
+                                "display" : "Midazolam (Versed)"
+                            },
+                            {
+                                "code" : "Lorazepam",
+                                "display" : "Lorazepam (Ativan)"
+                            },
+                            {
+                                "code" : "Clonazepam",
+                                "display" : "Clonazepam (Klonopin)"
+                            },
+                            {
+                                "code" : "VNS",
+                                "display" : "VNS (Vagal Nerve Stimulation Therapy) Magnet"
+                            },
+                            {
+                                "code" : "Other",
+                                "display" : "Other"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

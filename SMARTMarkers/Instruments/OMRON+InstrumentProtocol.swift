@@ -19,18 +19,17 @@ open class OMRON: Instrument {
         self.auth = OAuth2CodeGrant(settings: authSettings)
         self.auth.forgetTokens()
         self.auth.logger = OAuth2DebugLogger(.trace)
+        self.ip_title = "OMRON Blood Pressure"
     }
     
-    public var ip_title: String {
-        return "OMRON Blood Pressure"
-    }
+    public var ip_title: String
     
     public var ip_identifier: String? {
         return "omron-blood-pressure"
     }
     
     public var ip_code: Coding? {
-        return nil
+        return Coding.sm_Coding("omron-blood-pressure", "http://omronhealthcare.com", "OMRON Blood Pressure")
     }
     
     public var ip_version: String? {
@@ -40,7 +39,9 @@ open class OMRON: Instrument {
     public var ip_publisher: String?
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
-        return nil
+        return [
+            FHIRSearchParamRelationship(Observation.self, ["code": ip_code!.sm_searchableToken()!])
+        ]
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
@@ -48,6 +49,12 @@ open class OMRON: Instrument {
         let omronTaskViewController = OmronTaskViewController(auth: auth)
         callback(omronTaskViewController, nil)
         
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        let omronTaskViewController = OmronTaskViewController(auth: auth)
+        callback(omronTaskViewController, nil)
     }
     
     public func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {

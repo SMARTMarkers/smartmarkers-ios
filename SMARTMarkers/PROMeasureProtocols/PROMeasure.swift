@@ -14,17 +14,196 @@ import ResearchKit
 public protocol InstrumentResolver: class {
     
     func resolveInstrument(from pro: PROMeasure) -> Instrument?
+    
+    func resolveInstrument(in controller: PDController) -> Instrument?
+    
 }
 
-public protocol PROController: class {
+
+public final class PDController: NSObject {
     
-    var request: Request? { get set }
+    public var request: Request?
     
-    var instrument: Instrument? { get set }
+    public var instrument: Instrument? {
+        didSet {
+            if instrument != nil {
+                reports = Reports(instrument!, for: nil, request: request)
+            }
+        }
+    }
     
-    var reports: Reports? { get set }
+    public internal(set) final var reports: Reports?
+    
+    public weak var instrumentResolver: InstrumentResolver?
+    
+    public var onSessionCompletion: ((_ reports: SubmissionBundle?, _ error: Error?) -> Void)?
+    
+    public lazy var schedule: Schedule? = {
+        return request?.rq_schedule
+    }()
+    
+    convenience public init(_ _instrument: Instrument) {
+        
+        self.init()
+        self.instrument = _instrument
+    }
+    
+    convenience public init(_ _request: Request) {
+        
+        self.init()
+        self.request = _request
+    }
+    
+    public func prepareSession(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
+        guard let instrument = self.instrument else {
+            callback(nil, SMError.promeasureOrderedInstrumentMissing)
+            return
+        }
+        
+        instrument.sm_taskController { (taskViewController, error) in
+            taskViewController?.delegate = self
+            callback(taskViewController, error)
+        }
+    }
+    
+    public func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void)) {
+        
+        if let instr = self.instrument {
+            callback(instr, nil)
+            return
+        }
+        
+        if let resolver = instrumentResolver, let instr = resolver.resolveInstrument(in: self) {
+            callback(instr, nil)
+            return
+        }
+
+        request?.rq_instrumentResolve(callback: callback)
+    }
+    
+    public func updateRequest(_ _results: [ReportType]?, callback: @escaping ((_ success: Bool) -> Void)) {
+        
+        guard request != nil, let res = _results else {
+            return
+        }
+        
+        if let completed = schedule?.update(with: res.map{ $0.rp_date }) {
+            request?.rq_updated(completed, callback:callback)
+        }
+    }
+    
+    // MARK: Fetch Requests
+    
+    public class func Get<T: DomainResource & Request>(requestType: T.Type, for patient: Patient, server: Server, instrumentResolver: InstrumentResolver?, options: [String: String]? = nil, callback: @escaping ([PDController]?, Error?) -> Void) {
+        
+        var searchParams =  T.rq_fetchParameters ?? [String:String]()
+        searchParams["subject"] = patient.id!.string
+        
+        if let options = options {
+            for (k,v) in options {
+                searchParams[k] = v
+            }
+        }
+        
+        T.Requests(from: server, options: searchParams) { (requests, error) in
+            if let requests = requests {
+                let controllers = requests.map({ (request) -> PDController in
+                    let controller = PDController(request)
+                    controller.instrumentResolver = instrumentResolver
+                    return controller
+                })
+                
+                let group = DispatchGroup()
+                controllers.forEach({ (controller) in
+                    group.enter()
+                    controller.instrument(callback: { (resolved, error) in
+                        controller.instrument = resolved
+                        group.leave()
+                    })
+                    group.enter()
+                    controller.reports(for: patient, server: server, callback: { (_, _) in
+                        group.leave()
+                    })
+                })
+
+                group.notify(queue: .main, execute: {
+                    callback(controllers, nil)
+                })
+
+            }
+            else {
+                callback(nil, error)
+            }
+        }
+    }
+    
+    // MARK: Report Collection
+    
+    public func reports(for patient: Patient, server: Server, callback : ((_ success: Bool, _ error: Error?) -> Void)?) {
+        
+        guard let reports = reports else {
+            callback?(false, SMError.promeasureFetchLinkedResources)
+            return
+        }
+        
+        
+        reports.fetch(for: patient, server: server, searchParams: nil) { (results, error) in
+            callback?(results != nil, error)
+        }
+    }
+    
+
+    
 
 }
+
+
+extension PDController: ORKTaskViewControllerDelegate {
+    
+    func dismiss(taskViewController: ORKTaskViewController) {
+        
+        if let navigationController = taskViewController.navigationController {
+            if navigationController.viewControllers.count > 1 {
+                navigationController.popViewController(animated: true)
+            }
+        }
+        else {
+            taskViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        
+        // ***
+        // Bug :Premature firing before conclusion step
+        // ***
+        let stepIdentifier = taskViewController.currentStepViewController!.step!.identifier
+        if stepIdentifier.contains("range.of.motion") { return }
+        // ***
+        
+        if reason == .discarded, reason == .failed  {
+
+        }
+        
+        if reason == .completed {
+            
+            if let bundle = instrument?.ip_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
+                let gr = reports?.addNewReports(bundle, taskId: taskViewController.taskRunUUID.uuidString)
+                onSessionCompletion?(gr, nil)
+            }
+            else {
+                onSessionCompletion?(nil, SMError.instrumentResultBundleNotCreated)
+            }
+        }
+        
+        dismiss(taskViewController: taskViewController)
+        
+    }
+    
+}
+
+
 
 public protocol PROMeasureProtocol: NSObject  {
     
@@ -42,13 +221,14 @@ public protocol PROMeasureProtocol: NSObject  {
     
     func fetchReports(from server: Server, callback : ((_ success: Bool, _ error: Error?) -> Void)?)
     
-//    var sessionDelegate: SessionControllerTaskDelegate? { get set }
-    
     func prepareSession(callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
+    
+    func create(on server: SMART.Server, for instrument: Instrument, patient: Patient, practitioner: Practitioner, callback: @escaping ((_ request: Request?, _ error: Error?) -> Void))
     
 }
 
 public final class PROMeasure : NSObject, PROMeasureProtocol {
+    
     
     public weak var instrumentResolver: InstrumentResolver?
 
@@ -62,7 +242,9 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     
     public var instrument: Instrument? {
         didSet {
-            reports = Reports(resultRelations: instrument?.ip_resultingFhirResourceType, patient, instrument: instrument, request: request)
+            if let instr = instrument {
+                reports = Reports(instr, for: patient, request: request)
+            }
         }
     }
     
@@ -74,7 +256,7 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     
     public var teststatus: String = ""
     
-//    public weak var sessionDelegate: SessionControllerTaskDelegate?
+
     
     public weak var _sessionController: SessionController?
     
@@ -94,8 +276,6 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
         self.request = request
     }
     
-    
-    
     open func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void)) {
         
         if let instr = self.instrument {
@@ -111,12 +291,11 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
         request?.rq_instrumentResolve(callback: callback)
     }
     
-    public convenience init(instrument: Instrument?) {
+    public convenience init(instrument: Instrument) {
+        
         self.init()
         self.instrument = instrument
-        self.reports = Reports(resultRelations: instrument?.ip_resultingFhirResourceType, patient, instrument: instrument, request: request)
-
-
+        self.reports = Reports(instrument, for: patient, request: request)
     }
     
     public override init() { }
@@ -161,12 +340,11 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     public func fetchReports(from server: Server, callback : ((_ success: Bool, _ error: Error?) -> Void)?) {
         
         guard let reports = reports else {
-            
             callback?(false, SMError.promeasureFetchLinkedResources)
             return
         }
         
-        reports.fetch(server: server, searchParams: nil) { (results, error) in
+        reports.fetch(for: patient, server: server, searchParams: nil) { (results, error) in
             callback?(results != nil, error)
         }
     }
@@ -190,10 +368,20 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
         guard request != nil, let res = _results else {
             return
         }
+        
         if let completed = schedule?.update(with: res.map{ $0.rp_date }) {
             request?.rq_updated(completed, callback:callback)
         }
     }
+    
+    
+    public func create(on server: Server, for instrument: Instrument, patient: Patient, practitioner: Practitioner, callback: @escaping ((Request?, Error?) -> Void)) {
+        
+        
+        
+        
+    }
+    
     
     
     

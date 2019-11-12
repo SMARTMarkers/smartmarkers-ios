@@ -11,10 +11,18 @@ import SMART
 import ResearchKit
 
 
+public enum InstrumentCategoryType: String, Equatable {
+    case PRO
+    case ActiveTask
+    case Device
+    case WebRepository
+    case unknown
+}
+
 public protocol Instrument : class {
     
     /// Display friendly title for the instrument
-    var ip_title: String { get }
+    var ip_title: String { get set }
     
     /// Instrument identifier
     var ip_identifier: String? { get }
@@ -28,11 +36,15 @@ public protocol Instrument : class {
     /// Publisher
     var ip_publisher: String? { get }
     
+
     /// Output resource types; can be used to fetch historical resources from the `SMART.Server`
     var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? { get }
     
     /// Protocol Func to generate ResearchKit's `ORKTaskViewController`
     func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
+    
+    /// Protocol function to create a ResearchKit's survey task controller (`ORKTaskViewController`)
+    func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
     
     /// Protocol Func to generate a FHIR `Bundle` of result resources. eg. QuestionnaireResponse, Observation
     func ip_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle?
@@ -54,15 +66,6 @@ public extension Instrument where Self: SMART.DomainResource {
                 callback(nil, error)
             }
         }
-    }
-    
-}
-
-
-public extension Instrument {
-    
-    func asPROMeasure() -> PROMeasure {
-        return PROMeasure(instrument: self)
     }
     
 }

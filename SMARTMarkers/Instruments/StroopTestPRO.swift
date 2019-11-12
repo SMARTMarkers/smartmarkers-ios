@@ -18,13 +18,12 @@ open class StroopTestPRO: ActiveInstrumentProtocol {
     
     public init(attempts: Int = 10) {
         numberOfAttempts = attempts
+        ip_title = "Stroop Test"
     }
 
     public var ip_taskDescription: String?
     
-    public var ip_title: String {
-        return "Stroop Test"
-    }
+    public var ip_title: String
     
     public var ip_identifier: String? {
         return "stroop"
@@ -42,6 +41,13 @@ open class StroopTestPRO: ActiveInstrumentProtocol {
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
+        let task = ORKOrderedTask.stroopTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, numberOfAttempts: numberOfAttempts, options: [])
+        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        callback(taskViewController, nil)
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+
         let task = ORKOrderedTask.stroopTask(withIdentifier: ip_identifier!, intendedUseDescription: ip_taskDescription, numberOfAttempts: numberOfAttempts, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)

@@ -20,12 +20,11 @@ open class KneeRangeOfMotion: Instrument {
     required public init(limbOption: ORKPredefinedTaskLimbOption, usageDescription: String? = nil) {
         self.limbOption = limbOption
         self.usageDescription = usageDescription
+        self.ip_title = (limbOption == .left) ? "Left Knee Range of Motion" : "Right Knee Range of Motion"
     }
     
     
-    public var ip_title: String {
-        return "Knee Range of Motion"
-    }
+    public var ip_title: String
     
     public var ip_identifier: String? {
         return "org.researchkit.knee.range.of.motion"
@@ -43,10 +42,18 @@ open class KneeRangeOfMotion: Instrument {
     
     public var ip_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
         
-        return [FHIRSearchParamRelationship(Observation.self, ["code":ip_code!.code!.string])]
+        return [FHIRSearchParamRelationship(Observation.self, ["code":ip_code!.sm_searchableToken()!])]
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
+        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        callback(taskViewController, nil)
+    }
+    
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
         let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
@@ -94,18 +101,34 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
     
     required public init(limbOption: ORKPredefinedTaskLimbOption) {
         self.limbOption = limbOption
+        self.ip_title = (limbOption == .left) ? "Left Shoulder Range of Motion" : "Right Should Range of Motion"
     }
     
-    public var ip_title: String {
-        return "Shoulder Range of Motion"
-    }
+    public var ip_title: String
     
     public var ip_identifier: String? {
-        return "org.researchkit.shoulder.range.of.motion"
+        
+        if limbOption == ORKPredefinedTaskLimbOption.left {
+            return "org.researchkit.shoulder.left.rangeofmotion"
+        }
+        else {
+            return "org.researchkit.shoulder.right.rangeofmotion"
+        }
     }
     
     public var ip_code: Coding? {
-        return Coding.sm_Coding("shoulder.range.of.motion", "http://researchkit.org", "Range of Motion Shoulder")
+        
+        let code: String
+        
+        if limbOption == ORKPredefinedTaskLimbOption.left {
+            
+            code = "shoulder.left.rangeofmotion"
+        }
+        else {
+            code = "shoulder.right.rangeofmotion"
+        }
+        
+        return Coding.sm_Coding(code, "http://researchkit.org", "Range of Motion Shoulder")
     }
     
     public var ip_version: String? {
@@ -124,6 +147,13 @@ open class ShoulderRangeOfMotion: ActiveInstrumentProtocol {
     }
     
     public func ip_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: ip_taskDescription, options: [])
+        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        callback(taskViewController, nil)
+    }
+    
+    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+        
         let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: ip_title, limbOption: limbOption, intendedUseDescription: ip_taskDescription, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)

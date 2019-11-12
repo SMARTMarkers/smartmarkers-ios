@@ -99,7 +99,7 @@ open class Reports {
     //TODO: SORT by Date
     weak var request: Request?
     
-    weak var instrument: Instrument?
+    weak final var instrument: Instrument!
     
     weak var patient: Patient?
     
@@ -111,12 +111,10 @@ open class Reports {
         return [SubmissionBundle]()
     }()
     
-    open var resultLinks: [FHIRSearchParamRelationship]?
-    
-    public init(resultRelations: [FHIRSearchParamRelationship]?, _ patient: Patient?, instrument: Instrument?, request: Request?) {
-        self.resultLinks = resultRelations
-        self.patient = patient
+    public init(_ instrument: Instrument, for patient: Patient?, request: Request?) {
+        
         self.instrument = instrument
+        self.patient = patient
         self.request = request
     }
     
@@ -137,14 +135,27 @@ open class Reports {
         }).first
     }
     
-    open func fetch(server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [ReportType]?, _ error: Error?) -> Void)) {
+    open func fetch(for patient: Patient?, server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [ReportType]?, _ error: Error?) -> Void)) {
+     
+        guard let resultParams = instrument.ip_resultingFhirResourceType else {
+            callback(nil, SMError.reportUnknownFHIRReportType)
+            return
+        }
+        
         
         let group = DispatchGroup()
-        for type in resultLinks! {
-            let search = type.resourceType.search(type.relation as Any)
+        for param in resultParams {            
+            var searchParam = param.relation
+            if let pt = patient {
+                searchParam["subject"] = "Patient/\(pt.id!.string)"
+            }
+            //Todo: Remove
+            print(searchParam)
+
+            let search = param.resourceType.search(searchParam as Any)
             search.pageCount = 100
             group.enter()
-            search.perform(server) { [unowned self]  (bundle, error) in
+            search.perform(server) { (bundle, error) in
                 if let bundle = bundle, let entries = bundle.entry {
                     if entries.count > 0 {
                         let results = entries.map { $0.resource as! ReportType }
@@ -161,7 +172,6 @@ open class Reports {
         group.notify(queue: .global(qos: .default)) {
             callback(self.reports, nil)
         }
-        
     }
     
     @discardableResult
@@ -175,9 +185,8 @@ open class Reports {
     /// Prepare for Submission to `Server`.
     open func submit(to server: Server, consent: Bool, patient: Patient, request: Request?, callback: @escaping ((_ success: Bool, _ error: [Error]?) -> Void)) {
         
-        
         guard !submissionBundle.isEmpty else {
-            callback(false, nil)
+            callback(true, nil)
             return
         }
         
@@ -187,10 +196,10 @@ open class Reports {
         
         for gr in submissionBundle {
             
-            if !gr.shouldSubmit {
-                gr.status = .discarded
-                continue
-            }
+//            if !gr.shouldSubmit {
+//                gr.status = .discarded
+//                continue
+//            }
             
             var _bundle = gr.bundle
             Reports.Tag(&_bundle, with: patient, request: request)
