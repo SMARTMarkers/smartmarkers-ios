@@ -171,7 +171,7 @@ open class SMSubmissionErrorNoticeModifier: ORKStepModifier {
 
 
 
-extension PROMeasure {
+extension PDController {
     
     func sm_asFormItem() -> ORKFormItem {
         

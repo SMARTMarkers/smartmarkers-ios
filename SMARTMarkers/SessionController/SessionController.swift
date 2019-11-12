@@ -23,7 +23,7 @@ open class SessionController: NSObject {
     
     public let identifier: String
     
-    var measures: [PROMeasure]
+    var measures: [PDController]
     
     var patient: Patient?
     
@@ -33,7 +33,7 @@ open class SessionController: NSObject {
     
     var errors: [Error]?
     
-    public init(_ measures: [PROMeasure], patient: Patient?, server: Server?, verifyUser: Bool = false) {
+    public init(_ measures: [PDController], patient: Patient?, server: Server?, verifyUser: Bool = false) {
         
         self.identifier = UUID().uuidString
         self.measures = measures
@@ -44,7 +44,7 @@ open class SessionController: NSObject {
     
     weak var delegate: SessionDelegate?
     
-    public var onCancellation: ((_ proMeasure: PROMeasureProtocol) -> Void)?
+    public var onCancellation: ((_ proMeasure: PDController) -> Void)?
     
     public var onCompletion: (( _ session: SessionController) -> Void)?
     
@@ -57,7 +57,7 @@ open class SessionController: NSObject {
         var errors = [Error]()
         for measure in measures {
             
-            measure._sessionController = self
+//            measure._sessionController = self
             group.enter()
             measure.prepareSession { (taskViewController, error) in
                 if let tvc = taskViewController {
