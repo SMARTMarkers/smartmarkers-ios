@@ -83,16 +83,14 @@ class SMSubmissionInProgressStepVeiwController: ORKWaitStepViewController {
                 var b = [SubmissionBundle]()
                 selectedTasks?.forEach({ (taskId) in
                     if let sb = measure.reports?.submissionBundle(for: taskId) {
-                        sb.shouldSubmit = true
+                        sb.canSubmit = true
                         b.append(sb)
                     }
+                    
                 })
                 
                 return b.isEmpty ? nil : b
             }
-            
-           
-            
             
             
             let group = DispatchGroup()
@@ -186,11 +184,11 @@ extension Reports {
     
     func sm_asTextChoiceAnswerFormat() -> ORKTextChoiceAnswerFormat? {
         
-        guard !submissionBundle.isEmpty else {
+        guard !submissionQueue.isEmpty else {
             return nil
         }
         
-        let choices = submissionBundle.map { (gr) -> ORKTextChoice in
+        let choices = submissionQueue.map { (gr) -> ORKTextChoice in
             let content = gr.bundle.sm_ContentSummary()! + "\n\nStatus: \(gr.status)" + "\nTaskId: \(gr.taskId)"
                 let count  = gr.bundle.sm_resourceCount()
 

@@ -10,7 +10,7 @@ import Foundation
 import SMART
 
 
-extension Media: ReportProtocol {
+extension Media: Report {
     
     public var rp_resourceType: String {
         return sm_resourceType()
@@ -21,6 +21,10 @@ extension Media: ReportProtocol {
         return id?.string
     }
     
+    
+    public var rp_code: Coding? {
+        return type?.coding?.first
+    }
     
     public var rp_title: String? {
         return "Media #\(id?.string ?? "-")"
@@ -40,12 +44,6 @@ extension Media: ReportProtocol {
     public var rp_observation: String? {
         return nil
     }
-    
-    public static func searchParam(from: [DomainResource.Type]?) -> [String : String]? {
-        return nil
-    }
-    
-    
     
 }
 

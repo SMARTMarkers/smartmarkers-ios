@@ -58,10 +58,10 @@ public protocol Instrument : class {
     
 }
 
-
+/// Convenience Extension to fetch a set of `Instruments` from the `Server`
 public extension Instrument where Self: SMART.DomainResource {
     
-    static func Instruments(from server: Server, options: [String:String]?, callback: @escaping ((_ instrumentResources: [Self]?, _ error: Error?) -> Void)) {
+    static func Get(from server: Server, options: [String:String]?, callback: @escaping ((_ instrumentResources: [Self]?, _ error: Error?) -> Void)) {
         let search = Self.search(options as Any)
         search.pageCount = 100
         search.perform(server) { (bundle, error) in
@@ -78,8 +78,8 @@ public extension Instrument where Self: SMART.DomainResource {
 }
 
 
-
-public class InstrumentViewController: UITableViewController {
+/// ViewController for an Instrument
+open class InstrumentViewController: UITableViewController {
     
     public var instrument: Instrument!
     
@@ -97,7 +97,7 @@ public class InstrumentViewController: UITableViewController {
         instrument = _instrument
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         
         super.viewDidLoad()
         if navigationController != nil {
@@ -113,23 +113,20 @@ public class InstrumentViewController: UITableViewController {
     
     // MARK: - Table view data source
     
-    override public func numberOfSections(in tableView: UITableView) -> Int {
-        
+    override open func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
+    override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
     
-    override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "InstrumentCell"
         var cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
         if cell == nil {
             cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
             cell?.textLabel?.numberOfLines = 2
-            
             cell?.textLabel?.lineBreakMode = .byWordWrapping
             cell?.detailTextLabel?.textColor = view.tintColor
         }

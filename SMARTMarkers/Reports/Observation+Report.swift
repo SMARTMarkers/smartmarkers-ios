@@ -9,19 +9,19 @@
 import Foundation
 import SMART
 
-extension Observation : ReportProtocol {
+extension Observation : Report {
+    
+    public var rp_code: Coding? {
+        return code?.coding?.first
+    }
     
     public var rp_resourceType: String {
         return "Observation"
     }
     
-    
-    
     public var rp_identifier: String? {
         return id?.string
     }
-    
-    
     
     public var rp_title: String? {
         if let code = code?.text?.string {
@@ -44,17 +44,11 @@ extension Observation : ReportProtocol {
     public var rp_observation: String? {
         return observationValueString()
     }
-    
-    public static func searchParam(from: [DomainResource.Type]?) -> [String : String]? {
-        return nil
-    }
+
     
     func observationValueString() -> String? {
         if let v = valueString?.string { return v }
         if let v = valueQuantity { return String(describing: v.value!) }
         return nil
     }
-    
-    
-    
 }

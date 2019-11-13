@@ -9,7 +9,9 @@
 import Foundation
 import SMART
 
-
+/**
+ Convinience enums to store Instrument codes and Classes
+ */
 public enum Instruments {
     
     public enum HealthKit: String, CaseIterable, CustomStringConvertible {

@@ -43,10 +43,10 @@ open class TappingSpeed: Instrument {
         self.duration = duration
         self.usageDescription = usageDescription
         self.sm_title = "Tapping Speed Task"
-        self.sm_identifier = "tappingspeed"
         
         if hand == .right {
             self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Right.coding
+
         }
         else if hand == .left {
             self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Left.coding
@@ -54,8 +54,8 @@ open class TappingSpeed: Instrument {
         else {
             self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed.coding
         }
+        self.sm_identifier = sm_code?.code?.string
 
-        // TODO: Link Observation with DocumentReference
         self.sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!]),
             FHIRSearchParamRelationship(DocumentReference.self, ["type": sm_code!.sm_searchableToken()!])

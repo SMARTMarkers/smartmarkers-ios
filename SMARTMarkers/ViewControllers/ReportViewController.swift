@@ -106,7 +106,7 @@ public class ReportViewController: UITableViewController {
     
     public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let report = reports[section]
-        let count  = report.submissionBundle.count
+        let count  = report.submissionQueue.count
         return "\(report.instrument?.sm_title ?? " ") #\(count)"
     }
     
@@ -117,7 +117,7 @@ public class ReportViewController: UITableViewController {
     
     override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return reports[section].submissionBundle.count
+        return reports[section].submissionQueue.count
     }
     
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -127,7 +127,7 @@ public class ReportViewController: UITableViewController {
         cell.detailTextLabel?.lineBreakMode = .byWordWrapping
         cell.editingAccessoryType = .detailDisclosureButton
         
-        let new = reports[indexPath.section].submissionBundle[indexPath.row]
+        let new = reports[indexPath.section].submissionQueue[indexPath.row]
         cell.textLabel?.text = ""
         cell.detailTextLabel?.text = new.bundle.sm_ContentSummary()
         return cell
@@ -135,7 +135,7 @@ public class ReportViewController: UITableViewController {
     
     override public func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
       
-        let gr = reports[indexPath.section].submissionBundle[indexPath.row]
+        let gr = reports[indexPath.section].submissionQueue[indexPath.row]
         let bundleView = ReportBundleViewController(gr.bundle)
         show(bundleView, sender: nil)
     }

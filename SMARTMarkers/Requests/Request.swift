@@ -11,7 +11,7 @@ import SMART
 
 /*
  
- PRO Request Protocol
+ PGHD Request Protocol
  Fetches and Manages `FHIR` request resource
  
  */
@@ -36,13 +36,13 @@ public protocol Request :  class, CustomStringConvertible {
     /// Primary identifying Request Code
     var rq_categoryCode: String? { get }
     
-    /// Deduced Schedule
+    /// Schedule
     var rq_schedule: Schedule? { get }
     
     /// Fetch Parameters
     static var rq_fetchParameters: [String: String]? { get }
     
-    ///::: Should this be a Delegate Protocol?
+    ///TODO Should this be a Delegate Protocol?
     /// Notifies request has been updated
     func rq_updated(_ completed: Bool, callback: @escaping ((_ success: Bool) -> Void))
     
@@ -51,6 +51,13 @@ public protocol Request :  class, CustomStringConvertible {
     
     /// Resolve FHIR References if needed;
     func rq_resolveReferences(callback: @escaping ((Bool) -> Void))
+    
+    /*
+    static func Create(for instrument: Instrument, patient: Patient?, schedule: Schedule?,  callback: @escaping ((_ request: Self?, _ error: Error?) -> Void))
+    
+    func write(to server: Server, callback: @escaping ((_ request: Self?, _ error: Error?) -> Void))
+     
+     */
 
 }
 
@@ -73,7 +80,7 @@ public extension Request where Self: SMART.DomainResource {
                 let group = DispatchGroup()
                 for r in resources ?? [] {
                     group.enter()
-                    r.rq_resolveReferences(callback: { (completed ) in
+                    r.rq_resolveReferences(callback: { (_ ) in
                         group.leave()
                     })
                 }
@@ -93,10 +100,22 @@ public extension Request where Self: SMART.DomainResource {
         return self 
     }
     
+    //TODO
+    func write(to server: Server, callback: @escaping ((_ request: Self?, _ error: Error?) -> Void)) {
+        
+    
+        callback(nil, nil)
+    }
+
+    
     
     func asRelativeReference() throws -> Reference {
         return try self.asRelativeReference()
     }
+    
+    
+    
+    
     
     
 }

@@ -67,7 +67,7 @@ open class MeasuresViewController :  UITableViewController {
 		
         if nil != instruments { return }
         markBusy()
-        Questionnaire.Instruments(from: server, options: [:]) { [unowned self] (questionnaires, error) in
+        Questionnaire.Get(from: server, options: [:]) { [unowned self] (questionnaires, error) in
             
             if let error = error {
                 print(error)

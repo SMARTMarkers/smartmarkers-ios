@@ -10,48 +10,60 @@ import Foundation
 import SMART
 
 
-public typealias ReportType = DomainResource & ReportProtocol
-
-
-public protocol ReportProtocol {
+/**
+ Report Protocol
+ All FHIR resources inheriting from `DomainResource` that are results of a PGHD `Instrument` must conform to the report protocol.
+ */
+public protocol Report: Resource {
     
+    /// FHIR resourceType
     var rp_resourceType: String { get }
+    
+    /// Identifier: usually `resource.id`
     var rp_identifier: String? { get }
+    
+    /// Display friendly title
     var rp_title : String? { get }
+    
+    /// Type of report; based on `Coding`
+    var rp_code: Coding? { get }
+    
+    /// Report description
     var rp_description: String? { get }
+    
+    /// Date resource created/generated/updated
     var rp_date: Date { get }
+    
+    /// Observation value; if any
     var rp_observation: String? { get }
-    var rp_submitted: Bool { get }
-    static func searchParam(from: [DomainResource.Type]?) -> [String : String]?
     
 }
 
-public extension ReportProtocol where Self: ReportType {
-    
-    var rp_submitted: Bool {
-        return (id != nil)
-    }
-}
+public extension Report {
 
-public extension ReportProtocol where Self: DomainResource {
-    
     var rp_resourceType: String {
         return sm_resourceType()
     }
 }
 
-
 public struct FHIRSearchParamRelationship {
     
-    public let resourceType: ReportType.Type
+    public let resourceType: Report.Type
     public let relation: [String: String]
-    public init(_ type: ReportType.Type, _ relation: [String: String]) {
+    public init(_ type: Report.Type, _ relation: [String: String]) {
         self.resourceType = type
         self.relation = relation
     
     }
 }
 
+
+
+/**
+ SubmissionBundle holds newly created reports for submission to the FHIR
+ 
+ One `SubmissionBundle` created for each PGHD task session
+ */
 public class SubmissionBundle {
     
     public enum SubmissionStatus: String, CustomStringConvertible {
@@ -77,12 +89,28 @@ public class SubmissionBundle {
         case discarded
     }
     
+    /// User session task identifier
     public final let taskId: String
-    public final let bundle: SMART.Bundle
+    
+    /// `SMART.Bundle` generated from the task session
+    public final var bundle: SMART.Bundle
+    
+    /// Associated request identifier; (if any)
     public final let requestId: String?
-    public internal(set) var shouldSubmit: Bool = false
+    
+    /// Boolean to indicate if "ok" to submit
+    public var canSubmit: Bool = false
+    
+    /// Submission status
     public internal(set) var status: SubmissionStatus
     
+    /**
+     Designated Initializer
+     
+     - parameter taskId: User task session identifier
+     - parameter bundle: `SMART.Bundle` generated from the task session
+     - parameter requestId: Optional request identifier
+     */
     init(taskId: String, bundle: SMART.Bundle, requestId: String? = nil) {
         self.taskId = taskId
         self.bundle = bundle
@@ -93,24 +121,49 @@ public class SubmissionBundle {
     
 }
 
-
+/**
+ Reports Collection Class
+ 
+ Instances of this class are mainly responsible for fetching historical `Report` conformant FHIR resources and submit newly created resources.
+ */
 open class Reports {
     
-    //TODO: SORT by Date
+    /// Practitioner's `Request`
     weak var request: Request?
     
+    /// Instrument for which the reports are fetched or generated
     weak final var instrument: Instrument!
     
+    /// Patient for which the reports are fetched or generated
     weak var patient: Patient?
     
-    open lazy var reports: [ReportType] = {
-       return [ReportType]()
+    /// Collection of `Report`s fetched from the FHIR `Server`
+    private lazy var _reports: [Report] = {
+       return [Report]()
     }()
     
-    open lazy var submissionBundle: [SubmissionBundle] = {
+    /// Public reference to _reports
+    open var reports: [Report] {
+        return _reports
+    }
+    
+    /// Collection of `SubmissionBundle`; Yet to be submitted
+    private lazy var _submissionQueue: [SubmissionBundle] = {
         return [SubmissionBundle]()
     }()
     
+    /// Public reference to queue
+    open var submissionQueue: [SubmissionBundle] {
+        return _submissionQueue
+    }
+    
+    /**
+     Designated Initializer.
+     
+     - parameter instrument:    The `Instrument` the receiver should fetch or submit the reports for
+     - parameter for:           The `Patient` for which the reports are fetched or submitted
+     - parameter request:       The `Request` for which the reports are fetched or generated
+     */
     public init(_ instrument: Instrument, for patient: Patient?, request: Request?) {
         
         self.instrument = instrument
@@ -118,27 +171,27 @@ open class Reports {
         self.request = request
     }
     
-    open func add(resource: ReportType) {
-        reports.append(resource)
+    private func add(resource: Report) {
+        _reports.append(resource)
     }
     
     
-    open func add(resources: [ReportType]) {
-        reports.append(contentsOf: resources)
+    private func add(resources: [Report]) {
+        _reports.append(contentsOf: resources)
     }
     
     
     open func submissionBundle(for taskId: String) -> SubmissionBundle? {
         
-        return submissionBundle.filter({ (submissionBundle) -> Bool in
+        return submissionQueue.filter({ (submissionBundle) -> Bool in
             return submissionBundle.taskId == taskId
         }).first
     }
     
-    open func fetch(for patient: Patient?, server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [ReportType]?, _ error: Error?) -> Void)) {
+    open func fetch(for patient: Patient?, server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [Report]?, _ error: Error?) -> Void)) {
      
         guard let resultParams = instrument.sm_resultingFhirResourceType else {
-            callback(nil, SMError.reportUnknownFHIRReportType)
+            callback(nil, SMError.reportUnknownFHIRReport)
             return
         }
         
@@ -149,16 +202,14 @@ open class Reports {
             if let pt = patient {
                 searchParam["subject"] = "Patient/\(pt.id!.string)"
             }
-            //Todo: Remove
-            print(searchParam)
-
+            
             let search = param.resourceType.search(searchParam as Any)
             search.pageCount = 100
             group.enter()
             search.perform(server) { (bundle, error) in
                 if let bundle = bundle, let entries = bundle.entry {
                     if entries.count > 0 {
-                        let results = entries.map { $0.resource as! ReportType }
+                        let results = entries.map { $0.resource as! Report }
                         self.add(resources: results)
                     }
                 }
@@ -177,7 +228,7 @@ open class Reports {
     @discardableResult
     open func addNewReports(_ bundle: SMART.Bundle,  taskId: String) -> SubmissionBundle  {
         let gr = SubmissionBundle(taskId: taskId, bundle: bundle, requestId: nil)
-        submissionBundle.append(gr)
+        _submissionQueue.append(gr)
         return gr
     }
     
@@ -185,7 +236,7 @@ open class Reports {
     /// Prepare for Submission to `Server`.
     open func submit(to server: Server, consent: Bool, patient: Patient, request: Request?, callback: @escaping ((_ success: Bool, _ error: [Error]?) -> Void)) {
         
-        guard !submissionBundle.isEmpty else {
+        guard !_submissionQueue.isEmpty else {
             callback(true, nil)
             return
         }
@@ -194,34 +245,47 @@ open class Reports {
         let group  = DispatchGroup()
         var errors = [Error]()
         
-        for gr in submissionBundle {
+        for submission in _submissionQueue {
             
-//            if !gr.shouldSubmit {
-//                gr.status = .discarded
-//                continue
-//            }
+            if !submission.canSubmit {
+                submission.status = .discarded
+                continue
+            }
             
-            var _bundle = gr.bundle
-            Reports.Tag(&_bundle, with: patient, request: request)
+            Reports.Tag(&submission.bundle, with: patient, request: request)
             group.enter()
-            submit(bundle: _bundle, server: server) { (success, error) in
+            submit(bundle: submission.bundle, server: server) { (success, error) in
                 if let error = error {
                     errors.append(error)
                 }
-                gr.status = (success) ? .submitted : .failedToSubmit
+                submission.status = (success) ? .submitted : .failedToSubmit
                 group.leave()
             }
         }
         
         group.notify(queue: .global(qos: .default)) {
+            
+            // Remove all submitted bundles from the which were submitted or discarded
+            self._submissionQueue.removeAll(where: { (submission) -> Bool in
+                (submission.status == .submitted || submission.status == .discarded)
+            })
             callback(errors.isEmpty, errors)
         }
         
         
     }
     
-    
-    public static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: Request?) {
+    /**
+     Static method for "tagging" the generated `Bundle` with the patient and request if available.
+     
+     Resources contained in the `Bundle` are checked for known resource types and tagged with Patient and Requests's `Reference`
+     Supported FHIR Resources: `QuestionnaireResponse`, `Observation`, `Binary`, `Media`, `Immunization`, `AllergyIntolerance`, `Condition`, `MedicationRequest`, `Procedure`, `DocumentRefereence`
+     
+     - parameter bundle:    Generated output in `SMART.Bundle` to tag
+     - parameter with:      The `Patient` to associate the bundle resources with
+     - parameter request:   The `Request` to associate the bundle resources with
+    */
+    private static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: Request?) {
         
         do {
             let patientReference = try patient?.asRelativeReference()
@@ -304,7 +368,16 @@ open class Reports {
     }
     
     
-    
+    /**
+     Submission method
+     
+     Submits FHIR resources in the receiver's SubmissionBundle (`SMART.Bundle`) to the FHIR server
+     FHIR Bundle Transaction method is used.
+     
+     - parameter bundle: `SMART.Bundle` containing FHIR resources
+     - parameter server:    FHIR `Server` to write resources
+     - parameter callback:  The callback to call when operation completed with a success (Bool)
+    */
     open func submit(bundle: SMART.Bundle, server: Server, callback: @escaping ((_ success: Bool, _ error: Error?) -> Void)) {
         
         let handler = FHIRJSONRequestHandler(.POST, resource: bundle)
@@ -316,12 +389,12 @@ open class Reports {
             if let response = response as? FHIRServerJSONResponse,
                 let json = response.json,
                 let responseBundle = try? SMART.Bundle(json: json) {
-                if let results = responseBundle.entry?.filter({ $0.resource is ReportType}).map({ $0.resource as! ReportType }) {
+                if let results = responseBundle.entry?.filter({ $0.resource is Report}).map({ $0.resource as! Report }) {
                     self?.add(resources: results)
                     callback(true, nil)
                 }
                 else {
-                    callback(false, SMError.reportUnknownFHIRReportType)
+                    callback(false, SMError.reportUnknownFHIRReport)
                 }
             }
             else {
@@ -343,7 +416,7 @@ extension SMART.Bundle {
     func sm_ContentSummary() -> String? {
         
         let content = entry?.reduce(into: String(), { (bundleString, entry) in
-            let report = entry.resource as? ReportType
+            let report = entry.resource as? Report
             bundleString += report?.sm_resourceType() ?? "Type: \(entry.resource?.sm_resourceType() ?? "-")"
             bundleString += ": " + (report?.rp_date.shortDate ?? "-")
             bundleString += "\n"

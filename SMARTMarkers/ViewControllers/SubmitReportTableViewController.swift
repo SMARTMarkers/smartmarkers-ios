@@ -50,7 +50,7 @@ public class ReportBundleViewController: UITableViewController {
         
         let resource = bundle!.entry![indexPath.row].resource
         let view: UIViewController
-        if let resource = resource as? ReportType {
+        if let resource = resource as? Report {
             view = PROResultViewController(resource)
         }
         else {

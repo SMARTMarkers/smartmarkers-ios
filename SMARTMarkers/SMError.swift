@@ -33,13 +33,13 @@ public enum SMError : Error, CustomStringConvertible {
     case promeasureFetchLinkedResources
     
     
-    // MARK: ReportProtocol
+    // MARK: Report
     
     /// Report could not be submitted
     case reportSubmissionToServerError(serverError: Error)
     
-    /// FHIR Resources received are not `ReportProtocol` conformant
-    case reportUnknownFHIRReportType
+    /// FHIR Resources received are not `Report` protocol conformant
+    case reportUnknownFHIRReport
     
     // MARK: InstrumentProtocol
     
@@ -128,8 +128,8 @@ public enum SMError : Error, CustomStringConvertible {
             
         case .reportSubmissionToServerError(let serverError):
             return "Reports could not be submitted to the FHIR Server \(serverError)"
-        case .reportUnknownFHIRReportType:
-            return "FHIR resources retrieved are not conformant to ReportProtocol"
+        case .reportUnknownFHIRReport:
+            return "FHIR resources retrieved are not conformant to `Report` protocol"
             
         // Instrument
             

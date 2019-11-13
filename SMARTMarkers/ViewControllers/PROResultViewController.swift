@@ -10,7 +10,7 @@ import UIKit
 
 public class PROResultViewController: UITableViewController {
     
-    public var result: ReportProtocol!
+    public var result: Report!
     
     public lazy var data : [(String, String)] = {
         return [
@@ -23,7 +23,7 @@ public class PROResultViewController: UITableViewController {
         ]
     }()
 
-    public required convenience init(_ _result: ReportProtocol) {
+    public required convenience init(_ _result: Report) {
         self.init(style: .grouped)
         result = _result
     }

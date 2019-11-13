@@ -123,7 +123,15 @@ public class SMARTManager : NSObject {
                 self.patient = p
             }
             
-            if let idToken = self.client.server.idToken, let decoded = self.base64UrlDecode(idToken), let profile = decoded["profile"] as? String {
+            if let idToken = self.client.server.idToken, let decoded = self.base64UrlDecode(idToken) {
+                
+                guard let profile = decoded["profile"] as? String ?? decoded["fhirUser"] as? String else {
+                    callback(self.patient != nil, nil)
+                    return
+                }
+
+                print(decoded)
+                
                 let components = profile.components(separatedBy: "/")
                 let resourceType = components[0]
                 let resourceId   = components[1]
@@ -174,52 +182,6 @@ public class SMARTManager : NSObject {
                 callback(resource as? T, ferror)
             })
         })
-    }
-
-    
-    // MARK: FHIR Search Resources
-    
-    public func getPatients(callback: @escaping(_ patients: [Patient]?, _ error: Error?) -> Void ){
-        search(type: Patient.self, params: [:], callback: callback)
-    }
-    
-    public func getQuestionnaires(callback: @escaping(_ questionnaires: [Questionnaire]?, _ error: Error?) -> Void) {
-        search(type: Questionnaire.self, params: [:], callback: callback)
-    }
-
-	public func getObservations(callback: @escaping(_ observations: [Observation]?, _ error: Error?) -> Void) {
-		guard let patient = patient else {
-			print("Select Patient")
-			callback(nil, nil)
-			return
-		}
-		search(type: Observation.self, params: ["category" : "survey", "patient": patient.id!.string], callback: callback)
-	}
-    
-    public func search<T: DomainResource>(type domainResource: T.Type, params: [String: String], callback : @escaping (_ resources: [T]?, _ serror : Error?) -> Void) {
-        client.ready { [unowned self] (rerror) in
-            if nil != rerror {
-				self.clientNotReady(rerror!)
-				callback(nil, rerror)
-			}
-			let search = domainResource.search(params)
-			// TODO: Decide Appropriate Number
-			search.pageCount = 100
-            search.perform(self.client.server, callback: { (bundle, fhirError) in
-                if let bundle = bundle {
-                    let resources = bundle.entry?.filter{ $0.resource is T}.map{ $0.resource as! T}
-                    if let count = resources?.count, count > 0 {
-                        callback(resources, fhirError)
-                    }
-                    else {
-                        callback(nil, fhirError)
-                    }
-                }
-                else {
-                    callback(nil, fhirError)
-                }
-            })
-        }
     }
     
     

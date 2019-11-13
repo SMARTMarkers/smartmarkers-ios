@@ -1,5 +1,5 @@
 //
-//  ReportProtocol+FHIR.swift
+//  QuestionnaireResponse+Report.swift
 //  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 9/4/19.
@@ -12,17 +12,15 @@ import SMART
 
 
 
-extension QuestionnaireResponse : ReportProtocol {
-    
-    public var rp_resourceType: String {
-        return "QuestionnaireResponse"
-    }
+extension QuestionnaireResponse : Report {
     
     public var rp_identifier: String? {
         return id?.string ?? ""
     }
     
-    
+    public var rp_code: Coding? {
+        return nil
+    }
     
     public var rp_title: String? {
         return "Response #\(id?.string ?? "-")"
@@ -37,10 +35,6 @@ extension QuestionnaireResponse : ReportProtocol {
     }
     
     public var rp_observation: String? {
-        return nil
-    }
-    
-    public static func searchParam(from: [DomainResource.Type]?) -> [String : String]? {
         return nil
     }
     

@@ -9,9 +9,9 @@
 - [  ] Report
 - [  ] Request: create Request
 - [ X ] PGHDController Class
-- [  ] ReportSubmission
-- [  ]      delete SubmissionBundle after success
-- [  ]      override when not submitting in UI
+- [ X ] ReportSubmission
+- [ X ]      delete SubmissionBundle after success
+- [ X ]      override when not submitting in UI
 - [  ] Insights Controller
 - [  ] FHIRViewController
 - [  ] Remove Logo

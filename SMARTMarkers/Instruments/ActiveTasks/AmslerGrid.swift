@@ -34,12 +34,12 @@ public class AmslerGrid : Instrument {
     
     public init() {
         sm_title        = "Amsler Grid"
-        sm_type         = .ActiveTask
         sm_identifier   = "amslergrid"
+        sm_type         = .ActiveTask
         sm_code         = SMARTMarkers.Instruments.ActiveTasks.amslerGrid.coding
         sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|\(sm_identifier!)"]),
-            FHIRSearchParamRelationship(Media.self,       ["subject": ""]) // Left Empty to be filled later.
+            FHIRSearchParamRelationship(Media.self,       ["subject": ""]) // Filled in by `Reports`
         ]
     }
     

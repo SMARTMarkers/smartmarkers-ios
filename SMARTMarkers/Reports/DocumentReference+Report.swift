@@ -9,7 +9,11 @@
 import Foundation
 import SMART
 
-extension DocumentReference: ReportProtocol {
+extension DocumentReference: Report {
+    
+    public var rp_code: Coding? {
+        return nil
+    }
     
     public var rp_identifier: String? {
         return id?.string
@@ -32,11 +36,5 @@ extension DocumentReference: ReportProtocol {
     public var rp_observation: String? {
         return nil
     }
-    
-    public static func searchParam(from: [DomainResource.Type]?) -> [String : String]? {
-        return nil
-    }
-    
-    
     
 }

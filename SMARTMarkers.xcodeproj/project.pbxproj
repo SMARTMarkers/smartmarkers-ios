@@ -108,7 +108,7 @@
 		D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F0A578209A3CE200481868 /* LineChartView.swift */; };
 		D4FEBDB321DFD50D0057C77D /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEBDB221DFD50D0057C77D /* Common.swift */; };
 		D4FEBDB821E64A610057C77D /* SMError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEBDB721E64A610057C77D /* SMError.swift */; };
-		D4FEBDBA21E7B3EA0057C77D /* Request+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEBDB921E7B3EA0057C77D /* Request+FHIR.swift */; };
+		D4FEBDBA21E7B3EA0057C77D /* ServiceRequest+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FEBDB921E7B3EA0057C77D /* ServiceRequest+Request.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -216,7 +216,7 @@
 		D4F0A578209A3CE200481868 /* LineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
 		D4FEBDB221DFD50D0057C77D /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		D4FEBDB721E64A610057C77D /* SMError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMError.swift; sourceTree = "<group>"; };
-		D4FEBDB921E7B3EA0057C77D /* Request+FHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request+FHIR.swift"; sourceTree = "<group>"; };
+		D4FEBDB921E7B3EA0057C77D /* ServiceRequest+Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServiceRequest+Request.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,7 +254,7 @@
 			path = PROStep;
 			sourceTree = "<group>";
 		};
-		D422E58622C242990097E0CF /* HealthKitClinicalRecords */ = {
+		D422E58622C242990097E0CF /* iOSHealthRecords */ = {
 			isa = PBXGroup;
 			children = (
 				D4DFD99D224125A60097B958 /* HKClinicalRecordStep.swift */,
@@ -265,7 +265,7 @@
 				D4268F1C2335587E000416A1 /* SMHealthKitRecords.swift */,
 				D4268F1E23368C43000416A1 /* HKFHIRResource+FHIR.swift */,
 			);
-			path = HealthKitClinicalRecords;
+			path = iOSHealthRecords;
 			sourceTree = "<group>";
 		};
 		D436B1D520EBF89E00CAF2F5 /* Questionnaire */ = {
@@ -397,7 +397,7 @@
 				D4E3D218237B067800BDBCF2 /* Activity */,
 				D4E3D219237B068F00BDBCF2 /* Web */,
 				D48BBB5022D6443400FF4023 /* PROMIS */,
-				D422E58622C242990097E0CF /* HealthKitClinicalRecords */,
+				D422E58622C242990097E0CF /* iOSHealthRecords */,
 			);
 			path = Instruments;
 			sourceTree = "<group>";
@@ -438,7 +438,7 @@
 			isa = PBXGroup;
 			children = (
 				D4B964DB22298FF000F46177 /* Request.swift */,
-				D4FEBDB921E7B3EA0057C77D /* Request+FHIR.swift */,
+				D4FEBDB921E7B3EA0057C77D /* ServiceRequest+Request.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -662,7 +662,7 @@
 				D4E3D21D237B3DE100BDBCF2 /* DocumentReference+Report.swift in Sources */,
 				D422E58822C242B70097E0CF /* HKClincalRecordSelector.swift in Sources */,
 				D4E3D21F237B52AD00BDBCF2 /* AssessmentCenterServer.swift in Sources */,
-				D4FEBDBA21E7B3EA0057C77D /* Request+FHIR.swift in Sources */,
+				D4FEBDBA21E7B3EA0057C77D /* ServiceRequest+Request.swift in Sources */,
 				D4DC5B1D23326267001878B4 /* SubmissionStep.swift in Sources */,
 				D4E75D8120361EE5000CE95A /* PatientsViewController.swift in Sources */,
 				D4E75D7E20361EB5000CE95A /* MeasuresViewController.swift in Sources */,
