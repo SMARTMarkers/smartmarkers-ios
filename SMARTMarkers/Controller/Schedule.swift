@@ -1,6 +1,6 @@
 //
 //  Schedule.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 01/05/18.
 //  Copyright © 2018 Boston Children's Hospital. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  TowerofHanoiInstrument.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 4/18/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -12,10 +12,6 @@ import ResearchKit
 
 
 open class TowerOfHanoi: Instrument {
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-    }
-    
     
     let numberOfDisks: UInt!
     

@@ -1,6 +1,6 @@
 //
 //  AmslerGridInstrument.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/15/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -41,13 +41,6 @@ public class AmslerGrid : Instrument {
             FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|\(sm_identifier!)"]),
             FHIRSearchParamRelationship(Media.self,       ["subject": ""]) // Left Empty to be filled later.
         ]
-    }
-    
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.sm_identifier!, intendedUseDescription: sm_taskDescription, options: [])
-        let taskVC = ORKTaskViewController(task: amslerGridTask, taskRun: UUID())
-        callback(taskVC, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

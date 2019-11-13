@@ -1,6 +1,6 @@
 //
 //  SessionNavigationController.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 7/10/18.
 //  Copyright © 2018 Boston Children's Hospital. All rights reserved.

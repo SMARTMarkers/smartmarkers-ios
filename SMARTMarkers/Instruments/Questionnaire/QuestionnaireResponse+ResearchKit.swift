@@ -1,6 +1,6 @@
 //
 //  QuestionnaireResponse+ResearchKit.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 7/14/18.
 //  Copyright © 2018 Boston Children's Hospital. All rights reserved.

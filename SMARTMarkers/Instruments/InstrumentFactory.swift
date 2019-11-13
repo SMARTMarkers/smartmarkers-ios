@@ -1,6 +1,6 @@
 //
 //  InstrumentFactory.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/15/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.

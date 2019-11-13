@@ -17,12 +17,12 @@ This is **iOS** framework written entirely in Swift, relying on [SMART-on-FHIR][
 
 Download this repo or add as a git submodule to your project. Make sure the submodules are pulled as well ([ResearchKit][link-researchkit], [Swift-SMART][link-swift-smart]). 
 
-1. Drag `EASIPRO.xcodepro` to the root directory of your project in Xcode
+1. Drag `SMARTMarkers.xcodepro` to the root directory of your project in Xcode
 2. Drag `ResearchKit.xcodeproj` and `SwiftSMART.xcodeproj` to the root directory of the project as well, in Xcode.
-3. _Build_ submodules (ResearchKit, SwiftSMART) first and then EASIPRO
+3. _Build_ submodules (ResearchKit, SwiftSMART) first and then SMARTMarkers
 3. Select your blue project icon and select the "General" tab to find section _"Embedded Libraries"_ 
 4. Add the following libraries to "Embedded Libraries" 
-    - EASIPRO.framework
+    - SMARTMarkers.framework
     - SMART.framework
     - ResearchKit.framework
 

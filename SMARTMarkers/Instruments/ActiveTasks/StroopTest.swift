@@ -1,6 +1,6 @@
 //
-//  StroopTestPRO.swift
-//  EASIPRO
+//  StroopTest.swift
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 4/19/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -43,14 +43,6 @@ open class StroopTest: Instrument {
         
     }
     
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        let task = ORKOrderedTask.stroopTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, numberOfAttempts: numberOfAttempts, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
-        callback(taskViewController, nil)
-    }
-    
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 
         let task = ORKOrderedTask.stroopTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, numberOfAttempts: numberOfAttempts, options: [])
@@ -62,7 +54,6 @@ open class StroopTest: Instrument {
         
         if let stroopResults = result.stepResult(forStepIdentifier: sm_identifier!)?.results?.map({ $0 as! ORKStroopResult}) {
             let obs = Observation.sm_Stroop(self, result: stroopResults)
-            print(try! obs.sm_jsonString())
             return SMART.Bundle.sm_with([obs])
         }
         return nil

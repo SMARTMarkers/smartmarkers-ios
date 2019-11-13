@@ -12,7 +12,7 @@ import SMART
 
 public class ReportViewController: UITableViewController {
     
-    public final var measures: [PROMeasure]?
+    public final var measures: [PDController]?
     
     public final  var reports: [Reports]!
     
@@ -20,7 +20,7 @@ public class ReportViewController: UITableViewController {
     
     public final weak var patient: Patient?
     
-    public convenience init(_ measures: [PROMeasure], submitTo server: Server?, patient: Patient?) {
+    public convenience init(_ measures: [PDController], submitTo server: Server?, patient: Patient?) {
         
         self.init(style: .grouped)
         self.reports = measures.filter({ $0.reports != nil }).map { $0.reports! }

@@ -1,6 +1,6 @@
 //
 //  FHIRPath.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 6/10/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.

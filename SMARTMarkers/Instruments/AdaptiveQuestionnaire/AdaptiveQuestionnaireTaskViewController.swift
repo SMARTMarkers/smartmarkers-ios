@@ -1,6 +1,6 @@
 //
 //  AdaptiveQuestionnaireTaskViewController.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 1/28/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -19,7 +19,7 @@ public enum StepId: String {
 open class AdaptiveQuestionnaireTaskViewController: ORKTaskViewController {
     
     
-    public var measure: (PROMeasure)?
+    public var measure: (PDController)?
     
     
     let btnTitle_inSession            =   "Continue"

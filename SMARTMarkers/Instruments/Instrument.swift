@@ -1,6 +1,6 @@
 //
 //  InstrumentProtocol.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/1/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -11,6 +11,9 @@ import SMART
 import ResearchKit
 
 
+/**
+ Instrument Category Type
+ */
 public enum InstrumentCategoryType: String, Equatable {
     
     case survey
@@ -20,6 +23,10 @@ public enum InstrumentCategoryType: String, Equatable {
     case unknown
 }
 
+/**
+ Instrument Class Protocol
+ Serializes all types of PGHD into a common protocol
+ */
 public protocol Instrument : class {
     
     /// Display friendly title for the instrument
@@ -37,16 +44,12 @@ public protocol Instrument : class {
     /// Instrument Version
     var sm_version: String? { get set }
     
-    /// Publisher
+    /// Instrument Publisher
     var sm_publisher: String? { get set }
-    
 
     /// Output resource types; can be used to fetch historical resources from the `SMART.Server`
     var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]? { get set }
-    
-    /// Protocol Func to generate ResearchKit's `ORKTaskViewController`
-    func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
-    
+        
     /// Protocol function to create a ResearchKit's survey task controller (`ORKTaskViewController`)
     func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
     

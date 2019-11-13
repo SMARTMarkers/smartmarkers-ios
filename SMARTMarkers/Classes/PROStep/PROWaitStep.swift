@@ -18,11 +18,11 @@ let kSubmission_step_fail = "smartmarkers-submission-step-fail"
 
 class PROSubmissionWaitStep: ORKWaitStep {
     
-    weak final var promeasure: PROMeasure!
+    weak final var promeasure: PDController!
     
     var settings: [String: String]? = nil
     
-    convenience init(prom: PROMeasure, settings: [String:String]? = nil) {
+    convenience init(prom: PDController, settings: [String:String]? = nil) {
         self.init(identifier: kSubmission_step_waiting)
         promeasure = prom
         self.settings = settings
@@ -43,7 +43,7 @@ class PROSubmissionWaitStepViewController: ORKWaitStepViewController {
         return step as! PROSubmissionWaitStep
     }
     
-    var proMeasure: PROMeasure {
+    var proMeasure: PDController {
         return waitStep.promeasure
     }
     

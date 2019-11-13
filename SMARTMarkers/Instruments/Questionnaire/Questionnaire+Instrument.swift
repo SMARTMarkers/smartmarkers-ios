@@ -1,6 +1,6 @@
 //
 //  QuestionStep.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 7/5/18.
 //  Copyright © 2018 Boston Children's Hospital. All rights reserved.
@@ -85,7 +85,7 @@ extension SMART.Questionnaire: Instrument {
         }
     }
     
-    
+    /*
     public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))  {
         
         sm_genereteSteps { (steps, rulestupples, error) in
@@ -106,6 +106,7 @@ extension SMART.Questionnaire: Instrument {
             }
         }
     }
+    */
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         

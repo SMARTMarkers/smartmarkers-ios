@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  EASIPRO
+//  SpatialSpanMemory.swift
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 4/18/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -50,15 +50,6 @@ open class SpatialSpanMemory: Instrument {
         self.sm_identifier = "cognitive.memory.spatialspan"
         self.sm_code = SMARTMarkers.Instruments.ActiveTasks.spatialSpanMemory.coding
         self.sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
-    }
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: sm_identifier!, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
-        
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
-        
-        callback(taskViewController, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

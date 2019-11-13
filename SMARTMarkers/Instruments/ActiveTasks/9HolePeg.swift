@@ -1,6 +1,6 @@
 //
 //  9HolePeg+InstrumentProtocol.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/15/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -42,14 +42,6 @@ open class NineHolePegTest: Instrument {
         sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])
         ]
-    }
-
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        let tsk = ORKNavigableOrderedTask.holePegTest(withIdentifier: sm_identifier!, intendedUseDescription: nil, dominantHand: .left, numberOfPegs: 1, threshold: 0.2, rotated: false, timeLimit: 300, options: [])
-        let tvc = ORKTaskViewController(task: tsk, taskRun: UUID())
-        callback(tvc, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
@@ -96,8 +88,8 @@ open class NineHolePegTest: Instrument {
         let observation = Observation.sm_pegHoleTest(totalTime: totalTime, totalDistance: totalDistance, success: totalSuccesses, failures: totalFailures, effective: datetime)
         let code = sm_code!
         let concept = CodeableConcept.sm_From([code], text: nil)
-
-        let documentEntry = DocumentReference.sm_Reference(title: "Hole Peg Test Samples", concept: concept, creationDateTime: datetime, csvString: csvString).sm_asBundleEntry()
+        let instant = Instant.now
+        let documentEntry = DocumentReference.sm_Reference(title: "Hole Peg Test Samples", concept: concept, instant: instant, csvString: csvString).sm_asBundleEntry()
         observation.derivedFrom = [documentEntry.sm_asReference()]
         
         let bundle = SMART.Bundle()
@@ -186,14 +178,18 @@ extension Attachment {
 
 extension DocumentReference {
     
-    class func sm_Reference(title: String, concept: CodeableConcept, creationDateTime: DateTime, csvString: String) -> DocumentReference {
+    class func sm_Reference(title: String, concept: CodeableConcept, instant: Instant, csvString: String) -> DocumentReference {
         let documentReference = DocumentReference()
-        let attachment = Attachment.sm_withCSV(title: title, csvString: csvString, creationDateTime: creationDateTime)
+        let attachment = Attachment.sm_withCSV(title: title, csvString: csvString, creationDateTime: instant.nsDate.fhir_asDateTime())
         documentReference.content = [DocumentReferenceContent(attachment: attachment)]
         documentReference.status = .current
         documentReference.docStatus = .final
         documentReference.description_fhir = title.fhir_string
         documentReference.type = concept
+        documentReference.date = instant
+        documentReference.category = [
+            CodeableConcept.sm_From([Coding.sm_Coding("53576-5", "http://loinc.org", "Personal health monitoring report Document")], text: "Personal health monitoring report Document")
+        ]
         return documentReference
     }
 }

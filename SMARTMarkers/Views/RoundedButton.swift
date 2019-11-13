@@ -1,6 +1,6 @@
 //
 //  RoundedButton.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 27/04/18.
 //  Copyright © 2018 Boston Children's Hospital. All rights reserved.

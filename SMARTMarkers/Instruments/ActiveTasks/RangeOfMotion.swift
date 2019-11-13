@@ -1,6 +1,6 @@
 //
 //  RangeOfMotion.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 4/12/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -47,13 +47,6 @@ open class KneeRangeOfMotion: Instrument {
             sm_code = SMARTMarkers.Instruments.ActiveTasks.rangeOfMotion_knee_right.coding
         }
         sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
-    }
-    
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
-        callback(taskViewController, nil)
     }
     
     
@@ -137,12 +130,6 @@ open class ShoulderRangeOfMotion: Instrument {
             sm_identifier = "org.researchkit.shoulder.right.rangeofmotion"
         }
         sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
-    }
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
-        callback(taskViewController, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

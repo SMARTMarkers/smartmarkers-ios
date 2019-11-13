@@ -1,6 +1,6 @@
 //
 //  HKClinicalRecordStep.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/19/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.

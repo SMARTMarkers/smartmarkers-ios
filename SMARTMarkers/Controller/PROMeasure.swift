@@ -1,6 +1,6 @@
 //
 //  PROMeasure.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 6/27/18.
 //  Copyright © 2018 Boston Children's Hospital. All rights reserved.
@@ -117,24 +117,21 @@ public final class PDController: NSObject {
                 let group = DispatchGroup()
                 for i in 0..<controllers.count {
                     let controller = controllers[i]
-                    print("--\(i): INSTR")
+
                     group.enter()
                     controller.instrument(callback: { (instr, error) in
                         controller.instrument = instr
-                        print("--\(i): INSTR-RESOLVED")
                         group.leave()
                     })
                     
-                    print("--\(i): REPORTS")
+                    
                     group.enter()
                     controller.reports(for: patient, server: server, callback: { (_, _) in
-                        print("--\(i): REPORTS FETCHED")
                         group.leave()
                     })
                 }
 
                 group.notify(queue: DispatchQueue.global(qos: .background)) {
-                    print("===ALLDONE")
                     callback(controllers, nil)
                 }
 
@@ -211,7 +208,7 @@ extension PDController: ORKTaskViewControllerDelegate {
 }
 
 
-
+/*
 public protocol PROMeasureProtocol: NSObject  {
     
     var request: Request? { get set }
@@ -285,7 +282,7 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
     
     
     
-    open func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void)) {
+    public func instrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void)) {
         
         if let instr = self.instrument {
             callback(instr, nil)
@@ -361,6 +358,8 @@ public final class PROMeasure : NSObject, PROMeasureProtocol {
             return
         }
         
+        callback(nil, SMError.promeasureOrderedInstrumentMissing)
+
         instrument.sm_taskController(for: self) { (taskViewController, error) in
             taskViewController?.delegate = self
             callback(taskViewController, error)
@@ -464,5 +463,5 @@ extension PROMeasure : ORKTaskViewControllerDelegate {
     
     
 }
-
+*/
 

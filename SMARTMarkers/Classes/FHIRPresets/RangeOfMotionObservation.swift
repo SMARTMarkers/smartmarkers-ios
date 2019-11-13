@@ -1,6 +1,6 @@
 //
 //  RangeOfMotionObservation.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 4/16/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.

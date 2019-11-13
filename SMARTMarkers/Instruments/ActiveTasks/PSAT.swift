@@ -1,6 +1,6 @@
 //
 //  PSAT+Instrument.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/16/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -39,13 +39,6 @@ open class PASAT: Instrument {
         
     }
     
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:sm_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
-        callback(taskViewController, nil)
-    }
-    
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:sm_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
@@ -63,9 +56,6 @@ open class PASAT: Instrument {
         let code = Coding.sm_ResearchKit(psat_code, isAuditory)
         let concept = CodeableConcept.sm_From([code], text: isAuditory)
 
-        
-        let dateTime = DateTime.now
-        
         var csv = ORKPSATSample.csvHeader + "\n"
         var totalTime = 0.0
         for sample in psatResult.samples ?? [] {
@@ -74,8 +64,8 @@ open class PASAT: Instrument {
         }
         
         let observation = psatResult.sm_asFHIR(title: self.sm_title, totalTime: totalTime)
-        
-        let documentEntry = DocumentReference.sm_Reference(title: "PSAT Test Samples", concept: concept, creationDateTime: dateTime, csvString: csv).sm_asBundleEntry()
+        let instant = Instant.now
+        let documentEntry = DocumentReference.sm_Reference(title: "PSAT Test Samples", concept: concept, instant: instant, csvString: csv).sm_asBundleEntry()
         observation.derivedFrom = [documentEntry.sm_asReference()]
         
         let bundle = SMART.Bundle()

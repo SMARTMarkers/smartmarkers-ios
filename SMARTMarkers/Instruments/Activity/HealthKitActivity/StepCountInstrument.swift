@@ -34,14 +34,6 @@ open class StepReport: Instrument {
     
     public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        let sa = StepActivity(Date(), nil)
-        sa.store = HKHealthStore()
-        let activityTaskView = ActivityTaskViewController(activity: sa)
-        callback(activityTaskView, nil)
-    }
-    
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let sa = StepActivity(Date(), nil)

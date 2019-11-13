@@ -33,12 +33,6 @@ public class SMHealthKitRecords: Instrument {
         sm_identifier = "com.apple.healthkit.clinicalrecords"
     }
     
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        let taskViewController = HKClinicalRecordTaskViewController()
-        callback(taskViewController, nil)
-        
-    }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         

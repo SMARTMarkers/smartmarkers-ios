@@ -1,6 +1,6 @@
 //
 //  OMRON+InstrumentProtocol.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/14/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -43,14 +43,6 @@ open class OMRON: Instrument {
             FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])
         ]
         callbackHandler = self.auth
-        
-    }
-    
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        let omronTaskViewController = OmronTaskViewController(auth: auth)
-        callback(omronTaskViewController, nil)
         
     }
     

@@ -1,6 +1,6 @@
 //
-//  TappingSpeedPRO.swift
-//  EASIPRO
+//  TappingSpeed.swift
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 4/19/19.
 //  Copyright © 2019 Boston Children's Hospital. All rights reserved.
@@ -58,15 +58,8 @@ open class TappingSpeed: Instrument {
         // TODO: Link Observation with DocumentReference
         self.sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!]),
-            FHIRSearchParamRelationship(DocumentReference.self, ["code": sm_code!.sm_searchableToken()!])
+            FHIRSearchParamRelationship(DocumentReference.self, ["type": sm_code!.sm_searchableToken()!])
         ]
-    }
-    
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, duration: duration, handOptions: handOption, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
-        callback(taskViewController, nil)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
@@ -79,7 +72,7 @@ open class TappingSpeed: Instrument {
     public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         var resources = [BundleEntry]()
-        let dateTime = DateTime.now
+        let instant = Instant.now
 
         for id in TappingSpeed.resultStepIdentifiers {
             
@@ -93,11 +86,12 @@ open class TappingSpeed: Instrument {
                 let title = "Tapping Finger \(hand)"
                 let csv = ORKTappingSample.csvHeader + "\n" + samples.joined(separator: "\n")
                 let concept = CodeableConcept.sm_From([sm_code!], text: "Finger Tapping Speed")
-                let document = DocumentReference.sm_Reference(title: title, concept: concept, creationDateTime: dateTime, csvString: csv)
+                let document = DocumentReference.sm_Reference(title: title, concept: concept, instant: instant, csvString: csv)
                 let bundleEntry = BundleEntry()
-                bundleEntry.resource = document
                 let uuid = "urn:uuid:\(UUID().uuidString)"
+                bundleEntry.resource = document
                 bundleEntry.fullUrl = FHIRURL(uuid)
+                bundleEntry.request = BundleEntryRequest(method: .POST, url: FHIRURL("DocumentReference")!)
                 resources.append(bundleEntry)
             }
 
@@ -114,19 +108,18 @@ open class TappingSpeed: Instrument {
             let ob = Observation()
             ob.code = CodeableConcept.sm_From([sm_code!], text: "Finger Tapping Speed")
             ob.status = .final
-            ob.effectiveDateTime = dateTime
-            // Category
+            ob.effectiveDateTime = DateTime.now
             let activity = Coding.sm_Coding("activity", kHL7ObservationCategory, "Activity")
             ob.category = [CodeableConcept.sm_From([activity], text: "Activity")]
             ob.derivedFrom = references
             
             //Observtion Entry
+            let uuid = "urn:uuid:\(UUID().uuidString)"
             let observationBundleEntry = BundleEntry()
             observationBundleEntry.resource = ob
-            let uuid = "urn:uuid:\(UUID().uuidString)"
             observationBundleEntry.fullUrl = FHIRURL(uuid)
+            observationBundleEntry.request = BundleEntryRequest(method: .POST, url: FHIRURL("Observation")!)
             resources.append(observationBundleEntry)
-            
             
             let bundle = SMART.Bundle()
             bundle.entry = resources

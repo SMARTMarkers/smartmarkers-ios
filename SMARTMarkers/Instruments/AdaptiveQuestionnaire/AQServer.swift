@@ -1,6 +1,6 @@
 //
 //  AQServer.swift
-//  EASIPRO
+//  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 12/18/18.
 //  Copyright © 2018 Boston Children's Hospital. All rights reserved.
@@ -8,17 +8,6 @@
 
 import Foundation
 import SMART
-
-public class PROMISServer: AQServer {
-    
-    public convenience init(base: URL, clientid: String, clientsecret: String) {
-        let settings = [
-            "client_id" : clientid,
-            "client_secret" : clientsecret
-        ]
-        self.init(baseURL: base, auth: settings)
-    }
-}
 
 public class AQServer : SMART.Server {
     
