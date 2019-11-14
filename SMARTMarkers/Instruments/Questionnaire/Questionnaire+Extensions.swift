@@ -10,13 +10,6 @@ import Foundation
 import SMART
 import ResearchKit
 
-
-
-
-
-
-
-
 extension Coding {
     
     func sm_textAnswerChoice() -> ORKTextChoice? {
