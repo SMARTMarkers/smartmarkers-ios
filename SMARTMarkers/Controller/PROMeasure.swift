@@ -60,11 +60,10 @@ public final class PDController: NSObject {
     
     - parameter instrument: `Instrument` conformant class. Check `InstrumentFactory.swift` for a list of supported types out of the box.
     */
-    convenience public init(_ instrument: Instrument) {
+    convenience public init(instrument: Instrument) {
         self.init()
         self.instrument = instrument
         self.reports = Reports(instrument, for: nil, request: request)
-
     }
    
     /**
