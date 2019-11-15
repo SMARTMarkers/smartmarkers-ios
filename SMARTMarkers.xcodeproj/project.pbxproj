@@ -36,7 +36,6 @@
 		D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45790F822386FA0001E4E8D /* OmronTaskViewController.swift */; };
 		D4618A44205ED820004E117F /* PatientVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4618A43205ED820004E117F /* PatientVerificationController.swift */; };
 		D4618A46205F07EC004E117F /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4618A45205F07EB004E117F /* LocalAuth.swift */; };
-		D4618A4E20616100004E117F /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = D4618A4D206160FF004E117F /* Readme.md */; };
 		D4623EDA2368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json in Resources */ = {isa = PBXBuildFile; fileRef = D4623ED82368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json */; };
 		D4623EDB2368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json in Resources */ = {isa = PBXBuildFile; fileRef = D4623ED92368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json */; };
 		D4623EDD2368B64200230C5B /* dynamicquestionnaire.json in Resources */ = {isa = PBXBuildFile; fileRef = D4623EDC2368B64200230C5B /* dynamicquestionnaire.json */; };
@@ -59,6 +58,8 @@
 		D48B320221FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */; };
 		D48B320421FFC84600CEA44A /* ResearchKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */; };
 		D48BBB5222D6446300FF4023 /* ACModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BBB5122D6446300FF4023 /* ACModel.swift */; };
+		D48C2A8E237EFE0D002C9395 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D48C2A8D237EFE0D002C9395 /* README.md */; };
+		D48C2A90237F4469002C9395 /* README_S.md in Resources */ = {isa = PBXBuildFile; fileRef = D48C2A8F237F4469002C9395 /* README_S.md */; };
 		D4B964DC22298FF000F46177 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B964DB22298FF000F46177 /* Request.swift */; };
 		D4B964E22229A74300F46177 /* Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B964E12229A74300F46177 /* Instrument.swift */; };
 		D4B964E62229AAD900F46177 /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B964E52229AAD900F46177 /* Report.swift */; };
@@ -70,7 +71,7 @@
 		D4C69A5D23465C98006C6520 /* ActivityTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C69A5C23465C98006C6520 /* ActivityTaskViewController.swift */; };
 		D4C69A5F234F9959006C6520 /* StepCountInstrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C69A5E234F9959006C6520 /* StepCountInstrument.swift */; };
 		D4CBBFEA203F72B7002B6AC9 /* QuestionnaireViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */; };
-		D4CBC0082045ACF2002B6AC9 /* SMARTMarkers+SwiftFHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBC0072045ACF2002B6AC9 /* SMARTMarkers+SwiftFHIR.swift */; };
+		D4CBC0082045ACF2002B6AC9 /* FHIR+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBC0072045ACF2002B6AC9 /* FHIR+Extensions.swift */; };
 		D4CBC00C2046F1C3002B6AC9 /* PROMeasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4CBC00B2046F1C3002B6AC9 /* PROMeasure.swift */; };
 		D4CFF01B203C799F00A6FB31 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4CFF01C203C799F00A6FB31 /* ResearchKit.framework */; };
 		D4CFF01E203C7AE300A6FB31 /* SMART.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4CFF01F203C7AE300A6FB31 /* SMART.framework */; };
@@ -141,7 +142,6 @@
 		D45790F822386FA0001E4E8D /* OmronTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OmronTaskViewController.swift; sourceTree = "<group>"; };
 		D4618A43205ED820004E117F /* PatientVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientVerificationController.swift; sourceTree = "<group>"; };
 		D4618A45205F07EB004E117F /* LocalAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalAuth.swift; sourceTree = "<group>"; };
-		D4618A4D206160FF004E117F /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		D4623ED82368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json"; sourceTree = "<group>"; };
 		D4623ED92368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json"; sourceTree = "<group>"; };
 		D4623EDC2368B64200230C5B /* dynamicquestionnaire.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dynamicquestionnaire.json; sourceTree = "<group>"; };
@@ -164,6 +164,8 @@
 		D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireTaskViewController.swift; sourceTree = "<group>"; };
 		D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResearchKit+Extensions.swift"; sourceTree = "<group>"; };
 		D48BBB5122D6446300FF4023 /* ACModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACModel.swift; sourceTree = "<group>"; };
+		D48C2A8D237EFE0D002C9395 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D48C2A8F237F4469002C9395 /* README_S.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README_S.md; sourceTree = "<group>"; };
 		D4B964DB22298FF000F46177 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		D4B964E12229A74300F46177 /* Instrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Instrument.swift; sourceTree = "<group>"; };
 		D4B964E52229AAD900F46177 /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
@@ -175,7 +177,7 @@
 		D4C69A5C23465C98006C6520 /* ActivityTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTaskViewController.swift; sourceTree = "<group>"; };
 		D4C69A5E234F9959006C6520 /* StepCountInstrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCountInstrument.swift; sourceTree = "<group>"; };
 		D4CBBFE9203F72B7002B6AC9 /* QuestionnaireViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireViewController.swift; sourceTree = "<group>"; };
-		D4CBC0072045ACF2002B6AC9 /* SMARTMarkers+SwiftFHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SMARTMarkers+SwiftFHIR.swift"; sourceTree = "<group>"; };
+		D4CBC0072045ACF2002B6AC9 /* FHIR+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FHIR+Extensions.swift"; sourceTree = "<group>"; };
 		D4CBC00B2046F1C3002B6AC9 /* PROMeasure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROMeasure.swift; sourceTree = "<group>"; };
 		D4CFF01C203C799F00A6FB31 /* ResearchKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ResearchKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4CFF01F203C7AE300A6FB31 /* SMART.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SMART.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -233,9 +235,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D40A121A21627D95002F9F53 /* Classes */ = {
+		D40A121A21627D95002F9F53 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				D4CBC0072045ACF2002B6AC9 /* FHIR+Extensions.swift */,
 				D4CBC0062045ACC6002B6AC9 /* FHIR */,
 				D4DFD98F223AEDD50097B958 /* FHIRPresets */,
 				D45790F722386F79001E4E8D /* TaskViewControllers */,
@@ -243,7 +246,7 @@
 				D4618A45205F07EB004E117F /* LocalAuth.swift */,
 				D40A121B21627DBE002F9F53 /* Notifications.swift */,
 			);
-			path = Classes;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		D422E58322C120140097E0CF /* PROStep */ = {
@@ -287,7 +290,6 @@
 		D45790F722386F79001E4E8D /* TaskViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				D4DC5B1B23326245001878B4 /* SubmissionTask */,
 				D4DFD98A223ABFBF0097B958 /* WebFetchStep.swift */,
 			);
 			path = TaskViewControllers;
@@ -351,7 +353,6 @@
 			isa = PBXGroup;
 			children = (
 				D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */,
-				D4CBC0072045ACF2002B6AC9 /* SMARTMarkers+SwiftFHIR.swift */,
 				D434861822AF08E0001D922C /* FHIRPath.swift */,
 			);
 			path = FHIR;
@@ -460,9 +461,8 @@
 			children = (
 				D4DC5B05231ED258001878B4 /* TODO.md */,
 				D468777D229701D100717D95 /* QuestionnaireExamples */,
-				D4618A4D206160FF004E117F /* Readme.md */,
 				D465D5A3203DCB8E0057BD23 /* Installation.md */,
-				D4E75D5F2035E73E000CE95A /* SMARTMarkers */,
+				D4E75D5F2035E73E000CE95A /* Sources */,
 				D4E75D5E2035E73E000CE95A /* Products */,
 				D4CFF01A203C799F00A6FB31 /* Frameworks */,
 			);
@@ -476,15 +476,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D4E75D5F2035E73E000CE95A /* SMARTMarkers */ = {
+		D4E75D5F2035E73E000CE95A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				D4E3D21B237B082B00BDBCF2 /* Reports */,
 				D4E3D21A237B082200BDBCF2 /* Requests */,
 				D4DFD992223C0F5B0097B958 /* Instruments */,
 				D4E75D8320363BFF000CE95A /* Session */,
-				D40A121A21627D95002F9F53 /* Classes */,
-				D4E75D7C20361E86000CE95A /* Controller */,
+				D40A121A21627D95002F9F53 /* Extensions */,
+				D4E75D7C20361E86000CE95A /* TaskController */,
 				D4E75D7A20361E72000CE95A /* ViewControllers */,
 				D4E75D762036062C000CE95A /* images */,
 				D4E75D742035EABD000CE95A /* Views */,
@@ -494,7 +494,7 @@
 				D4FEBDB221DFD50D0057C77D /* Common.swift */,
 				D4FEBDB721E64A610057C77D /* SMError.swift */,
 			);
-			path = SMARTMarkers;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		D4E75D742035EABD000CE95A /* Views */ = {
@@ -534,13 +534,14 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		D4E75D7C20361E86000CE95A /* Controller */ = {
+		D4E75D7C20361E86000CE95A /* TaskController */ = {
 			isa = PBXGroup;
 			children = (
+				D48C2A8D237EFE0D002C9395 /* README.md */,
 				D4CBC00B2046F1C3002B6AC9 /* PROMeasure.swift */,
 				D40B19CA20989B9000C18C23 /* Schedule.swift */,
 			);
-			path = Controller;
+			path = TaskController;
 			sourceTree = "<group>";
 		};
 		D4E75D8320363BFF000CE95A /* Session */ = {
@@ -548,6 +549,8 @@
 			children = (
 				D4E75D8420363C0E000CE95A /* SessionController.swift */,
 				D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */,
+				D4DC5B1B23326245001878B4 /* SubmissionTask */,
+				D48C2A8F237F4469002C9395 /* README_S.md */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -630,12 +633,13 @@
 				D46877882297022B00717D95 /* adaptivePROMISDep.json in Resources */,
 				D46877872297022B00717D95 /* adaptivePROMIS.json in Resources */,
 				D48113B82373BBA00062B3D9 /* genevariant_reporting_panel.json in Resources */,
+				D48C2A8E237EFE0D002C9395 /* README.md in Resources */,
 				D4623EDD2368B64200230C5B /* dynamicquestionnaire.json in Resources */,
 				D46877842297022B00717D95 /* LifelinesQuestionnaireR4.json in Resources */,
 				D4623EDA2368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json in Resources */,
 				D4623EDB2368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json in Resources */,
+				D48C2A90237F4469002C9395 /* README_S.md in Resources */,
 				D48113BE2373CAC00062B3D9 /* surgeon_general.json in Resources */,
-				D4618A4E20616100004E117F /* Readme.md in Resources */,
 				D43E089821ADDD7000045680 /* works-with-smart-logo-768x514.png in Resources */,
 				D46877852297022B00717D95 /* qr4.json in Resources */,
 				D48113BC2373C5E40062B3D9 /* mental_residual_capacity_form.json in Resources */,
@@ -695,7 +699,7 @@
 				D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift in Sources */,
 				D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */,
 				D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */,
-				D4CBC0082045ACF2002B6AC9 /* SMARTMarkers+SwiftFHIR.swift in Sources */,
+				D4CBC0082045ACF2002B6AC9 /* FHIR+Extensions.swift in Sources */,
 				D4618A44205ED820004E117F /* PatientVerificationController.swift in Sources */,
 				D4B964DC22298FF000F46177 /* Request.swift in Sources */,
 				D43C71C02269FDF50008FF27 /* StroopTest.swift in Sources */,
@@ -861,7 +865,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/SMARTMarkers/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -884,7 +888,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/SMARTMarkers/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
