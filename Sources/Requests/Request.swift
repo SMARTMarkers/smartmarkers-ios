@@ -39,6 +39,9 @@ public protocol Request :  class, CustomStringConvertible {
     /// Schedule
     var rq_schedule: Schedule? { get }
     
+    /// Schedule2
+    var rq_schedule2: TaskSchedule? { get set }
+    
     /// Fetch Parameters
     static var rq_fetchParameters: [String: String]? { get }
     

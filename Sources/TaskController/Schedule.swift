@@ -8,6 +8,245 @@
 
 import Foundation
 
+/*
+ 
+ TODO:
+ - ServiceRequest.status accounting in TaskSchedule; show complete if "cancelled/completed"
+ 
+ */
+public class TaskSchedule: CustomStringConvertible {
+   
+    static let now = Date()
+
+    public struct Slot2 {
+        
+        public enum SlotStatus : String {
+            case Fulfilled
+            case unFulfilled
+            case unknown
+        }
+        
+        public enum Tense {
+            case Past, Current, Future, Unknown
+        }
+        
+        public let period: Period
+        
+        public var status: Slot2.SlotStatus = .unknown
+        
+        public var timeStatus: Tense
+        
+        init(_ period: Period) {
+            
+            self.period = period
+            
+            if period.contains(TaskSchedule.now) {
+                timeStatus = .Current
+            }
+            else if TaskSchedule.now < period.start {
+                timeStatus = .Future
+                status = .unFulfilled
+            }
+            else if TaskSchedule.now > period.end {
+                timeStatus = .Past
+            }
+            else {
+                timeStatus = .Unknown
+            }
+        }
+        
+        public mutating func updateIfSatisfied(by completionDate: Date) -> Bool {
+            if period.contains(completionDate) {
+                status = .Fulfilled
+                return true
+            }
+            return false
+        }
+    }
+    
+    public struct Period: Equatable, CustomStringConvertible {
+        let start:      Date
+        let end:        Date
+        let calender:   Calendar
+        
+        public var description: String {
+            return "\(start.shortDate) –- \(end.shortDate)"
+        }
+        
+        public static func == (lhs: Period, rhs: Period) -> Bool {
+            return (lhs.start == rhs.start) && (lhs.end == rhs.end)
+        }
+        
+        public static func > (lhs: Period, rhs: Period) -> Bool {
+            return (lhs.start > rhs.start)
+        }
+        
+        public func slots(of frequency: Frequency) -> [TaskSchedule.Slot2]? {
+            
+            let diffComponents = calender.dateComponents([.day], from: start, to: end)
+            let slotCount = (diffComponents.day! / frequency.unitDays)
+            if slotCount == 0 { return nil }
+
+            var startSlotDate    = Date()
+            var endSlotDate      = Date()
+            var newSlots         = [Slot2]()
+            
+            for i in 1...slotCount {
+                startSlotDate = (i == 1) ? start : calender.date(byAdding: .day, value: 1, to: endSlotDate)!
+                endSlotDate = calender.date(byAdding: .day, value: frequency.unitDays - 1, to: startSlotDate)!
+                let slotPeriod = Period(start: startSlotDate, end: endSlotDate, calender: calender)
+                let slot = TaskSchedule.Slot2(slotPeriod)
+                newSlots.append(slot)
+            }
+            return newSlots
+        }
+        
+        public func contains(_ date: Date) -> Bool {
+            let startDateOrder = calender.compare(date, to: start, toGranularity: .day)
+            let endDateOrder = calender.compare(date, to: end, toGranularity: .day)
+            let validStartDate = (startDateOrder == .orderedDescending) || (startDateOrder == .orderedSame)
+            let validEndDate = endDateOrder == .orderedAscending || endDateOrder == .orderedSame
+            return validStartDate && validEndDate
+        }
+    }
+ 
+    public enum ActivityStatus: String, CaseIterable {
+        case Due
+        case Completed
+        case Overdue
+        case Upcoming
+        case Unknown
+    }
+    
+    public struct Frequency {
+        let value   : Int
+        let unit    : String
+        let unitDays  : Int
+        
+        init(value: Int, unit: String) {
+            self.value = value
+            self.unit  = unit
+            self.unitDays = (unit == "wk") ? 7 : 1
+        }
+        
+        public func numberOfDays() -> UInt {
+            return 7 //TODO
+        }
+    }
+    
+    /// Activity Date; (DueDate)
+    public internal(set) var activityDate: Date?
+    
+    /// Activity Period;
+    public internal(set) var activityPeriod: Period?
+    
+    /// Frequency
+    var frequency: Frequency?
+    
+    /// Slots; (if any); dependent on acitivtyPeriod
+    public lazy var slots: [TaskSchedule.Slot2]? = {
+        if let f = frequency {
+            return activityPeriod?.slots(of: f)
+        }
+        return nil
+    }()
+    
+    /// Current Slot in schedule;
+    public var currentSlot: TaskSchedule.Slot2? {
+        return slots?.first(where: { ($0.timeStatus == .Current) })
+    }
+    
+    /// DUE Slot
+    public var dueSlot: TaskSchedule.Slot2? {
+        return slots?.first(where: { ($0.timeStatus == .Current || $0.timeStatus == .Future) && $0.status != .Fulfilled })
+    }
+    
+    /// current Due Date
+    public var dueDate: Date? {
+        return activityDate ?? dueSlot?.period.start
+    }
+    
+    /// Overall activity status
+    public var status: ActivityStatus = .Unknown
+    
+    @discardableResult
+    public func calculateStatus() -> ActivityStatus {
+        
+        guard let dueDate = dueDate else {
+            // No DueDate, better not say anything
+            status = .Unknown
+            return status
+        }
+        
+        if currentSlot?.status == .Fulfilled {
+            status = .Completed
+        }
+        else if TaskSchedule.now >= dueDate {
+            status = .Due
+        }
+        else if dueDate > TaskSchedule.now {
+            status = .Upcoming
+        }
+        else {
+            status = .Unknown
+        }
+        
+        return status
+    }
+    
+    
+    /**
+     Initializer
+     
+     When a date range is available, optionally a frequency
+    */
+    init(period: Period, frequency: Frequency?) {
+        self.activityPeriod = period
+        self.frequency = frequency
+        calculateStatus()
+    }
+    
+    /**
+     Initializer
+     
+     Instant dueDate
+     */
+    init(dueDate: Date) {
+        self.activityDate = dueDate
+        calculateStatus()
+    }
+    
+    @discardableResult
+    public func update(with completionDates:[Date]) -> Bool {
+        var didUpdate = false
+        if slots != nil  {
+            for completedDate in completionDates {
+                for i in slots!.indices {
+                    if slots![i].updateIfSatisfied(by: completedDate) {
+                        didUpdate = true
+                    }
+                }
+            }
+        }
+        if didUpdate {
+            calculateStatus()
+        }
+        return didUpdate
+    }
+    
+    
+    public var description: String {
+        return  """
+        activityDate: \(activityDate?.shortDate ?? "-")
+        activityPeriod: \(activityPeriod?.description ?? "-")
+        slots: \(slots?.description ?? "")
+        Status: \(status)
+        DueDate: \(dueDate?.shortDate ?? "-")
+        """
+    }
+    
+}
+
 public enum SlotStatus : String {
 	
 	case due                    = "due"

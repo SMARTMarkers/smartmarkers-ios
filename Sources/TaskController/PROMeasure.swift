@@ -54,6 +54,10 @@ public final class TaskController: NSObject {
     public lazy var schedule: Schedule? = {
         return request?.rq_schedule
     }()
+    
+    public lazy var schedule2: TaskSchedule? = {
+        return request?.rq_schedule2
+    }()
    
     /**
     Initializer
@@ -117,15 +121,11 @@ public final class TaskController: NSObject {
     }
    
     /// Method to update status and the request if necessary
-    public func updateRequest(_ _results: [Report]?, callback: @escaping ((_ success: Bool) -> Void)) {
-        
-        guard request != nil, let res = _results else {
-            return
-        }
-        
-        if let completed = schedule?.update(with: res.map{ $0.rp_date }) {
-            request?.rq_updated(completed, callback:callback)
-        }
+    public func updateSchedule(_ _reports: [Report]?) {
+
+        guard let rpts = self.reports?.reports ?? _reports else { return }
+        schedule2?.update(with: rpts.map { $0.rp_date })
+
     }
     
     // MARK: – Fetch Requests
@@ -174,6 +174,7 @@ public final class TaskController: NSObject {
                     
                     group.enter()
                     controller.reports(for: patient, server: server, callback: { (_, _) in
+                        controller.updateSchedule(nil)
                         group.leave()
                     })
                 }

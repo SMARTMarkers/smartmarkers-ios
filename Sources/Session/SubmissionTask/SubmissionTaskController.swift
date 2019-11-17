@@ -62,20 +62,18 @@ public final class SubmissionTask: ORKNavigableOrderedTask {
         }
         
         let selector = ORKResultSelector(resultIdentifier: kSM_Submission_Consent)
-        let resultPredicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: selector, expectedAnswer: false)
+        let declinedPredicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: selector, expectedAnswer: false)
         let progressSelector = ORKResultSelector(stepIdentifier: kSM_Submission_InProgress, resultIdentifier: kSM_Submission_Result)
         let errorPredicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: progressSelector, expectedAnswer: true)
         let errorPredicateNull = ORKResultPredicate.predicateForNilQuestionResult(with: progressSelector)
         let cancelledNoticeSkipPredicate = ORKResultPredicate.predicateForBooleanQuestionResult(with: selector, expectedAnswer: true)
 
-        let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [errorPredicate, errorPredicateNull, resultPredicate])
+        let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [errorPredicate, errorPredicateNull, declinedPredicate])
         
         let skipErrorStepRule =  ORKPredicateSkipStepNavigationRule(resultPredicate: compoundPredicate)
         setSkip(skipErrorStepRule, forStepIdentifier: kSM_Submission_Errors)
 
-
-
-        let navigationRule = ORKPredicateSkipStepNavigationRule(resultPredicate: resultPredicate)
+        let navigationRule = ORKPredicateSkipStepNavigationRule(resultPredicate: declinedPredicate)
         let navigationRule2 = ORKPredicateSkipStepNavigationRule(resultPredicate: cancelledNoticeSkipPredicate)
 
         setSkip(navigationRule, forStepIdentifier: kSM_Submission_InProgress)
@@ -88,6 +86,16 @@ public final class SubmissionTask: ORKNavigableOrderedTask {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public override func step(before step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
+        
+        let previous = super.step(before: step, with: result)
+        
+        if previous?.identifier == kSM_Submission_InProgress {
+            return self.step(withIdentifier: kSM_Submission_Consent)
+        }
+        
+        return previous
+    }
     
     
     public override func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
@@ -101,7 +109,6 @@ public final class SubmissionTask: ORKNavigableOrderedTask {
         if stp?.identifier == kSM_Submission_Errors {
             
         }
-        
         
         if stp?.identifier == kSM_Submission_Consent {
              let submissionNotice = "Selected reports will be submitted to: \(session.server!.name ?? "FHIR Server") at \(session.server!.baseURL.host ?? "")"

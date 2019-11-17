@@ -52,6 +52,11 @@ extension ServiceRequest: Request {
         return sm_Schedule()
     }
     
+    public var rq_schedule2: TaskSchedule? {
+        set { }
+        get { return sm_Schedule2()  }
+    }
+    
     public static var rq_fetchParameters: [String : String]? {
         return ["status": "active,completed"]
     }
@@ -135,6 +140,21 @@ extension ServiceRequest: Request {
 extension ServiceRequest {
     
     
+    public func sm_Schedule2() -> TaskSchedule? {
+        
+        if let occuranceDate = occurrenceDateTime?.nsDate {
+            return TaskSchedule(dueDate: occuranceDate)
+        }
+        
+        if let (start, end, frequencyValue, frequencyUnit) = period_frequency {
+            let period = TaskSchedule.Period(start: start, end: end, calender: Calendar.current)
+            let frequency = TaskSchedule.Frequency(value: frequencyValue, unit: frequencyUnit)
+            return TaskSchedule(period: period, frequency: frequency)
+        }
+        
+        return nil
+        
+    }
     public func sm_Schedule() -> Schedule? {
         
         let slotStatus = (self.status == RequestStatus.completed) ? SlotStatus.completed : nil
@@ -142,7 +162,7 @@ extension ServiceRequest {
         if let occuranceDate = self.occurrenceDateTime?.nsDate {
             return Schedule(period: PeriodBound(occuranceDate, nil), frequency: nil, overrideStatus: slotStatus)
         }
-        else if let (start, end, fValue, fUnit) = self.ep_period_frequency {
+        else if let (start, end, fValue, fUnit) = period_frequency {
             let period = PeriodBound(start, end)
             let frequence = Frequency(value: fValue, unit: fUnit)
             return Schedule(period: period, frequency: frequence, overrideStatus: slotStatus)
@@ -152,7 +172,7 @@ extension ServiceRequest {
         }
     }
     
-    var ep_period_frequency : (start: Date, end:Date, freqValue:Int, freqUnit: String)? {
+    var period_frequency : (start: Date, end:Date, freqValue:Int, freqUnit: String)? {
         guard let timing = self.occurrenceTiming else {
             return nil
         }

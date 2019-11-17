@@ -68,9 +68,11 @@ class SMSubmissionInProgressStepVeiwController: ORKWaitStepViewController {
         
         let submissionTask = taskViewController!.task as! SubmissionTask
         
-        if let r = taskViewController?.result.stepResult(forStepIdentifier: kSM_Submission_Review) {
+        // Get the selected reports to submit from the review-step
+        if let selected = taskViewController?.result.stepResult(forStepIdentifier: kSM_Submission_Review) {
             
-            let selectedTasks = r.results?.compactMap({ (result) -> String? in
+            // Get selected tasks
+            let selectedTasksIdentifiers = selected.results?.compactMap({ (result) -> String? in
                 let result = result as! ORKChoiceQuestionResult
                 if let taskIds = result.answer as? [String] {
                     return taskIds.first
@@ -78,40 +80,35 @@ class SMSubmissionInProgressStepVeiwController: ORKWaitStepViewController {
                 return nil
             })
             
-            let submissionBundles = submissionTask.session.tasks.compactMap { (measure) -> [SubmissionBundle]? in
-                
-                var b = [SubmissionBundle]()
-                selectedTasks?.forEach({ (taskId) in
-                    if let sb = measure.reports?.submissionBundle(for: taskId) {
+            //
+            _ = submissionTask.session.tasks.compactMap { (taskController) -> [SubmissionBundle]? in
+                var toSubmit = [SubmissionBundle]()
+                selectedTasksIdentifiers?.forEach({ (taskId) in
+                    if let sb = taskController.reports?.submissionBundle(for: taskId) {
                         sb.canSubmit = true
-                        b.append(sb)
+                        toSubmit.append(sb)
                     }
-                    
                 })
-                
-                return b.isEmpty ? nil : b
+                return toSubmit.isEmpty ? nil : toSubmit
             }
             
-            
             let group = DispatchGroup()
-            var nerrors = [Error]()
-            
-            for measure in submissionTask.session.tasks {
+            var submissionErrors = [Error]()
+            for taskController in submissionTask.session.tasks {
                 group.enter()
-                measure.reports!.submit(to: submissionTask.session.server!, consent: true, patient: submissionTask.session.patient!, request: nil) { (success, errors) in
+                taskController.reports!.submit(to: submissionTask.session.server!, consent: true, patient: submissionTask.session.patient!, request: nil) { (success, errors) in
                     if let errors = errors {
-                        nerrors.append(contentsOf: errors)
+                        submissionErrors.append(contentsOf: errors)
                     }
                     group.leave()
                 }
-                
             }
             
             group.notify(queue: .main) {
-                let success = nerrors.isEmpty
-                let succesResult = ORKBooleanQuestionResult(identifier: kSM_Submission_Result)
-                succesResult.booleanAnswer = success ? 1 : 0
-                self.addResult(succesResult)
+                let success = submissionErrors.isEmpty
+                let submissionResult = ORKBooleanQuestionResult(identifier: kSM_Submission_Result)
+                submissionResult.booleanAnswer = success ? 1 : 0
+                self.addResult(submissionResult)
                 self.goForward()
             }
         }
@@ -134,7 +131,7 @@ open class SMSubmissionErrorNotice: ORKInstructionStep {
         super.init(identifier: identifier)
         self.title = "Submission Issue"
         self.text  = "Some errors were encountered while attempting to submit"
-        self.detailText = "Try .."
+        self.detailText = "Please try again."
     }
     
     
@@ -154,11 +151,12 @@ open class SMSubmissionErrorNoticeModifier: ORKStepModifier {
         //todo
         let task = step.task as! SubmissionTask
         
-        if let result = taskResult.stepResult(forStepIdentifier: kSM_Submission_InProgress)?.firstResult as? ORKBooleanQuestionResult {
+        if let result = taskResult.stepResult(forStepIdentifier: kSM_Submission_InProgress)?.results?.last as? ORKBooleanQuestionResult {
             let skip = result.booleanAnswer == 1
             if !skip {
                 let rule = ORKDirectStepNavigationRule(destinationStepIdentifier: kSM_Submission_Review)
                 task.setNavigationRule(rule, forTriggerStepIdentifier: step.identifier)
+                
             }
         }
     }

@@ -87,7 +87,7 @@ public class AmslerGrid : Instrument {
                 cc.coding = [coding]
                 observation.code = cc
             }
-            observation.status = ObservationStatus.final
+//            observation.status = ObservationStatus.final
             observation.component = components
             var mediaBundleEntries = images.map{ $0.sm_asBundleEntry() }
             observation.derivedFrom = mediaBundleEntries.map { $0.sm_asReference() }
