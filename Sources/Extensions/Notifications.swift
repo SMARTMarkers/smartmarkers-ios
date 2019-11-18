@@ -83,7 +83,7 @@ public class PRONotification: NSObject {
                 content.sound = UNNotificationSound.default
                 content.categoryIdentifier = kPRODueNotificationCategory
                 content.threadIdentifier = request.rq_identifier
-                let availableSlots = slots.filter({ $0.hasPassed == false })
+                let availableSlots = slots.filter({ $0.timeStatus == .Past })
                 let notificationRequests = availableSlots.map({ (slot) -> UNNotificationRequest in
                     let date = slot.period.start
                     let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second], from: date)

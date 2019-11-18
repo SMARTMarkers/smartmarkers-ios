@@ -130,7 +130,7 @@ open class SessionController: NSObject {
         
         var views : [UIViewController] = taskViewControllers
         if  verifyUser, let patient = patient {
-            let verifyController = PatientVerificationController(patient: patient)
+            let verifyController = MiniPatientVerificationController(patient: patient)
             views.insert(verifyController, at: 0)
         }
         

@@ -80,6 +80,8 @@ public final class SubmissionTask: ORKNavigableOrderedTask {
         setSkip(navigationRule, forStepIdentifier: kSM_Submission_Completion)
         setSkip(navigationRule2, forStepIdentifier: kSM_Submission_Aborted)
         setStepModifier(SMSubmissionErrorNoticeModifier(), forStepIdentifier: kSM_Submission_Errors)
+        setStepModifier(ReviewStepModifier(), forStepIdentifier: kSM_Submission_Review)
+        setStepModifier(ConsentStepModifier(), forStepIdentifier: kSM_Submission_Consent)
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -102,17 +104,12 @@ public final class SubmissionTask: ORKNavigableOrderedTask {
         
         let stp = super.step(after: step, with: result)
         
-        if stp?.identifier == kSM_Submission_Review {
-            (stp as! SMSubmissionPermitStep).formItems = session.tasks.map ({ $0.sm_asFormItem() })
-        }
-        
         if stp?.identifier == kSM_Submission_Errors {
             
         }
         
         if stp?.identifier == kSM_Submission_Consent {
-             let submissionNotice = "Selected reports will be submitted to: \(session.server!.name ?? "FHIR Server") at \(session.server!.baseURL.host ?? "")"
-            (stp as! SMSubmissionServerNotice).text = submissionNotice
+         
         }
         
         return stp

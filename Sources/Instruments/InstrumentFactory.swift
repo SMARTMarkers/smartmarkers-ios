@@ -41,18 +41,18 @@ public enum Instruments {
    
     public enum Web: String, CaseIterable {
         
-        case omronBloodPressure             = "omronBloodPressure"
+        case OmronBloodPressure             = "omronBloodPressure"
         
         public func instance(authSettings: [String: Any], callbackHandler: inout OAuth2?) -> Instrument {
             switch self {
-            case .omronBloodPressure:
+            case .OmronBloodPressure:
                 return OMRON(authSettings: authSettings, callbackHandler: &callbackHandler)
             }
         }
         
         public var coding: Coding {
             switch self {
-            case .omronBloodPressure:
+            case .OmronBloodPressure:
                 return Coding.sm_Coding(self.rawValue, "http://omronhealthcare.com", "Omron Blood Pressure")
             }
         }

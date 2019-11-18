@@ -1,5 +1,5 @@
 //
-//  EHRLoginController.swift
+//  SMARTLoginViewController.swift
 //  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 15/02/18.
@@ -15,7 +15,7 @@ let loginTitle = "LOGIN"
 let hospitalName = 		"SMART Hospital"
 
 
-open class EHRLoginController: UIViewController {
+open class SMARTLoginViewController: UIViewController {
     
     weak var statuslbl : UILabel?
     
@@ -34,18 +34,18 @@ open class EHRLoginController: UIViewController {
 	}
 
     func setupViews() {
-        let userlbl = EHRLoginController.titleLabel()
+        let userlbl = SMARTLoginViewController.titleLabel()
         let cancelBtn = cancelButton()
         userlbl.numberOfLines = 0
         userlbl.adjustsFontSizeToFitWidth = true
         userlbl.lineBreakMode = .byWordWrapping
         let btn = UIButton.SMButton(title: loginTitle, target: self, action: #selector(login(_:)))
-        let lbl = EHRLoginController.titleLabel()
+        let lbl = SMARTLoginViewController.titleLabel()
         userlbl.text = SMARTManager.shared.practitioner?.name?.first?.human ?? ""
         userlbl.textColor = UIColor.lightGray
         statuslbl = userlbl
 
-        let logo = EHRLoginController.smartLogo()
+        let logo = SMARTLoginViewController.logo(imageName: "", fileExtension: "")
         let v = [
             "cbtn"  : cancelBtn,
             "btn"   : btn,
@@ -97,19 +97,15 @@ open class EHRLoginController: UIViewController {
     }
     
     
-    class func smartLogo() -> UIImageView {
-        //works-with-smart-logo-768x514
-        //smartlogo
-        let currentBundle = Bundle(for: EHRLoginController.self)
-        let imgPath = currentBundle.path(forResource: "works-with-smart-logo-768x514", ofType: "png")
-        let img = UIImage(contentsOfFile: imgPath!)
-        let imgView = UIImageView.init(image: img)
+    class func logo(imageName: String, fileExtension: String) -> UIImageView {
+        let path = Bundle.main.path(forResource: imageName, ofType: fileExtension) ?? ""
+        let img = UIImage(contentsOfFile: path)
+        let imgView = UIImageView(image: img)
         imgView.frame = CGRect(x: 0, y: 0, width: 150, height: 100)
-        imgView.translatesAutoresizingMaskIntoConstraints = false
+        imgView.translatesAutoresizingMaskIntoConstraints = true
         return imgView
     }
-    
-    
+
     
     
     func cancelButton() -> UIButton {

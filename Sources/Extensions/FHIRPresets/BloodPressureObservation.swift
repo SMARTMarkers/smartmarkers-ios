@@ -32,7 +32,7 @@ public extension Observation {
         systolicQuantity.system = FHIRURL("http://unitsofmeasure.org")
         systolicQuantity.value = FHIRDecimal(integerLiteral: systolic)
         systolicQuantity.code = FHIRString("mmHg")
-        let systolicCode = Coding.sm_Coding_SBP_LOINC()
+        let systolicCode = Coding.sm_Coding_Systolic_LOINC()
         let systolicCodableConcept = CodeableConcept()
         systolicCodableConcept.coding = [systolicCode]
         systolicCodableConcept.text = FHIRString("Systolic Blood Pressure")
@@ -46,7 +46,7 @@ public extension Observation {
         diastolicQuantity.system = FHIRURL("http://unitsofmeasure.org")
         diastolicQuantity.value = FHIRDecimal(integerLiteral: diastolic)
         diastolicQuantity.code = FHIRString("mmHg")
-        let diastolicCode = Coding.sm_Coding_DBP_LOINC()
+        let diastolicCode = Coding.sm_Coding_Diastolic_LOINC()
         let diastolicCodableConcept = CodeableConcept()
         diastolicCodableConcept.coding = [diastolicCode]
         diastolicCodableConcept.text = FHIRString("Diastolic Blood Pressure")
@@ -71,11 +71,11 @@ public extension Coding {
         return sm_LOINC("55284-4", "Blood Pressure")
     }
     
-    class func sm_Coding_SBP_LOINC() -> Coding {
+    class func sm_Coding_Diastolic_LOINC() -> Coding {
         return sm_LOINC("8462-4", "Diastolic Blood Pressure")
     }
     
-    class func sm_Coding_DBP_LOINC() -> Coding {
+    class func sm_Coding_Systolic_LOINC() -> Coding {
         return sm_LOINC("8480-6", "Systolic Blood Pressure")
     }
     

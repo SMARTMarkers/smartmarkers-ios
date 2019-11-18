@@ -10,8 +10,6 @@ import Foundation
 import SMART
 
 
-
-
 extension QuestionnaireResponse : Report {
     
     public var rp_identifier: String? {
@@ -36,6 +34,10 @@ extension QuestionnaireResponse : Report {
     
     public var rp_observation: String? {
         return nil
+    }
+    
+    public var rp_viewController: UIViewController? {
+        return QuestionnaireResponseViewController(self)
     }
     
 }

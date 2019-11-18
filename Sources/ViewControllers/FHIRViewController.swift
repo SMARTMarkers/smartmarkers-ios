@@ -38,6 +38,7 @@ open class FHIRViewController: UIViewController {
         if let json = try? resource?.sm_jsonString() {
             textView.text = json
         }
+        textView.scrollsToTop = true
     }
     
 }

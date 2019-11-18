@@ -46,6 +46,10 @@ extension ServiceRequest {
 
 public extension CodeableConcept {
     
+    class func sm_RequestCode_EvaluationProcedure() -> CodeableConcept {
+        return sm_From([Coding.sm_Coding("386053000", "http://snowmed.info/sct", "Evaluation procedure (procedure)")], text: "Evaluation procedure (procedure)")
+    }
+    
     class func sm_ObservationCategorySurvey() -> CodeableConcept {
         return sm_From([Coding.sm_Coding("survey", "http://hl7.org/fhir/observation-category", "Survey")], text: "Survey")
     }

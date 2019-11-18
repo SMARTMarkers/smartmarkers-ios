@@ -9,16 +9,13 @@
 import UIKit
 import SMART
 
-class PatientVerificationController: UIViewController {
+class MiniPatientVerificationController: UIViewController {
 
 	let patient : Patient
     
-    //let context = SMARTManager.shared.usageMode
-	
 	let datePicker = UIDatePicker()
 	
 	open var onCompletion : ((_ success: Bool) -> Void)?
-	
 	
 	init(patient: Patient ) {
 		
@@ -38,10 +35,9 @@ class PatientVerificationController: UIViewController {
 		configureView()
     }
 	
-	func moveToPROMeasures() {
+	func continueToTasks() {
 		
 		//Verification is always assumed to be the topMost hence can be popped.
-
         if let navigationController = self.navigationController, navigationController.topViewController == self {
 			navigationController.popViewController(animated: true)
 		}
@@ -53,26 +49,22 @@ class PatientVerificationController: UIViewController {
 			let alert = UIAlertController(title: "Verification Failed", message: "Incorrect entry, please try again or talk to the practitioner", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 			alert.addAction(UIAlertAction(title: "DEMO:OVERRIDE", style: .destructive, handler: { [weak self] (_ ) in
-				self?.moveToPROMeasures()
+				self?.continueToTasks()
 			}))
 			present(alert, animated: true)
 		}
 		else {
-			moveToPROMeasures()
+			continueToTasks()
 		}
 	}
 
 	@objc func cancelVerification(_ sender: Any?) {
-		
-//        if context != .Patient {
+        
             LocalAuth.verifyDeviceUser { [weak self] (success, error) in
                 if success {
                     self?.dismiss(animated: true)
                 }
             }
-        //} else {
-          //  dismiss(animated: true)
-        //}
 	}
 	
 	func verify() -> Bool {
@@ -80,7 +72,7 @@ class PatientVerificationController: UIViewController {
 	}
 	
 	
-	func EPButton(_ title: String) -> UIButton {
+	func roundButton(_ title: String) -> UIButton {
 		
 		let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
 		let btn = RoundedButton(frame: frame)
@@ -89,7 +81,7 @@ class PatientVerificationController: UIViewController {
 		btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
 		return btn
 	}
-	func EPtitleLabel(_ title: String) -> UILabel {
+	func titleLabel(_ title: String) -> UILabel {
 		let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
 		titleLabel.font = UIFont.boldSystemFont(ofSize: 30)
 		titleLabel.text = title
@@ -101,7 +93,7 @@ class PatientVerificationController: UIViewController {
 	
 	func configureView() {
 		
-		let verifyButton = EPButton("Verify")
+		let verifyButton = roundButton("Verify")
 		verifyButton.addTarget(self, action: #selector(verifyPatient(_:)), for: .touchUpInside)
 
 		let cancelButton = UIButton(type: .roundedRect)
@@ -113,15 +105,15 @@ class PatientVerificationController: UIViewController {
 		cancelButton.addTarget(self, action: #selector(cancelVerification(_:)), for: .touchUpInside)
 
 		
-		let titleLabel   = EPtitleLabel("Enter your birthday for Verification")
-		let subtitleLabel = EPtitleLabel(patient.ep_MRNumber())
+		let titleLabel   = self.titleLabel("Enter your birthday for Verification")
+		let subtitleLabel = self.titleLabel(patient.ep_MRNumber())
 		subtitleLabel.textColor = UIColor.lightGray
 		subtitleLabel.adjustsFontSizeToFitWidth = true
 		subtitleLabel.font = UIFont.systemFont(ofSize: 20)
 		
 
 		
-		let patientLabel = EPtitleLabel(patient.humanName!)
+		let patientLabel = self.titleLabel(patient.humanName!)
 		let views = ["titlelbl" : titleLabel, "patientlbl": patientLabel, "verifyBtn" : verifyButton, "cancelBtn" : cancelButton, "datepicker" : datePicker, "subtitlelbl" : subtitleLabel]
 		Array(views.values).forEach { view.addSubview($0) }
 		
@@ -141,9 +133,6 @@ class PatientVerificationController: UIViewController {
 		ac("H:|-[titlelbl]-|", views)
 		ac("H:|-[subtitlelbl]-|", views)
 		ac("H:|-70-[verifyBtn]-70-|", views)
-
-
-
 		ac("H:|-[datepicker]-|", views)
 		view.addConstraint(centerY)
 		ac("H:|-40-[patientlbl]-40-|", views)

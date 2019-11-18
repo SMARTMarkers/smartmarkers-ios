@@ -33,16 +33,12 @@ public final class TaskController: NSObject {
     public var request: Request?
    
     /// PGHD Instrument 
-    public var instrument: Instrument? {
-        didSet {
-            if instrument != nil {
-                reports = Reports(instrument!, for: nil, request: request)
-            }
-        }
-    }
+    public var instrument: Instrument?
    
     /// `Reports` holds all historial FHIR resources and the newly generated FHIR `Bundle(s)` after a user session. See `Reports.swift`
-    public internal(set) final var reports: Reports?
+    public internal(set) final lazy var reports: Reports? = {
+        return Reports(task: self)
+    }()
    
     /// Optional: External resolver for the instrument. 
     public weak var instrumentResolver: InstrumentResolver?
@@ -51,13 +47,14 @@ public final class TaskController: NSObject {
     public var onSessionCompletion: ((_ submissionBundle: SubmissionBundle?, _ error: Error?) -> Void)?
    
     /// Schedule referenced from the receiver's request
-    public lazy var schedule: Schedule? = {
+    public lazy var schedule: TaskSchedule? = {
         return request?.rq_schedule
     }()
     
-    public lazy var schedule2: TaskSchedule? = {
-        return request?.rq_schedule2
-    }()
+    /// Schedule referenced from the receiver's request
+    public var canBegin: Bool {
+        return (schedule?.status == .Due || schedule?.status == .Overdue)
+    }
    
     /**
     Initializer
@@ -67,7 +64,6 @@ public final class TaskController: NSObject {
     convenience public init(instrument: Instrument) {
         self.init()
         self.instrument = instrument
-        self.reports = Reports(instrument, for: nil, request: request)
     }
    
     /**
@@ -124,7 +120,7 @@ public final class TaskController: NSObject {
     public func updateSchedule(_ _reports: [Report]?) {
 
         guard let rpts = self.reports?.reports ?? _reports else { return }
-        schedule2?.update(with: rpts.map { $0.rp_date })
+        schedule?.update(with: rpts.map { $0.rp_date })
 
     }
     
@@ -253,7 +249,7 @@ extension TaskController: ORKTaskViewControllerDelegate {
         if reason == .completed {
             
             if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
-                let gr = reports?.addNewReports(bundle, taskId: taskViewController.taskRunUUID.uuidString)
+                let gr = reports?.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString)
                 onSessionCompletion?(gr, nil)
             }
             else {

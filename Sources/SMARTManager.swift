@@ -102,14 +102,13 @@ public class SMARTManager : NSObject {
     
     public func showLoginController(over viewController: UIViewController) {
         
-        let loginViewController = EHRLoginController()
-		
+        let loginViewController = SMARTLoginViewController()
         viewController.present(loginViewController, animated: true, completion: nil)
         
     }
     
-    public func loginController() -> EHRLoginController {
-        return EHRLoginController()
+    public func loginController() -> SMARTLoginViewController {
+        return SMARTLoginViewController()
     }
     
     // TODO:

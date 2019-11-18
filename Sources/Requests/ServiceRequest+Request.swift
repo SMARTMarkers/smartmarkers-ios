@@ -48,13 +48,9 @@ extension ServiceRequest: Request {
         return category?.first?.coding?.first?.code?.string
     }
     
-    public var rq_schedule: Schedule? {
-        return sm_Schedule()
-    }
-    
-    public var rq_schedule2: TaskSchedule? {
+    public var rq_schedule: TaskSchedule? {
         set { }
-        get { return sm_Schedule2()  }
+        get { return sm_Schedule()  }
     }
     
     public static var rq_fetchParameters: [String : String]? {
@@ -135,12 +131,69 @@ extension ServiceRequest: Request {
 }
 
 
+public extension ServiceRequest {
+    
+    static func Write(to server: Server,
+                      for patient: Patient,
+                      instrument: Instrument,
+                      requester: Practitioner?,
+                      schedule: TaskSchedule?,
+                      callback: @escaping ((_ request: ServiceRequest?, _ error: Error?) -> Void)) {
+        
+        
+        do {
+            let request = ServiceRequest()
+            request.status = .active
+            request.intent = .order
+            request.subject = try patient.asRelativeReference()
+            request.category = [CodeableConcept.sm_RequestCode_EvaluationProcedure()]
+            
+            // Set Instrument
+            if let questionnaire = instrument as? Questionnaire {
+                let qExtension = Extension()
+                qExtension.valueReference = try questionnaire.asRelativeReference()
+                qExtension.url = kSD_QuestionnaireRequest.fhir_string
+                request.extension_fhir = [qExtension]
+            }
+            
+            else {
+                request.code = CodeableConcept.sm_From(instrument)
+            }
+            
+            if let requester = requester {
+                request.requester = try requester.asRelativeReference()
+            }
+            
+            if let schedule = schedule {
+                
+            }
+            else {
+                request.occurrenceDateTime = DateTime.now
+            }
+            
+            request.createAndReturn(server) { (error) in
+                callback(error == nil ? request : nil, error)
+            }
+            
+        }
+        catch {
+            callback(nil, error)
+            print(error)
+        }
+        
+        
+    }
+    
+    
+}
+
+
 
 
 extension ServiceRequest {
     
     
-    public func sm_Schedule2() -> TaskSchedule? {
+    public func sm_Schedule() -> TaskSchedule? {
         
         if let occuranceDate = occurrenceDateTime?.nsDate {
             return TaskSchedule(dueDate: occuranceDate)
@@ -154,22 +207,6 @@ extension ServiceRequest {
         
         return nil
         
-    }
-    public func sm_Schedule() -> Schedule? {
-        
-        let slotStatus = (self.status == RequestStatus.completed) ? SlotStatus.completed : nil
-        
-        if let occuranceDate = self.occurrenceDateTime?.nsDate {
-            return Schedule(period: PeriodBound(occuranceDate, nil), frequency: nil, overrideStatus: slotStatus)
-        }
-        else if let (start, end, fValue, fUnit) = period_frequency {
-            let period = PeriodBound(start, end)
-            let frequence = Frequency(value: fValue, unit: fUnit)
-            return Schedule(period: period, frequency: frequence, overrideStatus: slotStatus)
-        }
-        else {
-            return nil
-        }
     }
     
     var period_frequency : (start: Date, end:Date, freqValue:Int, freqUnit: String)? {

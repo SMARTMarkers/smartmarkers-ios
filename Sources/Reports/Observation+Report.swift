@@ -24,8 +24,9 @@ extension Observation : Report {
     }
     
     public var rp_title: String? {
-        if let code = code?.text?.string {
-            return code
+        
+        if let code = rp_code {
+            return code.display?.string ?? "Code: \(code.code!.string)"
         }
         
         return "Observation: #\(self.id?.string ?? "-")"
@@ -42,13 +43,40 @@ extension Observation : Report {
     }
     
     public var rp_observation: String? {
-        return observationValueString()
+        return sm_observationValue()
     }
+}
 
+
+extension Observation {
     
-    func observationValueString() -> String? {
+    func sm_observationValue() -> String? {
+        
+        // valueString
         if let v = valueString?.string { return v }
+        
+        // valueQuantity
         if let v = valueQuantity { return String(describing: v.value!) }
+
+        // Components
+        if let components = component {
+            if let q = components.first?.valueQuantity?.value {
+                return q.description
+            }
+        }
         return nil
+    }
+    
+    func bloodPressureDescription() -> String? {
+        
+        guard let components = component else { return nil }
+        let v = components.reduce(into: String()) { (output, component) in
+            if let vq = valueQuantity {
+                output += String(describing: vq.value!)
+                output += " " + (vq.unit?.string ?? vq.code?.string ?? "")
+                output += ";"
+            }
+        }
+        return v
     }
 }

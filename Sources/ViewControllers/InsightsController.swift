@@ -12,7 +12,7 @@ import SMART
 
 open class InsightsController: UITableViewController {
     
-    public var pdControllers: [TaskController]?
+    public var tasks: [TaskController]?
 	
 	override open func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +40,7 @@ open class InsightsController: UITableViewController {
     // MARK: - Table view data source
 
 	override open func numberOfSections(in tableView: UITableView) -> Int {
-        return (pdControllers?.count) ?? 0
+        return (tasks?.count) ?? 0
     }
 
 	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,7 +73,7 @@ open class InsightsController: UITableViewController {
 
 		}
         
-        let controller = pdControllers![indexPath.section]
+        let controller = tasks![indexPath.section]
         let graphView = cell?.viewWithTag(10) as? LineGraphView
         let recent = controller.reports?.reports.last?.rp_observation
         graphView?.title = controller.instrument?.sm_title
@@ -81,20 +81,6 @@ open class InsightsController: UITableViewController {
         if let scores = controller.reports?.reports.filter({ $0.rp_observation != nil }).map({ Double($0.rp_observation!)! }) {
             graphView?.graphPoints = scores
         }
-        
-
-        
-
-
-        
-		// TODO: simply this.
-//        let obss = sortedObservations![indexPath.section]
-//        let lastestObservation = obss.last!
-//        let title = lastestObservation.code!.text!.string
-//        let scores = obss.map { Double($0.valueString!.string)! }
-
-//        graphView?.graphPoints = scores
-		
 
         return cell!
     }
@@ -106,41 +92,4 @@ open class InsightsController: UITableViewController {
 	override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return 400
 	}
-	
-
 }
-
-
-/* LEGACY
- 
- sortedObservations?.removeAll()
- 
- SMARTManager.shared.getObservations { [unowned self] (requests, error) in
- 
- guard let requests = requests else {
- if error != nil {
- print(error.debugDescription)
- }
- return
- }
- 
- let crossReference = requests.reduce(into: [String: [Observation]]()) {
- if let loincCoding = $1.code?.sm_coding(for: "http://loinc.org"), let code = loincCoding.code {
- $0[code.string, default: []].append($1)
- }
- else {
- $0[$1.code!.coding!.first!.code!.string, default: []].append($1)
- }
- }
- 
- var list = [[Observation]]()
- for (_,v) in crossReference {
- list.append(v.sorted { $0.effectiveDateTime!.nsDate < $1.effectiveDateTime!.nsDate })
- }
- self.sortedObservations = list
- 
- DispatchQueue.main.sync {
- self.tableView.reloadData()
- }
- }
- */

@@ -37,15 +37,11 @@ public protocol Request :  class, CustomStringConvertible {
     var rq_categoryCode: String? { get }
     
     /// Schedule
-    var rq_schedule: Schedule? { get }
-    
-    /// Schedule2
-    var rq_schedule2: TaskSchedule? { get set }
+    var rq_schedule: TaskSchedule? { get set }
     
     /// Fetch Parameters
     static var rq_fetchParameters: [String: String]? { get }
     
-    ///TODO Should this be a Delegate Protocol?
     /// Notifies request has been updated
     func rq_updated(_ completed: Bool, callback: @escaping ((_ success: Bool) -> Void))
     
@@ -55,19 +51,12 @@ public protocol Request :  class, CustomStringConvertible {
     /// Resolve FHIR References if needed;
     func rq_resolveReferences(callback: @escaping ((Bool) -> Void))
     
-    /*
-    static func Create(for instrument: Instrument, patient: Patient?, schedule: Schedule?,  callback: @escaping ((_ request: Self?, _ error: Error?) -> Void))
-    
-    func write(to server: Server, callback: @escaping ((_ request: Self?, _ error: Error?) -> Void))
-     
-     */
-
 }
 
 public extension Request {
     
     var description : String {
-        return "PRORequest: \(rq_identifier)"
+        return "Request: \(rq_identifier)"
     }
 }
 
@@ -103,12 +92,8 @@ public extension Request where Self: SMART.DomainResource {
         return self 
     }
     
-    //TODO
-    func write(to server: Server, callback: @escaping ((_ request: Self?, _ error: Error?) -> Void)) {
-        
     
-        callback(nil, nil)
-    }
+
 
     
     
@@ -116,8 +101,7 @@ public extension Request where Self: SMART.DomainResource {
         return try self.asRelativeReference()
     }
     
-    
-    
+ 
     
     
     

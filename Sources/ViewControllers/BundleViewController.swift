@@ -1,5 +1,5 @@
 //
-//  SubmitReportTableViewController.swift
+//  BundleViewController.swift
 //  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 9/4/19.
@@ -9,7 +9,7 @@
 import UIKit
 import SMART
 
-public class ReportBundleViewController: UITableViewController {
+public class BundleViewController: UITableViewController {
     
     public final var bundle: SMART.Bundle!
     
@@ -51,7 +51,7 @@ public class ReportBundleViewController: UITableViewController {
         let resource = bundle!.entry![indexPath.row].resource
         let view: UIViewController
         if let resource = resource as? Report {
-            view = PROResultViewController(resource)
+            view = ReportViewController(resource)
         }
         else {
             view = FHIRViewController(resource)

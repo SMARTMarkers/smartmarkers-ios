@@ -116,6 +116,7 @@ public class TaskSchedule: CustomStringConvertible {
         case Overdue
         case Upcoming
         case Unknown
+        case RequestInactive
     }
     
     public struct Frequency {
@@ -171,23 +172,32 @@ public class TaskSchedule: CustomStringConvertible {
     
     @discardableResult
     public func calculateStatus() -> ActivityStatus {
-        
+
+        let now = TaskSchedule.now
+
+        // No DueDate; either activity-inactive
         guard let dueDate = dueDate else {
-            // No DueDate, better not say anything
-            status = .Unknown
+            
+            if let end = activityPeriod?.end, now > end  {
+                status = .RequestInactive
+            }
+            else {
+                status = .Unknown
+            }
             return status
         }
         
+     
         if currentSlot?.status == .Fulfilled {
             status = .Completed
         }
-        else if TaskSchedule.now >= dueDate {
+        else if now >= dueDate {
             status = .Due
         }
-        else if dueDate > TaskSchedule.now {
+        else if dueDate > now {
             status = .Upcoming
         }
-        else {
+        else { //PAST
             status = .Unknown
         }
         
@@ -246,6 +256,7 @@ public class TaskSchedule: CustomStringConvertible {
     }
     
 }
+/*
 
 public enum SlotStatus : String {
 	
@@ -479,6 +490,7 @@ public struct Schedule {
     }
 }
     
+ */
 
 class UTCCalender {
 	

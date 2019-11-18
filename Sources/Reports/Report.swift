@@ -12,7 +12,7 @@ import SMART
 
 /**
  Report Protocol
- All FHIR resources inheriting from `DomainResource` that are results of a PGHD `Instrument` must conform to the report protocol.
+ All FHIR resources inheriting from `Resource` that are results of a PGHD `Instrument` must conform to the report protocol.
  */
 public protocol Report: Resource {
     
@@ -37,12 +37,24 @@ public protocol Report: Resource {
     /// Observation value; if any
     var rp_observation: String? { get }
     
+    /// Representation `ViewController`
+    var rp_viewController: UIViewController? { get }
+    
 }
 
+/**
+ Default extension for `Report`
+ 
+ rp_resourceType returns FHIR Resource Type; rp_viewController returns a generic `ReportViewController`
+ */
 public extension Report {
 
     var rp_resourceType: String {
         return sm_resourceType()
+    }
+    
+    var rp_viewController: UIViewController? {
+        return ReportViewController(self)
     }
 }
 
@@ -128,11 +140,14 @@ public class SubmissionBundle {
  */
 open class Reports {
     
+    /// Weak reference to `taskController`
+    weak var taskController: TaskController?
+    
     /// Practitioner's `Request`
     weak var request: Request?
     
     /// Instrument for which the reports are fetched or generated
-    weak final var instrument: Instrument!
+    weak var instrument: Instrument?
     
     /// Patient for which the reports are fetched or generated
     weak var patient: Patient?
@@ -157,6 +172,10 @@ open class Reports {
         return _submissionQueue
     }
     
+    public init(task: TaskController) {
+        self.taskController = task
+    }
+    
     /**
      Designated Initializer.
      
@@ -171,16 +190,17 @@ open class Reports {
         self.request = request
     }
     
+    /// `Report conformant FHIR Resource to the receiver
     private func add(resource: Report) {
         _reports.append(resource)
     }
     
-    
+    /// `Report` conformant FHIR Resources added to the receiver
     private func add(resources: [Report]) {
         _reports.append(contentsOf: resources)
     }
     
-    
+    /// Returns `SubmissionBundle` generated from a specific user task session (taskId) from the queue
     open func submissionBundle(for taskId: String) -> SubmissionBundle? {
         
         return submissionQueue.filter({ (submissionBundle) -> Bool in
@@ -188,10 +208,11 @@ open class Reports {
         }).first
     }
     
+    
     open func fetch(for patient: Patient?, server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [Report]?, _ error: Error?) -> Void)) {
      
-        guard let resultParams = instrument.sm_resultingFhirResourceType else {
-            callback(nil, SMError.reportUnknownFHIRReport)
+        guard let resultParams = (instrument ?? taskController?.instrument)?.sm_resultingFhirResourceType else {
+            callback(nil, SMError.promeasureOrderedInstrumentMissing)
             return
         }
         
@@ -225,16 +246,26 @@ open class Reports {
         }
     }
     
+    /// Enqueue newly created `SMART.Bundle` into the receiver's queue; prepared for submission to `FHIR Server`
     @discardableResult
-    open func addNewReports(_ bundle: SMART.Bundle,  taskId: String) -> SubmissionBundle  {
+    open func enqueueSubmission(_ bundle: SMART.Bundle,  taskId: String, requestId: String? = nil) -> SubmissionBundle  {
         let gr = SubmissionBundle(taskId: taskId, bundle: bundle, requestId: nil)
         _submissionQueue.append(gr)
         return gr
     }
     
     
-    /// Prepare for Submission to `Server`.
-    open func submit(to server: Server, consent: Bool, patient: Patient, request: Request?, callback: @escaping ((_ success: Bool, _ error: [Error]?) -> Void)) {
+    /**
+     Attempts to submit the `submissionBundles` in the receiver's queue (`submissionQueue`)
+     
+     Note: `SubmissionBundle.canSubmit` flag must be true for submission; else will be discarded.
+     
+     - parameter server:    `FHIR Server` to submit too
+     - parameter patient:   `SMART.Patient` resource
+     - parameter request:   `Request` resource (optional)
+     - parameter callback:  Callback indicating success or fail with errors when attempted submission
+    */
+    open func submit(to server: Server, patient: Patient, request: Request?, callback: @escaping ((_ success: Bool, _ error: [Error]?) -> Void)) {
         
         guard !_submissionQueue.isEmpty else {
             callback(true, nil)
@@ -273,6 +304,10 @@ open class Reports {
         }
         
         
+    }
+
+    open func submit(to server: Server, patient: Patient, callback: @escaping ((_ success: Bool, _ error: [Error]?) -> Void)) {
+        submit(to: server, patient: patient, request: taskController?.request ?? request, callback: callback)
     }
     
     /**
@@ -372,7 +407,7 @@ open class Reports {
      Submission method
      
      Submits FHIR resources in the receiver's SubmissionBundle (`SMART.Bundle`) to the FHIR server
-     FHIR Bundle Transaction method is used.
+     FHIR Bundle **Transaction** method is used.
      
      - parameter bundle: `SMART.Bundle` containing FHIR resources
      - parameter server:    FHIR `Server` to write resources

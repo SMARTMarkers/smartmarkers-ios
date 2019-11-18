@@ -67,6 +67,7 @@ class SMSubmissionInProgressStepVeiwController: ORKWaitStepViewController {
         updateText("Please wait\nData is being submitted...")
         
         let submissionTask = taskViewController!.task as! SubmissionTask
+        let session = submissionTask.session
         
         // Get the selected reports to submit from the review-step
         if let selected = taskViewController?.result.stepResult(forStepIdentifier: kSM_Submission_Review) {
@@ -81,7 +82,7 @@ class SMSubmissionInProgressStepVeiwController: ORKWaitStepViewController {
             })
             
             //
-            _ = submissionTask.session.tasks.compactMap { (taskController) -> [SubmissionBundle]? in
+            _ = session.tasks.compactMap { (taskController) -> [SubmissionBundle]? in
                 var toSubmit = [SubmissionBundle]()
                 selectedTasksIdentifiers?.forEach({ (taskId) in
                     if let sb = taskController.reports?.submissionBundle(for: taskId) {
@@ -94,9 +95,9 @@ class SMSubmissionInProgressStepVeiwController: ORKWaitStepViewController {
             
             let group = DispatchGroup()
             var submissionErrors = [Error]()
-            for taskController in submissionTask.session.tasks {
+            for taskController in session.tasks {
                 group.enter()
-                taskController.reports!.submit(to: submissionTask.session.server!, consent: true, patient: submissionTask.session.patient!, request: nil) { (success, errors) in
+                taskController.reports!.submit(to: session.server!, patient: session.patient!, request: taskController.request) { (success, errors) in
                     if let errors = errors {
                         submissionErrors.append(contentsOf: errors)
                     }
@@ -141,16 +142,39 @@ open class SMSubmissionErrorNotice: ORKInstructionStep {
     
 }
 
-
-
+class ConsentStepModifier: ORKStepModifier {
+    
+    override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
+        
+        guard let selected = taskResult.stepResult(forStepIdentifier: kSM_Submission_Review) else {
+            return
+        }
+        let task = step.task as! SubmissionTask
+        if let selectedTasksIdentifiers = selected.results?.compactMap({ (result) -> String? in
+            let result = result as! ORKChoiceQuestionResult
+            if let taskIds = result.answer as? [String] {
+                return taskIds.first
+            }
+            return nil
+        }) {
+            let submissionNotice = "\(selectedTasksIdentifiers.count) Selected\n\nWill be submitted to: \(task.session.server!.name ?? "FHIR Server") at \(task.session.server!.baseURL.host ?? ""). Proceed?"
+            step.text = submissionNotice
+        }
+    }
+}
+class ReviewStepModifier: ORKStepModifier {
+    
+    override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
+        let task = step.task as! SubmissionTask
+        (step as! SMSubmissionPermitStep).formItems = task.session.tasks.map ({ $0.sm_asFormItem() })
+    }
+}
 
 open class SMSubmissionErrorNoticeModifier: ORKStepModifier {
     
     open override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
      
-        //todo
         let task = step.task as! SubmissionTask
-        
         if let result = taskResult.stepResult(forStepIdentifier: kSM_Submission_InProgress)?.results?.last as? ORKBooleanQuestionResult {
             let skip = result.booleanAnswer == 1
             if !skip {
@@ -162,9 +186,6 @@ open class SMSubmissionErrorNoticeModifier: ORKStepModifier {
     }
     
 }
-
-
-
 
 
 extension TaskController {

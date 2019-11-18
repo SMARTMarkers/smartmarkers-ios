@@ -37,7 +37,7 @@ open class OMRON: Instrument {
         self.auth.logger = OAuth2DebugLogger(.trace)
         self.sm_title = "OMRON Blood Pressure"
         self.sm_identifier = "omron-blood-pressure"
-        self.sm_code = SMARTMarkers.Instruments.Web.omronBloodPressure.coding
+        self.sm_code = SMARTMarkers.Instruments.Web.OmronBloodPressure.coding
         self.sm_type = .WebRepository
         self.sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])
