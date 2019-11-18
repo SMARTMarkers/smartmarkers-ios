@@ -9,10 +9,10 @@
 - [ X ] Remove Logo
 - [ X ] FHIRViewController
 - [ X ] Report
-- [  ] Request: create Request
+- [ X ] Request: create Request
 - [ X ] Scheduling                     !!!!!!!!!!!!!!!!!!!!!!!!!!
 - [  ] JWT Token                     !!!!!!!!!!!!!!!!!!!!!!!!!!!
-- [   ] Questionnaire Check
+- [ X ] Questionnaire Check
 - [   ] ArgonautQuestionnaire Check
 - [   ] Move unnecessary classes to SM Instruments
 - [   ] PatientListing

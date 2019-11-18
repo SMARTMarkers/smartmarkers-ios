@@ -15,7 +15,7 @@ import SMART
  Fetches and Manages `FHIR` request resource
  
  */
-public protocol Request :  class, CustomStringConvertible {
+public protocol Request :  DomainResource {
     
     
     /// Request identifier
@@ -51,6 +51,9 @@ public protocol Request :  class, CustomStringConvertible {
     /// Resolve FHIR References if needed;
     func rq_resolveReferences(callback: @escaping ((Bool) -> Void))
     
+    /// Call for the receiver to configure itself with the instrument, scheduling, subject (patient) and practitioner
+    func rq_configureNew(for instrument: Instrument, schedule: TaskSchedule?, patient: Patient?, practitioner: Practitioner?) throws
+    
 }
 
 public extension Request {
@@ -61,7 +64,12 @@ public extension Request {
 }
 
 
-public extension Request where Self: SMART.DomainResource {
+public extension Request {
+    
+    static func rq_create() -> Self? {
+        return ServiceRequest() as? Self
+        //TODO: Make `Self.init()` "required" for metatype initialization
+    }
     
     static func Requests(from server: Server, options: [String:String]?, callback: @escaping ((_ requestResources: [Self]?, _ error: Error?) -> Void)) {
         let search = Self.search(options as Any)
@@ -91,18 +99,9 @@ public extension Request where Self: SMART.DomainResource {
     var asFHIR : DomainResource? {
         return self 
     }
-    
-    
 
-
-    
     
     func asRelativeReference() throws -> Reference {
         return try self.asRelativeReference()
     }
-    
- 
-    
-    
-    
 }

@@ -207,10 +207,46 @@ public final class TaskController: NSObject {
             callback?(results != nil, error)
         }
     }
-    
+}
 
-    
+// MARK: - Practitioner Requesting PGHD
 
+public extension TaskController  {
+    
+    /**
+     Creates and dispatches a FHIR `Request` to the FHIR Server
+     
+     Relies on `Request`-protocol conformant classes to configure the FHIR resource
+     
+     - parameter of:        FHIR Request Resource Type. Default is R4 `ServiceRequest`. Needs to conform to `Request`
+     - parameter on:        FHIR `Server` for the receiver to create the resource on
+     - parameter for:       `Practitioner` making the request
+     - parameter schedule:  Associated repeating schedule if any (Optional)
+    */
+    func createRequest(of fhirType: Request.Type? = nil, on server: Server, for patient: Patient, from practitioner: Practitioner?, schedule: TaskSchedule? = nil, callback: @escaping ((_ request: Request?, _ error: Error?) -> Void)) {
+        
+        guard let instr = instrument else {
+            callback(nil, SMError.promeasureOrderedInstrumentMissing)
+            return
+        }
+        if request != nil {
+            callback(nil, nil)
+        }
+        do {
+            let resource = fhirType?.rq_create() ?? ServiceRequest.init()
+            try resource.rq_configureNew(for: instr, schedule: schedule, patient: patient, practitioner: practitioner)
+            resource.createAndReturn(server, callback: {  (error) in
+                if let error = error{
+                    callback(nil, error)
+                }
+                self.request = resource
+                callback(resource, nil)
+            })
+        }
+        catch {
+            callback(nil, error)
+        }
+    }
 }
 
 

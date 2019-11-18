@@ -58,7 +58,6 @@ extension ServiceRequest: Request {
     }
     
     
-    
     public func rq_updated(_ completed: Bool, callback: @escaping ((_ success: Bool) -> Void)) {
         
         if completed {
@@ -128,62 +127,45 @@ extension ServiceRequest: Request {
         }
     }
     
-}
-
-
-public extension ServiceRequest {
     
-    static func Write(to server: Server,
-                      for patient: Patient,
-                      instrument: Instrument,
-                      requester: Practitioner?,
-                      schedule: TaskSchedule?,
-                      callback: @escaping ((_ request: ServiceRequest?, _ error: Error?) -> Void)) {
-        
-        
+    public func rq_configureNew(for instrument: Instrument, schedule: TaskSchedule?, patient: Patient?, practitioner: Practitioner?) throws {
+
         do {
-            let request = ServiceRequest()
-            request.status = .active
-            request.intent = .order
-            request.subject = try patient.asRelativeReference()
-            request.category = [CodeableConcept.sm_RequestCode_EvaluationProcedure()]
+            status = .active
+            intent = .order
+            category = [CodeableConcept.sm_RequestCode_EvaluationProcedure()]
+            subject = try patient?.asRelativeReference()
             
-            // Set Instrument
+            // Instrument
             if let questionnaire = instrument as? Questionnaire {
                 let qExtension = Extension()
                 qExtension.valueReference = try questionnaire.asRelativeReference()
                 qExtension.url = kSD_QuestionnaireRequest.fhir_string
-                request.extension_fhir = [qExtension]
+                extension_fhir = [qExtension]
             }
-            
             else {
-                request.code = CodeableConcept.sm_From(instrument)
+                code = CodeableConcept.sm_From(instrument)
             }
             
-            if let requester = requester {
-                request.requester = try requester.asRelativeReference()
+            // Requester
+            if let practitioner = practitioner {
+                requester = try practitioner.asRelativeReference()
             }
             
-            if let schedule = schedule {
+            // Schedule
+            if let _ = schedule {
                 
             }
             else {
-                request.occurrenceDateTime = DateTime.now
+                occurrenceDateTime = DateTime.now
             }
-            
-            request.createAndReturn(server) { (error) in
-                callback(error == nil ? request : nil, error)
-            }
-            
         }
         catch {
-            callback(nil, error)
-            print(error)
+            throw error
         }
-        
-        
     }
-    
+
+
     
 }
 
