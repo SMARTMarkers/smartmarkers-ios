@@ -433,7 +433,7 @@ open class Reports {
                 }
             }
             else {
-                callback(false, SMError.reportSubmissionToServerError(serverError: response.error ?? SMError.undefined))
+                callback(false, SMError.reportSubmissionToServerError(serverError: response.error ?? SMError.undefined(description: "unknown error when submitting reports")))
             }
             semaphore.signal()
         }

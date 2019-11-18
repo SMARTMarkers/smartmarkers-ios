@@ -66,7 +66,7 @@ open class StepActivity: Activity {
                 callback(samples, nil)
             }
             
-            callback(nil, SMError.undefined)
+            callback(nil, SMError.undefined(description: "No Samples Found"))
         }
         
         store?.execute(query)
