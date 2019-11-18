@@ -10,7 +10,7 @@ import Foundation
 
 public enum SMError : Error, CustomStringConvertible {
     
-    case undefined
+    case undefined(description: String)
     
     // Mark: PROServer
     
@@ -99,8 +99,8 @@ public enum SMError : Error, CustomStringConvertible {
         
         switch self {
             
-        case .undefined:
-            return "Undefined"
+        case .undefined(let description):
+            return "UndefinedError: \(description)"
         // AdaptiveQuestionnaires
             
         case .adaptiveQuestionnaireErrorMappingToSTU3:
