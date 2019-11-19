@@ -20,9 +20,9 @@ public enum Step: String, CustomStringConvertible {
     }
 }
 
-open class AdaptiveQuestionnaireTask2: ORKNavigableOrderedTask {
+open class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask {
     
-    public let adaptiveQuestionnaire: AdaptiveQuestionnaire
+    public let adaptiveQuestionnaire: Questionnaire
     
     public var adaptiveServer: FHIRServer?
     
@@ -49,7 +49,7 @@ open class AdaptiveQuestionnaireTask2: ORKNavigableOrderedTask {
         
     }
     
-    public required init(identifier: String, steps: [ORKStep], adaptiveQuestionnaire: AdaptiveQuestionnaire, adaptiveServer: FHIRServer?) {
+    public required init(identifier: String, steps: [ORKStep], adaptiveQuestionnaire: Questionnaire, adaptiveServer: FHIRServer?) {
         
         let title = adaptiveQuestionnaire.sm_displayTitle() ?? "Survey #\(adaptiveQuestionnaire.sm_identifier ?? "")"
         let instructions = "\(title)\n\nThis is a computer adaptive test."
@@ -74,11 +74,9 @@ open class AdaptiveQuestionnaireTask2: ORKNavigableOrderedTask {
     
     open override func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
         
-        print("Trying to fetching nextQ for \(step?.identifier ?? "")")
 
         guard shouldSubmitResponse else {
             shouldSubmitResponse = true
-            print("......denied fetching nextQ for \(step?.identifier ?? "")")
             return super.step(after:step, with: result)
         }
         
@@ -97,12 +95,10 @@ open class AdaptiveQuestionnaireTask2: ORKNavigableOrderedTask {
         
         if sourceStep.identifier != Step.Introduction.rawValue {
             if responseItem == nil {
-                print("......no response item to send! \(step?.identifier ?? "")")
                 return super.step(after: step, with: result)
             }
         }
         
-        print("fetching nextQ for \(sourceStep.identifier)")
         let semaphore = DispatchSemaphore(value: 0)
         adaptiveQuestionnaire.next_q2(server: adaptiveServer!, answer: responseItem, forQuestionnaireItemLinkId: sourceStep.identifier, options: [.lenient], for: currentResponse) { [weak self] (new_qresponse, error) in
             if let new = new_qresponse {
@@ -124,28 +120,8 @@ open class AdaptiveQuestionnaireTask2: ORKNavigableOrderedTask {
         return super.step(after: step, with: result)
     }
     
-    open override func step(before step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
-        return super.step(before: step, with: result)
-    }
-    
-    public var conclusionRule : ORKDirectStepNavigationRule {
-        return  ORKDirectStepNavigationRule(destinationStepIdentifier: Step.Conclusion.rawValue)
-    }
-    
-    public var conclusionStep: ORKCompletionStep? {
-        return self.step(withIdentifier: Step.Conclusion.rawValue) as? ORKCompletionStep
-    }
-    
-    open func assignRule(_ rule: ORKStepNavigationRule, for triggeringStep: String) {
-        self.setNavigationRule(rule, forTriggerStepIdentifier: triggeringStep)
-    }
-    
-    open func continueTo(_ to: ORKStep,_ from: ORKStep) {
-        assignRule(ORKDirectStepNavigationRule(destinationStepIdentifier: to.identifier), for: from.identifier)
-    }
-    
     open func continueTo(_ toIdentifier: String,_ from: ORKStep) {
-        assignRule(ORKDirectStepNavigationRule(destinationStepIdentifier: toIdentifier), for: from.identifier)
+        setNavigationRule(ORKDirectStepNavigationRule(destinationStepIdentifier: toIdentifier), forTriggerStepIdentifier: from.identifier)
     }
     
     open func resultReport(from response: QuestionnaireResponse?) -> String? {
@@ -173,7 +149,7 @@ open class AdaptiveQuestionnaireTask2: ORKNavigableOrderedTask {
 class AdaptiveConclusionStepModifier: ORKStepModifier {
     
     override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
-        let task = step.task as! AdaptiveQuestionnaireTask2
+        let task = step.task as! AdaptiveQuestionnaireTask
         let score = task.resultReport(from: task.currentResponse) ?? ""
         step.title = "Completed"
         step.text =  "Survey concluded, Thank you.\n\n\(score)"

@@ -10,41 +10,7 @@ import Foundation
 import SMART
 
 
-open class AdaptiveQuestionnaire: Questionnaire {
-    
-    lazy var answers: [QuestionnaireResponse] =  {
-        return [QuestionnaireResponse]()
-    }()
-    
-    var finalResponse: QuestionnaireResponse?
-    
-    var currentResponse: QuestionnaireResponse? {
-        return answers.last
-    }
-    
-    var currentQuestionnaire: Questionnaire? {
-        return currentResponse?.contained?.first as? Questionnaire
-    }
-    
-    var currentQuestionLinkId: String? {
-        
-        print(currentQuestionnaire?.item?.map { $0.linkId?.string })
-        
-        return currentQuestionnaire?.item?.first?.linkId?.string
-    }
-    
-    func stepBack() {
-        answers.removeLast()
-    }
-    
-    func reset() {
-        answers.removeLast()
-        completedFlag = false
-    }
-    
-    public internal(set) var completedFlag: Bool = false
-    
-    var onCompletion: ((_ response: QuestionnaireResponse?, _ error: Error?) -> Void)?
+extension Questionnaire {
     
     public func next_q2(server: FHIRServer, answer: QuestionnaireResponseItem?, forQuestionnaireItemLinkId: String?, options: FHIRRequestOption, for currResponse: QuestionnaireResponse? = nil,callback: @escaping (_ resource: QuestionnaireResponse?, _ error: Error?) -> Void) {
         
@@ -78,10 +44,6 @@ open class AdaptiveQuestionnaire: Questionnaire {
                 do {
                     let resource = try response.responseResource(ofType: QuestionnaireResponse.self)
                     resource._server = server
-                    if resource.status == .completed {
-                        self?.completedFlag = true
-                    }
-                    self?.answers.append(resource)
                     callback(resource, nil)
                     
                 }
@@ -94,5 +56,49 @@ open class AdaptiveQuestionnaire: Questionnaire {
                 callback(nil, response.error)
             }
         }
+    }
+}
+
+
+
+extension Questionnaire {
+    
+    public func ResponseBody(responseIdentifier: String, answer: Any? = nil) -> QuestionnaireResponse? {
+        
+        let qr = QuestionnaireResponse()
+        qr.id = FHIRString(responseIdentifier)
+        
+        let meta = Meta()
+        meta.profile = [FHIRCanonical(kSD_adaptive_QuestionnaireResponse)!]
+        qr.meta = meta
+        let exts = [
+            Extension(FHIRURL(kSD_adaptive_QuestionnaireExpiration)!, DateTime.now),
+            Extension(FHIRURL(kSD_adaptive_QuestionnaireFinished)!, nil)
+        ]
+        qr.extension_fhir = exts
+        qr.status = QuestionnaireResponseStatus.inProgress
+        qr.authored = DateTime.now
+        
+        let containedQ = Questionnaire()
+        containedQ.meta = meta
+        containedQ.meta?.profile = [FHIRCanonical(kSD_adaptive_Questionnaire)!]
+        containedQ.id = id
+        containedQ.url = url
+        containedQ.title = title
+        containedQ.status = status
+        containedQ.subjectType = subjectType
+        
+        containedQ.item = []
+        qr.contained = [containedQ]
+        return qr
+    }
+    
+}
+
+extension SMART.Extension {
+    
+    convenience init(_ url: FHIRURL, _ dateTime: DateTime?) {
+        self.init(url: url.absoluteString.fhir_string)
+        self.valueDateTime = dateTime
     }
 }

@@ -87,15 +87,26 @@ extension SMART.Questionnaire: Instrument {
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
+        
+        if item == nil, let srv = _server, let iden = id?.string  {
+            let semaphore = DispatchSemaphore(value: 0)
+            Questionnaire.read(iden, server: srv, options: [.lenient]) { (resource, error) in
+                self.item = (resource as? Questionnaire)?.item
+                semaphore.signal()
+            }
+            semaphore.wait()
+        }
+    
         sm_genereteSteps { (steps, rulestupples, error) in
             
             if let steps = steps {
                 let uuid = UUID()
                 let taskIdentifier = uuid.uuidString
                 
-                let adaptive = true
+                // Fallback; should only rely on SDC Extension
+                let adaptive = (self._server is AdaptiveServer)
                 if adaptive {
-                    let task = AdaptiveQuestionnaireTask2(identifier: taskIdentifier, steps: steps, adaptiveQuestionnaire: self as! AdaptiveQuestionnaire, adaptiveServer: nil)
+                    let task = AdaptiveQuestionnaireTask(identifier: taskIdentifier, steps: steps, adaptiveQuestionnaire: self, adaptiveServer: self._server)
                     rulestupples?.forEach({ (rule, linkId) in
                         task.setSkip(rule, forStepIdentifier: linkId)
                     })
