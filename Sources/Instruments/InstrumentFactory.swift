@@ -60,12 +60,12 @@ public enum Instruments {
     
     
     public enum ActiveTasks: String, CaseIterable, CustomStringConvertible {
-            
+        
             case AmslerGrid                     = "amslergrid"
             case TowerOfHanoi                   = "towerOfHanoi"
             case NineHolePegTest                = "holePegTest"
             case PSAT_2                         = "psat-2"
-//            case psat_3                         = "psat-3"
+            case PSAT_3                         = "psat-3"
             case RangeOfMotion_shoulder_right   = "rangeofmotion.shoulder.right"
             case RangeOfMotion_shoulder_left    = "rangeofmotion.shoulder.left"
             case RangeOfMotion_knee_right       = "rangeofmotion.knee.right"
@@ -84,10 +84,9 @@ public enum Instruments {
                     case .NineHolePegTest:
                         return SMARTMarkers.NineHolePegTest()
                     case .PSAT_2:
-                        return SMARTMarkers.PASAT()
-                    //TODO
-//                    case .psat_3:
-//                        fatalError()
+                        return SMARTMarkers.PASAT(interStimulusInterval: 2.0)
+                    case .PSAT_3:
+                        return SMARTMarkers.PASAT(interStimulusInterval: 3.0)
                     case .TowerOfHanoi:
                         return SMARTMarkers.TowerOfHanoi()
                     case .RangeOfMotion_shoulder_left:
@@ -112,9 +111,37 @@ public enum Instruments {
             }
             
             public var description: String {
-                //TODO
-                return self.rawValue
-            }
+                switch self {
+                case .AmslerGrid:
+                    return "Amsler Grid"
+                case .NineHolePegTest:
+                    return "9 Hole Peg Test"
+                case .PSAT_2:
+                    return "Paced Serial Addition test (2sec)"
+                case .PSAT_3:
+                    return "Paced Serial Addition test (3sec)"
+                case .TowerOfHanoi:
+                    return "Tower of Hanoi"
+                case .RangeOfMotion_shoulder_left:
+                    return "Left Shoulder Range of Motion"
+                case .RangeOfMotion_shoulder_right:
+                    return "Right Shoulder Range of Motion"
+                case .RangeOfMotion_knee_left:
+                    return "Left Knee Range of Motion"
+                case .RangeOfMotion_knee_right:
+                    return "Right Knee Range of Motion"
+                case .FingerTappingSpeed:
+                    return "Finger Tapping Speed"
+                case .FingerTappingSpeed_Left:
+                    return "Finger Tapping Speed (Left)"
+                case .FingerTappingSpeed_Right:
+                    return "Finger Tapping Speed (Right)"
+                case .SpatialSpanMemory:
+                    return "Spatiel Span Memory"
+                case .StroopTest:
+                    return "Stroop Test"
+                }
+        }
             
             
             public var coding: Coding {

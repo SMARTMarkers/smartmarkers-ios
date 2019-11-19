@@ -13,6 +13,8 @@ import ResearchKit
 
 open class PASAT: Instrument {
     
+    let interStimulusInterval: TimeInterval
+    
     public var sm_title: String
 
     public var sm_identifier: String?
@@ -27,7 +29,8 @@ open class PASAT: Instrument {
     
     public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
 
-    public init() {
+    public init(interStimulusInterval: TimeInterval) {
+        self.interStimulusInterval = interStimulusInterval
         sm_title = "Paced Auditory Serial Additions Test"
         sm_identifier = "pasat"
         sm_code = SMARTMarkers.Instruments.ActiveTasks.PSAT_2.coding
@@ -41,7 +44,7 @@ open class PASAT: Instrument {
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:sm_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: 3.0, stimulusDuration: 1.0, seriesLength: 10, options: [])
+        let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:sm_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: self.interStimulusInterval, stimulusDuration: 1.0, seriesLength: 10, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
