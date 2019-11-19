@@ -33,6 +33,7 @@ extension ORKStepResult {
         guard let results = results else {
             return nil
         }
+        
         let stepIdentifer = identifier
         let step = task.step?(withIdentifier: stepIdentifer)
         var items = [QuestionnaireResponseItem]()
@@ -55,14 +56,16 @@ extension ORKStepResult {
             stepAnswerItems.forEach { (answerItem) in
                 answerItem.text = form.formItems!.filter({ $0.identifier == answerItem.linkId!.string }).first!.text!.fhir_string
             }
+            let questionnaireItem = allQuestionnaireItems?.first(where: { $0.linkId?.string == identifier })
             let groupItem = QuestionnaireResponseItem(linkId: identifier.fhir_string)
             groupItem.text = step?.title?.fhir_string
             groupItem.item = stepAnswerItems
+            groupItem.extension_fhir = questionnaireItem?.extension_fhir
             items.append(groupItem)
             return items
         }
         
-            //Single Step: Has only One Item
+        // Single Step: Has only One Item
         else if let question = step as? ORKQuestionStep, stepAnswerItems.count == 1 {
             stepAnswerItems.first?.text = question.question?.fhir_string
             return stepAnswerItems

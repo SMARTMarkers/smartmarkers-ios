@@ -17,6 +17,7 @@ let kSD_QuestionnaireCalculatedExpression = "http://hl7.org/fhir/StructureDefini
 /// Adaptive QuestionnaireResponse SDC Defs
 let kSD_adaptive_QuestionnaireExpiration = "http://hl7.org/fhir/StructureDefinition/questionnaire-expirationTime"
 let kSD_adaptive_QuestionnaireFinished = "http://hl7.org/fhir/StructureDefinition/questionnaire-finishedTime"
+let kSD_QuestionnaireResponseItemOrder = "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder"
 
 /// Adaptive Questionnaire SDC Dynamic
 let kSD_adaptive_Questionnaire_Dynamic = "http://hl7.org/fhir/us/sdc/StructureDefinition/sdc-questionnaire-dynamic"

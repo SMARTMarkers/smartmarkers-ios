@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		D40A121C21627DBE002F9F53 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40A121B21627DBE002F9F53 /* Notifications.swift */; };
 		D40B19CB20989B9000C18C23 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40B19CA20989B9000C18C23 /* Schedule.swift */; };
-		D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift */; };
+		D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaire.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaire.swift */; };
 		D41A2E6F235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41A2E6E235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift */; };
 		D422E58522C120540097E0CF /* PROWaitStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58422C120540097E0CF /* PROWaitStep.swift */; };
 		D422E58822C242B70097E0CF /* HKClincalRecordSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58722C242B70097E0CF /* HKClincalRecordSelector.swift */; };
@@ -21,6 +21,8 @@
 		D42605CE209364FE00853609 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42605CD209364FE00853609 /* RoundedButton.swift */; };
 		D4268F1D2335587E000416A1 /* SMHealthKitRecords.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4268F1C2335587E000416A1 /* SMHealthKitRecords.swift */; };
 		D4268F1F23368C43000416A1 /* HKFHIRResource+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4268F1E23368C43000416A1 /* HKFHIRResource+FHIR.swift */; };
+		D4334D8D23833E0F00279397 /* promis_qr_dynamic.json in Resources */ = {isa = PBXBuildFile; fileRef = D4334D8C23833E0F00279397 /* promis_qr_dynamic.json */; };
+		D4334D8F23833E3200279397 /* promis_q_dynamic.json in Resources */ = {isa = PBXBuildFile; fileRef = D4334D8E23833E3200279397 /* promis_q_dynamic.json */; };
 		D434861922AF08E0001D922C /* FHIRPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434861822AF08E0001D922C /* FHIRPath.swift */; };
 		D436B1D720EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */; };
 		D436B1D920EE880600CAF2F5 /* Questionnaire+Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */; };
@@ -114,7 +116,7 @@
 /* Begin PBXFileReference section */
 		D40A121B21627DBE002F9F53 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		D40B19CA20989B9000C18C23 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
-		D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireOperation.swift; sourceTree = "<group>"; };
+		D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaire.swift; sourceTree = "<group>"; };
 		D41A2E6E235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireTask.swift; sourceTree = "<group>"; };
 		D422E58422C120540097E0CF /* PROWaitStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROWaitStep.swift; sourceTree = "<group>"; };
 		D422E58722C242B70097E0CF /* HKClincalRecordSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClincalRecordSelector.swift; sourceTree = "<group>"; };
@@ -126,6 +128,8 @@
 		D42605CD209364FE00853609 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		D4268F1C2335587E000416A1 /* SMHealthKitRecords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMHealthKitRecords.swift; sourceTree = "<group>"; };
 		D4268F1E23368C43000416A1 /* HKFHIRResource+FHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HKFHIRResource+FHIR.swift"; sourceTree = "<group>"; };
+		D4334D8C23833E0F00279397 /* promis_qr_dynamic.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = promis_qr_dynamic.json; sourceTree = "<group>"; };
+		D4334D8E23833E3200279397 /* promis_q_dynamic.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = promis_q_dynamic.json; sourceTree = "<group>"; };
 		D434861822AF08E0001D922C /* FHIRPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRPath.swift; sourceTree = "<group>"; };
 		D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+ResearchKit.swift"; sourceTree = "<group>"; };
 		D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+Instrument.swift"; sourceTree = "<group>"; };
@@ -297,6 +301,8 @@
 			isa = PBXGroup;
 			children = (
 				D48113BD2373CAC00062B3D9 /* surgeon_general.json */,
+				D4334D8C23833E0F00279397 /* promis_qr_dynamic.json */,
+				D4334D8E23833E3200279397 /* promis_q_dynamic.json */,
 				D48113B72373BBA00062B3D9 /* genevariant_reporting_panel.json */,
 				D48113B92373C5E40062B3D9 /* ecg_panel.json */,
 				D48113BA2373C5E40062B3D9 /* mental_residual_capacity_form.json */,
@@ -318,10 +324,10 @@
 			isa = PBXGroup;
 			children = (
 				D482BA6221C953F800840D2E /* AQServer.swift */,
-				D44C5E1B22009C8E007ACC8E /* AdaptiveQuestionnaireResponse.swift */,
-				D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift */,
-				D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */,
+				D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaire.swift */,
 				D41A2E6E235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift */,
+				D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */,
+				D44C5E1B22009C8E007ACC8E /* AdaptiveQuestionnaireResponse.swift */,
 			);
 			path = AdaptiveQuestionnaire;
 			sourceTree = "<group>";
@@ -624,6 +630,7 @@
 			files = (
 				D46877862297022B00717D95 /* bmi_r4.json in Resources */,
 				D4623EDF2368BA6A00230C5B /* dynamicquestionnaire_valuecoding.json in Resources */,
+				D4334D8D23833E0F00279397 /* promis_qr_dynamic.json in Resources */,
 				D46877892297022B00717D95 /* bmiquestionnaire_r3.json in Resources */,
 				D465D5A4203DCB8E0057BD23 /* Installation.md in Resources */,
 				D48113BB2373C5E40062B3D9 /* ecg_panel.json in Resources */,
@@ -635,6 +642,7 @@
 				D46877842297022B00717D95 /* LifelinesQuestionnaireR4.json in Resources */,
 				D4623EDA2368B53C00230C5B /* BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C_FHIR.json in Resources */,
 				D4623EDB2368B53C00230C5B /* 96FE494D-F176-4EFB-A473-2AB406610626_FHIR.json in Resources */,
+				D4334D8F23833E3200279397 /* promis_q_dynamic.json in Resources */,
 				D48C2A90237F4469002C9395 /* README_S.md in Resources */,
 				D48113BE2373CAC00062B3D9 /* surgeon_general.json in Resources */,
 				D46877852297022B00717D95 /* qr4.json in Resources */,
@@ -692,7 +700,7 @@
 				D4C69A5B2343A206006C6520 /* StepActivity.swift in Sources */,
 				D4DC5B14232BEE5C001878B4 /* Element+Extensions.swift in Sources */,
 				D48BBB5222D6446300FF4023 /* ACModel.swift in Sources */,
-				D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaireOperation.swift in Sources */,
+				D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaire.swift in Sources */,
 				D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */,
 				D4F0A579209A3CE200481868 /* LineChartView.swift in Sources */,
 				D4CBC0082045ACF2002B6AC9 /* FHIR+Extensions.swift in Sources */,

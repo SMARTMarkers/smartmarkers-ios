@@ -12,11 +12,11 @@ import SMART
 
 extension SMART.Element {
     
-    public func sm_questionItem_instructions() -> String? {
+    func sm_questionItem_instructions() -> String? {
         return extensions(forURI: kSD_QuestionnaireInstruction)?.first?.valueString?.localized
     }
     
-    public func sm_questionItem_Help() -> String? {
+    func sm_questionItem_Help() -> String? {
         return extensions(forURI: kSD_QuestionnaireHelp)?.first?.valueString?.localized
     }
     

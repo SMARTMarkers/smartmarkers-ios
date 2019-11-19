@@ -85,29 +85,6 @@ extension SMART.Questionnaire: Instrument {
         }
     }
     
-    /*
-    public func sm_taskController(for measure: PROMeasure, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))  {
-        
-        sm_genereteSteps { (steps, rulestupples, error) in
-            if let steps = steps {
-                let uuid = UUID()
-
-                let taskIdentifier = measure.request?.rq_identifier ?? uuid.uuidString
-                let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
-                rulestupples?.forEach({ (rule, linkId) in
-                    task.setSkip(rule, forStepIdentifier: linkId)
-                })
-                
-                let taskViewController = QuestionnaireTaskViewController(task: task, taskRun: uuid)
-                callback(taskViewController, nil)
-            }
-            else {
-                callback(nil, nil)
-            }
-        }
-    }
-    */
-    
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         sm_genereteSteps { (steps, rulestupples, error) in
@@ -115,16 +92,28 @@ extension SMART.Questionnaire: Instrument {
             if let steps = steps {
                 let uuid = UUID()
                 let taskIdentifier = uuid.uuidString
-                let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
-                rulestupples?.forEach({ (rule, linkId) in
-                    task.setSkip(rule, forStepIdentifier: linkId)
-                })
                 
-                let taskViewController = QuestionnaireTaskViewController(task: task, taskRun: uuid)
-                callback(taskViewController, nil)
+                let adaptive = true
+                if adaptive {
+                    let task = AdaptiveQuestionnaireTask2(identifier: taskIdentifier, steps: steps, adaptiveQuestionnaire: self as! AdaptiveQuestionnaire, adaptiveServer: nil)
+                    rulestupples?.forEach({ (rule, linkId) in
+                        task.setSkip(rule, forStepIdentifier: linkId)
+                    })
+                    let taskViewController = AdaptiveQuestionnaireTaskViewController(task: task, taskRun: uuid)
+                    callback(taskViewController, nil)
+
+                }
+                else {
+                    let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
+                    rulestupples?.forEach({ (rule, linkId) in
+                        task.setSkip(rule, forStepIdentifier: linkId)
+                    })
+                    let taskViewController = QuestionnaireTaskViewController(task: task, taskRun: uuid)
+                    callback(taskViewController, nil)
+                }
             }
             else {
-                callback(nil, nil)
+                callback(nil, error?.first)
             }
         }
     }

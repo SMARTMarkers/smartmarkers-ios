@@ -46,9 +46,7 @@ extension Questionnaire  {
                 group.leave()
             })
         }
-        
-        assignVariables(to: nsteps as! [QuestionnaireItemStepProtocol])
-    
+
         group.notify(queue: .main) {
             
             if nsteps.sm_hasDuplicates() {
@@ -65,32 +63,6 @@ extension Questionnaire  {
     public func allItemsRecursively() -> [QuestionnaireItem] {
         let items = self.item ?? [QuestionnaireItem]()
         return items + items.flatMap { $0.allItemsRecursively() }
-    }
-    
-    
-    public func assignVariables(to steps: [QuestionnaireItemStepProtocol]) {
-        
-        guard let vextensions = self.extensions(forURI: kSD_Variable) else {
-            print("no variable extensions")
-            return
-        }
-        
-        let expressions = vextensions.compactMap{ $0.valueExpression }
-        
-        for expression in expressions {
-            let variable = expression.name!.string
-            let nodes    = FHIRPathParser(expression.expression!.string, .keypath).nodes
-            
-            let itemNodes = nodes.filter ({ $0.keyPath == "item" && $0.cmd != nil }).compactMap ({ $0.cmd }).flatMap({$0})
-            
-            for node in itemNodes {
-                if node.command == .where_fhir && node.key == "linkId" {
-                    if var step = steps.filter({ $0.stepIdentifier == node._value }).first {
-                        step.variable = variable
-                    }
-                }
-            }
-        }
     }
     
     
@@ -154,7 +126,6 @@ extension QuestionnaireItem {
                             newgroup.enter()
                             subitem.sm_generateSteps(callback: { (steps, rules, errs ) in
                                 if let errs = errs {
-                                    print(errs as Any)
                                     all_errors.append(contentsOf: errs)
                                 }
                                 if let steps = steps {
@@ -165,11 +136,10 @@ extension QuestionnaireItem {
                             newgroup.wait()
                         }
                         if subSteps.isEmpty {
-                            //TODO: Add Form has no Steps
-                            print("Group: \(self.rk_Identifier()) has could not generate steps")
+                            let err_msg = "Could Not create Questionnaire `form` item with linkId: \(self.linkId?.string ?? ""); Unable to create `ORKSteps`"
+                            all_errors.append(SMError.undefined(description: err_msg))
                             break
                         }
-                        
                         let formItems = subSteps.flatMap  { $0.sm_toFormItem()! }
                         let formSp = QuestionnaireFormStep.init(identifier: self.rk_Identifier(), title: self.text?.string, text: self.id?.string)
                         formSp.formItems = formItems
@@ -177,7 +147,6 @@ extension QuestionnaireItem {
                         steps.append(formSp)
                     } else {
                         
-                        //TODO add error:
                         all_errors.append(SMError.instrumentQuestionnaireMissingItems(linkId: self.linkId!.string))
                     }
                     break
@@ -210,25 +179,36 @@ extension QuestionnaireItem {
         switch type {
         case .group:
             callback(nil, nil)
+            
         case .display:
             callback(nil, nil)
+            
         case .boolean:
             callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
+            
         case .date:
             callback(ORKAnswerFormat.dateAnswerFormat(), nil)
+            
         case .dateTime:
             callback(ORKAnswerFormat.dateTime(), nil)
+            
         case .time:
             callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
+            
         case .string, .text:
             callback(ORKAnswerFormat.textAnswerFormat(), nil)
+            
         case .url:
             callback(ORKAnswerFormat.textAnswerFormat(), nil)
+            
         case .integer:
             callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
+            
         case .decimal:
             callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
+            
         case .choice, .openChoice:
+
             if let answerValueSet = answerValueSet {
                 if answerValueSet.absoluteString == kVS_YesNoDontknow {
                     callback(ORKAnswerFormat.sm_hl7YesNoDontKnow(), nil)
@@ -237,8 +217,8 @@ extension QuestionnaireItem {
                     let style: ORKChoiceAnswerStyle = (repeats?.bool ?? false) ? .multipleChoice : .singleChoice
                     let semaphore = DispatchSemaphore(value: 0)
                     answerValueSet.resolve(ValueSet.self) { (resolvedVS) in
-                        if let answerVS = resolvedVS, let af = answerVS.rk_choiceAnswerFormat(style: style) {
-                            callback(af, nil)
+                        if let aValueSet = resolvedVS, let answerFormat = aValueSet.rk_choiceAnswerFormat(style: style) {
+                            callback(answerFormat, nil)
                         }
                         else {
                             callback(nil, SMError.instrumentCannotHandleQuestionnaireType(linkId: self.linkId!.string))
@@ -259,7 +239,6 @@ extension QuestionnaireItem {
             }
         default:
             callback(nil, SMError.instrumentCannotHandleQuestionnaireType(linkId: linkId!.string))
-            
         }
     }
     

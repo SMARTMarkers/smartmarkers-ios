@@ -79,27 +79,7 @@ public extension AQClient {
         
         let server = AQServer(baseURL: URL(string: base)!, auth: settings)
        
-        Questionnaire.read("96FE494D-F176-4EFB-A473-2AB406610626", server: server, callback: { (questionnaire, error) in
-            
-            if let r4 = questionnaire as? Questionnaire {
-                r4.item = nil
-                let qr = try! QuestionnaireResponse.sm_AdaptiveQuestionnaireBody(contained: r4)
-                r4.next_q(server: server, questionnaireResponse: qr) { (resource, error) in
-                    do {
-                        if let resource = resource as? QuestionnaireResponse {
-                            if let questionnaire = resource.contained?.first as? Questionnaire {
-                                questionnaire.status = PublicationStatus.active
-                                print(questionnaire.item?.first?.item?[1].answerOption)
-                            }
-                        }
-                    }
-                    catch {
-                        print(error)
-                    }
-                }
-            }
-        })
-        
+      
         
         
     }

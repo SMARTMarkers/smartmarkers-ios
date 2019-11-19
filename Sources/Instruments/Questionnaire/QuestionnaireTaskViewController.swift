@@ -45,29 +45,4 @@ open class QuestionnaireTaskViewController:  ORKTaskViewController {
         }
     }
     
-    override open func stepViewControllerWillAppear(_ stepViewController: ORKStepViewController) {
-        
-        let step = stepViewController.step as! QuestionnaireItemStepProtocol
-        
-        if step.isCalculationNeeded {
-            
-            print(variables)
-            
-            step.calculate(from: result, variables: variables)
-            
-            
-        }
-        //1. Get Variables Needed for Steps
-        // let vars = step.variables
-        
-        //2. for each var, get its result -> create a dictionary
-        
-        //3.
-        
-        super.stepViewControllerWillAppear(stepViewController)
-    }
-    
-    
-  
-    
 }
