@@ -25,7 +25,7 @@ List of Instruments
 TypeTyp          | Name            | FHIR IN             | FHIR OUT
 ---------------- | --------------- | ------------------- | -----------------------
 Survey           | Static surveys  | Questionnaire       | QuestionnaireResponse
-                 | Adaptive        | Questionnaire       | QuestionnaireResponse
+  -               | Adaptive        | Questionnaire       | QuestionnaireResponse
 ActiveTasks      | AmslerGrid      | Coding              | Observation, Media
                  | TappingSpeed    | Coding              | Observation, Attachment
 
