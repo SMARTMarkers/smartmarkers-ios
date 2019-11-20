@@ -50,9 +50,9 @@ Check [`SessionController`](../Sources/Session/)
 Also relevant: Protocols 
 --------------------------------------------
 
-1. [➔ Request](../Sources/Requests/)  
-2. [➔ Instrument](../Sources/Instruments/)  
-3. [➔ Report](../Sources/Reports/)  
+1. [➔ Request](../Requests/)  
+2. [➔ Instrument](../Instruments/)  
+3. [➔ Report](../Reports/)  
 
 
 
