@@ -15,7 +15,7 @@ The framework is written entirely in _Swift_ and requires Xcode 11.0 or newer an
 
 #### Getting Started
 
-[➔ Installation](INSTALLATION.md)  
+[➔ Installation](Installation.md)  
 [➔ Sample: Patient Facing App][easipro-patient]  
 [➔ Sample: Practitioner Facing App][easipro-practitioner]
 
