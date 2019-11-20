@@ -22,7 +22,7 @@ let amslerGrid = Instruments.ActiveTasks.AmslerGrid.instance
 List of Instruments
 -------------------
 
-| Category | Name | FHIR IN | FHIR OUT |
+| Category | Name | 🔥FHIR IN | 🔥FHIR OUT |
 |-----------------------|---------------------------------------------------|----------------|---------------------------------------|
 | Surveys | Static questionnaires<br>surveys<br>[examples](#) | Questionnaire | QuestionnaireResponse |
 |  | PROMIS <br>(Adaptive Questionnaire FHIR API) | Coding (LOINC) | QuestionnaireResponse <br>Observation |
