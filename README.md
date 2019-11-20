@@ -70,5 +70,8 @@ This work is [Apache 2](LICENSE.txt) licensed. Also take look at [NOTICE.txt](NO
 [promis]: http://www.healthmeasures.net/index.php?option=com_content&view=category&layout=blog&id=147&Itemid=806
 [swift-smart]: https://github.com/smart-on-fhir/swift-smart
 [rk]: https://researchkit.org
+[r4]: http://hl7.org/fhir/R4/
+[smart]: https://smarthealthit.org
+[fhir]: https://hl7.org/fhir
 
 
