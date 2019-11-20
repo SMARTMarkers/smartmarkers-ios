@@ -4,14 +4,14 @@ SMART Markers is standards based software framework for creating health system i
 
 Building upon [SMART][smart] on [FHIR][fhir], SMART Markers is fully standards compliant with FHIR version [R4][r4]. All data _in and out_ is FHIR.
 
-#### Designed for Patients & Practitioners apps
+#### Designed for Patient & Practitioner apps
 
 While the framework is fully functional with open FHIR servers, it can enable user-type dependent functionality– specific to either patients or practitioners and hence, both patient facing and practitioner facing apps can be created.
 
 
 #### Requirements
 
-SMART Markers Framework is written entirely in _Swift_ and requires Xcode 11.0 or newer and supports iOS devices with base SDK version of 12.1 (SMART Markers framework can run on devices with iOS 12.1 or newer). Two essential submodules [Swift-SMART][swift-smart]– a SMART on FHIR swift library, and [ResearchKit][rk]– for data generating user interfaces.
+The framework is written entirely in _Swift_ and requires Xcode 11.0 or newer and supports iOS devices with base SDK version of 12.1 (SMART Markers framework can run on devices with iOS 12.1 or newer). Two essential submodules are required for compiling: [Swift-SMART][swift-smart]– a SMART on FHIR swift library, and [ResearchKit][rk]– for data generating user interfaces.
 
 #### Getting Started
 
@@ -20,13 +20,14 @@ SMART Markers Framework is written entirely in _Swift_ and requires Xcode 11.0 o
 [Sample: Practitioner Facing App][easipro-practitioner]
 
 ```swift
+// Start by importing
 import SMARTMarkers
 ```
 
 Protocols and  Modules
 ----------------------
 
-SMART Markers follows a model of _request_ & _report_. The framework's core functionality is abstracted into the following three _protocols_ and other supporting controller classes
+SMART Markers follows a model of _request_ & _report_. The framework's core functionality is abstracted into the following three _protocols_ and supporting controller classes
 
 ### Request Protocol
 

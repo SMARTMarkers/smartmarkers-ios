@@ -3,7 +3,7 @@ TaskController
 
 Controller class that can be instantiated from either a `Request` conformant FHIR resource or an `Instrument` type with three main functions.
 
-1. Controller handles [`ResearchKit`](link-rk) user session for generating patient generated data producing an output FHIR `Bundle`.
+1. Controller handles [`ResearchKit`][link-rk] user session for generating patient generated data producing an output FHIR `Bundle`.
 2. `Controller.reports` holds historical FHIR resources generated as a response to the `Instrument` fetched from the FHIR `Server`, relying on the `Instrument` specified code and search parameters.
 3. `Controller` enqueues newly generated FHIR output to be "ready" for submission. 
 
@@ -45,19 +45,14 @@ Multiple PGHD Sessions
 
 An array of PDControllers can be passed onto `SessionController` to create a unified session for multiple back to back task. Also included is a `SubmissionsController`– a `ResearchKit` based `ORKTaskViewController` module to seek explicit permission before submitted the generated data to the `FHIR Server`.
 
-Check [`SessionController`](sessioncontroller)
+Check [`SessionController`](../Sources/Session/)
 
-Also relevant: Protocols For Reference
+Also relevant: Protocols 
 --------------------------------------------
 
-### All types must conform to this protocol to be used by `TaskController`
--> [Instrument](link-ip), 
-
-### FHIR Requests (eg. [ServiceRequest](#)) must conform to this protocol
--> [Request Protocol](link-request)
-
-### Resulting output FHIR resources (eg. [QuestionnaireResponse](#), etc) must conform to this protocol
--> [Report Protocol](link-report),  
+1. [➔ Request](../Sources/Requests/)  
+2. [➔ Instrument](../Sources/Instruments/)  
+3. [➔ Report](../Sources/Reports/)  
 
 
 
