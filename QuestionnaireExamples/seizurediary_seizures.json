@@ -1,0 +1,233 @@
+{
+    "resourceType" : "Questionnaire",
+    "status" : "active",
+    "title" : "Neurology: Seizure Diary",
+    "date" : "2018-08-01",
+    "version" : "0.1",
+    "code" : [
+	    {
+		    "system" : "https://neurology.com/loddenkemper",
+		    "code"   : "neuro-seizure-diary",
+		    "display" : "Seizure Diary"
+	    }
+    ],
+    "identifier": [
+        {
+          "use": "official",
+          "system": "https://neurology.com/loddenkemper",
+          "value": "Neuro-Seizure-Diary"
+        }
+      ],
+    "item" : [
+	{
+		"linkId" : "Introduction",
+		"type" : "display",
+		"text" : "Seizure Diary",
+		"readOnly" : "true",
+		"extension" : [
+			{
+				"url" : "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+				"valueString" : "Please answer all questions about the recent seizure event"
+			}
+		]
+	},
+        {
+            "linkId" : "SZ_TYPE",
+            "type" : "choice",
+            "options" : { 
+                "reference" : "#Choices_seizureTypes"
+            },
+            "text" : "Please select name to describe the type of Seizure"
+        },
+        {
+            "linkId" : "SZ_TYPICAL",
+            "type" : "boolean",
+            "text" : "Is this a typical seizure?",
+            "required" : true
+        },
+        {
+            "linkId" : "RES_MED",
+            "type" : "choice",
+            "repeats" : true, 
+            "text" : "Please select any rescue medications or interventions given.",
+            "options" : { 
+                "reference" : "#rescueMedicationList"
+            }
+        },
+        {
+            "linkId" : "SZ_TRIGGER",
+            "type" : "choice",
+            "repeats" : true, 
+            "text" : "Please select any possible seizure triggers.",
+            "options" : { 
+                "reference" : "#list_SZ_TRIGGER"
+            },
+	    "enableWhen" : [
+		    {
+			    "question" : "SZ_TYPICAL",
+			    "answerBoolean" : true 
+		    },
+		    {
+			    "question" : "RES_MED",
+			    "answerCoding" : { 
+				    "code" : "Diazepam",
+				    "system" : "http://rxnorm.org"
+			    }
+		    }
+	    ]
+
+        }
+    ],
+    "contained" : [
+        {
+            "id" : "list_SZ_TRIGGER",
+            "resourceType" : "ValueSet",
+            "name" : "Triggers List",
+            "status" : "active", 
+            "compose" : {
+                "include" : [
+                    {
+                        "system" : "http://someSystemLikeSNOMED-maybe.org",
+                        "concept" : [
+                            {
+                                "code" : "Alcohol-intake",
+                                "display" : "Alcohol intake"
+                            },
+                            {
+                                "code" : "Changed-Medication-Dose",
+                                "display" : "Changed Medication Dose"
+                            },
+                            {
+                                "code" : "Cold",
+                                "display" : "Cold"
+                            },
+                            {
+                                "code" : "Fever",
+                                "display" : "Fever"
+                            },
+                            {
+                                "code" : "Flashing-lights-or-Patterns",
+                                "display" : "Flashing lights or Patterns"
+                            },
+                            {
+                                "code" : "Head-injury",
+                                "display" : "Head-injury"
+                            },
+                            {
+                                "code" : "Hormone-Change",
+                                "display" : "Hormone Change"
+                            },
+                            {
+                                "code" : "Infection",
+                                "display" : "Infection"
+                            },
+                            {
+                                "code" : "Lack-of-Sleep",
+                                "display" : "Lack of Sleep"
+                            },
+                            {
+                                "code" : "Missed-medication-dose",
+                                "display" : "Missed medication dose"
+                            },
+                            {
+                                "code" : "Mood/Stress",
+                                "display" : "Mood/Stress"
+                            },
+                            {
+                                "code" : "Overexertion",
+                                "display" : "Overexertion"
+                            },
+                            {
+                                "code" : "Physically-Sick",
+                                "display" : "Physically Sick"
+                            },
+                            {
+                                "code" : "None",
+                                "display" : "None"
+                            },
+                            {
+                                "code" : "Other",
+                                "display" : "Other"
+                            }
+                        ]
+                    }
+                ] 
+
+            }
+        },
+        {
+            "id" : "rescueMedicationList",
+            "resourceType" : "ValueSet",
+            "name" : "Rescue Medication List",
+            "status" : "active",
+            "compose" : {
+                "include" : [
+                    {
+                        "system" : "http://rxnorm.org",
+                        "concept" : [ 
+                            {
+                                "code" : "Diazepam",
+                                "display" : "Diazepam (Valium, Diastat)"
+                            },
+                            {
+                                "code" : "Midazolam",
+                                "display" : "Midazolam (Versed)"
+                            },
+                            {
+                                "code" : "Lorazepam",
+                                "display" : "Lorazepam (Ativan)"
+                            },
+                            {
+                                "code" : "Clonazepam",
+                                "display" : "Clonazepam (Klonopin)"
+                            },
+                            {
+                                "code" : "VNS",
+                                "display" : "VNS (Vagal Nerve Stimulation Therapy) Magnet"
+                            },
+                            {
+                                "code" : "Other",
+                                "display" : "Other"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id" : "Choices_seizureTypes",
+            "resourceType" : "ValueSet",
+            "name" : "Seizure Types Choices",
+            "status" : "active",
+            "compose" : {
+                "include" : [
+                    {
+                        "system" : "http://neuroSystemTobi.org",
+                        "concept" : [
+                            {
+                                "code" : "i-dont-know",
+                                "display" : "I do not know what to call  this type of seizure"
+                            },
+                            {
+                                "code" : "non-convulsive",
+                                "display" : "Non-convulsive seizure / Starting Episode / Alteration of Consciousness"
+                            },
+                            {
+                                "code" : "focal-convulsive-seizure",
+                                "display" : "Small or partial-body convulsive seizure (Focal)"
+                            },
+                            {
+                                "code" : "generalized-tonic-clonic",
+                                "display" : "Whole body convulsive seizure (Generalized Convulsive)"
+                            },
+                            {
+                                "code" : "other-seizure",
+                                "display" : "Other"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

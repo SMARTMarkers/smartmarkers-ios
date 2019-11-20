@@ -1,0 +1,657 @@
+{
+"resourceType": "Questionnaire",
+"id": "96FE494D-F176-4EFB-A473-2AB406610626", 
+"meta": {"versionId": "1","lastUpdated": "2015-02-07T13:28:17.239+02:00","profile": ["http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-adapt"]},
+"url":"http://localhost/ac_api/2018-10/Questionnaire/BE7C81D4-3CB1-4C6E-BE62-EDFFB41C7A0C",
+"title":"ASCQ-Me Emotional Impact CAT v2.0",
+"status": "active",
+"date": "2019-10-01T16:46:48-05:00",
+"subjectType": ["Patient"],
+
+
+            "item": [
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                            "valueInteger": 6
+                        }
+                    ],
+                    "id": "EmotionalImpactQ8",
+                    "linkId": "1-178A5078-FBCB-45A3-8A50-5AA5862459B6",
+                    "type": "group",
+                    "item": [
+                        {
+                            "extension": [
+                                {
+                                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                    "valueInteger": 1
+                                }
+                            ],
+                            "linkId": "2-5A36280A-B58E-4543-8FAC-39F591557179",
+                            "text": "In the past 7 days, how often were you depressed about your health problems?",
+                            "type": "choice",
+                            "answerOption": [
+                                {
+                                    "id": "9450C10E-DC1D-4391-B9E9-16C8850106BC",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 1
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "5"
+                                        }
+                                    ],
+                                    "valueString": "Never"
+                                },
+                                {
+                                    "id": "53D26CA1-997D-4234-8015-574A900FA098",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 2
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "4"
+                                        }
+                                    ],
+                                    "valueString": "Rarely"
+                                },
+                                {
+                                    "id": "6368E88D-47D2-4EA6-B241-6829F3C29692",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 3
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "3"
+                                        }
+                                    ],
+                                    "valueString": "Sometimes"
+                                },
+                                {
+                                    "id": "47C1DB29-1E3F-4404-A092-F59EFC0D36CD",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 4
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "2"
+                                        }
+                                    ],
+                                    "valueString": "Often"
+                                },
+                                {
+                                    "id": "EE6A0293-7D30-455B-BF45-B850D55DCAC5",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 5
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "1"
+                                        }
+                                    ],
+                                    "valueString": "Always"
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+{
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                            "valueInteger": 5
+                        }
+                    ],
+                    "id": "EmotionalImpactQ8",
+                    "linkId": "2-178A5078-FBCB-45A3-8A50-5AA5862459B6",
+                    "type": "group",
+                    "item": [
+                        {
+                            "extension": [
+                                {
+                                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                    "valueInteger": 1
+                                }
+                            ],
+                            "linkId": "1-5A36280A-B58E-4543-8FAC-39F591557179",
+                            "text": "In the past 7 days, how often were you depressed about your health problems?",
+                            "type": "choice",
+                            "answerOption": [
+                                {
+                                    "id": "9450C10E-DC1D-4391-B9E9-16C8850106BC",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 1
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "5"
+                                        }
+                                    ],
+                                    "valueString": "Never"
+                                },
+                                {
+                                    "id": "53D26CA1-997D-4234-8015-574A900FA098",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 2
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "4"
+                                        }
+                                    ],
+                                    "valueString": "Rarely"
+                                },
+                                {
+                                    "id": "6368E88D-47D2-4EA6-B241-6829F3C29692",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 3
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "3"
+                                        }
+                                    ],
+                                    "valueString": "Sometimes"
+                                },
+                                {
+                                    "id": "47C1DB29-1E3F-4404-A092-F59EFC0D36CD",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 4
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "2"
+                                        }
+                                    ],
+                                    "valueString": "Often"
+                                },
+                                {
+                                    "id": "EE6A0293-7D30-455B-BF45-B850D55DCAC5",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 5
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "1"
+                                        }
+                                    ],
+                                    "valueString": "Always"
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+
+{
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                            "valueInteger": 4
+                        }
+                    ],
+                    "id": "EmotionalImpactQ19",
+                    "linkId": "C0D70E8E-79EC-47C4-BAD6-DB59033C845A",
+                    "type": "group",
+                    "item": [
+                        {
+                            "extension": [
+                                {
+                                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                    "valueInteger": 1
+                                }
+                            ],
+                            "linkId": "9BC334E2-FED5-4427-9E61-709E26E28884",
+                            "text": "In the past 7 days, how sad were you about your health problems?",
+                            "type": "choice",
+                            "answerOption": [
+                                {
+                                    "id": "6C91BC00-3653-4BEF-ACC3-7FD6D1FF565A",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 1
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "5"
+                                        }
+                                    ],
+                                    "valueString": "Not at all"
+                                },
+                                {
+                                    "id": "5CDA8F51-6484-490E-B247-7702A62E35CF",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 2
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "4"
+                                        }
+                                    ],
+                                    "valueString": "A little"
+                                },
+                                {
+                                    "id": "7DC3A18C-4C70-47CD-92E5-986ECEB872A0",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 3
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "3"
+                                        }
+                                    ],
+                                    "valueString": "Somewhat"
+                                },
+                                {
+                                    "id": "02B9737E-E12F-487A-952D-7258E6A7A037",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 4
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "2"
+                                        }
+                                    ],
+                                    "valueString": "Quite"
+                                },
+                                {
+                                    "id": "ACB3BDE9-41DF-419F-A8BA-6D496D4C5FAD",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 5
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "1"
+                                        }
+                                    ],
+                                    "valueString": "Very"
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+				{
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                            "valueInteger": 3
+                        }
+                    ],
+                    "id": "EmotionalImpactQ10",
+                    "linkId": "A6469523-7595-470A-98AE-82174F979B2E",
+                    "type": "group",
+                    "item": [
+                        {
+                            "extension": [
+                                {
+                                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                    "valueInteger": 1
+                                }
+                            ],
+                            "linkId": "8847140D-9462-45C9-BAA6-1A85A8503E03",
+                            "text": "In the past 7 days, how sad did you feel because of your health?",
+                            "type": "choice",
+                            "answerOption": [
+                                {
+                                    "id": "FA6C9F41-5AE0-457D-A64F-3396AD7D9BFD",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 1
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "5"
+                                        }
+                                    ],
+                                    "valueString": "Not at all"
+                                },
+                                {
+                                    "id": "5EE32027-1E9F-4F4C-A8B1-45FBCC006E1A",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 2
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "4"
+                                        }
+                                    ],
+                                    "valueString": "A little"
+                                },
+                                {
+                                    "id": "A48CEBAC-6518-4442-91DA-9CB8B856629D",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 3
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "3"
+                                        }
+                                    ],
+                                    "valueString": "Somewhat"
+                                },
+                                {
+                                    "id": "CB39FBD8-0789-4E53-9762-744A44B98DA4",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 4
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "2"
+                                        }
+                                    ],
+                                    "valueString": "Quite"
+                                },
+                                {
+                                    "id": "3656DB2F-660B-4AA5-8406-522DA0741D6B",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 5
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "1"
+                                        }
+                                    ],
+                                    "valueString": "Very"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                            "valueInteger": 2
+                        }
+                    ],
+                    "id": "EmotionalImpactQ16",
+                    "linkId": "D84F07BA-0428-4CDD-A8EB-289D94FEDED0",
+                    "type": "group",
+                    "item": [
+                        {
+                            "extension": [
+                                {
+                                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                    "valueInteger": 1
+                                }
+                            ],
+                            "linkId": "DFDBC364-0B61-4C14-B667-C6071843DC03",
+                            "text": "In the past 7 days, how depressed were you about your health problems?",
+                            "type": "choice",
+                            "answerOption": [
+                                {
+                                    "id": "96F1099F-EC1F-4638-8F38-F3E047D26785",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 1
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "5"
+                                        }
+                                    ],
+                                    "valueString": "Not at all"
+                                },
+                                {
+                                    "id": "71992C69-3D1B-4CA7-BE23-43352C3EEF91",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 2
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "4"
+                                        }
+                                    ],
+                                    "valueString": "A little"
+                                },
+                                {
+                                    "id": "CA0EC334-F835-4024-9AFF-6113AD0F287A",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 3
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "3"
+                                        }
+                                    ],
+                                    "valueString": "Somewhat"
+                                },
+                                {
+                                    "id": "5E44E0D8-7650-45C4-82E8-6EC792E95B04",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 4
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "2"
+                                        }
+                                    ],
+                                    "valueString": "Quite"
+                                },
+                                {
+                                    "id": "E630EDB4-D7AA-4DB4-9198-ACB04573525A",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 5
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "1"
+                                        }
+                                    ],
+                                    "valueString": "Very"
+                                }
+                            ]
+                        }
+                    ]
+                }
+
+,
+				{
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                            "valueInteger": 1
+                        }
+                    ],
+                    "id": "EmotionalImpactQ14",
+                    "linkId": "4F7CCA2E-002C-4953-A7B0-98BE46676056",
+                    "type": "group",
+                    "item": [
+                        {
+                            "extension": [
+                                {
+                                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                    "valueInteger": 1
+                                }
+                            ],
+                            "linkId": "C2C08A67-AFAF-400B-AC36-8130290D8F71",
+                            "text": "In the past 7 days, how often were you sad about your health problems?",
+                            "type": "choice",
+                            "answerOption": [
+                                {
+                                    "id": "5A9917D7-4D6F-4D67-B4D8-507711CEF12A",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 1
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "5"
+                                        }
+                                    ],
+                                    "valueString": "Never"
+                                },
+                                {
+                                    "id": "3B416249-A660-48E3-8B03-04AB0A39301B",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 2
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "4"
+                                        }
+                                    ],
+                                    "valueString": "Rarely"
+                                },
+                                {
+                                    "id": "8EF550E2-1C29-4FF0-9274-DA99E3E1C52C",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 3
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "3"
+                                        }
+                                    ],
+                                    "valueString": "Sometimes"
+                                },
+                                {
+                                    "id": "A2CD1D88-3FC0-4597-95F1-AE187F69DDA9",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 4
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "2"
+                                        }
+                                    ],
+                                    "valueString": "Often"
+                                },
+                                {
+                                    "id": "35929B45-4D8F-473A-B454-F52302B4CE69",
+                                    "extension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-displayOrder",
+                                            "valueInteger": 5
+                                        }
+                                    ],
+                                    "modifierExtension": [
+                                        {
+                                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionScore",
+                                            "valueString": "1"
+                                        }
+                                    ],
+                                    "valueString": "Always"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+
+}
