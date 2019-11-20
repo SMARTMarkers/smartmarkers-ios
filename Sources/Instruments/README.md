@@ -22,6 +22,24 @@ let amslerGrid = Instruments.ActiveTasks.AmslerGrid.instance
 List of Instruments
 -------------------
 
+
+| Category |                    Name                    |     FHIR IN    |                 FHIR OUT                 |
+|:--------:|:------------------------------------------:|:--------------:|:----------------------------------------:|
+| Surveys  | Static questionnaires surveys,  HRQoL etc. | Questionnaire  | QuestionnaireResponse                    |
+|          | PROMIS                                     | Coding (LOINC) | QuestionnaireResponse <br> Observation   |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+|          |                                            |                |                                          |
+
+
 TypeTyp          | Name            | FHIR IN             | FHIR OUT
 ---------------- | --------------- | ------------------- | -----------------------
 Survey           | Static surveys  | Questionnaire       | QuestionnaireResponse
