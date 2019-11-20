@@ -11,7 +11,6 @@
 		D40B19CB20989B9000C18C23 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40B19CA20989B9000C18C23 /* Schedule.swift */; };
 		D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaire.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaire.swift */; };
 		D41A2E6F235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41A2E6E235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift */; };
-		D422E58522C120540097E0CF /* PROWaitStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58422C120540097E0CF /* PROWaitStep.swift */; };
 		D422E58822C242B70097E0CF /* HKClincalRecordSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58722C242B70097E0CF /* HKClincalRecordSelector.swift */; };
 		D422E58A22C25FA00097E0CF /* HealthKit+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58922C25FA00097E0CF /* HealthKit+ResearchKit.swift */; };
 		D422E58C22C272E50097E0CF /* HKClinicalRecordResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D422E58B22C272E50097E0CF /* HKClinicalRecordResult.swift */; };
@@ -23,12 +22,10 @@
 		D4268F1F23368C43000416A1 /* HKFHIRResource+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4268F1E23368C43000416A1 /* HKFHIRResource+FHIR.swift */; };
 		D4334D8D23833E0F00279397 /* promis_qr_dynamic.json in Resources */ = {isa = PBXBuildFile; fileRef = D4334D8C23833E0F00279397 /* promis_qr_dynamic.json */; };
 		D4334D8F23833E3200279397 /* promis_q_dynamic.json in Resources */ = {isa = PBXBuildFile; fileRef = D4334D8E23833E3200279397 /* promis_q_dynamic.json */; };
-		D434861922AF08E0001D922C /* FHIRPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = D434861822AF08E0001D922C /* FHIRPath.swift */; };
 		D436B1D720EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */; };
 		D436B1D920EE880600CAF2F5 /* Questionnaire+Instrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */; };
 		D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */; };
 		D43C71B82268B9360008FF27 /* SpatialSpanMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71B72268B9360008FF27 /* SpatialSpanMemory.swift */; };
-		D43C71BC2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BB2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift */; };
 		D43C71BE226909050008FF27 /* TowerofHanoi.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BD226909050008FF27 /* TowerofHanoi.swift */; };
 		D43C71C02269FDF50008FF27 /* StroopTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BF2269FDF50008FF27 /* StroopTest.swift */; };
 		D43C71C2226A348C0008FF27 /* TappingSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71C1226A348C0008FF27 /* TappingSpeed.swift */; };
@@ -48,7 +45,6 @@
 		D46877882297022B00717D95 /* adaptivePROMISDep.json in Resources */ = {isa = PBXBuildFile; fileRef = D46877822297022B00717D95 /* adaptivePROMISDep.json */; };
 		D46877892297022B00717D95 /* bmiquestionnaire_r3.json in Resources */ = {isa = PBXBuildFile; fileRef = D46877832297022B00717D95 /* bmiquestionnaire_r3.json */; };
 		D468778D229735C700717D95 /* QuestionnaireItemStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468778C229735C700717D95 /* QuestionnaireItemStep.swift */; };
-		D468778F2297419000717D95 /* QuestionnaireTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468778E2297419000717D95 /* QuestionnaireTaskViewController.swift */; };
 		D468AAF621188EFF00AE942F /* FHIRDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */; };
 		D48113B82373BBA00062B3D9 /* genevariant_reporting_panel.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113B72373BBA00062B3D9 /* genevariant_reporting_panel.json */; };
 		D48113BB2373C5E40062B3D9 /* ecg_panel.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113B92373C5E40062B3D9 /* ecg_panel.json */; };
@@ -83,7 +79,6 @@
 		D4DC5B0D231FFFD7001878B4 /* FHIRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B0C231FFFD7001878B4 /* FHIRViewController.swift */; };
 		D4DC5B0F232029A2001878B4 /* BundleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B0E232029A2001878B4 /* BundleViewController.swift */; };
 		D4DC5B12232BEDE3001878B4 /* Questionnaire+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B11232BEDE3001878B4 /* Questionnaire+Extensions.swift */; };
-		D4DC5B14232BEE5C001878B4 /* Element+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B13232BEE5C001878B4 /* Element+Extensions.swift */; };
 		D4DC5B16232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B15232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift */; };
 		D4DC5B1A233260FF001878B4 /* SubmissionTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B19233260FF001878B4 /* SubmissionTaskController.swift */; };
 		D4DC5B1D23326267001878B4 /* SubmissionStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DC5B1C23326267001878B4 /* SubmissionStep.swift */; };
@@ -117,7 +112,6 @@
 		D40B19CA20989B9000C18C23 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		D40CDE9D21FB6078000A1A1C /* AdaptiveQuestionnaire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaire.swift; sourceTree = "<group>"; };
 		D41A2E6E235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireTask.swift; sourceTree = "<group>"; };
-		D422E58422C120540097E0CF /* PROWaitStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROWaitStep.swift; sourceTree = "<group>"; };
 		D422E58722C242B70097E0CF /* HKClincalRecordSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClincalRecordSelector.swift; sourceTree = "<group>"; };
 		D422E58922C25FA00097E0CF /* HealthKit+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HealthKit+ResearchKit.swift"; sourceTree = "<group>"; };
 		D422E58B22C272E50097E0CF /* HKClinicalRecordResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKClinicalRecordResult.swift; sourceTree = "<group>"; };
@@ -129,12 +123,10 @@
 		D4268F1E23368C43000416A1 /* HKFHIRResource+FHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HKFHIRResource+FHIR.swift"; sourceTree = "<group>"; };
 		D4334D8C23833E0F00279397 /* promis_qr_dynamic.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = promis_qr_dynamic.json; sourceTree = "<group>"; };
 		D4334D8E23833E3200279397 /* promis_q_dynamic.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = promis_q_dynamic.json; sourceTree = "<group>"; };
-		D434861822AF08E0001D922C /* FHIRPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRPath.swift; sourceTree = "<group>"; };
 		D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+ResearchKit.swift"; sourceTree = "<group>"; };
 		D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+Instrument.swift"; sourceTree = "<group>"; };
 		D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionNavigationController.swift; sourceTree = "<group>"; };
 		D43C71B72268B9360008FF27 /* SpatialSpanMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialSpanMemory.swift; sourceTree = "<group>"; };
-		D43C71BB2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialSpanMemoryObservation.swift; sourceTree = "<group>"; };
 		D43C71BD226909050008FF27 /* TowerofHanoi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TowerofHanoi.swift; sourceTree = "<group>"; };
 		D43C71BF2269FDF50008FF27 /* StroopTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StroopTest.swift; sourceTree = "<group>"; };
 		D43C71C1226A348C0008FF27 /* TappingSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappingSpeed.swift; sourceTree = "<group>"; };
@@ -154,7 +146,6 @@
 		D46877822297022B00717D95 /* adaptivePROMISDep.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = adaptivePROMISDep.json; sourceTree = "<group>"; };
 		D46877832297022B00717D95 /* bmiquestionnaire_r3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bmiquestionnaire_r3.json; sourceTree = "<group>"; };
 		D468778C229735C700717D95 /* QuestionnaireItemStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireItemStep.swift; sourceTree = "<group>"; };
-		D468778E2297419000717D95 /* QuestionnaireTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireTaskViewController.swift; sourceTree = "<group>"; };
 		D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRDefinitions.swift; sourceTree = "<group>"; };
 		D48113B72373BBA00062B3D9 /* genevariant_reporting_panel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = genevariant_reporting_panel.json; sourceTree = "<group>"; };
 		D48113B92373C5E40062B3D9 /* ecg_panel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ecg_panel.json; sourceTree = "<group>"; };
@@ -190,7 +181,6 @@
 		D4DC5B0C231FFFD7001878B4 /* FHIRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRViewController.swift; sourceTree = "<group>"; };
 		D4DC5B0E232029A2001878B4 /* BundleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleViewController.swift; sourceTree = "<group>"; };
 		D4DC5B11232BEDE3001878B4 /* Questionnaire+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+Extensions.swift"; sourceTree = "<group>"; };
-		D4DC5B13232BEE5C001878B4 /* Element+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Element+Extensions.swift"; sourceTree = "<group>"; };
 		D4DC5B15232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Questionnaire+SDCDefinitions.swift"; sourceTree = "<group>"; };
 		D4DC5B19233260FF001878B4 /* SubmissionTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmissionTaskController.swift; sourceTree = "<group>"; };
 		D4DC5B1C23326267001878B4 /* SubmissionStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmissionStep.swift; sourceTree = "<group>"; };
@@ -242,19 +232,10 @@
 				D4CBC0062045ACC6002B6AC9 /* FHIR */,
 				D4DFD98F223AEDD50097B958 /* FHIRPresets */,
 				D45790F722386F79001E4E8D /* TaskViewControllers */,
-				D422E58322C120140097E0CF /* PROStep */,
 				D4618A45205F07EB004E117F /* LocalAuth.swift */,
 				D40A121B21627DBE002F9F53 /* Notifications.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		D422E58322C120140097E0CF /* PROStep */ = {
-			isa = PBXGroup;
-			children = (
-				D422E58422C120540097E0CF /* PROWaitStep.swift */,
-			);
-			path = PROStep;
 			sourceTree = "<group>";
 		};
 		D422E58622C242990097E0CF /* iOSHealthRecords */ = {
@@ -278,10 +259,8 @@
 				D436B1D620EBF8C700CAF2F5 /* Questionnaire+ResearchKit.swift */,
 				D436B1D820EE880600CAF2F5 /* Questionnaire+Instrument.swift */,
 				D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */,
-				D468778E2297419000717D95 /* QuestionnaireTaskViewController.swift */,
 				D4DC5B11232BEDE3001878B4 /* Questionnaire+Extensions.swift */,
 				D468778C229735C700717D95 /* QuestionnaireItemStep.swift */,
-				D4DC5B13232BEE5C001878B4 /* Element+Extensions.swift */,
 				D4DC5B15232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift */,
 			);
 			path = Questionnaire;
@@ -354,7 +333,6 @@
 			isa = PBXGroup;
 			children = (
 				D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */,
-				D434861822AF08E0001D922C /* FHIRPath.swift */,
 			);
 			path = FHIR;
 			sourceTree = "<group>";
@@ -372,8 +350,6 @@
 		D4DC5B1B23326245001878B4 /* SubmissionTask */ = {
 			isa = PBXGroup;
 			children = (
-				D4DC5B19233260FF001878B4 /* SubmissionTaskController.swift */,
-				D4DC5B1C23326267001878B4 /* SubmissionStep.swift */,
 			);
 			path = SubmissionTask;
 			sourceTree = "<group>";
@@ -383,7 +359,6 @@
 			children = (
 				D4DFD990223AEE0D0097B958 /* BloodPressureObservation.swift */,
 				D4DAAD5422662161004F0815 /* RangeOfMotionObservation.swift */,
-				D43C71BB2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift */,
 			);
 			path = FHIRPresets;
 			sourceTree = "<group>";
@@ -549,6 +524,8 @@
 				D4618A43205ED820004E117F /* MiniPatientVerificationController.swift */,
 				D4E75D8420363C0E000CE95A /* SessionController.swift */,
 				D436B1DE20F55F4500CAF2F5 /* SessionNavigationController.swift */,
+				D4DC5B19233260FF001878B4 /* SubmissionTaskController.swift */,
+				D4DC5B1C23326267001878B4 /* SubmissionStep.swift */,
 				D4DC5B1B23326245001878B4 /* SubmissionTask */,
 				D48C2A8F237F4469002C9395 /* README_S.md */,
 			);
@@ -685,7 +662,6 @@
 				D4DC5B0F232029A2001878B4 /* BundleViewController.swift in Sources */,
 				D422E59522C6BE270097E0CF /* RequestViewController.swift in Sources */,
 				D4E3D223237B75EC00BDBCF2 /* Media+Report.swift in Sources */,
-				D468778F2297419000717D95 /* QuestionnaireTaskViewController.swift in Sources */,
 				D4268F1D2335587E000416A1 /* SMHealthKitRecords.swift in Sources */,
 				D4DC5B16232BEF6C001878B4 /* Questionnaire+SDCDefinitions.swift in Sources */,
 				D436B1DF20F55F4500CAF2F5 /* SessionNavigationController.swift in Sources */,
@@ -694,7 +670,6 @@
 				D4B964E22229A74300F46177 /* Instrument.swift in Sources */,
 				D4DFD996223C2EB40097B958 /* InstrumentFactory.swift in Sources */,
 				D4C69A5B2343A206006C6520 /* StepActivity.swift in Sources */,
-				D4DC5B14232BEE5C001878B4 /* Element+Extensions.swift in Sources */,
 				D48BBB5222D6446300FF4023 /* PROMISServer.swift in Sources */,
 				D40CDE9E21FB6078000A1A1C /* AdaptiveQuestionnaire.swift in Sources */,
 				D4DFD9A62260C7570097B958 /* RangeOfMotion.swift in Sources */,
@@ -707,12 +682,10 @@
 				D4DFD98E223AC5F40097B958 /* OMRON+Instrument.swift in Sources */,
 				D4FEBDB821E64A610057C77D /* SMError.swift in Sources */,
 				D4618A46205F07EC004E117F /* LocalAuth.swift in Sources */,
-				D434861922AF08E0001D922C /* FHIRPath.swift in Sources */,
 				D4CFF03C203C7F9D00A6FB31 /* SMARTManager.swift in Sources */,
 				D4DFD98B223ABFBF0097B958 /* WebFetchStep.swift in Sources */,
 				D4CBC00C2046F1C3002B6AC9 /* TaskController.swift in Sources */,
 				D436B1D920EE880600CAF2F5 /* Questionnaire+Instrument.swift in Sources */,
-				D422E58522C120540097E0CF /* PROWaitStep.swift in Sources */,
 				D4E75D732035E7AA000CE95A /* SMARTLoginViewController.swift in Sources */,
 				D482BA6321C953F800840D2E /* AdaptiveServer.swift in Sources */,
 				D4C69A5D23465C98006C6520 /* ActivityTaskViewController.swift in Sources */,
@@ -720,7 +693,6 @@
 				D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */,
 				D41A2E6F235677F300ED8BCF /* AdaptiveQuestionnaireTask.swift in Sources */,
 				D43C71B82268B9360008FF27 /* SpatialSpanMemory.swift in Sources */,
-				D43C71BC2268C6FA0008FF27 /* SpatialSpanMemoryObservation.swift in Sources */,
 				D4C2B2B0208FA59800262B14 /* LineGraphView.swift in Sources */,
 				D4DFD99A223CC8190097B958 /* PSAT.swift in Sources */,
 				D468AAF621188EFF00AE942F /* FHIRDefinitions.swift in Sources */,

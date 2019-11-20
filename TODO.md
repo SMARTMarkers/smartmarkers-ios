@@ -10,10 +10,10 @@
 - [ X ] FHIRViewController
 - [ X ] Report
 - [ X ] Request: create Request
-- [ X ] Scheduling                     !!!!!!!!!!!!!!!!!!!!!!!!!!
-- [  ] JWT Token                     !!!!!!!!!!!!!!!!!!!!!!!!!!!
+- [ X ] Scheduling 
+- [ = ] JWT Token---------------DEFFERRED
 - [ X ] Questionnaire Check
-- [   ] ArgonautQuestionnaire Check
-- [   ] Move unnecessary classes to SM Instruments
+- [ X ] Adaptive Check
+- [ X ] Move unnecessary classes to SM Instruments
 - [   ] PatientListing
 

@@ -3,7 +3,7 @@ TaskController
 
 Controller class that can be instantiated from either a `Request` conformant FHIR resource or an `Instrument` type with three main functions.
 
-1. Controller handles `ResearchKit` user session for generating patient generated data producing an output FHIR `Bundle`.
+1. Controller handles [`ResearchKit`](link-rk) user session for generating patient generated data producing an output FHIR `Bundle`.
 2. `Controller.reports` holds historical FHIR resources generated as a response to the `Instrument` fetched from the FHIR `Server`, relying on the `Instrument` specified code and search parameters.
 3. `Controller` enqueues newly generated FHIR output to be "ready" for submission. 
 
@@ -14,7 +14,6 @@ For a given `Instrument`
 let instrument = Instruments.ActiveTasks.AmslerGrid.instrument
 
 // Instantiate TaskController; An instance or type should hold onto the variable
-
 self.controller = TaskController(instrument: instrument)
 
 // prepare User Session Task Controller; powered by ResearchKit
@@ -29,7 +28,7 @@ controller.prepareSession() { taskViewController, error in
     } 
 } 
 
-// Session Completion; Note: Completion does not mean successful completion
+// Session completion callback; the submissionBundle is retained by the receiver 
 controller.onSessionCompletion = { submissionBundle, error in 
     if let submissionBundle = submissionBundle { 
         // Output: FHIR Bundle 
@@ -51,7 +50,15 @@ Check [`SessionController`](sessioncontroller)
 Also relevant: Protocols For Reference
 --------------------------------------------
 
-1. [Instrument](#): All types must conform to this protocol to be used by `TaskController`
-2. [Request](#): FHIR Requests (eg. [ServiceRequest](#)) must conform to this protocol
-3. [Report](#): Resulting FHIR resources (eg. [QuestionnaireResponse](#), etc) must conform to this protocol
+### All types must conform to this protocol to be used by `TaskController`
+-> [Instrument](link-ip), 
 
+### FHIR Requests (eg. [ServiceRequest](#)) must conform to this protocol
+-> [Request Protocol](link-request)
+
+### Resulting output FHIR resources (eg. [QuestionnaireResponse](#), etc) must conform to this protocol
+-> [Report Protocol](link-report),  
+
+
+
+[link-rk]: http://researchkit.org

@@ -1,5 +1,5 @@
 //
-//  QuestionStep.swift
+//  Questionnaire+Instrument.swift
 //  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 7/5/18.
@@ -10,6 +10,13 @@ import Foundation
 import ResearchKit
 import SMART
 
+
+/**
+ Conformance of FHIR `Questionnaire` with `Instrument` Protocol
+ 
+ Manages transformation of Questionnaire into ResearchKit steps (`ORKStep`). Applicable for both– adaptive and static questionnaires
+ The receiver initializes
+ */
 extension SMART.Questionnaire: Instrument {
     
     public var sm_title: String {
@@ -64,26 +71,6 @@ extension SMART.Questionnaire: Instrument {
         }
     }
     
-    public func sm_SessionController(_ sessionIdentifier: String?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
-        sm_genereteSteps { (steps, rulestupples, error) in
-            if let steps = steps {
-                let uuid = UUID()
-                
-                let taskIdentifier = sessionIdentifier ?? uuid.uuidString
-                let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
-                rulestupples?.forEach({ (rule, linkId) in
-                    task.setSkip(rule, forStepIdentifier: linkId)
-                })
-                
-                let taskViewController = QuestionnaireTaskViewController(task: task, taskRun: uuid)
-                callback(taskViewController, nil)
-            }
-            else {
-                callback(nil, nil)
-            }
-        }
-    }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
@@ -103,7 +90,10 @@ extension SMART.Questionnaire: Instrument {
                 let uuid = UUID()
                 let taskIdentifier = uuid.uuidString
                 
-                // Fallback; should only rely on SDC Extension
+                /*
+                 TODO
+                 Should check adaptive based on presence of SDC Extension.
+                */
                 let adaptive = (self._server is AdaptiveServer)
                 if adaptive {
                     let task = AdaptiveQuestionnaireTask(identifier: taskIdentifier, steps: steps, adaptiveQuestionnaire: self, adaptiveServer: self._server)
@@ -119,7 +109,7 @@ extension SMART.Questionnaire: Instrument {
                     rulestupples?.forEach({ (rule, linkId) in
                         task.setSkip(rule, forStepIdentifier: linkId)
                     })
-                    let taskViewController = QuestionnaireTaskViewController(task: task, taskRun: uuid)
+                    let taskViewController = ORKTaskViewController(task: task, taskRun: uuid)
                     callback(taskViewController, nil)
                 }
             }
@@ -133,7 +123,6 @@ extension SMART.Questionnaire: Instrument {
     public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         guard let taskResults = result.results as? [ORKStepResult] else {
-            print("No results found")
             return nil
         }
         
@@ -192,8 +181,6 @@ extension Questionnaire {
                 }
             }
         }
-        
-        
         
         return self.id?.string
     }

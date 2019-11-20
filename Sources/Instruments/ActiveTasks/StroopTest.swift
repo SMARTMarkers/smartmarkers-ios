@@ -38,7 +38,7 @@ open class StroopTest: Instrument {
         self.usageDescription = usageDescription
         self.sm_title = "Stroop Test"
         self.sm_identifier = "stroop"
-        self.sm_code = SMARTMarkers.Instruments.ActiveTasks.StroopTest.coding
+        self.sm_code = Instruments.ActiveTasks.StroopTest.coding
         self.sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
         
     }

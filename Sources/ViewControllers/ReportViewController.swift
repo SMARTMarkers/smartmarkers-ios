@@ -14,11 +14,12 @@ public class ReportViewController: UITableViewController {
     
     public lazy var data : [(String, String)] = {
         return [
+            ("Title",               report.rp_title ?? ""),
             ("FHIR Resource Type",  report.rp_resourceType),
             ("FHIR ID",             report.rp_identifier ?? "-NA-"),
+            ("Ontology",            report.rp_code?.display?.string ?? report.rp_code?.code?.string ?? "-"),
             ("Date",                report.rp_date.shortDate),
             ("Description",         report.rp_description ?? ""),
-            ("Title",               report.rp_title ?? ""),
             ("ResultValue",         report.rp_observation ?? "")
         ]
     }()
@@ -26,6 +27,7 @@ public class ReportViewController: UITableViewController {
     public required convenience init(_ report: Report) {
         self.init(style: .grouped)
         self.report = report
+        self.title = "\(report.rp_date.shortDate)"
     }
     
     @objc

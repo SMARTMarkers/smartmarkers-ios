@@ -81,10 +81,10 @@ open class OmronStepViewController: WebFetchStepViewController {
                     let deviceType = firstItm["deviceType"] as! String
                     let recordId = firstItm["id"] as! Int
                     self.omron.items = [
-                        ("Record ID      : \(recordId)" as NSCopying & NSSecureCoding & NSObject),
-                        ("Blood Pressure: \(systolic)/\(diastolic) mmHg" as NSCopying & NSSecureCoding & NSObject),
-                        ("DateTime      : \(datetime)" as NSCopying & NSSecureCoding & NSObject),
-                        ("DeviceType:   : \(deviceType)" as NSCopying & NSSecureCoding & NSObject)
+                        ("Record ID         : \(recordId)" as NSCopying & NSSecureCoding & NSObject),
+                        ("Blood Pressure    : \(systolic)/\(diastolic) mmHg" as NSCopying & NSSecureCoding & NSObject),
+                        ("DateTime          : \(datetime)" as NSCopying & NSSecureCoding & NSObject),
+                        ("DeviceType        : \(deviceType)" as NSCopying & NSSecureCoding & NSObject)
                     ]
                     self.omron.text = "Fetch complete"
                     self.continueButtonTitle = "Submit"

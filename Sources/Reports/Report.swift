@@ -1,5 +1,5 @@
 //
-//  ResultProtocol.swift
+//  Report.swift
 //  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/1/19.

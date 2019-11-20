@@ -12,7 +12,7 @@ import SMART
 
 open class OMRON: Instrument {
     
-    public internal(set) final var auth: OAuth2!
+    final var auth: OAuth2!
     
     var usageDescription: String?
     

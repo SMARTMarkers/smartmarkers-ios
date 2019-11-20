@@ -42,20 +42,10 @@ open class TappingSpeed: Instrument {
         self.handOption = hand
         self.duration = duration
         self.usageDescription = usageDescription
-        self.sm_title = "Tapping Speed Task"
-        
-        if hand == .right {
-            self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Right.coding
-
-        }
-        else if hand == .left {
-            self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed_Left.coding
-        }
-        else {
-            self.sm_code = SMARTMarkers.Instruments.ActiveTasks.FingerTappingSpeed.coding
-        }
+        let i: Instruments.ActiveTasks = (hand == .right) ? .FingerTappingSpeed_Right : (hand == .left) ? .FingerTappingSpeed_Left : .FingerTappingSpeed
+        self.sm_title = i.description
+        self.sm_code = i.coding
         self.sm_identifier = sm_code?.code?.string
-
         self.sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!]),
             FHIRSearchParamRelationship(DocumentReference.self, ["type": sm_code!.sm_searchableToken()!])

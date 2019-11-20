@@ -33,7 +33,7 @@ open class PASAT: Instrument {
         self.interStimulusInterval = interStimulusInterval
         sm_title = "Paced Auditory Serial Additions Test"
         sm_identifier = "pasat"
-        sm_code = SMARTMarkers.Instruments.ActiveTasks.PSAT_2.coding
+        sm_code = Instruments.ActiveTasks.PSAT_2.coding
         sm_type = .ActiveTask
         sm_publisher = "ResearchKit.org"
         sm_resultingFhirResourceType = [

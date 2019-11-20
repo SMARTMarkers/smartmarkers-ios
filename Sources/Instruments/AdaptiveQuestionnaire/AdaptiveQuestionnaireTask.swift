@@ -72,9 +72,11 @@ open class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
     open override func step(after step: ORKStep?, with result: ORKTaskResult) -> ORKStep? {
         
 
+        // shouldSubmitResponse is `false` when user taps "back" button
         guard shouldSubmitResponse else {
             shouldSubmitResponse = true
             return super.step(after:step, with: result)
@@ -87,12 +89,12 @@ open class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask {
         guard let stepResult = result.stepResult(forStepIdentifier: sourceStep.identifier) else {
             return super.step(after: step, with: result)
         }
+        // Yes; there are too many `guard` statements here!
 
         let responseItem = stepResult.responseItems(for: adaptiveQuestionnaire, task: self)?.first
         
         // responseItem can only be nil for the Intro step.
         // Other fetches cannot be nil!
-        
         if sourceStep.identifier != Step.Introduction.rawValue {
             if responseItem == nil {
                 return super.step(after: step, with: result)

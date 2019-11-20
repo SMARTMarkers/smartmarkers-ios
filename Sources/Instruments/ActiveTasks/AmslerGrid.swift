@@ -36,7 +36,7 @@ public class AmslerGrid : Instrument {
         sm_title        = "Amsler Grid"
         sm_identifier   = "amslergrid"
         sm_type         = .ActiveTask
-        sm_code         = SMARTMarkers.Instruments.ActiveTasks.AmslerGrid.coding
+        sm_code         = Instruments.ActiveTasks.AmslerGrid.coding
         sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|\(sm_identifier!)"]),
             FHIRSearchParamRelationship(Media.self,       ["subject": ""]) // Filled in by `Reports`
@@ -87,7 +87,7 @@ public class AmslerGrid : Instrument {
                 cc.coding = [coding]
                 observation.code = cc
             }
-//            observation.status = ObservationStatus.final
+            observation.status = ObservationStatus.final
             observation.component = components
             var mediaBundleEntries = images.map{ $0.sm_asBundleEntry() }
             observation.derivedFrom = mediaBundleEntries.map { $0.sm_asReference() }

@@ -14,6 +14,7 @@ extension Questionnaire {
     
     public func next_q2(server: FHIRServer, answer: QuestionnaireResponseItem?, forQuestionnaireItemLinkId: String?, options: FHIRRequestOption, for currResponse: QuestionnaireResponse? = nil,callback: @escaping (_ resource: QuestionnaireResponse?, _ error: Error?) -> Void) {
         
+        //TODO: remove name!
         let response = currResponse ?? self.ResponseBody(responseIdentifier: "session-raheel")
         
         if let answer = answer {
@@ -22,13 +23,12 @@ extension Questionnaire {
             response?.item = items
         }
         
-        
         guard let url = url else {
             callback(nil, FHIRError.requestNotSent("Questionnaire has no url"))
             return
         }
         
-        guard var handler = server.handlerForRequest(withMethod: .POST, resource: response) else {
+        guard let handler = server.handlerForRequest(withMethod: .POST, resource: response) else {
             callback(nil, FHIRError.requestNotSent("Handler could not be created"))
             return
         }
@@ -36,9 +36,7 @@ extension Questionnaire {
         let path = url.absoluteString + "/next-q"
         
         server.performRequest(against: path, handler: handler) { [weak self] (response) in
-            
 
-            
             if nil == response.error {
                 self?._server = server
                 do {

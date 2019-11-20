@@ -147,9 +147,6 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
         
         print(stepResults)
         
-        let parser = FHIRPathParser(exp, .math)
-        parser.calculate(stepResults)
-        
         return nil
     }
 }

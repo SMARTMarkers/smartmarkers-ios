@@ -12,6 +12,18 @@ import ResearchKit
 
 
 
+extension QuestionnaireItem {
+    
+    func sm_questionItem_instructions() -> String? {
+        return extensions(forURI: kSD_QuestionnaireInstruction)?.first?.valueString?.localized
+    }
+    
+    func sm_questionItem_Help() -> String? {
+        return extensions(forURI: kSD_QuestionnaireHelp)?.first?.valueString?.localized
+    }
+    
+}
+
 extension Coding {
     
     func sm_textAnswerChoice() -> ORKTextChoice? {

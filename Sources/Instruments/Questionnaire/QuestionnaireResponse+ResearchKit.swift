@@ -38,7 +38,9 @@ extension ORKStepResult {
         let step = task.step?(withIdentifier: stepIdentifer)
         var items = [QuestionnaireResponseItem]()
         let allQuestionnaireItems = questionnaire?.allItemsRecursively()
-        
+        let questionnaireItemForStep = allQuestionnaireItems?.first(where: { $0.linkId?.string == identifier })
+
+        //Create all `QuestionnaireResponseItems` for this stepResult
         var stepAnswerItems = [QuestionnaireResponseItem]()
         for result in results {
             if let res = result as? ORKQuestionResult {
@@ -56,11 +58,10 @@ extension ORKStepResult {
             stepAnswerItems.forEach { (answerItem) in
                 answerItem.text = form.formItems!.filter({ $0.identifier == answerItem.linkId!.string }).first!.text!.fhir_string
             }
-            let questionnaireItem = allQuestionnaireItems?.first(where: { $0.linkId?.string == identifier })
             let groupItem = QuestionnaireResponseItem(linkId: identifier.fhir_string)
             groupItem.text = step?.title?.fhir_string
             groupItem.item = stepAnswerItems
-            groupItem.extension_fhir = questionnaireItem?.extension_fhir
+            groupItem.extension_fhir = questionnaireItemForStep?.extension_fhir
             items.append(groupItem)
             return items
         }

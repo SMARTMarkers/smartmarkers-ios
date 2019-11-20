@@ -64,12 +64,6 @@ extension Questionnaire  {
         let items = self.item ?? [QuestionnaireItem]()
         return items + items.flatMap { $0.allItemsRecursively() }
     }
-    
-    
-    
-    
-
-    
 }
 
 extension QuestionnaireItem {
@@ -314,17 +308,13 @@ extension ORKChoiceQuestionResult {
 extension ResearchKit.ORKStep {
     
     func sm_toFormItem() -> [ORKFormItem]? {
-        
         if let slf = self as? ORKQuestionStep {
-            
             let formItem = ORKFormItem(identifier: slf.identifier , text: slf.question, answerFormat: slf.answerFormat)
-            
             return [formItem]
         }
         else {
             let formItem = ORKFormItem(identifier: self.identifier , text: self.text, answerFormat: nil)
             return [formItem]
-            
         }
     }
 }
@@ -335,7 +325,6 @@ extension QuestionnaireItemEnableWhen {
     func sm_resultPredicate() -> NSPredicate? {
         
         let resultSelector = ORKResultSelector(stepIdentifier: question!.string, resultIdentifier: question!.string)
-        
         if let bool = answerBoolean {
             return ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: bool.bool)
         }
@@ -344,7 +333,6 @@ extension QuestionnaireItemEnableWhen {
             let value = (coding.system?.absoluteString ?? "") + kDelimiter + coding.code!.string
             return ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector, expectedAnswerValue: value as NSCoding & NSCopying & NSObjectProtocol)
         }
-        
         return nil
     }
     
@@ -353,10 +341,8 @@ extension QuestionnaireItemEnableWhen {
         guard let resultPredicate = sm_resultPredicate() else {
             return nil
         }
-        
         var predicates = [NSPredicate]()
         let enableOperator = operator_fhir
-
         switch enableOperator! {
         case .eq:
             let skipIfNot = NSCompoundPredicate(notPredicateWithSubpredicate: resultPredicate)

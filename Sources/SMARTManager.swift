@@ -19,11 +19,7 @@ public enum UserContextMode  {
 
 public class SMARTManager : NSObject {
     
-    public weak var callbackHandler: OAuth2? {
-        didSet {
-            print("set")
-        }
-    }
+    public weak var callbackHandler: OAuth2?
     
     public var client: SMART.Client
     
@@ -167,22 +163,6 @@ public class SMARTManager : NSObject {
             }
         })
     }
-    
-    // MARK: FHIR Fetch Resource
-    
-    func fetch<T: DomainResource>(type domainResource: T.Type, resource identifier: String, callback: @escaping (_ resource: T?, _ error: Error?) -> Void) {
-        client.ready(callback: { [unowned self] (error) in
-            if let error = error {
-				self.clientNotReady(error)
-                callback(nil, error)
-				
-            }
-            domainResource.read(identifier, server: self.client.server, callback: { (resource, ferror) in
-                callback(resource as? T, ferror)
-            })
-        })
-    }
-    
     
     private func base64UrlDecode(_ value: String) -> [String: Any]? {
         let comps = value.components(separatedBy: ".")

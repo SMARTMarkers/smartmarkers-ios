@@ -1,5 +1,5 @@
 //
-//  RequestProtocol.swift
+//  Request.swift
 //  SMARTMarkers
 //
 //  Created by Raheel Sayeed on 3/1/19.
@@ -9,11 +9,9 @@
 import Foundation
 import SMART
 
-/*
- 
+/**
  PGHD Request Protocol
  Fetches and Manages `FHIR` request resource
- 
  */
 public protocol Request :  DomainResource {
     

@@ -37,7 +37,7 @@ open class NineHolePegTest: Instrument {
     public init() {
         sm_title = "9 Hole Peg Test"
         sm_identifier = "9-hole-peg-test"
-        sm_code = SMARTMarkers.Instruments.ActiveTasks.NineHolePegTest.coding
+        sm_code = Instruments.ActiveTasks.NineHolePegTest.coding
         sm_type = .ActiveTask
         sm_resultingFhirResourceType = [
             FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])

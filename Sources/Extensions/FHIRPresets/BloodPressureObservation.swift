@@ -9,7 +9,9 @@
 import Foundation
 import SMART
 
-
+/**
+ Generic method for creating Observation-vital-signs resource for Blood Pressure
+ */
 public extension Observation {
     
     class func sm_BloodPressure(systolic: Int, diastolic: Int, date: Date, sourceCode: Coding? = nil) -> Observation {

@@ -38,7 +38,7 @@ open class TowerOfHanoi: Instrument {
         self.sm_identifier = "towerOfHanoi"
         self.usageDescription = usageDescription
         self.sm_type = .ActiveTask
-        self.sm_code = SMARTMarkers.Instruments.ActiveTasks.TowerOfHanoi.coding
+        self.sm_code = Instruments.ActiveTasks.TowerOfHanoi.coding
         self.sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
     }
     

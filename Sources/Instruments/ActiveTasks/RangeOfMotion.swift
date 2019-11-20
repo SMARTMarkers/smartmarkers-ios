@@ -37,15 +37,9 @@ open class KneeRangeOfMotion: Instrument {
         self.limbOption = limbOption
         self.usageDescription = usageDescription
         self.sm_identifier = "org.researchkit.knee.range.of.motion"
-        
-        if limbOption == .left {
-            sm_title = "Left Knee Range of Motion"
-            sm_code  = SMARTMarkers.Instruments.ActiveTasks.RangeOfMotion_knee_left.coding
-        }
-        else {
-            sm_title = "Right Knee Range of Motion"
-            sm_code = SMARTMarkers.Instruments.ActiveTasks.RangeOfMotion_knee_right.coding
-        }
+        let i: Instruments.ActiveTasks = (limbOption == .right) ? .RangeOfMotion_knee_right : .RangeOfMotion_knee_left
+        self.sm_title = i.description
+        self.sm_code = i.coding
         sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
     }
     
@@ -112,23 +106,13 @@ open class ShoulderRangeOfMotion: Instrument {
     public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
     
     required public init(limbOption: ORKPredefinedTaskLimbOption, usageDescription: String? = nil) {
-
         self.limbOption = limbOption
         self.usageDescription = usageDescription
-        self.sm_identifier = "org.researchkit.knee.range.of.motion"
+        self.sm_identifier = (limbOption == .right) ? "org.researchkit.shoulder.left.rangeofmotion" : "org.researchkit.shoulder.right.rangeofmotion"
         self.sm_type = .ActiveTask
-
-        
-        if limbOption == .left {
-            sm_title = "Left Shoulder Range of Motion"
-            sm_code  = SMARTMarkers.Instruments.ActiveTasks.RangeOfMotion_shoulder_left.coding
-            sm_identifier = "org.researchkit.shoulder.left.rangeofmotion"
-        }
-        else {
-            sm_title = "Right Should Range of Motion"
-            sm_code = SMARTMarkers.Instruments.ActiveTasks.RangeOfMotion_shoulder_right.coding
-            sm_identifier = "org.researchkit.shoulder.right.rangeofmotion"
-        }
+        let i: Instruments.ActiveTasks = (limbOption == .right) ? .RangeOfMotion_shoulder_right : .RangeOfMotion_shoulder_left
+        self.sm_title = i.description
+        self.sm_code = i.coding
         sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
     }
     
