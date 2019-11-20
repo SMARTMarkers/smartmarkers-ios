@@ -15,8 +15,8 @@ SMART Markers Framework is written entirely in _Swift_ and requires Xcode 11.0 o
 
 #### Getting Started
 
-[Installation](INSTALLATION.md)
-[Sample: Patient Facing App][easipro-patient]
+[Installation](INSTALLATION.md)  
+[Sample: Patient Facing App][easipro-patient]  
 [Sample: Practitioner Facing App][easipro-practitioner]
 
 ```swift
