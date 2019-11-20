@@ -8,12 +8,15 @@ Controller class that can be instantiated from either a `Request` conformant FHI
 3. `Controller` enqueues newly generated FHIR output to be "ready" for submission. 
 
 
-For a given `Instrument`
+`TaskController` can be instantiated with a `Request` type or an `Instrument` type. If initialized with a request, it will try to resolve the instrument embedded with the request FHIR resource.
 
 ```swift
-let instrument = Instruments.ActiveTasks.AmslerGrid.instrument
+import SMARTMarkers
 
-// Instantiate TaskController; An instance or type should hold onto the variable
+// Grab an instrument
+let instrument = Instruments.ActiveTasks.AmslerGrid.instance
+
+// Instantiate TaskController with an Instrument; An instance or type should hold onto the variable
 self.controller = TaskController(instrument: instrument)
 
 // prepare User Session Task Controller; powered by ResearchKit
@@ -29,7 +32,7 @@ controller.prepareSession() { taskViewController, error in
 } 
 
 // Session completion callback; the submissionBundle is retained by the receiver 
-controller.onSessionCompletion = { submissionBundle, error in 
+controller.onTaskCompletion = { submissionBundle, error in 
     if let submissionBundle = submissionBundle { 
         // Output: FHIR Bundle 
         print(submissionBundle.bundle)
@@ -45,7 +48,7 @@ Multiple PGHD Sessions
 
 An array of PDControllers can be passed onto `SessionController` to create a unified session for multiple back to back task. Also included is a `SubmissionsController`– a `ResearchKit` based `ORKTaskViewController` module to seek explicit permission before submitted the generated data to the `FHIR Server`.
 
-Check [`SessionController`](../Sources/Session/)
+Check [➔SessionController](../Session/) for more.
 
 Also relevant: Protocols 
 --------------------------------------------

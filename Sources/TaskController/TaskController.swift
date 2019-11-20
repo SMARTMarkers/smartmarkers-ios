@@ -43,8 +43,8 @@ public final class TaskController: NSObject {
     /// Optional: External resolver for the instrument. 
     public weak var instrumentResolver: InstrumentResolver?
    
-    /// Callback; called when a PGHD user session is completed
-    public var onSessionCompletion: ((_ submissionBundle: SubmissionBundle?, _ error: Error?) -> Void)?
+    /// Callback; called when a PGHD user task-session is completed
+    public var onTaskCompletion: ((_ submissionBundle: SubmissionBundle?, _ error: Error?) -> Void)?
    
     /// Schedule referenced from the receiver's request
     public lazy var schedule: TaskSchedule? = {
@@ -286,10 +286,10 @@ extension TaskController: ORKTaskViewControllerDelegate {
             
             if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
                 let gr = reports?.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString)
-                onSessionCompletion?(gr, nil)
+                onTaskCompletion?(gr, nil)
             }
             else {
-                onSessionCompletion?(nil, SMError.instrumentResultBundleNotCreated)
+                onTaskCompletion?(nil, SMError.instrumentResultBundleNotCreated)
             }
         }
         
