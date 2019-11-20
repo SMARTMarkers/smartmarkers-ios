@@ -2,7 +2,7 @@
 
 SMART Markers is standards based software framework for creating health system integrated apps for patient generated health data that includes– patient reported outcomes (PROs), [PROMIS®][promis], smartphone based activity exercises and device sensor data.
 
-Building upon [SMART][smart] on [🔥FHIR][fhir], SMART Markers is fully standards compliant with FHIR version [R4][r4]. All data _in and out_ is FHIR.
+Building upon [SMART][smart] on [FHIR][fhir], SMART Markers is fully standards compliant with FHIR version [R4][r4]. All data _in and out_ is FHIR.
 
 #### Designed for Patients & Practitioners
 
@@ -26,36 +26,39 @@ import SMARTMarkers
 Protocols and  Modules
 ----------------------
 
-SMART Markers follow a model of _request_ & _report_. The framework's core functionality is abstracted into the following three _protocols_ and their controller class.
+SMART Markers follows a model of _request_ & _report_. The framework's core functionality is abstracted into the following three _protocols_ and other supporting controller classes
 
 ### Request Protocol
 
-Defines a set of variables needed to parse an incoming, practitioner dispatched _request_ resource. For FHIR R4, the default support is for FHIR `ServiceRequest`, but adding more `Request` compliant resources is possible. This protocol further resolves the _Instrument_ (PROs, surveys, PROMIS, activity reports, etc..) and also the associated schedule.
-[➔ Request](./Sources/Request/) 
-[➔ Schedule](./Sources/Request/Schedule.swift) 
+Defines a set of variables needed to parse an incoming, practitioner dispatched _request_ resource. For R4, the default support is for FHIR `ServiceRequest`, but adding more `Request` compliant resources is possible. This protocol further resolves the _Instrument_ (PROs, surveys, PROMIS, activity reports, etc..) and also the associated schedule.   
+[➔ Request](./Sources/Requests/)  
+[➔ Schedule](./Sources/Requests/Schedule.swift)
 
 
 ### Instrument Protocol
 
-Classes conforming to `Instrument` define the metadata and methods needed for initiating an interactive user session for generating data. A variety of instruments are supported out of the box. More can be added by apps. Curently all instruments are required to be proactive data generating sessions. For consistent UX, ResearchKit's `ORKTaskViewController` created for _all_ instruments
-[➔ Instrument](./Sources/Instrument/)
-[➔ Instrument List](./Sources/Instrument/List.md) 
+Classes conforming to `Instrument` define the metadata and methods needed for initiating an interactive user session for generating data. A variety of instruments are supported out of the box with capability to add more downstream. Curently all instruments are required to be proactive data generating sessions. For consistent UX, ResearchKit's `ORKTaskViewController` created for _all_ instruments.  
+[➔ Instrument](./Sources/Instruments/)  
+[➔ Instrument List](./Sources/Instruments/README.md)  
 
 ### Report Protocol
 
-FHIR resources generated as results of a given instrument conform to `Report` and superclasses of FHIR `Resource`. Eg. `QuestionnaireResponse`, `Observation`, `Media`etc. for easy handling. Report collector class `Reports` builds historical FHIR resources from a FHIR Server for a given `Instrument` or a `Request` or both. Also manages _reporting_ of newly created FHIR Bundle to the server after tagging after tagging with Patient and, if available, Practitioner.
-[➔ Report](./Sources/Reports/)
+FHIR `Resources` generated as results for a given instrument conform to `Report`. Eg. `QuestionnaireResponse`, `Observation`, `Media`etc. A report collector class `Reports` builds historical FHIR resources from a FHIR Server for a given `Instrument` or a `Request` or both. Also manages _reporting_ of newly created FHIR Bundles to the server after tagging with Patient and, if available, Practitioner.  
+[➔ Report](./Sources/Reports/)  
 [➔ Reports](./Sources/Reports/Reports.swift) 
+
 
 ### TaskController
 
-Controller to manage all aspects of `Request`, `Instrument` and `Report` based classes and makes it easier to fetch PGHD requests, administer instrument session and report back to the FHIR server.
+Controller to manage all aspects of `Request`, `Instrument` and `Report` based classes and makes it easier to fetch PGHD requests, administer instrument session and report back to the FHIR server.   
 [➔ TaskController](./Sources/TaskController/)
 
 ### Multiple Sessions & Submission to FHIR Server
 
-For multiple, back to back interactive sessions, a set of `TaskControllers` can be passed onto `SessionControllers` to create a single presentable `UIViewController`. The output from these sessions are collected by `SubmissionTask`– a UI layer to facilitate writing the resources to the `FHIR Server`
+For multiple, back to back interactive sessions, a set of `TaskControllers` can be passed onto a `SessionController` to create a single presentable `UIViewController`. The output from these sessions are collected by `SubmissionTask`– a `ORKTaskViewController` based UI layer to facilitate writing the resources to the `FHIR Server`  
 [➔ SessionController](./Sources/Session/)
+
+
 
 
 License
