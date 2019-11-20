@@ -22,30 +22,20 @@ let amslerGrid = Instruments.ActiveTasks.AmslerGrid.instance
 List of Instruments
 -------------------
 
-
-| Category |                    Name                    |     FHIR IN    |                 FHIR OUT                 |
-|:--------:|:------------------------------------------:|:--------------:|:----------------------------------------:|
-| Surveys  | Static questionnaires surveys,  HRQoL etc. | Questionnaire  | QuestionnaireResponse                    |
-|          | PROMIS                                     | Coding (LOINC) | QuestionnaireResponse <br> Observation   |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-|          |                                            |                |                                          |
-
-
-TypeTyp          | Name            | FHIR IN             | FHIR OUT
----------------- | --------------- | ------------------- | -----------------------
-Survey           | Static surveys  | Questionnaire       | QuestionnaireResponse
-  -               | Adaptive        | Questionnaire       | QuestionnaireResponse
-ActiveTasks      | AmslerGrid      | Coding              | Observation, Media
-                 | TappingSpeed    | Coding              | Observation, Attachment
-
+| Category | Name | FHIR IN | FHIR OUT |
+|-----------------------|---------------------------------------------------|----------------|---------------------------------------|
+| Surveys | Static questionnaires<br>surveys<br>[examples](#) | Questionnaire | QuestionnaireResponse |
+|  | PROMIS <br>(Adaptive Questionnaire FHIR API) | Coding (LOINC) | QuestionnaireResponse <br>Observation |
+| ActiveTasks<br> | Range of Motion | Coding | Observation (angle) |
+|  | Tapping Speed | Coding | DocumentReference |
+|  | 9-Hole Peg test | Coding | Observation<br>DocumentReference |
+|  | Paced Serial Addition Test | Coding | Observation<br>DocumentReference |
+|  | Tower of Hanoi | Coding | Observation (Bool) |
+|  | Stroop Test | Coding | Observation (Duration) |
+|  | Spatial Memory Span | Coding | Observation (score) |
+|  | Amsler Grid | Coding | Observation<br>Media |
+| Activity<br>HealthKit | Step Count (HealthKit) | Coding (LOINC) | Observation |
+| Web Repositories | OMRON Blood Pressure | Coding (LOINC) | Observation |
+| FHIR Data | Apple Health App | - | DSTU2 -> R4 Mapped |
 
 
