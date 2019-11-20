@@ -46,6 +46,7 @@
 		D46877892297022B00717D95 /* bmiquestionnaire_r3.json in Resources */ = {isa = PBXBuildFile; fileRef = D46877832297022B00717D95 /* bmiquestionnaire_r3.json */; };
 		D468778D229735C700717D95 /* QuestionnaireItemStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468778C229735C700717D95 /* QuestionnaireItemStep.swift */; };
 		D468AAF621188EFF00AE942F /* FHIRDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */; };
+		D47016122385A47500512B9A /* Reports.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47016112385A47500512B9A /* Reports.swift */; };
 		D48113B82373BBA00062B3D9 /* genevariant_reporting_panel.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113B72373BBA00062B3D9 /* genevariant_reporting_panel.json */; };
 		D48113BB2373C5E40062B3D9 /* ecg_panel.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113B92373C5E40062B3D9 /* ecg_panel.json */; };
 		D48113BC2373C5E40062B3D9 /* mental_residual_capacity_form.json in Resources */ = {isa = PBXBuildFile; fileRef = D48113BA2373C5E40062B3D9 /* mental_residual_capacity_form.json */; };
@@ -147,6 +148,7 @@
 		D46877832297022B00717D95 /* bmiquestionnaire_r3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bmiquestionnaire_r3.json; sourceTree = "<group>"; };
 		D468778C229735C700717D95 /* QuestionnaireItemStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionnaireItemStep.swift; sourceTree = "<group>"; };
 		D468AAF521188EFF00AE942F /* FHIRDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRDefinitions.swift; sourceTree = "<group>"; };
+		D47016112385A47500512B9A /* Reports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reports.swift; sourceTree = "<group>"; };
 		D48113B72373BBA00062B3D9 /* genevariant_reporting_panel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = genevariant_reporting_panel.json; sourceTree = "<group>"; };
 		D48113B92373C5E40062B3D9 /* ecg_panel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ecg_panel.json; sourceTree = "<group>"; };
 		D48113BA2373C5E40062B3D9 /* mental_residual_capacity_form.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mental_residual_capacity_form.json; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 			children = (
 				D4B964DB22298FF000F46177 /* Request.swift */,
 				D4FEBDB921E7B3EA0057C77D /* ServiceRequest+Request.swift */,
+				D40B19CA20989B9000C18C23 /* Schedule.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -428,6 +431,7 @@
 				D4E3D222237B75EC00BDBCF2 /* Media+Report.swift */,
 				D4E3D220237B75CA00BDBCF2 /* Observation+Report.swift */,
 				D4E3D21C237B3DE100BDBCF2 /* DocumentReference+Report.swift */,
+				D47016112385A47500512B9A /* Reports.swift */,
 			);
 			path = Reports;
 			sourceTree = "<group>";
@@ -513,7 +517,6 @@
 			children = (
 				D48C2A8D237EFE0D002C9395 /* README.md */,
 				D4CBC00B2046F1C3002B6AC9 /* TaskController.swift */,
-				D40B19CA20989B9000C18C23 /* Schedule.swift */,
 			);
 			path = TaskController;
 			sourceTree = "<group>";
@@ -698,6 +701,7 @@
 				D468AAF621188EFF00AE942F /* FHIRDefinitions.swift in Sources */,
 				D4E3D221237B75CA00BDBCF2 /* Observation+Report.swift in Sources */,
 				D48B320221FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift in Sources */,
+				D47016122385A47500512B9A /* Reports.swift in Sources */,
 				D40B19CB20989B9000C18C23 /* Schedule.swift in Sources */,
 				D4FEBDB321DFD50D0057C77D /* Common.swift in Sources */,
 				D42605CE209364FE00853609 /* RoundedButton.swift in Sources */,
