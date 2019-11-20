@@ -4,7 +4,7 @@ Installation & App Configuration
 ### Step 1. Download
 - Download the latest [Xcode 11](xcode) app. Version 11 or greater. 
 - Download SMART Markers and all its submodules. 
-    - Using Git: `$ git clone --recursive https://github.com/SMARTMarkers/smartmarkers-framework-ios`
+    - Using Git: `$ git clone --recursive https://github.com/SMARTMarkers/smartmarkers-ios`
 - Make sure the submodules are downloaded. 
     - [ResearchKit](rk) and [Swift-SMART](ss) required in its entirety
 
