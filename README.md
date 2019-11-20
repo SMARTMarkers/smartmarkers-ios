@@ -4,7 +4,7 @@ SMART Markers is standards based software framework for creating health system i
 
 Building upon [SMART][smart] on [FHIR][fhir], SMART Markers is fully standards compliant with FHIR version [R4][r4]. All data _in and out_ is FHIR.
 
-#### Designed for Patients & Practitioners
+#### Designed for Patients & Practitioners apps
 
 While the framework is fully functional with open FHIR servers, it can enable user-type dependent functionality– specific to either patients or practitioners and hence, both patient facing and practitioner facing apps can be created.
 
