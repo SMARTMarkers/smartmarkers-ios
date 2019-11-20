@@ -1,5 +1,5 @@
-Xcode App Installation
---------------------------
+Installation & App Configuration
+----------------------
 
 ### Step 1. Download
 - Download the latest [Xcode 11](xcode) app. Version 11 or greater. 
