@@ -1,7 +1,7 @@
 [submodule "SwiftSMART"]
 	path = SwiftSMART
-	url = https://github.com/raheelsayeed/Swift-SMART.git
-	branch = develop
+	url = https://github.com/smart-on-fhir/Swift-SMART.git
+	branch = master
 [submodule "ResearchKit"]
 	path = ResearchKit
 	url = https://github.com/ResearchKit/ResearchKit.git
