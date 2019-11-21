@@ -13,15 +13,45 @@ While the framework is fully functional with open FHIR servers, it can enable us
 
 The framework is written entirely in _Swift_ and requires Xcode 11.0 or newer and supports iOS devices with base SDK version of 12.1 (SMART Markers framework can run on devices with iOS 12.1 or newer). Two essential submodules are required for compiling: [Swift-SMART][swift-smart]– a SMART on FHIR swift library, and [ResearchKit][rk]– for data generating user interfaces.
 
-#### Getting Started
+Getting Started
+---------------
 
 [➔ Installation](Installation.md)  
 [➔ Sample: Patient Facing App][easipro-patient]  
 [➔ Sample: Practitioner Facing App][easipro-practitioner]
 
 ```swift
-// Start by importing
 import SMARTMarkers
+
+// Simple instantiation using TaskController
+// Grab an instrument
+let instrument = Instruments.ActiveTasks.AmslerGrid.instance
+
+// Instantiate TaskController with an Instrument; An instance or type should hold onto the variable
+self.controller = TaskController(instrument: instrument)
+
+// prepare User Session Task Controller; powered by ResearchKit
+controller.prepareSession() { taskViewController, error in 
+
+    if let taskViewController = taskViewController { 
+        self.present(taskViewController, animated: true, completion: nil)
+    } 
+    else { 
+        // check error:
+        print(error)
+    } 
+} 
+
+// Session completion callback; the submissionBundle is retained by the receiver 
+controller.onTaskCompletion = { submissionBundle, error in 
+    if let submissionBundle = submissionBundle { 
+        // Output: FHIR Bundle 
+        print(submissionBundle.bundle)
+    } 
+    else { 
+        print(error)
+    }
+}
 ```
 
 Protocols and  Modules
