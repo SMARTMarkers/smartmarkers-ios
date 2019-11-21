@@ -191,11 +191,12 @@ public class SMARTManager : NSObject {
     
     public func selectPatient(callback: @escaping ((_ patientPicker: UIViewController) -> Void)) {
         
-		let patientPickerViewController = EPPatientListViewController(server: client.server)
-        patientPickerViewController.onPatientSelect = { [unowned self] (patient) in
+        let patientPicker = PatientListViewController(list: PatientList(query: PatientListQuery(search: FHIRSearch(query: []))), server: client.server)
+        
+        patientPicker.onPatientSelect = { [unowned self] (patient) in
             self.patient = patient
         }
-        let navigationController = UINavigationController(rootViewController: patientPickerViewController)
+        let navigationController = UINavigationController(rootViewController: patientPicker)
         callback(navigationController)
     }
 }

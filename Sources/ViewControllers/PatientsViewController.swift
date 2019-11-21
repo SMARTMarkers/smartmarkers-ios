@@ -10,7 +10,7 @@ import Foundation
 import SMART
 
 
-
+/*
 class SearchList : PatientList {
 	
 	public init(_ searchQuery: Any) {
@@ -175,3 +175,4 @@ extension EPPatientListViewController : UISearchControllerDelegate, UISearchResu
 	
 	
 }
+ */
