@@ -29,7 +29,7 @@ open class KneeRangeOfMotion: Instrument {
     
     public var sm_type: InstrumentCategoryType?
 
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     required public init(limbOption: ORKPredefinedTaskLimbOption, usageDescription: String? = nil) {
         
@@ -40,7 +40,7 @@ open class KneeRangeOfMotion: Instrument {
         let i: Instruments.ActiveTasks = (limbOption == .right) ? .RangeOfMotion_knee_right : .RangeOfMotion_knee_left
         self.sm_title = i.description
         self.sm_code = i.coding
-        sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
+        sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
     }
     
     
@@ -103,7 +103,7 @@ open class ShoulderRangeOfMotion: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     required public init(limbOption: ORKPredefinedTaskLimbOption, usageDescription: String? = nil) {
         self.limbOption = limbOption
@@ -113,7 +113,7 @@ open class ShoulderRangeOfMotion: Instrument {
         let i: Instruments.ActiveTasks = (limbOption == .right) ? .RangeOfMotion_shoulder_right : .RangeOfMotion_shoulder_left
         self.sm_title = i.description
         self.sm_code = i.coding
-        sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
+        sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

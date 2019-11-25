@@ -30,14 +30,21 @@ public class ReportViewController: UITableViewController {
         self.title = "\(report.rp_date.shortDate)"
     }
     
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        let isPresented = (presentingViewController?.presentedViewController == self || parent?.isBeingPresented == true)
+        if isPresented {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSelf))
+        }
+    }
+    
     @objc
     func showFHIR(_ sender: Any?) {
         let fhirViewController = FHIRViewController(report)
         show(fhirViewController, sender: sender)
     }
     
-    @objc
-    func dismissSelf() {
+    @objc func dismissSelf() {
         dismiss(animated: true, completion: nil)
     }
 
@@ -59,7 +66,6 @@ public class ReportViewController: UITableViewController {
             cell?.textLabel?.numberOfLines = 2
             cell?.textLabel?.lineBreakMode = .byWordWrapping
             cell?.detailTextLabel?.textColor = UIColor.gray
-
         }
         
         if indexPath.section == 0 {

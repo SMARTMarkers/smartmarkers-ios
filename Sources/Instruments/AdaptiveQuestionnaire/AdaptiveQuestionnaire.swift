@@ -14,8 +14,7 @@ extension Questionnaire {
     
     public func next_q2(server: FHIRServer, answer: QuestionnaireResponseItem?, forQuestionnaireItemLinkId: String?, options: FHIRRequestOption, for currResponse: QuestionnaireResponse? = nil,callback: @escaping (_ resource: QuestionnaireResponse?, _ error: Error?) -> Void) {
         
-        //TODO: remove name!
-        let response = currResponse ?? self.ResponseBody(responseIdentifier: "session-raheel")
+        let response = currResponse ?? self.ResponseBody(responseIdentifier: UUID().uuidString)
         
         if let answer = answer {
             var items = response?.item ?? [QuestionnaireResponseItem]()

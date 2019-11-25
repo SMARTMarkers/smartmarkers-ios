@@ -17,6 +17,8 @@ let hospitalName = 		"SMART Hospital"
 
 open class SMARTLoginViewController: UIViewController {
     
+    weak var fhir: FHIRManager?
+    
     weak var statuslbl : UILabel?
     
     open internal(set) var loginButton : UIButton?
@@ -27,8 +29,9 @@ open class SMARTLoginViewController: UIViewController {
         setupViews()
     }
 	
-	convenience init() {
+    convenience init(fhir: FHIRManager) {
 		self.init(nibName:nil, bundle:nil)
+        self.fhir = fhir
 		modalPresentationStyle = .formSheet
 		
 	}
@@ -41,7 +44,6 @@ open class SMARTLoginViewController: UIViewController {
         userlbl.lineBreakMode = .byWordWrapping
         let btn = UIButton.SMButton(title: loginTitle, target: self, action: #selector(login(_:)))
         let lbl = SMARTLoginViewController.titleLabel()
-        userlbl.text = SMARTManager.shared.practitioner?.name?.first?.human ?? ""
         userlbl.textColor = UIColor.lightGray
         statuslbl = userlbl
 
@@ -134,27 +136,19 @@ open class SMARTLoginViewController: UIViewController {
     
     
     @objc func login(_ sender: Any) {
-        SMARTManager.shared.authorize { [weak self] (success, error) in
+        
+        fhir?.authorize(callback: { [weak self] (success, userName, error) in
             
-            if let error = error {
-                print(error as Any)
-            }
-            
-            if success {
-                DispatchQueue.main.async {
-                    let name = (SMARTManager.shared.usageMode == .Practitioner) ? SMARTManager.shared.practitioner?.name?.first?.human : SMARTManager.shared.patient?.humanName
-                    self?.statuslbl?.text = name
+            DispatchQueue.main.async {
+                if success {
+                    self?.statuslbl?.text = userName
                     self?.dismiss(animated: true, completion: nil)
                 }
-            }
-            else {
-                DispatchQueue.main.async {
-                    if let error = error {
-                        self?.statuslbl?.text = "Authorization Failed. Try again \(error.asOAuth2Error.localizedDescription)"
-                    }
+                else {
+                    self?.statuslbl?.text = "Authorization Failed. Try again \( error?.asOAuth2Error.localizedDescription ?? "")"
                 }
             }
-        }
+        })
     }
     
 }

@@ -49,7 +49,7 @@ extension SMART.Questionnaire: Instrument {
         get { return publisher?.string }
     }
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]? {
+    public var sm_reportSearchOptions: [FHIRReportOptions]? {
         set { }
         get {
             var searchParam = [String]()
@@ -64,7 +64,7 @@ extension SMART.Questionnaire: Instrument {
             
             if !searchParam.isEmpty {
                 return [
-                    FHIRSearchParamRelationship(QuestionnaireResponse.self, ["questionnaire": searchParam.joined(separator: ",")])
+                    FHIRReportOptions(QuestionnaireResponse.self, ["questionnaire": searchParam.joined(separator: ",")])
                 ]
             }
             return nil
@@ -121,6 +121,14 @@ extension SMART.Questionnaire: Instrument {
     
     
     public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
+        
+        // AdaptiveQuestionnaire?
+        // Should be determined from the Questionnaire.
+        // For now: lets check if task is Adaptive.
+        // Fall back would be to go as usual, derive QR from `ORKTaskResult`
+        if let task = task as? AdaptiveQuestionnaireTask, let qr = task.currentResponse {
+            return SMART.Bundle.sm_with([qr])
+        }
         
         guard let taskResults = result.results as? [ORKStepResult] else {
             return nil
@@ -183,5 +191,9 @@ extension Questionnaire {
         }
         
         return self.id?.string
+    }
+    
+    func isAdaptive() -> Bool {
+        return false
     }
 }

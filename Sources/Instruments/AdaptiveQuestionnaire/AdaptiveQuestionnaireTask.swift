@@ -44,6 +44,9 @@ open class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask {
     }
     
     public func stepBack() {
+        if answers.count == 0 {
+            return
+        }
         answers.removeLast()
         shouldSubmitResponse = false
         

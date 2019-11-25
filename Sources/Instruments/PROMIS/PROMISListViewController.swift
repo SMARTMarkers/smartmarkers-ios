@@ -11,18 +11,15 @@ import Foundation
 /**
  Exclusive class to list `PROMIS` instruments
  */
-public class PROMISListViewController: MeasuresViewController {
+public class PROMISListViewController: InstrumentListViewController {
     
     public var client: PROMISClient?
     
-    public required init(client: PROMISClient) {
-        super.init(style: .plain)
+    public convenience init(client: PROMISClient) {
+        self.init(server: client.server)
         self.client = client
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
     
     public override func loadQuestionnaires() {
         if nil != instruments { return }
@@ -37,7 +34,4 @@ public class PROMISListViewController: MeasuresViewController {
             }
         })
     }
-    
-    
-    
 }

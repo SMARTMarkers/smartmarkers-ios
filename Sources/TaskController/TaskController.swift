@@ -17,7 +17,7 @@ Optional instrument resolving delegate for `TaskController`. Delegates can const
 */
 public protocol InstrumentResolver: class {
    
-    /// Optional: Create an `Instrument` compliant task from the `TaskController`
+    /// Called when trying to resolve the `Instrument` referenced in `Request` from the `TaskController`
     func resolveInstrument(in controller: TaskController) -> Instrument?
     
 }
@@ -113,7 +113,7 @@ public final class TaskController: NSObject {
             return
         }
 
-        request?.rq_instrumentResolve(callback: callback)
+        request?.rq_resolveInstrument(callback: callback)
     }
    
     /// Method to update status and the request if necessary
@@ -138,18 +138,9 @@ public final class TaskController: NSObject {
     - parameter options:            Optional, search parameter options for request FHIR resources
     - parameter callback:           An array of TaskController objects
     */
-    public class func Get<T: DomainResource & Request>(requestType: T.Type, for patient: Patient, server: Server, instrumentResolver: InstrumentResolver?, options: [String: String]? = nil, callback: @escaping ([TaskController]?, Error?) -> Void) {
+    public class func Requests<T: Request>(requestType: T.Type, for patient: Patient, server: Server, instrumentResolver: InstrumentResolver?, options: [String: String]? = nil, callback: @escaping ([TaskController]?, Error?) -> Void) {
         
-        var searchParams =  T.rq_fetchParameters ?? [String:String]()
-        searchParams["subject"] = patient.id!.string
-        
-        if let options = options {
-            for (k,v) in options {
-                searchParams[k] = v
-            }
-        }
-        
-        T.Requests(from: server, options: searchParams) { (requests, error) in
+        T.PGHDRequests(from: server, for: patient, options: options) { (requests, error) in
             if let requests = requests {
                 let controllers = requests.map({ (request) -> TaskController in
                     let controller = TaskController(request)

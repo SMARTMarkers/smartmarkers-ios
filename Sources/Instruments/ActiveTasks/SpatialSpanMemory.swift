@@ -37,7 +37,7 @@ open class SpatialSpanMemory: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     public init(initialSpan: Int = 3, minimumSpan: Int = 3, maximumSpan: Int = 15, playSpeed: TimeInterval = 1.0, maximumTests: Int = 5, maximumConsecutiveFailures: Int = 3) {
         self.initialSpan = initialSpan
@@ -49,7 +49,7 @@ open class SpatialSpanMemory: Instrument {
         self.sm_title = "Spatial Span Memory"
         self.sm_identifier = "cognitive.memory.spatialspan"
         self.sm_code = Instruments.ActiveTasks.SpatialSpanMemory.coding
-        self.sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
+        self.sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

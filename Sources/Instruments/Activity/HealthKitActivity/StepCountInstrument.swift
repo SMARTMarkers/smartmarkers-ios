@@ -17,7 +17,7 @@ open class StepReport: Instrument {
         sm_type = .Device
         sm_title = "Step Count (HealthKit)"
         sm_code = Coding.sm_LOINC("41950-7", "Number of steps in 24 hour Measured")
-        sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
+        sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
     }
     
     public var sm_title: String
@@ -32,7 +32,7 @@ open class StepReport: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         

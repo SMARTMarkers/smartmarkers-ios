@@ -28,7 +28,7 @@ open class OMRON: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     public init(authSettings: [String:Any], usageDescription: String? = nil, callbackHandler: inout OAuth2?) {
 
@@ -39,8 +39,8 @@ open class OMRON: Instrument {
         self.sm_identifier = "omron-blood-pressure"
         self.sm_code = SMARTMarkers.Instruments.Web.OmronBloodPressure.coding
         self.sm_type = .WebRepository
-        self.sm_resultingFhirResourceType = [
-            FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])
+        self.sm_reportSearchOptions = [
+            FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])
         ]
         callbackHandler = self.auth
         

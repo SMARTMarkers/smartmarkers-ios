@@ -48,7 +48,7 @@ public protocol Instrument : class {
     var sm_publisher: String? { get set }
 
     /// Output resource types; can be used to fetch historical resources from the `SMART.Server`
-    var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]? { get set }
+    var sm_reportSearchOptions: [FHIRReportOptions]? { get set }
         
     /// Protocol function to create a ResearchKit's survey task controller (`ORKTaskViewController`)
     func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void))

@@ -13,7 +13,7 @@ import SMART
  PGHD Request Protocol
  Fetches and Manages `FHIR` request resource
  */
-public protocol Request :  DomainResource {
+public protocol Request:  DomainResource {
     
     
     /// Request identifier
@@ -36,7 +36,7 @@ public protocol Request :  DomainResource {
     
     /// Schedule
     var rq_schedule: TaskSchedule? { get set }
-    
+
     /// Fetch Parameters
     static var rq_fetchParameters: [String: String]? { get }
     
@@ -44,7 +44,7 @@ public protocol Request :  DomainResource {
     func rq_updated(_ completed: Bool, callback: @escaping ((_ success: Bool) -> Void))
     
     /// Requested Instrument
-    func rq_instrumentResolve(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
+    func rq_resolveInstrument(callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
     
     /// Resolve FHIR References if needed;
     func rq_resolveReferences(callback: @escaping ((Bool) -> Void))
@@ -69,7 +69,25 @@ public extension Request {
         //TODO: Make `Self.init()` "required" for metatype initialization
     }
     
-    static func Requests(from server: Server, options: [String:String]?, callback: @escaping ((_ requestResources: [Self]?, _ error: Error?) -> Void)) {
+    static func PGHDRequests(from server: Server, for patient: Patient?, options: [String:String]?, callback: @escaping ((_ requestResources: [Self]?, _ error: Error?) -> Void)) {
+        
+        var searchParams =  rq_fetchParameters ?? [String:String]()
+        
+        if let patientFHIRID = patient?.id?.string {
+            searchParams["subject"] = patientFHIRID
+        }
+        
+        if let options = options {
+            for (k,v) in options {
+                searchParams[k] = v
+            }
+        }
+        
+        PGHDRequests(from: server, options: searchParams, callback: callback)
+    }
+
+    
+    static func PGHDRequests(from server: Server, options: [String:String]?, callback: @escaping ((_ requestResources: [Self]?, _ error: Error?) -> Void)) {
         let search = Self.search(options as Any)
         search.pageCount = 100
         search.perform(server) { (bundle, error) in

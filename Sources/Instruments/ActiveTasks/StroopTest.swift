@@ -28,7 +28,7 @@ open class StroopTest: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     public var usageDescription: String?
     
@@ -39,7 +39,7 @@ open class StroopTest: Instrument {
         self.sm_title = "Stroop Test"
         self.sm_identifier = "stroop"
         self.sm_code = Instruments.ActiveTasks.StroopTest.coding
-        self.sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
+        self.sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
         
     }
     

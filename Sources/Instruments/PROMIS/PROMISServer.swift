@@ -11,7 +11,7 @@ import Foundation
 
 public class PROMISClient {
    
-    public var server: AdaptiveServer!
+    public let server: AdaptiveServer!
     
     public init(baseURL: URL, client_id: String, client_secret: String) {
         server = AdaptiveServer(baseURL: baseURL, auth: ["client_id": client_id, "client_secret": client_secret])

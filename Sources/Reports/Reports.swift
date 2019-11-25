@@ -17,6 +17,8 @@ import SMART
  */
 open class Reports {
     
+    static let calendar = Calendar.current
+    
     /// Weak reference to `taskController`
     weak var taskController: TaskController?
     
@@ -53,6 +55,17 @@ open class Reports {
         self.taskController = task
     }
     
+    public func hasReportsForToday() -> Bool {
+        for report in reports {
+            if Reports.calendar.isDateInToday(report.rp_date) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    
+    
     /**
      Designated Initializer.
      
@@ -88,13 +101,15 @@ open class Reports {
     
     open func fetch(for patient: Patient?, server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [Report]?, _ error: Error?) -> Void)) {
         
-        guard let resultParams = (instrument ?? taskController?.instrument)?.sm_resultingFhirResourceType else {
+        guard let resultParams = (instrument ?? taskController?.instrument)?.sm_reportSearchOptions else {
             callback(nil, SMError.promeasureOrderedInstrumentMissing)
             return
         }
         
         
         let group = DispatchGroup()
+        var errors = [Error]()
+        
         for param in resultParams {
             var searchParam = param.relation
             if let pt = patient {
@@ -112,14 +127,14 @@ open class Reports {
                     }
                 }
                 if let error = error {
-                    print(error)
+                    errors.append(error)
                 }
                 group.leave()
             }
         }
         
         group.notify(queue: .global(qos: .default)) {
-            callback(self.reports, nil)
+            callback(self.reports, (errors.count > 0) ? SMError.reportsFetchFinishedWithErrors(description: errors.description) : nil)
         }
     }
     
@@ -316,6 +331,13 @@ open class Reports {
         }
         semaphore.wait()
     }
+    
+    
+}
+
+
+public extension Reports {
+    
     
     
 }

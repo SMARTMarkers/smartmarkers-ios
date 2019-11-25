@@ -13,19 +13,25 @@ public class QuestionnaireResponseViewController: UITableViewController {
     
     public var questionnaireResponse: QuestionnaireResponse!
     
-    private var qrItems: [QuestionnaireResponseItem]!
-    
-    public required convenience init(_ qr: QuestionnaireResponse) {
-        self.init(style: .grouped)
+    /**
+     Designated Initializer
+     */
+    public required init(_ qr: QuestionnaireResponse) {
         questionnaireResponse = qr
-        qrItems = qr.item
+        super.init(style: .grouped)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
     override public func viewDidLoad() {
+        
         if let date = questionnaireResponse.authored?.nsDate.shortDate {
             title = "Completed on " + date
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSelf))
+
     }
     
     @objc
@@ -39,7 +45,7 @@ public class QuestionnaireResponseViewController: UITableViewController {
     }
     
     override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == 0) ? qrItems.count : 1
+        return (section == 0) ? (questionnaireResponse.item?.count ?? 0) : 1
     }
     
     override public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -64,23 +70,10 @@ public class QuestionnaireResponseViewController: UITableViewController {
             return cell!
         }
         
-        
-        
-        if let answer = qrItems[indexPath.row].answer {
-            var answerStrings = [String]()
-            answer.forEach({ (itemAnswer) in
-                if let valueCoding = itemAnswer.valueCoding {
-                    let displayString = valueCoding.display?.string ?? valueCoding.code!.string
-                    answerStrings.append(displayString)
-                }
-                if let valueString = itemAnswer.valueString {
-                    answerStrings.append(valueString.string)
-                }
-            })
-            cell?.textLabel?.text = answerStrings.joined(separator: " + ")
-        }
-        
-        cell?.detailTextLabel?.text = qrItems[indexPath.row].text?.string
+        let item = questionnaireResponse.item![indexPath.row]
+        let (question, answer) = item.sm_QuestionAndAnswer()
+        cell?.textLabel?.text = answer
+        cell?.detailTextLabel?.text = question
         cell?.accessoryType = .checkmark
         return cell!
     }
@@ -90,6 +83,41 @@ public class QuestionnaireResponseViewController: UITableViewController {
             show(FHIRViewController(questionnaireResponse), sender: nil)
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    
+    
+    
+}
+
+// MARK - Parse QuestionnaireResponse.item to get answers and question strings
+
+extension QuestionnaireResponseItem {
+    
+    func sm_QuestionAndAnswer() -> (String, String) {
+        var questionAnswerTuple = (text?.string ?? String(),String())
+        questionAnswerTuple = item?.reduce(into: questionAnswerTuple, { (tup, itm) in
+            tup.0.append(contentsOf: (itm.text != nil) ? "- \(itm.text!.string)" : "")
+            let answer = self.sm_getAnswer(itm.answer)
+            tup.1.append(contentsOf: answer)
+        }) ?? ("", "")
+        return questionAnswerTuple
+        
+    }
+    
+    func sm_getAnswer(_ answer: [QuestionnaireResponseItemAnswer]?) -> String {
+        guard let answer = answer else { return "" }
+        var answerStrings = [String]()
+        answer.forEach({ (itemAnswer) in
+            if let valueCoding = itemAnswer.valueCoding {
+                let displayString = valueCoding.display?.string ?? valueCoding.code!.string
+                answerStrings.append(displayString)
+            }
+            if let valueString = itemAnswer.valueString {
+                answerStrings.append(valueString.string)
+            }
+        })
+        return answerStrings.joined(separator: " + ")
     }
     
 }

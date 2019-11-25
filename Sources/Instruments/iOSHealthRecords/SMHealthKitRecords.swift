@@ -25,7 +25,7 @@ public class SMHealthKitRecords: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     public init() {
         sm_title = "HealthKit Clinical Record"

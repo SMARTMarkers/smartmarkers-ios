@@ -11,13 +11,9 @@ import SMART
 
 
 
-open class MeasuresViewController :  UITableViewController {
+open class InstrumentListViewController :  UITableViewController {
     
-    let searchController = UISearchController(searchResultsController: nil)
-    
-    open lazy var server : SMART.Server = {
-       return SMARTManager.shared.client.server
-    }()
+    public var server: SMART.Server?
     
 	open internal(set) var  _title: String?
 	
@@ -31,8 +27,21 @@ open class MeasuresViewController :  UITableViewController {
     
     open var onSelection: (([Instrument]?) ->Void)?
     
+    let searchController = UISearchController(searchResultsController: nil)
+    
+    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    
+    public required init(server: Server?) {
+        self.server = server
+        super.init(style: .grouped)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override open func viewDidLoad() {
-        title = "PRO-Instruments"
+        title = "Questionnaires"
         super.viewDidLoad()
         tableView.allowsMultipleSelection = true
         searchController.searchResultsUpdater = self
@@ -43,6 +52,8 @@ open class MeasuresViewController :  UITableViewController {
         definesPresentationContext = true
         tableView.estimatedRowHeight = UITableView.automaticDimension
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissModal(_:)))
+        let activityItem = UIBarButtonItem(customView: activityIndicator)
+        navigationItem.leftBarButtonItem = activityItem
         self.loadQuestionnaires()
     }
     
@@ -50,12 +61,14 @@ open class MeasuresViewController :  UITableViewController {
     open func markBusy() {
 		_title = title
         title = "Loading.."
+        activityIndicator.startAnimating()
     }
     
     
     open func markStandby() {
         tableView.reloadData()
 		title = _title
+        activityIndicator.stopAnimating()
     }
 	
 	open func set(_ instruments: [Instrument]?) {
@@ -65,7 +78,9 @@ open class MeasuresViewController :  UITableViewController {
     
     open func loadQuestionnaires() {
 		
-        if nil != instruments { return }
+        guard nil == instruments, let server = server else {
+            return
+        }
         markBusy()
         Questionnaire.Get(from: server, options: [:]) { [unowned self] (questionnaires, error) in
             
@@ -177,14 +192,14 @@ open class MeasuresViewController :  UITableViewController {
     }
 }
 
-extension MeasuresViewController : UISearchControllerDelegate {
+extension InstrumentListViewController : UISearchControllerDelegate {
     
     public func willDismissSearchController(_ searchController: UISearchController) {
         instruments = _instruments
         tableView.reloadData()
     }
 }
-extension MeasuresViewController : UISearchResultsUpdating {
+extension InstrumentListViewController : UISearchResultsUpdating {
 
     public func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text?.lowercased(), !searchText.isEmpty {

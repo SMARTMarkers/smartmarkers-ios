@@ -58,7 +58,7 @@ public extension Report {
     }
 }
 
-public struct FHIRSearchParamRelationship {
+public struct FHIRReportOptions {
     
     public let resourceType: Report.Type
     public let relation: [String: String]

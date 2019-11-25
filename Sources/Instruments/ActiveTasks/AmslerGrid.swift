@@ -30,16 +30,16 @@ public class AmslerGrid : Instrument {
     
     public var sm_publisher: String?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     public init() {
         sm_title        = "Amsler Grid"
         sm_identifier   = "amslergrid"
         sm_type         = .ActiveTask
         sm_code         = Instruments.ActiveTasks.AmslerGrid.coding
-        sm_resultingFhirResourceType = [
-            FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|\(sm_identifier!)"]),
-            FHIRSearchParamRelationship(Media.self,       ["subject": ""]) // Filled in by `Reports`
+        sm_reportSearchOptions = [
+            FHIRReportOptions(Observation.self, ["code": "http://researchkit.org|\(sm_identifier!)"]),
+            FHIRReportOptions(Media.self,       ["subject": ""]) // Filled in by `Reports`
         ]
     }
     

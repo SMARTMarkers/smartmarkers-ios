@@ -29,11 +29,14 @@ public enum SMError : Error, CustomStringConvertible {
     /// `PROMeasure.server` is nil
     case promeasureServerNotSet
     
-    /// `PROMeasure.fetchAll()` error in fetching links
+    /// `Reports.fetch()` error in fetching links
     case promeasureFetchLinkedResources
     
     
     // MARK: Report
+    
+    /// Reports fetch finished with errors
+    case reportsFetchFinishedWithErrors(description: String)
     
     /// Report could not be submitted
     case reportSubmissionToServerError(serverError: Error)
@@ -125,7 +128,8 @@ public enum SMError : Error, CustomStringConvertible {
             return "PROMeasure: error encountered fetching resources from server"
             
         // Reports
-            
+        case .reportsFetchFinishedWithErrors(let description):
+            return "Reports Fetch finished with errors:\n \(description)"
         case .reportSubmissionToServerError(let serverError):
             return "Reports could not be submitted to the FHIR Server \(serverError)"
         case .reportUnknownFHIRReport:

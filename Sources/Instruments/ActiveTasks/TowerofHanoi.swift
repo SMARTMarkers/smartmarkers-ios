@@ -27,7 +27,7 @@ open class TowerOfHanoi: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
     
     public var usageDescription: String?
     
@@ -39,7 +39,7 @@ open class TowerOfHanoi: Instrument {
         self.usageDescription = usageDescription
         self.sm_type = .ActiveTask
         self.sm_code = Instruments.ActiveTasks.TowerOfHanoi.coding
-        self.sm_resultingFhirResourceType = [FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
+        self.sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

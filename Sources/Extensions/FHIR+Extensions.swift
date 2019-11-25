@@ -10,6 +10,18 @@ import Foundation
 import SMART
 
 
+let kSD_Variable = "http://hl7.org/fhir/StructureDefinition/variable"
+
+
+/// Coding Systems - LOINC
+let kLoincSystemKey = "http://loinc.org"
+let kHL7ConditionVerificationStatus = "http://terminology.hl7.org/CodeSystem/condition-ver-status"
+let kHL7ConditionClinicalStatus = "http://terminology.hl7.org/CodeSystem/condition-clinical"
+let kHL7ObservationCategory = "http://terminology.hl7.org/CodeSystem/observation-category"
+
+
+
+
 extension Appointment {
 	
 	public func ep_patientReferences() -> [String]? {

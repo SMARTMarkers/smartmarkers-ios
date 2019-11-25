@@ -17,16 +17,111 @@ Getting Started
 ---------------
 
 [➔ Installation](Installation.md)  
-[➔ Sample: Patient Facing App][easipro-patient]  
-[➔ Sample: Practitioner Facing App][easipro-practitioner]
+[➔ EASIPRO Clinic App](hhttps://github.com/SMARTMarkers/easipro-clinic-pghd-ios)
+
+
+Protocols and  Modules
+----------------------
+
+SMART Markers follows a model of _request_ & _report_. The framework's core functionality is abstracted into the following three _protocols_ and supporting controller classes. Simplified event change would be (1.) **Request**: Fetching or generating FHIR resources to dispatch a __request__ for data. (2) **PGHD Instrument** resolution from the request and survey session administration with output. (3) **Report** creation from the instrument's out and submission to the FHIR server. 
+
+
+### Request Protocol
+
+Defines a set of variables needed to parse an incoming, practitioner dispatched _request_ resource. For R4, the default support is for FHIR `ServiceRequest`, but adding more `Request` compliant resources is possible. This protocol further resolves the _Instrument_ (PROs, surveys, PROMIS, activity reports, etc..) and also the associated schedule.   
+[➔ Request](./Sources/Requests/)  
+[➔ Schedule](./Sources/Requests/Schedule.swift)
 
 ```swift
 import SMARTMarkers
 
-// Simple instantiation using TaskController
-// Grab an instrument
-let instrument = Instruments.ActiveTasks.AmslerGrid.instance
+let requests = [Request]() // can also be `[ServiceRequest]() 
 
+// Get PGHD requests for `patient` from `server`
+ServiceRequest.PGHDRequests(from: server, for: patient, options: nil) { [weak self] (serviceRequests, error) in
+                if let serviceRequests = serviceRequests {
+                    self?.requests = serviceRequests
+                }
+                if let error = error { 
+                    print(error)
+                }
+}
+```
+
+### Instrument Protocol
+
+Classes conforming to `Instrument` define the metadata with methods needed for initiating an interactive user session for generating data. A variety of instruments are supported out of the box with capability to add more downstream. `Instrument` classes determine the type of `FHIR` resources generated after a task session packaged as `FHIR Bundle`. Curently all instruments are required to be proactive data generating sessions. For consistent UX, ResearchKit's `ORKTaskViewController` created for _all_ instruments.  
+[➔ Instrument](./Sources/Instruments/)  
+[➔ Instrument List](./Sources/Instruments/README.md)  
+
+```swift
+// Resolve Instrument embedded in the `Request`
+request?.rq_resolveInstrument(callback: { (instrument, error) in
+            if let instrument = instrument { 
+                // Resolved: Can be any class that conforms to `Instrument`
+                // eg: FHIR Questionnaire, Adaptive Questionnaire 
+                self.instrument = instrument
+            }
+            else {
+                print(error) 
+            }
+        })
+
+// Or.. Instantiate an Instrument locally
+
+// FHIR Questionnaire resource:
+let questionnaire = Questionnaire()
+
+let stepCount = Instruments.HealthKit.StepCount.instance
+
+let amslerGrid = Instruments.ActiveTasks.AmslerGrid.instance
+
+// Omron requires its OAuth2 credentials and a callback handler
+let omron = Instruments.Web.Omron(authSettings: [:], &callbackHandler: nil) 
+
+// intiating a data generating task session
+instrument.sm_taskController { (taskViewController, error) in
+            if let taskView = taskViewController {
+                // Present taskView
+            }
+            else {
+                // error creating a task user session controller
+                print(error)
+            }
+    }
+```
+
+
+
+### Report Protocol
+
+FHIR `Resources` generated as results for a given instrument conform to `Report`. Eg. `QuestionnaireResponse`, `Observation`, `Media`etc. A report collector class `Reports` builds historical FHIR resources from a FHIR Server for a given `Instrument` or a `Request` or both. Also manages _reporting_ of newly created FHIR Bundles to the server after tagging with Patient and, if available, Practitioner.  
+[➔ Report](./Sources/Reports/)  
+[➔ Reports](./Sources/Reports/Reports.swift) 
+
+```swift
+// Instantiate Reports class (gathers and submits Report types)
+let reports = Reports(instrument, for: patient, request: request)
+
+// Fetches historical FHIR resources for the given instrument & patient
+reports.fetch(for: patient, server: server, options: nil) { (fhirReports, error) in {
+    if let fhirReports = fhirReports {
+        print(fhirReports)
+    }
+}
+
+// Submit newly generated FHIR outout 
+reports.submit(to: server, patient: patient) { (success, errors) in { 
+    print(success)
+}
+```
+
+### TaskController
+
+Controller to manage all aspects of `Request`, `Instrument` and `Report` based classes and makes it easier to fetch PGHD requests, administer instrument session and report back to the FHIR server.   
+[➔ TaskController](./Sources/TaskController/)
+
+```swift
 // Instantiate TaskController with an Instrument; An instance or type should hold onto the variable
 self.controller = TaskController(instrument: instrument)
 
@@ -42,11 +137,14 @@ controller.prepareSession() { taskViewController, error in
     } 
 } 
 
-// Session completion callback; the submissionBundle is retained by the receiver 
+// Session completion callback; the `SubmissionBundle` is retained by receiver's reports, can be submitted.
 controller.onTaskCompletion = { submissionBundle, error in 
     if let submissionBundle = submissionBundle { 
         // Output: FHIR Bundle 
         print(submissionBundle.bundle)
+        
+        // submit: 
+        controller.reports.submit() //as above
     } 
     else { 
         print(error)
@@ -54,35 +152,6 @@ controller.onTaskCompletion = { submissionBundle, error in
 }
 ```
 
-Protocols and  Modules
-----------------------
-
-SMART Markers follows a model of _request_ & _report_. The framework's core functionality is abstracted into the following three _protocols_ and supporting controller classes
-
-### Request Protocol
-
-Defines a set of variables needed to parse an incoming, practitioner dispatched _request_ resource. For R4, the default support is for FHIR `ServiceRequest`, but adding more `Request` compliant resources is possible. This protocol further resolves the _Instrument_ (PROs, surveys, PROMIS, activity reports, etc..) and also the associated schedule.   
-[➔ Request](./Sources/Requests/)  
-[➔ Schedule](./Sources/Requests/Schedule.swift)
-
-
-### Instrument Protocol
-
-Classes conforming to `Instrument` define the metadata and methods needed for initiating an interactive user session for generating data. A variety of instruments are supported out of the box with capability to add more downstream. Curently all instruments are required to be proactive data generating sessions. For consistent UX, ResearchKit's `ORKTaskViewController` created for _all_ instruments.  
-[➔ Instrument](./Sources/Instruments/)  
-[➔ Instrument List](./Sources/Instruments/README.md)  
-
-### Report Protocol
-
-FHIR `Resources` generated as results for a given instrument conform to `Report`. Eg. `QuestionnaireResponse`, `Observation`, `Media`etc. A report collector class `Reports` builds historical FHIR resources from a FHIR Server for a given `Instrument` or a `Request` or both. Also manages _reporting_ of newly created FHIR Bundles to the server after tagging with Patient and, if available, Practitioner.  
-[➔ Report](./Sources/Reports/)  
-[➔ Reports](./Sources/Reports/Reports.swift) 
-
-
-### TaskController
-
-Controller to manage all aspects of `Request`, `Instrument` and `Report` based classes and makes it easier to fetch PGHD requests, administer instrument session and report back to the FHIR server.   
-[➔ TaskController](./Sources/TaskController/)
 
 ### Multiple Sessions & Submission to FHIR Server
 

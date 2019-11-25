@@ -32,15 +32,15 @@ open class NineHolePegTest: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
 
     public init() {
         sm_title = "9 Hole Peg Test"
         sm_identifier = "9-hole-peg-test"
         sm_code = Instruments.ActiveTasks.NineHolePegTest.coding
         sm_type = .ActiveTask
-        sm_resultingFhirResourceType = [
-            FHIRSearchParamRelationship(Observation.self, ["code": sm_code!.sm_searchableToken()!])
+        sm_reportSearchOptions = [
+            FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])
         ]
     }
     

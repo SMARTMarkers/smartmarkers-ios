@@ -27,7 +27,7 @@ open class PASAT: Instrument {
     
     public var sm_type: InstrumentCategoryType?
     
-    public var sm_resultingFhirResourceType: [FHIRSearchParamRelationship]?
+    public var sm_reportSearchOptions: [FHIRReportOptions]?
 
     public init(interStimulusInterval: TimeInterval) {
         self.interStimulusInterval = interStimulusInterval
@@ -36,8 +36,8 @@ open class PASAT: Instrument {
         sm_code = Instruments.ActiveTasks.PSAT_2.coding
         sm_type = .ActiveTask
         sm_publisher = "ResearchKit.org"
-        sm_resultingFhirResourceType = [
-            FHIRSearchParamRelationship(Observation.self, ["code": "http://researchkit.org|psat-2,http://researchkit.org|psat-3"])
+        sm_reportSearchOptions = [
+            FHIRReportOptions(Observation.self, ["code": "http://researchkit.org|psat-2,http://researchkit.org|psat-3"])
             ]
         
     }
