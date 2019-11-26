@@ -18,6 +18,7 @@ Getting Started
 
 [➔ Installation](Installation.md)  
 [➔ EASIPRO Clinic App](https://github.com/SMARTMarkers/easipro-clinic-pghd-ios)
+[➔ EASIPRO Patient App](#) (soon..)
 
 
 Protocols and  Modules
@@ -35,7 +36,7 @@ Defines a set of variables needed to parse an incoming, practitioner dispatched 
 ```swift
 import SMARTMarkers
 
-let requests = [Request]() // can also be `[ServiceRequest]() 
+let requests = [Request]() // can also be [ServiceRequest]() 
 
 // Get PGHD requests for `patient` from `server`
 ServiceRequest.PGHDRequests(from: server, for: patient, options: nil) { [weak self] (serviceRequests, error) in
@@ -72,8 +73,10 @@ request?.rq_resolveInstrument(callback: { (instrument, error) in
 // FHIR Questionnaire resource:
 let questionnaire = Questionnaire()
 
+// StepCount  
 let stepCount = Instruments.HealthKit.StepCount.instance
 
+// Amsler Grid (task from ResearchKit)
 let amslerGrid = Instruments.ActiveTasks.AmslerGrid.instance
 
 // Omron requires its OAuth2 credentials and a callback handler
@@ -115,6 +118,9 @@ reports.submit(to: server, patient: patient) { (success, errors) in {
     print(success)
 }
 ```
+
+- - -
+
 
 ### TaskController
 
