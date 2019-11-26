@@ -17,7 +17,7 @@ Getting Started
 ---------------
 
 [➔ Installation](Installation.md)  
-[➔ EASIPRO Clinic App](hhttps://github.com/SMARTMarkers/easipro-clinic-pghd-ios)
+[➔ EASIPRO Clinic App](https://github.com/SMARTMarkers/easipro-clinic-pghd-ios)
 
 
 Protocols and  Modules
