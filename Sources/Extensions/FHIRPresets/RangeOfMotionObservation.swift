@@ -8,24 +8,16 @@
 
 import Foundation
 import SMART
+import ResearchKit
 
 public extension Observation {
     
     //https://zulip-uploads.s3.amazonaws.com/10155/asOP7kN_xL_McwtgOiTLTtcc/NoninBtle.json?Signature=H%2BTjf8NLt%2BC1172L5ynFOSVwhkY%3D&Expires=1555427590&AWSAccessKeyId=AKIAIEVMBCAT2WD3M5KQ
     
-    class func sm_RangeOfMotion(flexed: Double, extended: Double, date: Date) -> Observation {
+    class func sm_RangeOfMotion(flexed: Double, extended: Double, date: Date, limbOption: ORKPredefinedTaskLimbOption) -> Observation {
         
         let observation = Observation()
-        observation.effectiveDateTime = date.fhir_asDateTime()
-        observation.status = .final
-        
-        let flexedComponent = ObservationComponent()
-        flexedComponent.valueQuantity = Quantity.sm_Angle(flexed)
-        
-        let extendedComponent = ObservationComponent()
-        extendedComponent.valueQuantity = Quantity.sm_Angle(extended)
-        
-        observation.component = [flexedComponent, extendedComponent]
+
         
         return observation
         
@@ -57,33 +49,70 @@ public extension Observation {
 
 public extension Coding {
     
-    //Knee Codes
-    class func sm_KneeRightRangeofMotion() -> [Coding] {
-        return [
-            sm_LOINC("41349-2", "Knee - right Extension Active Range of Motion Quantitative"),
-            sm_LOINC("41347-6", "Knee - right Flexion Active Range of Motion")
-        ]
+    func sm_asCodeableConcept() -> CodeableConcept {
+        return CodeableConcept.sm_From([self], text: display?.string)
     }
     
-    class func sm_KneeLeftRangeofMotion() -> [Coding] {
-        return [
-            sm_LOINC("41345-0", "Knee - left Extension Active Range of Motion Quantitative"),
-            sm_LOINC("41343-5", "Knee - left Flexion Active Range of Motion")
-        ]
+    class func sm_ActiveRangeOfMotionPanel() -> Coding {
+        return
+            sm_LOINC("41359-1", "Active range of motion panel Quantitative")
+        
     }
     
-    class func sm_ShoulderLeftFlexionRangeOfMotion() -> [Coding] {
-        return [
+    //Knee Extended
+    class func sm_KneeRightExtendedRangeofMotionQuantitative() -> Coding {
+        return
+            sm_LOINC("41349-2", "Knee - right Extension Active Range of Motion Quantitative")
+        
+    }
+    
+    class func sm_KneeLeftExtendedRangeofMotionQuantitative() -> Coding {
+        return
+            sm_LOINC("41345-0", "Knee - left Extension Active Range of Motion Quantitative")
+        
+    }
+    
+    //Knee Flexed
+    class func sm_KneeRightFlexedRangeofMotionQuantitative() -> Coding {
+        return
+            sm_LOINC("41347-6", "Knee - right Flexion Active Range of Motion Quantitative")
+        
+    }
+    
+    class func sm_KneeLeftFlexedRangeofMotionQuantitative() -> Coding {
+        return
+            sm_LOINC("41343-5", "Knee - left Flexion Active Range of Motion Quantitative")
+        
+    }
+    
+    
+    // Shoulder Flexion
+    
+    class func sm_ShoulderLeftFlexionRangeOfMotionQuantitative() -> Coding {
+        return
             sm_LOINC("41295-7", "Shoulder - left Flexion Active Range of Motion Quantitative")
-        ]
+        
     }
     
-    class func sm_ShoulderRightFlexionRangeOfMotion() -> [Coding] {
-        return [
+    class func sm_ShoulderRightFlexionRangeOfMotionQuantitative() -> Coding {
+        return
             sm_LOINC("41307-0", "Shoulder - Right Flexion Active Range of Motion Quantitative")
-        ]
+        
     }
     
+    // Shoulder Extension
+
+    class func sm_ShoulderLeftExtensionRangeOfMotionQuantitative() -> Coding {
+        return
+            sm_LOINC("41297-3", "Shoulder - left Extension Active Range of Motion Quantitative")
+        
+    }
+    
+    class func sm_ShoulderRightExtensionRangeOfMotionQuantitative() -> Coding {
+        return
+            sm_LOINC("41309-6", "Shoulder - Right Extension Active Range of Motion Quantitative")
+        
+    }
     
     
     class func sm_bodySite_KneeLeft() -> Coding {
@@ -106,34 +135,8 @@ public extension Coding {
 
 public extension CodeableConcept {
     
-    class func sm_KneeLeftRangeOfMotion() -> CodeableConcept {
-        return sm_From(Coding.sm_KneeLeftRangeofMotion(), text: "Knee Left Active Range of Motion")
-    }
-    
-    class func sm_KneeRightRangeOfMotion() -> CodeableConcept {
-        return sm_From(Coding.sm_KneeRightRangeofMotion(), text: "Knee Right Active Range of Motion")
-    }
     
     
-    class func sm_KneeBothRangeOfMotion() -> CodeableConcept {
-        
-        let arr = Coding.sm_KneeLeftRangeofMotion() + Coding.sm_KneeRightRangeofMotion()
-        return sm_From(
-            arr, text: "Knee Both Active Range of Motion")
-    }
-    
-    class func sm_ShoulderBothRangeOfMotion() -> CodeableConcept {
-        let arr = Coding.sm_ShoulderLeftFlexionRangeOfMotion() + Coding.sm_ShoulderRightFlexionRangeOfMotion()
-        return sm_From(arr, text: "Shoulder Flexion Range of Motion")
-    }
-    
-    class func sm_ShoulderRightRangeOfMotion() -> CodeableConcept {
-        return sm_From(Coding.sm_ShoulderRightFlexionRangeOfMotion(), text: "Shoulder - Right Flexion Range of Motion")
-    }
-
-    class func sm_ShoulderLeftRangeOfMotion() -> CodeableConcept {
-        return sm_From(Coding.sm_ShoulderLeftFlexionRangeOfMotion(), text: "Shoulder - Left Flexion Range of Motion")
-    }
 
     class func sm_BodySiteKneeBoth() -> CodeableConcept {
         return sm_From(

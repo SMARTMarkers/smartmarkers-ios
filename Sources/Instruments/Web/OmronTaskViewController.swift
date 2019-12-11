@@ -109,7 +109,7 @@ open class OmronTaskViewController: ORKTaskViewController {
         
         let steps = [introStep, omronStep, success]
         
-        let task = ORKOrderedTask(identifier: "taskId", steps: steps)
+        let task = ORKOrderedTask(identifier: "omron-bloodpressure", steps: steps)
         
         super.init(task: task, taskRun: UUID())
         

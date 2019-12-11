@@ -30,8 +30,7 @@ public class FHIRManager {
         return main.server
     }
     
-    /// weak refernce to `OAuth2` to handle callbacks; Some `Instruments` might use this
-    public weak var oauthCallbacker: OAuth2?
+    public var callbackManager: CallbackManager?
     
     /// Context based on loggin in user; `NA` for unknown user type or open FHIR server
     public internal(set) var context: UserContext = .NA
@@ -64,12 +63,20 @@ public class FHIRManager {
     /// AssessementCenter.net API Credentials; Needed for PROMIS (computer adaptive tests)
     public var promis: PROMISClient?
     
+    public internal(set) var promisInstruments: [Questionnaire]?
+    
     /**
     Designated Initializer
     */
     public init(main client: SMART.Client, promis: PROMISClient? = nil) {
         self.main = client
         self.promis = promis
+        self.callbackManager = CallbackManager()
+        promis?.getInstruments(callback: { [weak self] (promisInstr, error) in
+            if let promisInstruments = promisInstr {
+                self?.promisInstruments = promisInstruments as? [Questionnaire]
+            }
+        })
     }
     
     
@@ -87,7 +94,9 @@ public class FHIRManager {
             if let idToken = self.mainServer.idToken, let decoded = self.base64UrlDecode(idToken) {
                 
                 guard let profile = decoded["profile"] as? String ?? decoded["fhirUser"] as? String else {
-                    callback(self.patient != nil, nil, nil)
+                    DispatchQueue.main.async {
+                        callback(self.patient != nil, nil, error)
+                    }
                     return
                 }
                 
@@ -99,7 +108,9 @@ public class FHIRManager {
                         if let practitioner = resource as? Practitioner {
                             self.userProfileSet = practitioner
                             self.context = .Practitioner
-                            callback(true, practitioner.name?.first?.human, nil)
+                            DispatchQueue.main.async {
+                                callback(true, practitioner.name?.first?.human, nil)
+                            }
                         }
                     })
                 }
@@ -114,17 +125,23 @@ public class FHIRManager {
                             if self.patient == nil || self.patient!.id != userPatient.id {
                                 self.patient = userPatient
                             }
-                            callback(self.patient != nil, userPatient.name?.first?.human, nil)
+                            DispatchQueue.main.async {
+                                callback(self.patient != nil, userPatient.name?.first?.human, nil)
+                            }
                         }
                     })
                 }
                 else {
                     self.context = .NA
-                    callback(self.patient != nil, nil, SMError.proserverUserNotPractitionerOrPatient(profileType: resourceType))
+                    DispatchQueue.main.async {
+                        callback(self.patient != nil, nil, SMError.proserverUserNotPractitionerOrPatient(profileType: resourceType))
+                    }
                 }
             }
             else {
-                callback(error == nil, nil, error)
+                DispatchQueue.main.async {
+                    callback(error == nil, nil, error)
+                }
             }
         })
     }
@@ -176,4 +193,37 @@ extension FHIRManager {
         }
         return nil
     }
+}
+
+
+class WeakWebInstrument {
+    
+    private(set) weak var value: WebInstrument?
+    
+    init(_ value: WebInstrument) {
+        self.value = value
+    }
+}
+
+public class CallbackManager{
+    
+    private(set) var instruments = [WeakWebInstrument]()
+
+    init() {
+        
+    }
+    
+    
+    public func handleRedirect(url: URL) {
+        
+        for webInstrument in instruments {
+            try? webInstrument.value?.handleRedirectURL(redirectURL: url)
+        }
+    }
+    
+    func register(_ webInstrument: WebInstrument) {
+        instruments.append(WeakWebInstrument(webInstrument))
+    }
+    
+    
 }

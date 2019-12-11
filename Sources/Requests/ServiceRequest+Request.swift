@@ -20,6 +20,10 @@ extension ServiceRequest: Request {
         return code?.text?.string ?? code?.coding?.first?.display?.string ?? category?.first?.text?.string ?? "REQ #\(self.id!.string)"
     }
     
+    public var rq_code: Coding? {
+        return code?.coding?.first
+    }
+    
     public var rq_requesterName: String? {
         
         if let practitioner = requester?.resolved(Practitioner.self) {
@@ -87,18 +91,22 @@ extension ServiceRequest: Request {
                 callback(true)
             })
         }
-            
-        else if ref.contains("Device/") {
-            requester!.resolve(Device.self, callback: { (_ ) in
-                callback(true)
-            })
-        }
         
         else {
             callback(true)
         }
         
     }
+    
+    public var rq_instrumentMetadataQuestionnaireReferenceURL: URL? {
+        if let urlString = extensions(forURI: kSD_QuestionnaireRequest)?.first?.valueReference?.reference?.string {
+            return URL(string: urlString)
+        }
+        return nil
+    }
+    
+ 
+    
 
     
     public func rq_resolveInstrument(callback: @escaping ((Instrument?, Error?) -> Void)) {
@@ -113,7 +121,9 @@ extension ServiceRequest: Request {
                 }
             })
         }
-        else if let coding = ep_coding(for: "http://researchkit.org"), let code = coding.code?.string {
+        else if let coding = sm_coding(for: "http://researchkit.org"), let code = coding.code?.string {
+            
+
             
             if let instr = Instruments.ActiveTasks(rawValue: code)?.instance {
                 callback(instr, nil)
@@ -123,6 +133,8 @@ extension ServiceRequest: Request {
             }
         }
         else {
+            
+
             callback(nil, SMError.promeasureOrderedInstrumentMissing)
         }
     }
@@ -208,29 +220,8 @@ extension ServiceRequest {
             return TaskSchedule(occuranceTiming: repeating)
         }
         
-//        if let (start, end, freqValue, freqPeriodUnit, numberOfFreqPeriods) = period_frequency {
-//            let period = TaskSchedule.Period(start, end, Calendar.current)
-//            let frequency = TaskSchedule.Frequency(times: freqValue, periodType: freqPeriodUnit, numberOfPeriods: numberOfFreqPeriods)
-//            return TaskSchedule(period: period, frequency: frequency)
-//        }
-        
         return nil
         
     }
-    
-    var period_frequency : (start: Date, end:Date, freqValue:Int, freqPeriodUnit: String, numberOfFreqPeriods: Decimal)? {
-        
-        guard let timing = self.occurrenceTiming else {
-            return nil
-        }
-        let start = timing.repeat_fhir!.boundsPeriod!.start!.nsDate
-        let end = timing.repeat_fhir!.boundsPeriod!.end!.nsDate
-        let freqPeriodUnit = timing.repeat_fhir!.periodUnit!.string
-        let numberOfFreqPeriods = timing.repeat_fhir!.period!.decimal
-        let freqValue = timing.repeat_fhir!.frequency!.int
-        return (start, end, freqValue, freqPeriodUnit, numberOfFreqPeriods)
-    }
-    
-   
     
 }

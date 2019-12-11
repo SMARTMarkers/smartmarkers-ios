@@ -44,7 +44,7 @@ extension Appointment {
 
 extension ServiceRequest {
 	
-    public func ep_coding(for system: String) -> Coding? {
+    public func sm_coding(for system: String) -> Coding? {
         
         if let codeConcept = code {
             return codeConcept.sm_coding(for: system)
@@ -174,6 +174,13 @@ extension SMART.Coding {
         guard let code = code else { return nil }
         return system != nil ? "\(system!.absoluteString)|\(code.string)" : code.string
     }
+    
+    func sm_DisplayRepresentation() -> String? {
+        
+        guard let code = code else { return nil }
+        return display?.string ?? (system != nil ? "\(system!.absoluteString): \(code.string)" : code.string)
+    }
+    
     
     
 }

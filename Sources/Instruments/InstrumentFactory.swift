@@ -141,10 +141,10 @@ public enum Instruments {
         
         case OmronBloodPressure             = "omronBloodPressure"
         
-        public func instance(authSettings: [String: Any], callbackHandler: inout OAuth2?) -> Instrument {
+        public func instance(authSettings: [String: Any], callbackManager: inout CallbackManager) -> Instrument {
             switch self {
             case .OmronBloodPressure:
-                return OMRON(authSettings: authSettings, callbackHandler: &callbackHandler)
+                return OMRON(authSettings: authSettings, callbackManager: &callbackManager)
             }
         }
         

@@ -58,6 +58,19 @@ public protocol Instrument : class {
     
 }
 
+
+/**
+ Instruments with OAuth2
+ 
+ Certain Instrument require logging into their connected Web Repositories, Such instruments have to comply with `WebInstrument` Protocol
+ */
+
+public protocol WebInstrument: class {
+
+    func handleRedirectURL(redirectURL: URL) throws
+    
+}
+
 /// Convenience Extension to fetch a set of `Instruments` from the `Server`
 public extension Instrument where Self: SMART.DomainResource {
     
@@ -77,6 +90,16 @@ public extension Instrument where Self: SMART.DomainResource {
     
 }
 
+public extension Instrument {
+    
+    func introductionAndConclusionSteps() -> (intro: ORKStep, completed: ORKStep) {
+        let introduction = ORKInstructionStep(identifier: "instrument_introduction", _title: sm_title, _detailText: sm_publisher)
+        let completion = ORKCompletionStep(identifier: "instrument_completion")
+        return (introduction, completion)
+    }
+    
+}
+
 
 /// ViewController for an Instrument
 open class InstrumentViewController: UITableViewController {
@@ -88,6 +111,7 @@ open class InstrumentViewController: UITableViewController {
             ("Title",       instrument.sm_title),
             ("Identifier",  instrument.sm_identifier ?? "-NA-"),
             ("Type",        instrument.sm_type?.rawValue ?? "-NA-"),
+            ("Code",        instrument.sm_code?.sm_DisplayRepresentation() ?? "-NA-"),
             ("Version",     instrument.sm_version ?? "-NA-"),
             ("Publisher",   instrument.sm_publisher ?? "-NA-")
         ]

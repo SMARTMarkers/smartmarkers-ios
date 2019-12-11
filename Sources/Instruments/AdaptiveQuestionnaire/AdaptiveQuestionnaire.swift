@@ -12,7 +12,7 @@ import SMART
 
 extension Questionnaire {
     
-    public func next_q2(server: FHIRServer, answer: QuestionnaireResponseItem?, forQuestionnaireItemLinkId: String?, options: FHIRRequestOption, for currResponse: QuestionnaireResponse? = nil,callback: @escaping (_ resource: QuestionnaireResponse?, _ error: Error?) -> Void) {
+    public func next_q(server: FHIRServer, answer: QuestionnaireResponseItem?, forQuestionnaireItemLinkId: String?, options: FHIRRequestOption, for currResponse: QuestionnaireResponse? = nil,callback: @escaping (_ resource: QuestionnaireResponse?, _ error: Error?) -> Void) {
         
         let response = currResponse ?? self.ResponseBody(responseIdentifier: UUID().uuidString)
         

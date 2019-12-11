@@ -230,13 +230,13 @@ import UIKit
             addEntries()
         }
     }
-    public var thresholds : [Double]? = nil //[90.0, 80.0, 70.0 ,60.0 ,50.0 ,40.0 ,30.0 ,20.0, 10.0]
+    public var thresholds : [Double]? = [90.0, 80.0, 70.0 ,60.0 ,50.0 ,40.0 ,30.0 ,20.0, 10.0]
     
     public func addEntries() {
 
         mainLayer.sublayers?.forEach{ $0.removeFromSuperlayer() }
         
-        if let dataEntries = dataEntries {
+        if let dataEntries = dataEntries, dataEntries.count > 0 {
             let count = dataEntries.count
             let contentSize = CGSize(width: (Constants.circleDiameter + Constants.interSegmentLength) * CGFloat(count), height: scrollView.frame.size.height)
             scrollView.contentSize = contentSize
@@ -251,6 +251,7 @@ import UIKit
     
     
     func addEntry() {
+        
         
         let maxValue = thresholds?.max() ?? dataEntries!.filter { $0.rp_observation != nil }.map { Double($0.rp_observation!)! }.max()!
         let margins = Constants.bottomBorder + Constants.topBorder

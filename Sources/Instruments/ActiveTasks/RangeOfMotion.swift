@@ -59,22 +59,36 @@ open class KneeRangeOfMotion: Instrument {
                 return nil
             }
             
-            let observation = Observation.sm_RangeOfMotion(flexed: motionResult.flexed, extended: motionResult.extended, date: motionResult.endDate)
             
-            if limbOption == .both {
-                
-                observation.bodySite = CodeableConcept.sm_BodySiteShoulderBoth()
-                observation.code = CodeableConcept.sm_ShoulderBothRangeOfMotion()
+            let observation = Observation()
+            observation.effectiveDateTime = motionResult.endDate.fhir_asDateTime()
+            observation.status = .final
+            let leftLimb = limbOption == .left
+            
+            let flexedComponent = ObservationComponent()
+            flexedComponent.valueQuantity = Quantity.sm_Angle(motionResult.flexed)
+            let extendedComponent = ObservationComponent()
+            extendedComponent.valueQuantity = Quantity.sm_Angle(motionResult.extended)
+            if leftLimb {
+                flexedComponent.code = Coding.sm_KneeLeftFlexedRangeofMotionQuantitative().sm_asCodeableConcept()
+                extendedComponent.code = Coding.sm_KneeLeftExtendedRangeofMotionQuantitative().sm_asCodeableConcept()
+                observation.bodySite = CodeableConcept.sm_BodySiteKneeLeft()
+
             }
-                
-            else if limbOption == .left {
-                observation.bodySite = CodeableConcept.sm_BodySiteShoulderLeft()
-                observation.code = CodeableConcept.sm_ShoulderLeftRangeOfMotion()
+            else {
+                flexedComponent.code = Coding.sm_KneeRightFlexedRangeofMotionQuantitative().sm_asCodeableConcept()
+                extendedComponent.code = Coding.sm_KneeRightExtendedRangeofMotionQuantitative().sm_asCodeableConcept()
+                observation.bodySite = CodeableConcept.sm_BodySiteKneeRight()
             }
-            else if limbOption == .right {
-                observation.bodySite = CodeableConcept.sm_BodySiteShoulderRight()
-                observation.code = CodeableConcept.sm_ShoulderRightRangeOfMotion()
-            }
+            
+            observation.component = [flexedComponent, extendedComponent]
+            observation.code = CodeableConcept.sm_From(
+                [
+                    Coding.sm_ActiveRangeOfMotionPanel(),
+                    sm_code!,
+                    extendedComponent.code!.coding!.first!
+                ]
+                , text: "Knee Range of Motion")
             
             return SMART.Bundle.sm_with([observation])
         }
@@ -131,22 +145,36 @@ open class ShoulderRangeOfMotion: Instrument {
                 return nil
             }
 
-            let observation = Observation.sm_RangeOfMotion(flexed: motionResult.flexed, extended: motionResult.extended, date: motionResult.endDate)
+            let observation = Observation()
+            observation.effectiveDateTime = motionResult.endDate.fhir_asDateTime()
+            observation.status = .final
+            let leftLimb = limbOption == .left
             
-            if limbOption == .both {
-                
-                observation.bodySite = CodeableConcept.sm_BodySiteShoulderBoth()
-                observation.code = CodeableConcept.sm_ShoulderBothRangeOfMotion()
-            }
-                
-            else if limbOption == .left {
+            let flexedComponent = ObservationComponent()
+            flexedComponent.valueQuantity = Quantity.sm_Angle(motionResult.flexed)
+            let extendedComponent = ObservationComponent()
+            extendedComponent.valueQuantity = Quantity.sm_Angle(motionResult.extended)
+            if leftLimb {
+                flexedComponent.code = Coding.sm_ShoulderLeftFlexionRangeOfMotionQuantitative().sm_asCodeableConcept()
+                extendedComponent.code = Coding.sm_ShoulderLeftExtensionRangeOfMotionQuantitative().sm_asCodeableConcept()
                 observation.bodySite = CodeableConcept.sm_BodySiteShoulderLeft()
-                observation.code = CodeableConcept.sm_ShoulderLeftRangeOfMotion()
             }
-            else if limbOption == .right {
-                observation.bodySite = CodeableConcept  .sm_BodySiteShoulderRight()
-                observation.code = CodeableConcept.sm_ShoulderRightRangeOfMotion()
+            else {
+                flexedComponent.code = Coding.sm_ShoulderRightFlexionRangeOfMotionQuantitative().sm_asCodeableConcept()
+                extendedComponent.code = Coding.sm_ShoulderRightFlexionRangeOfMotionQuantitative().sm_asCodeableConcept()
+                observation.bodySite = CodeableConcept.sm_BodySiteShoulderRight()
             }
+            
+            observation.component = [flexedComponent, extendedComponent]
+            observation.code = CodeableConcept.sm_From(
+                [
+                    Coding.sm_ActiveRangeOfMotionPanel(),
+                    sm_code!,
+                    flexedComponent.code!.coding!.first!
+                ]
+                , text: "Shoulder Range of Motion")
+          
+            
             
             return SMART.Bundle.sm_with([observation])
             

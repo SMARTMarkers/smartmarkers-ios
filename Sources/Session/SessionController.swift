@@ -111,7 +111,7 @@ open class SessionController: NSObject {
         group.notify(queue: .main) {
             if viewControllers.count > 0 {
                 
-                // SubmissionTask
+                // SubmissionTask Module appended when a server and patient is found
                 if let _ = self.patient, let _ = self.server {
                     let submissionTask = SubmissionTaskController(self)
                     viewControllers.append(submissionTask)
@@ -135,6 +135,7 @@ open class SessionController: NSObject {
         }
         
         let container = SessionViewController(views: views, reversed: true, verifyUser: verifyUser, session: self)
+        container.modalPresentationStyle = .fullScreen
 
         return container
     }

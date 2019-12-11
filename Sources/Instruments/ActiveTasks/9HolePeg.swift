@@ -46,7 +46,7 @@ open class NineHolePegTest: Instrument {
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let tsk = ORKNavigableOrderedTask.holePegTest(withIdentifier: sm_identifier!, intendedUseDescription: nil, dominantHand: .left, numberOfPegs: 1, threshold: 0.2, rotated: false, timeLimit: 300, options: [])
+        let tsk = ORKNavigableOrderedTask.holePegTest(withIdentifier: sm_identifier!, intendedUseDescription: nil, dominantHand: .left, numberOfPegs: 9, threshold: 0.2, rotated: false, timeLimit: 300, options: [])
         let tvc = ORKTaskViewController(task: tsk, taskRun: UUID())
         callback(tvc, nil)
     }
@@ -77,13 +77,6 @@ open class NineHolePegTest: Instrument {
         if totalTime == 0.0 {
             return nil
         }
-        
-        
-        print(totalTime)
-        print(totalFailures)
-        print(totalSuccesses)
-        print(totalDistance)
-        print(csvString)
         
         let observation = Observation.sm_pegHoleTest(totalTime: totalTime, totalDistance: totalDistance, success: totalSuccesses, failures: totalFailures, effective: datetime)
         let code = sm_code!

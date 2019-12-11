@@ -10,10 +10,10 @@ import Foundation
 import ResearchKit
 import SMART
 
-open class OMRON: Instrument {
+open class OMRON: Instrument, WebInstrument {
     
-    final var auth: OAuth2!
-    
+    final var auth: OAuth2
+
     var usageDescription: String?
     
     public var sm_title: String
@@ -30,7 +30,7 @@ open class OMRON: Instrument {
     
     public var sm_reportSearchOptions: [FHIRReportOptions]?
     
-    public init(authSettings: [String:Any], usageDescription: String? = nil, callbackHandler: inout OAuth2?) {
+    public init(authSettings: [String:Any], usageDescription: String? = nil, callbackManager: inout CallbackManager) {
 
         self.auth = OAuth2CodeGrant(settings: authSettings)
         self.auth.forgetTokens()
@@ -42,8 +42,13 @@ open class OMRON: Instrument {
         self.sm_reportSearchOptions = [
             FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])
         ]
-        callbackHandler = self.auth
+        callbackManager.register(self)
         
+    }
+    
+    
+    public func handleRedirectURL(redirectURL: URL) throws {
+        try auth.handleRedirectURL(redirectURL)
     }
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

@@ -68,7 +68,11 @@ open class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask {
         self.steps.forEach({ (step) in
             step.task = self
         })
-        setStepModifier(AdaptiveConclusionStepModifier(), forStepIdentifier: Step.Conclusion.rawValue)
+         modifyConclusionStep(stepIdentifier: Step.Conclusion.rawValue)
+    }
+    
+    open func modifyConclusionStep(stepIdentifier: String) {
+        setStepModifier(AdaptiveConclusionStepModifier(), forStepIdentifier: stepIdentifier)
     }
     
     public required init(coder aDecoder: NSCoder) {
@@ -92,6 +96,7 @@ open class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask {
         guard let stepResult = result.stepResult(forStepIdentifier: sourceStep.identifier) else {
             return super.step(after: step, with: result)
         }
+        
         // Yes; there are too many `guard` statements here!
 
         let responseItem = stepResult.responseItems(for: adaptiveQuestionnaire, task: self)?.first
@@ -105,7 +110,7 @@ open class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask {
         }
         
         let semaphore = DispatchSemaphore(value: 0)
-        adaptiveQuestionnaire.next_q2(server: adaptiveServer!, answer: responseItem, forQuestionnaireItemLinkId: sourceStep.identifier, options: [.lenient], for: currentResponse) { [weak self] (new_qresponse, error) in
+        adaptiveQuestionnaire.next_q(server: adaptiveServer!, answer: responseItem, forQuestionnaireItemLinkId: sourceStep.identifier, options: [.lenient], for: currentResponse) { [weak self] (new_qresponse, error) in
             if let new = new_qresponse {
                 self?.answers.append(new)
                 if new.status == .completed {
@@ -136,10 +141,10 @@ open class AdaptiveQuestionnaireTask: ORKNavigableOrderedTask {
             if let theta = theta, let deviation = deviation {
                 let tscore = String(round((Double(theta.decimal.description)! * 10) + 50.0))
                 let standardError =  String(round(Double(deviation.decimal.description)! * 10))
-                return """
-                T-Score: \(tscore)
-                StdErr:  \(standardError)
-                """
+                return  """
+                        T-Score: \(tscore)
+                        StdErr:  \(standardError)
+                        """
             }
         }
         return nil

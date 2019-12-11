@@ -18,7 +18,7 @@ Optional instrument resolving delegate for `TaskController`. Delegates can const
 public protocol InstrumentResolver: class {
    
     /// Called when trying to resolve the `Instrument` referenced in `Request` from the `TaskController`
-    func resolveInstrument(in controller: TaskController) -> Instrument?
+    func resolveInstrument(in controller: TaskController, callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
     
 }
 
@@ -108,12 +108,24 @@ public final class TaskController: NSObject {
             return
         }
         
-        if let resolver = instrumentResolver, let instr = resolver.resolveInstrument(in: self) {
-            callback(instr, nil)
-            return
+        
+        if let resolver = instrumentResolver {
+            
+            resolver.resolveInstrument(in: self) { [weak self] (instrument, error) in
+                if let instr = instrument {
+                    callback(instr, nil)
+                }
+                else {
+                    self?.request?.rq_resolveInstrument(callback: callback)
+                }
+            }
+        }
+        
+        else {
+            request?.rq_resolveInstrument(callback: callback)
         }
 
-        request?.rq_resolveInstrument(callback: callback)
+
     }
    
     /// Method to update status and the request if necessary

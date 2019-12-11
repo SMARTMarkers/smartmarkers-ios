@@ -103,6 +103,7 @@ open class InstrumentListViewController :  UITableViewController {
         if let onSelection = onSelection {
             if selections.count > 0, let instruments = _instruments {
                 let questionnaires = instruments.filter { selections.contains($0.sm_identifier!) }
+                selections.removeAll()
                 onSelection(questionnaires)
             } else {
                 onSelection(nil)

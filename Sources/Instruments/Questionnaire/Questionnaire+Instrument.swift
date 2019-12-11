@@ -86,9 +86,10 @@ extension SMART.Questionnaire: Instrument {
     
         sm_genereteSteps { (steps, rulestupples, error) in
             
-            if let steps = steps {
+            if var steps = steps {
                 let uuid = UUID()
                 let taskIdentifier = uuid.uuidString
+     
                 
                 /*
                  TODO
@@ -105,6 +106,9 @@ extension SMART.Questionnaire: Instrument {
 
                 }
                 else {
+                    let (introStep, completedStep) = self.introductionAndConclusionSteps()
+                    steps.insert(introStep, at: 0)
+                    steps.append(completedStep)
                     let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
                     rulestupples?.forEach({ (rule, linkId) in
                         task.setSkip(rule, forStepIdentifier: linkId)
@@ -126,8 +130,8 @@ extension SMART.Questionnaire: Instrument {
         // Should be determined from the Questionnaire.
         // For now: lets check if task is Adaptive.
         // Fall back would be to go as usual, derive QR from `ORKTaskResult`
-        if let task = task as? AdaptiveQuestionnaireTask, let qr = task.currentResponse {
-            return SMART.Bundle.sm_with([qr])
+        if let task = task as? AdaptiveQuestionnaireTask, let questionnaireResponse = task.currentResponse {
+            return SMART.Bundle.sm_with([questionnaireResponse])
         }
         
         guard let taskResults = result.results as? [ORKStepResult] else {

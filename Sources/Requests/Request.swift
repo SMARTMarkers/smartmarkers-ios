@@ -25,6 +25,9 @@ public protocol Request:  DomainResource {
     /// Person requesting the PRO
     var rq_requesterName: String? { get }
     
+    /// Requested activity code
+    var rq_code: Coding? { get }
+    
     /// Entity requesting the PRO
     var rq_requesterEntity: String? { get }
     
@@ -39,7 +42,10 @@ public protocol Request:  DomainResource {
 
     /// Fetch Parameters
     static var rq_fetchParameters: [String: String]? { get }
-    
+
+    /// Embedded Questionnaire URL
+    var rq_instrumentMetadataQuestionnaireReferenceURL: URL? { get }
+
     /// Notifies request has been updated
     func rq_updated(_ completed: Bool, callback: @escaping ((_ success: Bool) -> Void))
     
@@ -65,8 +71,8 @@ public extension Request {
 public extension Request {
     
     static func rq_create() -> Self? {
+        //TODO: Swift 5.1 should replace this!
         return ServiceRequest() as? Self
-        //TODO: Make `Self.init()` "required" for metatype initialization
     }
     
     static func PGHDRequests(from server: Server, for patient: Patient?, options: [String:String]?, callback: @escaping ((_ requestResources: [Self]?, _ error: Error?) -> Void)) {
