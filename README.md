@@ -18,7 +18,7 @@ Getting Started
 
 [➔ Installation](Installation.md)  
 [➔ EASIPRO Clinic App](https://github.com/SMARTMarkers/easipro-clinic-pghd-ios)  
-[➔ EASIPRO Patient App](#) (soon..)
+[➔ EASIPRO Patient App](https://github.com/SMARTMarkers/easipro-patient-ios)
 
 
 Protocols and  Modules
@@ -71,7 +71,7 @@ request?.rq_resolveInstrument(callback: { (instrument, error) in
 // Or.. Instantiate an Instrument locally
 
 // FHIR Questionnaire resource:
-let questionnaire = Questionnaire()
+let questionnaire = Questionnaire() // initialized already
 
 // StepCount  
 let stepCount = Instruments.HealthKit.StepCount.instance
@@ -80,7 +80,8 @@ let stepCount = Instruments.HealthKit.StepCount.instance
 let amslerGrid = Instruments.ActiveTasks.AmslerGrid.instance
 
 // Omron requires its OAuth2 credentials and a callback handler
-let omron = Instruments.Web.Omron(authSettings: [:], &callbackHandler: nil) 
+// a `CallbackManager` class can optionally handle incoming redirect calls after authorization
+let omron = Instruments.Web.Omron(authSettings: [:], callbackManager: CallbackManager()) 
 
 // intiating a data generating task session
 instrument.sm_taskController { (taskViewController, error) in
