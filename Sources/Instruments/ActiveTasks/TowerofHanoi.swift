@@ -31,7 +31,7 @@ open class TowerOfHanoi: Instrument {
     
     public var usageDescription: String?
     
-    public init(_ numberOfDisks: UInt = 0, usageDescription: String? = nil) {
+    public init(_ numberOfDisks: UInt = 3, usageDescription: String? = nil) {
         
         self.numberOfDisks = numberOfDisks
         self.sm_title = "Tower of Hanoi"

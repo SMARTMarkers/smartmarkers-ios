@@ -13,11 +13,11 @@ import ResearchKit
 
 open class NineHolePegTest: Instrument {
 
-    static let stepIdentifiers      = [
-        ORKHolePegTestDominantPlaceStepIdentifier,
-        ORKHolePegTestDominantRemoveStepIdentifier,
-        ORKHolePegTestNonDominantPlaceStepIdentifier,
-        ORKHolePegTestNonDominantRemoveStepIdentifier
+    static let resultStepIdentifiers      = [
+        "hole.peg.test.dominant.place",
+        "hole.peg.test.dominant.remove",
+        "hole.peg.test.non.dominant.place",
+        "hole.peg.test.non.dominant.remove"
     ]
     
     public var sm_title: String
@@ -61,7 +61,7 @@ open class NineHolePegTest: Instrument {
         var totalDistance  = 0.0
         var csvString      = ""
         
-        for stpId in NineHolePegTest.stepIdentifiers {
+        for stpId in NineHolePegTest.resultStepIdentifiers {
             
             let nonDominant    = stpId.hasPrefix("hole.peg.test.non.dominant") ? "NonDominant" : "Dominant"
             let move           = stpId.hasSuffix("place") ? "place" : "remove"
@@ -181,7 +181,8 @@ extension DocumentReference {
         documentReference.type = concept
         documentReference.date = instant
         documentReference.category = [
-            CodeableConcept.sm_From([Coding.sm_Coding("53576-5", "http://loinc.org", "Personal health monitoring report Document")], text: "Personal health monitoring report Document")
+            CodeableConcept.sm_From([Coding.sm_Coding("53576-5", "http://loinc.org", "Personal health monitoring report Document")],
+                                    text: "Personal health monitoring report Document")
         ]
         return documentReference
     }
