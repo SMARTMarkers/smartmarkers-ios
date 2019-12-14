@@ -113,7 +113,7 @@ extension SMART.Questionnaire: Instrument {
                     rulestupples?.forEach({ (rule, linkId) in
                         task.setSkip(rule, forStepIdentifier: linkId)
                     })
-                    let taskViewController = ORKTaskViewController(task: task, taskRun: uuid)
+                    let taskViewController = InstrumentTaskViewController(task: task, taskRun: uuid)
                     callback(taskViewController, nil)
                 }
             }

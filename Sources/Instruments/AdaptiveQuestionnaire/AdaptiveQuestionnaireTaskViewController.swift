@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-open class AdaptiveQuestionnaireTaskViewController: ORKTaskViewController {
+open class AdaptiveQuestionnaireTaskViewController: InstrumentTaskViewController {
     
     public var adaptiveServer: FHIRServer? {
         didSet {

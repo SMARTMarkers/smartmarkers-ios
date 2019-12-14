@@ -149,7 +149,7 @@ open class ActivityFetchStepController: ORKWaitStepViewController {
     }
 }
 
-open class ActivityTaskViewController: ORKTaskViewController {
+open class ActivityTaskViewController: InstrumentTaskViewController {
     
     public init(activity: Activity) {
         let task = ActivityReportTask(activity: activity)

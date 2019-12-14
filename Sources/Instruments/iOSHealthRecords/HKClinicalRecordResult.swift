@@ -17,9 +17,6 @@ class HKClinicalRecordResult: ORKResult {
     required convenience init(clinicalType: HKClinicalType, records: [HKClinicalRecord]) {
         self.init(identifier: clinicalType.identifier)
         self.clinicalRecords = records
-        for c in  self.clinicalRecords ?? [] {
-            print(c)
-        }
     }
     
     override func encode(with aCoder: NSCoder) {

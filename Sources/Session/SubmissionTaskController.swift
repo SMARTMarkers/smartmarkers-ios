@@ -20,7 +20,7 @@ let kSM_Submission_Aborted      = "smartmarkers.submission.aborted"
 let kSM_Submission_Result       = "smartmarkers.submission.result"
 
 
-open class SubmissionTaskController: ORKTaskViewController {
+open class SubmissionTaskController: InstrumentTaskViewController {
     
     public init(_ session: SessionController,  requiresConsent: Bool = false) {
         

@@ -96,7 +96,7 @@ open class OmronStepViewController: WebFetchStepViewController {
     }
 }
 
-open class OmronTaskViewController: ORKTaskViewController {
+open class OmronTaskViewController: InstrumentTaskViewController {
     
     
     public init(auth: OAuth2) {

@@ -25,8 +25,8 @@ extension Observation : Report {
     
     public var rp_title: String? {
         
-        if let code = rp_code {
-            return code.display?.string ?? "Code: \(code.code!.string)"
+        if let code = code {
+            return code.text?.string ?? rp_code!.display?.string ?? "Code: \(rp_code!.code!.string)"
         }
         
         return "Observation: #\(self.id?.string ?? "-")"

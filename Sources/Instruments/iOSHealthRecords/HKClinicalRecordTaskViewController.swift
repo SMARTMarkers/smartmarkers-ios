@@ -17,7 +17,7 @@ let ksm_step_submission         = "smartmarkers.step.healthkit.submission"
 let ksm_step_completion         = "smartmarkers.step.healthkit.completion"
 
 @available(iOS 12.0, *)
-open class HKClinicalRecordTaskViewController: ORKTaskViewController {
+open class HKClinicalRecordTaskViewController: InstrumentTaskViewController {
     
     public convenience init() {
         

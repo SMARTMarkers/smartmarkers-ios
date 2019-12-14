@@ -32,7 +32,6 @@ extension HKFHIRResource {
         
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: []) as! FHIRJSON
-            print(json)
             let resource = self.resourceType.as_FHIRResource()
             try resource.sm_populate(from: json, source: sourceURL)
             return resource as! T
@@ -162,7 +161,6 @@ extension Condition {
     func sm__populate(from dstu2: FHIRJSON, source: URL?) throws {
         var ctx = FHIRInstantiationContext()
         populate(from: dstu2, context: &ctx)
-        print(ctx.errors)
         
         do {
             if let cat = dstu2["category"] as? FHIRJSON {
@@ -260,7 +258,6 @@ extension Observation {
             
         }
         catch {
-            print(error)
             throw error
         }
     }

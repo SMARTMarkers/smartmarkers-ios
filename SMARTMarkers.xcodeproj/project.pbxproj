@@ -32,6 +32,7 @@
 		D43C71BE226909050008FF27 /* TowerofHanoi.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BD226909050008FF27 /* TowerofHanoi.swift */; };
 		D43C71C02269FDF50008FF27 /* StroopTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BF2269FDF50008FF27 /* StroopTest.swift */; };
 		D43C71C2226A348C0008FF27 /* TappingSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71C1226A348C0008FF27 /* TappingSpeed.swift */; };
+		D4491B0323A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4491B0223A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift */; };
 		D44BD43E20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */; };
 		D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45790F822386FA0001E4E8D /* OmronTaskViewController.swift */; };
 		D4618A44205ED820004E117F /* MiniPatientVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4618A43205ED820004E117F /* MiniPatientVerificationController.swift */; };
@@ -135,6 +136,7 @@
 		D43C71BD226909050008FF27 /* TowerofHanoi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TowerofHanoi.swift; sourceTree = "<group>"; };
 		D43C71BF2269FDF50008FF27 /* StroopTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StroopTest.swift; sourceTree = "<group>"; };
 		D43C71C1226A348C0008FF27 /* TappingSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappingSpeed.swift; sourceTree = "<group>"; };
+		D4491B0223A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentTaskViewController.swift; sourceTree = "<group>"; };
 		D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuestionnaireResponse+ResearchKit.swift"; sourceTree = "<group>"; };
 		D45790F822386FA0001E4E8D /* OmronTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OmronTaskViewController.swift; sourceTree = "<group>"; };
 		D4618A43205ED820004E117F /* MiniPatientVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPatientVerificationController.swift; sourceTree = "<group>"; };
@@ -363,6 +365,7 @@
 				D4E75D7D20361EB5000CE95A /* InstrumentListViewController.swift */,
 				D4B964E12229A74300F46177 /* Instrument.swift */,
 				D4DFD995223C2EB40097B958 /* InstrumentFactory.swift */,
+				D4491B0223A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift */,
 				D436B1D520EBF89E00CAF2F5 /* Questionnaire */,
 				D482BA6121C953AE00840D2E /* AdaptiveQuestionnaire */,
 				D48BBB5022D6443400FF4023 /* PROMIS */,
@@ -688,6 +691,7 @@
 				D42605CE209364FE00853609 /* RoundedButton.swift in Sources */,
 				D4C69A5F234F9959006C6520 /* StepCountInstrument.swift in Sources */,
 				D470167F2386F57300512B9A /* ActiveTaskListViewController.swift in Sources */,
+				D4491B0323A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift in Sources */,
 				D4DFD99E224125A60097B958 /* HKClinicalRecordStep.swift in Sources */,
 				D4DFD991223AEE0D0097B958 /* BloodPressureObservation.swift in Sources */,
 				D4DC5B09231FFA78001878B4 /* QuestionnaireResponse+Report.swift in Sources */,
