@@ -23,13 +23,19 @@ import UIKit
         static let attributes = [NSAttributedString.Key.foregroundColor: UIColor.white,
                                  NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10)]
 	}
-	@IBInspectable var startColor: 	UIColor = UIColor(red: 1, green:  0.493272, blue: 0.473998, alpha: 1)
-	@IBInspectable var endColor: 	UIColor = UIColor(red: 1, green:  0.57810, blue: 0, alpha: 1)
-	@IBInspectable var strokeColor: UIColor = .white
-	
-	public var thresholds : [Double] = []
-	public var title : String?
-    public var subtitle: String?
+	@IBInspectable public var startColor: UIColor = UIColor(red: 1, green:  0.493272, blue: 0.473998, alpha: 1)
+	@IBInspectable public var endColor: UIColor = UIColor(red: 1, green:  0.57810, blue: 0, alpha: 1)
+	@IBInspectable public var strokeColor: UIColor = .white
+    @IBInspectable var titleFont: UIFont = UIFont.boldSystemFont(ofSize: 15)
+    @IBInspectable var subTitleFont: UIFont = UIFont.systemFont(ofSize: 12)
+    @IBInspectable public var title : String? = "Title"
+    @IBInspectable public var subtitle: String? = "subtitle"
+    @IBInspectable public var drawThresholds: Bool = false
+
+
+	public var thresholds: [Double]?
+    
+    var _thresholds: [Double] = []
     
 	public var graphPoints: [Double] = [] {
 		didSet {
@@ -46,6 +52,15 @@ import UIKit
 	required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
+    func calculateThresholds() -> [Double]? {
+        let max = graphPoints.max()
+        let min = graphPoints.min()
+        if max == nil || min == nil {
+            return nil
+        }
+        return [max!, min!]
+    }
 	
 	
 	
@@ -53,7 +68,7 @@ import UIKit
 	override public func draw(_ rect: CGRect) {
 		
 
-		thresholds = [90,80,70,60,50,40,30,20,10]
+		_thresholds = thresholds ?? calculateThresholds() ?? [90,80,70,60,50,40,30,20,10]
 		
 		let width = rect.width
 		let height = rect.height
@@ -78,6 +93,26 @@ import UIKit
 								   start: startPoint,
 								   end: endPoint,
 								   options: CGGradientDrawingOptions(rawValue: 0))
+        
+        var mastHeight: CGFloat = 0.0
+        if let title = title {
+            let titlePoint = CGPoint(x: Constants.margin, y: 10)
+            (title as NSString).draw(at: titlePoint, withAttributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                NSAttributedString.Key.font: titleFont
+            ])
+            mastHeight = title.heightWithConstrainedWidth(width: 300, font: titleFont) + 10
+        }
+        
+        if let subTitle = subtitle {
+            let titlePoint = CGPoint(x: Constants.margin, y: mastHeight)
+            (subTitle as NSString).draw(at: titlePoint, withAttributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                NSAttributedString.Key.font: subTitleFont
+            ])
+            mastHeight += subTitle.heightWithConstrainedWidth(width: 300, font: subTitleFont) + 15
+
+        }
 		
 		let margin = Constants.margin
 		let columnXPoint = { (column:Int) -> CGFloat in
@@ -87,10 +122,10 @@ import UIKit
 			return x
 		}
 		
-		let topBorder: CGFloat = Constants.topBorder
+		let topBorder: CGFloat = mastHeight
 		let bottomBorder: CGFloat = Constants.bottomBorder
 		let graphHeight = height - topBorder - bottomBorder
-		let maxValue = thresholds.max()!
+		let maxValue = _thresholds.max()!
 		let columnYPoint = { (graphPoint:Double) -> CGFloat in
 			var y:CGFloat = CGFloat(graphPoint) / CGFloat(maxValue) * graphHeight
 			y = graphHeight + topBorder - y
@@ -121,10 +156,10 @@ import UIKit
 			let highestYPoint = columnYPoint(maxValue)
 			startPoint = CGPoint(x:margin, y: highestYPoint)
 			endPoint = CGPoint(x:margin, y: bounds.height)
-            let gradient2 = CGGradient(colorsSpace: colorSpace,
-                                       colors: [strokeColor.withAlphaComponent(0.5).cgColor, startColor.withAlphaComponent(0.3).cgColor, endColor.cgColor] as CFArray,
-                                      locations: [0.0, 0.5, 1.0])!
-			context.drawLinearGradient(gradient2, start: startPoint, end: endPoint, options: CGGradientDrawingOptions(rawValue: 0))
+//            let gradient2 = CGGradient(colorsSpace: colorSpace,
+//                                       colors: [strokeColor.withAlphaComponent(0.3).cgColor, startColor.withAlphaComponent(0.0).cgColor, endColor.cgColor] as CFArray,
+//                                      locations: [0.0, 0.5, 1.0])!
+//			context.drawLinearGradient(gradient2, start: startPoint, end: endPoint, options: CGGradientDrawingOptions(rawValue: 0))
 			context.restoreGState()
 			graphPath.lineWidth = 2.0
 			graphPath.stroke()
@@ -139,35 +174,35 @@ import UIKit
 			}
         }
 		
-		let linePath = UIBezierPath()
-		for yPoint in thresholds {
-			let y = columnYPoint(yPoint)
-			linePath.move(to: CGPoint(x: margin, y: y))
-			linePath.addLine(to: CGPoint(x: width - margin, y: y))
-			let str = String(Int(yPoint)) as NSString
-			str.draw(at: CGPoint(x: width - margin + 4, y: y - 6), withAttributes: Constants.attributes)
-		}
-		let color = UIColor(white: 1.0, alpha: 0.5)
-		color.setStroke()
-		
-		linePath.lineWidth = 1.0
-		linePath.stroke()
-		
-        
-		if let title = title  {
-            (title as NSString).draw(at: CGPoint.init(x: Constants.margin, y: 10) , withAttributes: [NSAttributedString.Key.foregroundColor: UIColor.white,
-                                                                                                     NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20)])
-		}
-        if let subtitle = subtitle {
-            (subtitle as NSString).draw(at: CGPoint(x: Constants.margin, y: 35), withAttributes:
-                [NSAttributedString.Key.foregroundColor: UIColor.lightText,
-                 NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)])
+        if drawThresholds {
+            let linePath = UIBezierPath()
+            for yPoint in _thresholds {
+                let y = columnYPoint(yPoint)
+                linePath.move(to: CGPoint(x: margin, y: y))
+                linePath.addLine(to: CGPoint(x: width - margin, y: y))
+                let str = String(Int(yPoint)) as NSString
+                str.draw(at: CGPoint(x: width - margin + 4, y: y - 6), withAttributes: Constants.attributes)
+            }
+            let color = UIColor(white: 1.0, alpha: 0.5)
+            color.setStroke()
+            linePath.lineWidth = 1.0
+            linePath.stroke()
         }
+		
         
-		
+        
+	
+        
 
-		
 	}
+}
+
+extension String {
+    func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
+        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let boundingBox = self.boundingRect(with: constraintRect, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSAttributedString.Key.font: font], context: nil)
+        return boundingBox.height
+    }
 }
 
 
