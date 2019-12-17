@@ -16,25 +16,45 @@ let ksm_step_review             = "smartmarkers.step.healthkit.review"
 let ksm_step_submission         = "smartmarkers.step.healthkit.submission"
 let ksm_step_completion         = "smartmarkers.step.healthkit.completion"
 
+
+
 @available(iOS 12.0, *)
 open class ClinicalRecordTaskViewController: InstrumentTaskViewController {
     
-    public convenience init() {
+    public required init(settings: [String:String]?) {
+        
+        let introductionTitle = settings?["introduction_title"] ?? ClinicalRecordTaskViewController.Introduction_Title
+        let introductionText  = settings?["introduction_text"] ?? ClinicalRecordTaskViewController.Introduction_Text
+        let completionTitle   = settings?["completion_step_title"] ?? ClinicalRecordTaskViewController.Completion_Title
+        let completionText    = settings?["completion_step_text"] ?? ClinicalRecordTaskViewController.Completion_Text
         
         let steps : [ORKStep] = [
-            ClinicalRecordRequestStep(identifier: ksm_step_authreview, title: "Access Request", text: "Please select the type of clinical data to request from your iPhone."),
-            ClinicalRecordWaitStep(identifier: ksm_step_auth),
-            ClinicalRecordSelectorStep(identifier: ksm_step_review),
-            ORKCompletionStep(identifier: ksm_step_completion, _title: "Medical Record", _detailText: "Selected data is ready for submission")
-        ]
-        let task  = ORKNavigableOrderedTask(identifier: "sm.healthkit.task", steps: steps)
-        self.init(task: task, taskRun: UUID())
-        self.view.tintColor = UIColor.red
-        task.setStepModifier(ClnicalRecordStepModifier(), forStepIdentifier: ksm_step_review)
-        task.setStepModifier(ClinicalRecordAuthorizationStepModifier(), forStepIdentifier: ksm_step_auth)
-        
+               ClinicalRecordRequestStep(identifier: ksm_step_authreview, title: introductionTitle, text: introductionText),
+               ClinicalRecordWaitStep(identifier: ksm_step_auth),
+               ClinicalRecordSelectorStep(identifier: ksm_step_review),
+               ORKCompletionStep(identifier: ksm_step_completion, _title: completionTitle, _detailText: completionText)
+           ]
+       let task  = ORKNavigableOrderedTask(identifier: "sm.healthkit.task", steps: steps)
+       super.init(task: task, taskRun: UUID())
+       self.view.tintColor = UIColor.red
+       task.setStepModifier(ClnicalRecordStepModifier(), forStepIdentifier: ksm_step_review)
+       task.setStepModifier(ClinicalRecordAuthorizationStepModifier(), forStepIdentifier: ksm_step_auth)
+           
     }
+    
+    required public init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // Defaults
+    static let Introduction_Title  =   "Access Request"
+    static let Introduction_Text   =   "Please select the type of clinical data to request from your iPhone."
+    static let Completion_Title    =   "Medical Record"
+    static let Completion_Text     =   "Selected data is ready for submission"
 }
+
+
+
 
 
 

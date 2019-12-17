@@ -34,7 +34,7 @@ class ClinicalRecordResult: ORKResult {
 
 
 
-class ClnicalStepModifier: ORKStepModifier {
+class ClnicalRecordStepModifier: ORKStepModifier {
     
     override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
         
@@ -57,7 +57,7 @@ class ClinicalRecordAuthorizationStepModifier: ORKStepModifier {
     
     override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
         
-        guard let authResults = taskResult.stepResult(forStepIdentifier: ksm_step_authreview), let slf = step as? HKClinicalRecordWaitStep else {
+        guard let authResults = taskResult.stepResult(forStepIdentifier: ksm_step_authreview), let slf = step as? ClinicalRecordWaitStep else {
             return
         }
         

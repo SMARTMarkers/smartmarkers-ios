@@ -10,6 +10,8 @@ import Foundation
 import HealthKit
 import ResearchKit
 
+
+
 @available(iOS 12.0, *)
 extension HKClinicalTypeIdentifier {
     
@@ -45,9 +47,4 @@ extension HKClinicalTypeIdentifier {
         
         return ORKTextChoice(text: "Vital Signs", detailText: "Requests Vital Signs data from HealthKit" , value: HKClinicalTypeIdentifier.vitalSignRecord as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
     }
-    
-    
-
-    
-    
 }

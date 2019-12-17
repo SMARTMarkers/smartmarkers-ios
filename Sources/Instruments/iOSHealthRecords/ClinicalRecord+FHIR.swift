@@ -13,7 +13,7 @@ import HealthKit
 
 extension HKFHIRResourceType {
     
-    func as_FHIRResource<T: DomainResource>() -> T {
+    func as_FHIRResource<T: DomainResource>() throws -> T {
         
         if self == .allergyIntolerance  { return AllergyIntolerance()   as! T }
         if self == .immunization        { return Immunization()         as! T }
@@ -22,7 +22,9 @@ extension HKFHIRResourceType {
         if self == .medicationDispense  { return MedicationDispense()   as! T }
         if self == .medicationOrder     { return MedicationRequest()    as! T }
         if self == .medicationStatement { return MedicationStatement()  as! T }
-        return                                   Procedure()            as! T
+        if self == .procedure           { return Procedure()            as! T }
+        
+        throw SMError.instrumentHealthKitClinicalRecordTypeNotSupported(type: "<HKFHIRResourceType: \(self.rawValue)>")
     }
 }
 
@@ -32,7 +34,7 @@ extension HKFHIRResource {
         
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: []) as! FHIRJSON
-            let resource = self.resourceType.as_FHIRResource()
+            let resource = try self.resourceType.as_FHIRResource()
             try resource.sm_populate(from: json, source: sourceURL)
             return resource as! T
         }

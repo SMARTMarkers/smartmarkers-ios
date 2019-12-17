@@ -124,7 +124,7 @@ open class ClinicalRecordAuthorizationStepViewController: ORKWaitStepViewControl
 
 
 @available(iOS 12.0, *)
-open class HKDeidentifyStep: ORKQuestionStep {
+open class ClinicalRecordDeidentifyStep: ORKQuestionStep {
     
     public override init(identifier: String) {
         super.init(identifier: identifier)

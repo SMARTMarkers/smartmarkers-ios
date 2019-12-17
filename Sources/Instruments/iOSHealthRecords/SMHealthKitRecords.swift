@@ -27,23 +27,26 @@ public class SMHealthKitRecords: Instrument {
     
     public var sm_reportSearchOptions: [FHIRReportOptions]?
     
-    public init() {
+    var settings: [String: String]?
+    
+    public init(_ settings: [String:String]? = nil) {
         sm_title = "HealthKit Clinical Record"
-        sm_type = .unknown
+        sm_type = .clinicalRecord
         sm_identifier = "com.apple.healthkit.clinicalrecords"
+        self.settings = settings
     }
     
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let taskViewController = HKClinicalRecordTaskViewController()
+        let taskViewController = ClinicalRecordTaskViewController(settings: settings)
         callback(taskViewController, nil)
     }
     
     public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         guard let choice = result.stepResult(forStepIdentifier: ksm_step_review)?.results?.first as? ORKChoiceQuestionResult,
-        let dataResults = result.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [HKClinicalRecordResult] else {
+        let dataResults = result.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [ClinicalRecordResult] else {
             return nil
         }
         
@@ -66,6 +69,5 @@ public class SMHealthKitRecords: Instrument {
         }
         
         return fhirResources.isEmpty ? nil : SMART.Bundle.sm_with(fhirResources)
-
     }
 }

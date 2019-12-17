@@ -25,15 +25,13 @@ class ClinicalRecordSelectorStep: ORKFormStep {
         super.init(identifier: identifier)
         self.text = "This is your health data stored on your device. Please select the category of records to submit"
         self.footnote = ""
-        
-        
     }
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    func setupUI(records: [HKClinicalRecordResult]) {
+    func setupUI(records: [ClinicalRecordResult]) {
         
         let choices    = records.map { $0.textChoice() }
         let reviewChoices = ORKAnswerFormat.choiceAnswerFormat(with: .multipleChoice, textChoices: choices)
@@ -48,7 +46,7 @@ class ClinicalRecordSelectorStep: ORKFormStep {
     
 }
 
-extension HKClinicalRecordResult {
+extension ClinicalRecordResult {
     
     func textChoice() -> ORKTextChoice {
         
