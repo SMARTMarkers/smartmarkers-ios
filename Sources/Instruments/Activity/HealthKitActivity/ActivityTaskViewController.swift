@@ -12,14 +12,15 @@ import HealthKit
 
 
 
-let kActivitydateSelectorStep = "kSM.activity.date.selector"
-let kActivityFetchStep        = "kSM.activity.fetch"
-let kActivityTask             = "kSM.activity.task"
+let kActivitydateSelectorStep = "smartmarkers.activity.step.dateselector"
+let kActivityFetchStep        = "smartmarkers.activity.step.fetch"
+let kAcitivtyCompletionStep   = "smartmarkers.activity.step.completion"
+let kActivityTask             = "smartmarkers.activity.task"
 
 
 open class ActivityReportTask: ORKNavigableOrderedTask {
     
-    public final let activity: Activity!
+    public weak var activity: Activity!
     
     public init(activity: Activity) {
         
@@ -27,8 +28,8 @@ open class ActivityReportTask: ORKNavigableOrderedTask {
 
         self.activity  = activity
         let dateStep   = ActivityDateSelectorStep(activity)
-        let fetchStep  = ActivityFetch(activity)
-        let conclusion = ORKCompletionStep(identifier: ksm_step_completion, _title: "Completed", _detailText: nil)
+        let fetchStep  = ActivityFetchStep(activity)
+        let conclusion = ActivityCompletionStep(activity)
         
         let steps = [
             introStep,
@@ -40,7 +41,7 @@ open class ActivityReportTask: ORKNavigableOrderedTask {
         let identifier = kActivityTask + ".\(activity.type)"
         super.init(identifier: identifier, steps: steps)
         setStepModifier(DateStepModifier(), forStepIdentifier: fetchStep.identifier)
-        
+        setStepModifier(ResultCheckStepModifier(), forStepIdentifier: conclusion.identifier)
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -53,6 +54,20 @@ public protocol ActivityStep: class {
     
     var activity: Activity? { get set }
     
+}
+
+open class ResultCheckStepModifier: ORKStepModifier {
+    
+    open override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
+
+        let stp = step as! ActivityStep
+        let identifier = kActivityFetchStep + ".\(stp.activity!.type)"
+        if let stepSamples = taskResult.stepResult(forStepIdentifier: identifier)?.results as? [SMQuantitySampleResult] {
+            for sample in stepSamples {
+                print(sample)
+            }
+        }
+    }
 }
 
 open class DateStepModifier: ORKStepModifier {
@@ -87,7 +102,8 @@ open class ActivityDateSelectorStep: ORKFormStep, ActivityStep {
     
     override public init(identifier: String) {
         super.init(identifier: identifier)
-        
+        self.title = "Select Date Range"
+        self.text = "Select a start and an end date.\nActivity data which activity data should be fetched."
         let today = Date()
         let startItem = ORKFormItem(identifier: "start-date", text: "Start Date", answerFormat: ORKAnswerFormat.dateAnswerFormat())
         let endItem = ORKFormItem(identifier: "end-date", text: "End Date", answerFormat: ORKAnswerFormat.dateAnswerFormat(withDefaultDate: today, minimumDate: nil, maximumDate: today, calendar: nil))
@@ -99,7 +115,23 @@ open class ActivityDateSelectorStep: ORKFormStep, ActivityStep {
     }
 }
 
-open class ActivityFetch: ORKWaitStep, ActivityStep {
+open class ActivityCompletionStep: ORKCompletionStep, ActivityStep {
+    
+    weak public var activity: Activity?
+    
+    required public init(_ activity: Activity) {
+        super.init(identifier: kAcitivtyCompletionStep)
+        self.activity = activity
+        self.title = activity.type.description
+        self.detailText = "Completed"
+    }
+    
+    required public init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+open class ActivityFetchStep: ORKWaitStep, ActivityStep {
     
     weak public var activity: Activity?
     
@@ -109,6 +141,7 @@ open class ActivityFetch: ORKWaitStep, ActivityStep {
 
         super.init(identifier: identifier)
         self.activity = activity
+        self.text = "Gathering data, please wait..."
     }
     
     open override func stepViewControllerClass() -> AnyClass {
@@ -126,34 +159,32 @@ open class ActivityFetchStepController: ORKWaitStepViewController {
 
         super.viewDidAppear(animated)
         
-        let stp = (self.step as! ActivityFetch)
+        let stp = (self.step as! ActivityFetchStep)
         let store = HKHealthStore()
-        print(stp.activity?.period)
+
+        let group = DispatchGroup()
         
+        group.enter()
         stp.activity?.fetch(store, callback: { [weak self] (samples, error) in
-            
             if let samples = samples as? [HKQuantitySample] {
                 let sampleType = stp.activity!.type.description
                 let result = SMQuantitySampleResult(sampleType: sampleType, samples: samples)
-                print(samples)
+                stp.activity?.value = result as Any
                 self?.addResult(result)
-                DispatchQueue.main.async {
-                    //self?.addResult(result)
-                }
             }
-            
-            DispatchQueue.main.async {
-                self?.goForward()
-            }
+            group.leave()
         })
+        
+        group.notify(queue: .main) {
+            self.goForward()
+        }
     }
 }
 
 open class ActivityTaskViewController: InstrumentTaskViewController {
     
-    public init(activity: Activity) {
-        let task = ActivityReportTask(activity: activity)
-        super.init(task: task, taskRun: UUID())
+    public init(activityTask: ActivityReportTask) {
+        super.init(task: activityTask, taskRun: UUID())
     }
     
     public required init(coder aDecoder: NSCoder) {

@@ -17,7 +17,7 @@ import HealthKitUI
 
 
 @available(iOS 12.0, *)
-class HKClinicalRecordSelectorStep: ORKFormStep {
+class ClinicalRecordSelectorStep: ORKFormStep {
     
     
     override init(identifier: String) {
@@ -80,7 +80,7 @@ extension HKClinicalType {
         case .procedureRecord:
             return "Procedures"
         case .vitalSignRecord:
-            return "Clinical Vitals"
+            return "Vitals Signs"
         default:
             return identifier
         }

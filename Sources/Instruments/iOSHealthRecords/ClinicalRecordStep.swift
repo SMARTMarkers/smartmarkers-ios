@@ -15,23 +15,23 @@ import HealthKit
 
 
 @available(iOS 12.0, *)
-open class HKClinicalRecordWaitStep: ORKWaitStep {
+open class ClinicalRecordWaitStep: ORKWaitStep {
     
     var clinicalTypes: Set<HKClinicalType> = []
 
     open override func stepViewControllerClass() -> AnyClass {
-        return HKClinicalRecordAuthorizationStepViewController.self
+        return ClinicalRecordAuthorizationStepViewController.self
     }
     
 }
-open class HKClinicalRecordAuthorizationStepViewController: ORKWaitStepViewController {
+open class ClinicalRecordAuthorizationStepViewController: ORKWaitStepViewController {
     
     var clinicalTypes: Set<HKClinicalType> {
         return waitStep.clinicalTypes
     }
     
-    var waitStep: HKClinicalRecordWaitStep {
-        return step as! HKClinicalRecordWaitStep
+    var waitStep: ClinicalRecordWaitStep {
+        return step as! ClinicalRecordWaitStep
     }
 
     var data: [HKSample]?
@@ -47,7 +47,7 @@ open class HKClinicalRecordAuthorizationStepViewController: ORKWaitStepViewContr
                 self.requestAuthorization()
             } else {
                 DispatchQueue.main.async {
-                    self.updateText("Authorization determined\nFetching clinical data from HealthKit")
+                    self.updateText("Fetching clinical data from HealthKit")
                     self.runQuery()
                 }
             }
@@ -78,12 +78,12 @@ open class HKClinicalRecordAuthorizationStepViewController: ORKWaitStepViewContr
             let query = HKSampleQuery(sampleType: ctype, predicate: nil, limit: 100, sortDescriptors: sortDescriptors) {(_, samplesOrNil, error) in
                 DispatchQueue.main.async {
                     guard let samples = samplesOrNil else {
-                        //:::TODO handle error, goForward will still be called.
+                        //TODO: handle error, goForward will still be called.
                         self.handleError(error)
                         return
                     }
                     if let records = samples as? [HKClinicalRecord] {
-                        let dataResult = HKClinicalRecordResult(clinicalType: ctype, records: records)
+                        let dataResult = ClinicalRecordResult(clinicalType: ctype, records: records)
                         self.addResult(dataResult)
                     }
                 }
@@ -142,15 +142,13 @@ open class HKDeidentifyStep: ORKQuestionStep {
 
 
 @available(iOS 12.0, *)
-open class HKClinicalRecordRequestStep: ORKQuestionStep {
+open class ClinicalRecordRequestStep: ORKQuestionStep {
     
-    
-    
-    public override init(identifier: String) {
+    public required init(identifier: String, title: String?, text: String?) {
         super.init(identifier: identifier)
-        self.title = "Authorization"
-        self.text  = "To access health data from your iPhone, please select the type of data you would like to submit to the [EHR]."
-        self.question = "Select clinical record"
+        self.text = text
+        self.title = title
+        self.question = "Select the type for clinical record"
         let choices = [
             HKClinicalTypeIdentifier.vitalSignsChoice,
             HKClinicalTypeIdentifier.ImmunizationChoice,

@@ -10,7 +10,7 @@ import Foundation
 import HealthKit
 import ResearchKit
 
-class HKClinicalRecordResult: ORKResult {
+class ClinicalRecordResult: ORKResult {
     
     var clinicalRecords: [HKClinicalRecord]?
     
@@ -25,7 +25,7 @@ class HKClinicalRecordResult: ORKResult {
     }
     
     override func copy(with zone: NSZone? = nil) -> Any {
-        let result = super.copy(with: zone) as! HKClinicalRecordResult
+        let result = super.copy(with: zone) as! ClinicalRecordResult
         result.clinicalRecords = clinicalRecords
         return result
     }
@@ -34,16 +34,16 @@ class HKClinicalRecordResult: ORKResult {
 
 
 
-class HKClnicalStepModifier: ORKStepModifier {
+class ClnicalStepModifier: ORKStepModifier {
     
     override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
         
-        guard let stp = step as? HKClinicalRecordSelectorStep else {
+        guard let stp = step as? ClinicalRecordSelectorStep else {
             return
         }
         
         
-        if let dataResults = taskResult.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [HKClinicalRecordResult] {
+        if let dataResults = taskResult.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [ClinicalRecordResult] {
             stp.title = "Verify Submission"
             stp.setupUI(records: dataResults)
         }
@@ -53,7 +53,7 @@ class HKClnicalStepModifier: ORKStepModifier {
     
 }
 
-class HKClinicalAuthorizationStepModifier: ORKStepModifier {
+class ClinicalRecordAuthorizationStepModifier: ORKStepModifier {
     
     override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
         

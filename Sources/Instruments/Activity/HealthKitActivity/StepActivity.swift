@@ -53,7 +53,9 @@ open class StepActivity: Activity {
             if !success {
                 callback(nil, error)
             }
-            self.executeQuery(callback: callback)
+            else {
+                self.executeQuery(callback: callback)
+            }
         })
         
     }
@@ -65,8 +67,9 @@ open class StepActivity: Activity {
             if let samples = samples as? [HKQuantitySample] {
                 callback(samples, nil)
             }
-            
-            callback(nil, SMError.undefined(description: "No Samples Found"))
+            else {
+                callback(nil, SMError.undefined(description: "No Samples Found"))
+            }
         }
         
         store?.execute(query)

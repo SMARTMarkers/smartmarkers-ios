@@ -17,21 +17,21 @@ let ksm_step_submission         = "smartmarkers.step.healthkit.submission"
 let ksm_step_completion         = "smartmarkers.step.healthkit.completion"
 
 @available(iOS 12.0, *)
-open class HKClinicalRecordTaskViewController: InstrumentTaskViewController {
+open class ClinicalRecordTaskViewController: InstrumentTaskViewController {
     
     public convenience init() {
         
         let steps : [ORKStep] = [
-            HKClinicalRecordRequestStep(identifier: ksm_step_authreview),
-            HKClinicalRecordWaitStep(identifier: ksm_step_auth),
-            HKClinicalRecordSelectorStep(identifier: ksm_step_review),
+            ClinicalRecordRequestStep(identifier: ksm_step_authreview, title: "Access Request", text: "Please select the type of clinical data to request from your iPhone."),
+            ClinicalRecordWaitStep(identifier: ksm_step_auth),
+            ClinicalRecordSelectorStep(identifier: ksm_step_review),
             ORKCompletionStep(identifier: ksm_step_completion, _title: "Medical Record", _detailText: "Selected data is ready for submission")
         ]
         let task  = ORKNavigableOrderedTask(identifier: "sm.healthkit.task", steps: steps)
         self.init(task: task, taskRun: UUID())
         self.view.tintColor = UIColor.red
-        task.setStepModifier(HKClnicalStepModifier(), forStepIdentifier: ksm_step_review)
-        task.setStepModifier(HKClinicalAuthorizationStepModifier(), forStepIdentifier: ksm_step_auth)
+        task.setStepModifier(ClnicalRecordStepModifier(), forStepIdentifier: ksm_step_review)
+        task.setStepModifier(ClinicalRecordAuthorizationStepModifier(), forStepIdentifier: ksm_step_auth)
         
     }
 }

@@ -34,22 +34,27 @@ open class StepReport: Instrument {
     
     public var sm_reportSearchOptions: [FHIRReportOptions]?
     
+    var stepActivity = StepActivity(Date(), nil)
+    
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let sa = StepActivity(Date(), nil)
-        sa.store = HKHealthStore()
-        let activityTaskView = ActivityTaskViewController(activity: sa)
+        stepActivity.store = HKHealthStore()
+        let activityTask = ActivityReportTask(activity: stepActivity)
+        let activityTaskView = ActivityTaskViewController(activityTask: activityTask)
         callback(activityTaskView, nil)
     }
     
     public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let stepCountResult = result.stepResult(forStepIdentifier: "kSM.activity.fetch.StepCount")?.firstResult as? SMQuantitySampleResult {
-            
+        if let stepCountResult = stepActivity.value as? SMQuantitySampleResult {
             if let samples = stepCountResult.samples {
                 let observation = Observation.sm_StepCount(count: 0, start: result.startDate, end: result.endDate, samples: samples)
                 return SMART.Bundle.sm_with([observation])
             }
+        }
+        
+        if let stepCountResult = result.stepResult(forStepIdentifier: kActivityFetchStep)?.firstResult as? SMQuantitySampleResult {
+            
         }
         
         return nil
