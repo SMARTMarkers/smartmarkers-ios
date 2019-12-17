@@ -46,7 +46,7 @@ public class AmslerGrid : Instrument {
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.sm_identifier!, intendedUseDescription: sm_taskDescription, options: [])
-        let taskVC = ORKTaskViewController(task: amslerGridTask, taskRun: UUID())
+        let taskVC = InstrumentTaskViewController(task: amslerGridTask, taskRun: UUID())
         callback(taskVC, nil)
     }
     

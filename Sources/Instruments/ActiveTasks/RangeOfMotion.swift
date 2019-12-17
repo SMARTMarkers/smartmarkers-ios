@@ -47,7 +47,7 @@ open class KneeRangeOfMotion: Instrument {
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     

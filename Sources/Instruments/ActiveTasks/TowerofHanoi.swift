@@ -45,7 +45,7 @@ open class TowerOfHanoi: Instrument {
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, numberOfDisks: self.numberOfDisks, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     

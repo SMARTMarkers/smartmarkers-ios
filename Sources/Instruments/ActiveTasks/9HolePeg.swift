@@ -47,7 +47,7 @@ open class NineHolePegTest: Instrument {
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let tsk = ORKNavigableOrderedTask.holePegTest(withIdentifier: sm_identifier!, intendedUseDescription: nil, dominantHand: .left, numberOfPegs: 9, threshold: 0.2, rotated: false, timeLimit: 300, options: [])
-        let tvc = ORKTaskViewController(task: tsk, taskRun: UUID())
+        let tvc = InstrumentTaskViewController(task: tsk, taskRun: UUID())
         callback(tvc, nil)
     }
     

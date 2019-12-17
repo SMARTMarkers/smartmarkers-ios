@@ -45,7 +45,7 @@ open class PASAT: Instrument {
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let task = ORKOrderedTask.psatTask(withIdentifier: String(describing:sm_identifier), intendedUseDescription: "Description", presentationMode: ORKPSATPresentationMode.auditory.union(.visual), interStimulusInterval: self.interStimulusInterval, stimulusDuration: 1.0, seriesLength: 10, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     

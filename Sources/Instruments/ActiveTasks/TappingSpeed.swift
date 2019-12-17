@@ -55,7 +55,7 @@ open class TappingSpeed: Instrument {
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         let task = ORKOrderedTask.twoFingerTappingIntervalTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, duration: duration, handOptions: handOption, options: [])
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
     }
     

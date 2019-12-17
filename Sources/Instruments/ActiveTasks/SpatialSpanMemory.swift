@@ -56,7 +56,7 @@ open class SpatialSpanMemory: Instrument {
         
         let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: sm_identifier!, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
         
-        let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
+        let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())
         
         callback(taskViewController, nil)
     }
