@@ -38,23 +38,23 @@ extension TaskSchedule {
     
     convenience init?(occuranceTiming: SMART.Timing) {
         
-        if let freqValue = occuranceTiming.repeat_fhir?.frequency?.int,
+        guard let freqValue = occuranceTiming.repeat_fhir?.frequency?.int,
             let periodUnit = occuranceTiming.repeat_fhir?.periodUnit?.string,
             let numberOfPeriods = occuranceTiming.repeat_fhir?.period?.decimal,
             let bounds = occuranceTiming.repeat_fhir?.boundsPeriod
             
-        {
-            self.init(occurancePeriod: bounds)
-            self.frequency = Frequency(times: freqValue, periodType: periodUnit, numberOfPeriods: numberOfPeriods)
+        else {
+            return nil
         }
-        return nil
+        let frequency = Frequency(times: freqValue, periodType: periodUnit, numberOfPeriods: numberOfPeriods)
+        self.init(start: bounds.start!.nsDate, end: bounds.end!.nsDate, frequency: frequency)
     }
     
     convenience init?(occurancePeriod: SMART.Period) {
         
-        if let start = occurancePeriod.start?.nsDate, let end = occurancePeriod.end?.nsDate {
-            self.init(start: start, end: end, frequency: nil)
+        guard let start = occurancePeriod.start?.nsDate, let end = occurancePeriod.end?.nsDate else {
+            return nil
         }
-        return nil
+        self.init(start: start, end: end, frequency: nil)
     }
 }
