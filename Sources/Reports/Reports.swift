@@ -98,14 +98,20 @@ open class Reports {
         }).first
     }
     
-    
+    /**
+     Fetch historical reports for a given patient and instrument
+     */
     open func fetch(for patient: Patient?, server: Server, searchParams: [String:String]?, callback: @escaping ((_ _results: [Report]?, _ error: Error?) -> Void)) {
         
         guard let resultParams = (instrument ?? taskController?.instrument)?.sm_reportSearchOptions else {
+            
             callback(nil, SMError.promeasureOrderedInstrumentMissing)
             return
         }
         
+        for rp in resultParams {
+            print(rp.relation)
+        }
         
         let group = DispatchGroup()
         var errors = [Error]()
@@ -150,7 +156,7 @@ open class Reports {
     /**
      Attempts to submit the `submissionBundles` in the receiver's queue (`submissionQueue`)
      
-     Note: `SubmissionBundle.canSubmit` flag must be true for submission; else will be discarded.
+     Note: `SubmissionBundle.canSubmit` flag must be `true` for submission; else will be discarded.
      
      - parameter server:    `FHIR Server` to submit too
      - parameter patient:   `SMART.Patient` resource

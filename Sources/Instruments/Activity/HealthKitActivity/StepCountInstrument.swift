@@ -15,9 +15,10 @@ open class StepReport: Instrument {
     
     public init() {
         sm_type = .Device
-        sm_title = "Step Count (HealthKit)"
+        sm_title = "Step Count (Health App)"
         sm_code = Coding.sm_LOINC("41950-7", "Number of steps in 24 hour Measured")
         sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
+        sm_identifier = sm_code?.sm_searchableToken()
     }
     
     public var sm_title: String
@@ -46,15 +47,12 @@ open class StepReport: Instrument {
     
     public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let stepCountResult = stepActivity.value as? SMQuantitySampleResult {
-            if let samples = stepCountResult.samples {
-                let observation = Observation.sm_StepCount(count: 0, start: result.startDate, end: result.endDate, samples: samples)
-                return SMART.Bundle.sm_with([observation])
-            }
-        }
-        
-        if let stepCountResult = result.stepResult(forStepIdentifier: kActivityFetchStep)?.firstResult as? SMQuantitySampleResult {
+        if let stepCountResult = stepActivity.value as? SMQuantitySampleResult,
+            let samples = stepCountResult.samples,
+            samples.count != 0 {
             
+            let observation = Observation.sm_StepCount(count: 0, start: result.startDate, end: result.endDate, samples: samples)
+            return SMART.Bundle.sm_with([observation])
         }
         
         return nil
@@ -112,25 +110,4 @@ extension HKQuantitySample {
         
         return component
     }
-}
-
-
-extension HKQuantitySample {
-    
-    func sm_process() {
-        
-        print(self.sampleType)
-        print(self.endDate)
-        print(self.endDate)
-        print(self.count)
-        print(self.quantity.doubleValue(for: HKUnit.count()))
-        print(self.quantityType)
-        print(self.uuid.uuidString)
-        print(self.sourceRevision)
-        print(self.device)
-        print(self.metadata)
-        print("----")
-        
-    }
-    
 }

@@ -123,8 +123,6 @@ extension ServiceRequest: Request {
         }
         else if let coding = sm_coding(for: "http://researchkit.org"), let code = coding.code?.string {
             
-
-            
             if let instr = Instruments.ActiveTasks(rawValue: code)?.instance {
                 callback(instr, nil)
             }
@@ -132,9 +130,16 @@ extension ServiceRequest: Request {
                 callback(nil, SMError.promeasureOrderedInstrumentMissing)
             }
         }
-        else {
+        else if let coding = sm_coding(for: "http://loinc.org"), let code = coding.code?.string {
             
-
+            if code == Instruments.HealthKit.StepCount.instance.sm_code?.code?.string {
+                callback(Instruments.HealthKit.StepCount.instance, nil)
+            }
+            else {
+                callback(nil, SMError.promeasureOrderedInstrumentMissing)
+            }
+        }
+        else {
             callback(nil, SMError.promeasureOrderedInstrumentMissing)
         }
     }

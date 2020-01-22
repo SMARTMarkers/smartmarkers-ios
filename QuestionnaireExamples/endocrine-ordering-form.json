@@ -1,0 +1,912 @@
+{
+    "date": "2019-10-29T15:08:26.936Z",
+    "title": "XomeDx Clinical Information Form",
+    "name": "XomeDx Clinical Information Form",
+    "subjectType": [
+        "Practitioner"
+    ],
+    "status": "draft",
+    "experimental": true,
+    "publisher": "Boston Children's Hospital",
+    "resourceType": "Questionnaire",
+   "contained": [
+        {
+            "resourceType": "ValueSet",
+            "id": "Perinatal-History",
+            "name": "Perinatal History",
+            "status": "active",
+            "description": "Conditions of Perinatal History with ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Prematurity"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "IUGR"
+                            },
+                            {
+                                "code": "LA6564-4",
+                                "display": "Oligohydramnios"
+                            },
+                            {
+                                "code": "LA6565-1",
+                                "display": "Polyhydramnios"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Cystic Hygroma/increased NT"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "resourceType": "ValueSet",
+            "id": "Physical-Cognitive-Development",
+            "name": "Physical/Cognitive Development",
+            "status": "active",
+            "description": "Conditions of Physical/Cognitive Development with ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Fine motor delay"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Gross motor delay"
+                            },
+                            {
+                                "code": "LA6564-4",
+                                "display": "Speech delay"
+                            },
+                            {
+                                "code": "LA6565-1",
+                                "display": "Learning Disability"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Developmental regression"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "resourceType": "ValueSet",
+            "id": "Behavioral",
+            "name": "Behavioral",
+            "status": "active",
+            "description": "Conditions of Behavioral disorders with ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Autusm Spectrum disorder"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Autistic features"
+                            },
+                            {
+                                "code": "LA6564-4",
+                                "display": "Obsessive-compulsive disorder"
+                            },
+                            {
+                                "code": "LA6565-1",
+                                "display": "Stereotypic behaviors"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Other psychiatric symptoms"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "resourceType": "ValueSet",
+            "id": "Craniofacial-ophthalmalogic-auditory",
+            "name": "Craniofacial Ophthalmalogic/auditory",
+            "status": "active",
+            "description": "Conditions of Craniofacial Ophthalmalogic/auditory disorders with ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Cateracts, Blue/gray sclerae, Glaucoma"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Cleft lip/palate"
+                            },
+                            {
+                                "code": "LA6564-4",
+                                "display": "CPEO (opthalmoplegia)"
+                            },
+                            {
+                                "code": "LA6565-1",
+                                "display": "Ptosis"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Blindness"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Optic atrophy"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Retinitis pigmentosa"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Hearing loss"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Ototoxicity (aminoglycoside-induced)"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "External ear malformation"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        
+        {
+            "resourceType": "ValueSet",
+            "id": "Cardiac-Congenital-Heart-malformations",
+            "name": "Cardiac/congenital heart malformations",
+            "status": "active",
+            "description": "Cardiac/congenital heart malformations with ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Atrial Septal Defect"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Ventricular Septal Defect"
+                            },
+                            {
+                                "code": "LA6564-4",
+                                "display": "Coarctation of aorta"
+                            },
+                            {
+                                "code": "LA6565-1",
+                                "display": "Hypoplastic left heart"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Tetralogy of Fallot"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Cardiomyopathy"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "arrhythmia/conduction defect"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {   
+            "resourceType": "ValueSet",
+            "id": "Brain-malformations/abnormal-imaging",
+            "name": "Brain malformations/abnormal imaging",
+            "status": "active",
+            "description": "Conditions with  Brain malformations/abnormal imagingwith ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Agenesis of the corpus callosum"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Holoprosencephaly"
+                            },
+                            {
+                                "code": "LA6564-4",
+                                "display": "Lissencephaly"
+                            },
+                            {
+                                "code": "LA6565-1",
+                                "display": "Coartical displasia"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Heterotopia"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Hydrocephalus"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Brain atrophy"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Periventricular leukomalacia"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Hemimegalencephaly"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Abnormalities of basal ganglia"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {   
+            "resourceType": "ValueSet",
+            "id": "Neurological/Muscular",
+            "name": "Neurological/Muscular",
+            "status": "active",
+            "description": "Conditions with  Neurological/Muscular with ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Ataxia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Chorea"
+                            },
+                            {
+                                "code": "LA6564-4",
+                                "display": "Dystonia"
+                            },
+                            {
+                                "code": "LA6565-1",
+                                "display": "Hypotonia"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Hypertonia"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Spasticity"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Exercise intolerance/easy fatigue"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Muscle weakness"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Stroke/stroke-like episodes"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Recurrent headache/migraine"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {   
+            "resourceType": "ValueSet",
+            "id": "Gastrointestinal",
+            "name": "Gastrointestinal",
+            "status": "active",
+            "description": "Conditions with Gastrointestinal ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Gastroschisis/omphalocele"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Pyloric stenosis"
+                            },
+                            {
+                                "code": "LA6564-4",
+                                "display": "Tracheoesophageal fistula"
+                            },
+                            {
+                                "code": "LA6565-1",
+                                "display": "Delayed gastric emptying"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Eosinophilic easophagitis"
+                            },
+                            {
+                                "code": "LA6566-9",
+                                "display": "Gastrointestinal reflux"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Recurrent vomiting"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Chronic diarrhea"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Constipation"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Chronic intestinal pseudo-obstruction"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Hirschrung disease"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Hepatic failure"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "Elevated transaminases"
+                            },
+                            {
+                                "code": "la6566-9",
+                                "display": "CPK abnormalities"
+                            }
+
+                        ]
+                    }
+                ]
+            }
+        },
+        {   
+            "resourceType": "ValueSet",
+            "id": "Hematologic/Immunologic",
+            "name": "Hematologic/Immunologic",
+            "status": "active",
+            "description": "Conditions with Hematologic/Immunologic anomalies and their ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Anemia/Neutropenia/Pancytopenia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Immunodeficiency"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {   
+            "resourceType": "ValueSet",
+            "id": "Skeletal/Limb-abnormalities",
+            "name": "Skeletal/Limb abnormalities",
+            "status": "active",
+            "description": "Conditions with Skeletal/Limb abnormalities and their ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Contractures, Fractures, Limb anomoly"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Club foot"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Polydactyly"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Syndactyly"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Scoliosis"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Vertebral anomaly"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {   
+            "resourceType": "ValueSet",
+            "id": "Genitourinary-abnormalities",
+            "name": "Genitourinary abnormalities",
+            "status": "active",
+            "description": "Conditions with Genitourinary abnormalities and their ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Ambiguous genitalia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Hypospadias"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Hydronephrosis"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Undescended testis"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Kidney malformation"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Renal agenesis"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Renal tubulopathy"
+                            }
+
+                        ]
+                    }
+                ]
+            }
+        },
+        {   
+            "resourceType": "ValueSet",
+            "id": "Endocrine",
+            "name": "Endocrine",
+            "status": "active",
+            "description": "Conditions with Endocrine  abnormalities and their ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Diabetes Mellitus"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Hypothyroidism"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Hypoparathyroidism"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Pheochromocytoma/paraganglioma"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Adrenal insufficiency"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Ambiguous Genitalia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Autoimmune polyglandular syndrome"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Combined pituitary hormone deficiency"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Congential adrenal hyperplasia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Hypercalcemia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Hypocalcemia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Hypoglycemia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Obesity"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Optic nerve hypoplasia/septooptic displasia"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Osteoporosis"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Pituitary adenoma"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Precocious puberty"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Delayed puberty"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Short stature"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Tall Stature"
+                            }
+
+                        ]
+                    }
+                ]
+            }
+        },
+        {   
+            "resourceType": "ValueSet",
+            "id": "Metabolic",
+            "name": "Metabolic",
+            "status": "active",
+            "description": "Conditions with Metabolic  abnormalities and their ICD-10 codes",
+            "compose": {
+                "include": [
+                    {
+                        "system": "http://hl7.org/fhir/sid/icd-10",
+                        "concept": [
+                            {
+                                "code": "LA6562-8",
+                                "display": "Ketosis"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Lactic acidemia/high CSF lactate"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Elevated pyruvate"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Elevated alanine"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Organic aciduria"
+                            },
+                            {
+                                "code": "LA6563-6",
+                                "display": "Low plasma carnitine"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }        
+    ],
+    "item": [
+        {
+            "type": "group",
+            "code": [
+                {
+                    "code": "gene-panel-exome",
+                    "display": "Clinical Information",
+                    "system": "Custom"
+                }
+            ],
+            "required": false,
+            "linkId": "/gene-panel-exome",
+            "text": "Clinical Information",
+            "item": [
+                {
+                    "type": "string",
+                    "required": false,
+                    "linkId": "/gene-panel-exome/undefined",
+                    "text": "Account #",
+                    "initial": [
+                        {
+                            "valueString": "Boston Children's Hospital"
+                        }
+                    ]
+                },
+                {
+                    "type": "string",
+                    "required": false,
+                    "linkId": "/gene-panel-exome/MRN",
+                    "text": "BCH MRN"
+                },
+                {
+                    "type": "string",
+                    "required": false,
+                    "linkId": "/gene-panel-exome/Last-Name",
+                    "text": "Last Name"
+                },
+                {
+                    "type": "string",
+                    "required": false,
+                    "linkId": "/gene-panel-exome/First-Name",
+                    "text": "First Name"
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "required": false,
+            "linkId": "/undefined",
+            "text": "Clinical Diagnosis",
+            "item": [
+                {
+                    "type": "string",
+                    "required": false,
+                    "linkId": "/Clinical-Diagnosis/Clinical-Diagnosis",
+                    "text": "Clinical Diagnosis"
+                },
+                {
+                    "type": "text",
+                    "required": false,
+                    "linkId": "/Clinical-Diagnosis/icd-10-codes",
+                    "text": "ICD-10 codes"
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Perinatal-History",
+            "text": "Perinatal History",
+            "answerValueSet": "#Perinatal-History",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+            "linkId": "/Physical-Cognitive-development",
+            "text": "Physical Cognitive Development",
+            "answerValueSet": "#Physical-Cognitive-Development",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Behavioral",
+            "text": "Behavioral",
+            "answerValueSet": "#Behavioral",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Craniofacial-Ophthalmalogic-auditory",
+            "text": "Craniofacial Ophthalmalogic/auditory",
+            "answerValueSet": "#Craniofacial-ophthalmalogic-auditory",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Cardiac/congenital heart malformations",
+            "text": "Cardiac/congenital heart malformations",
+            "answerValueSet": "#Cardiac-Congenital-Heart-malformations",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Brain-malformations/abnormal-imaging",
+            "text": "Brain-malformations abnormal-imaging",
+            "answerValueSet": "#Brain-malformations/abnormal-imaging",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Neurological/Muscular",
+            "text": "Neurological/Muscular",
+            "answerValueSet": "#Neurological/Muscular",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Gastrointestinal",
+            "text": "Gastrointestinal",
+            "answerValueSet": "#Gastrointestinal",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Hematologic/Immunologic",
+            "text": "Hematologic/Immunologic",
+            "answerValueSet": "#Hematologic/Immunologic",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Skeletal/Limb-abnormalities",
+            "text": "Skeletal Limb-abnormalities",
+            "answerValueSet": "#Skeletal/Limb-abnormalities",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+
+            "linkId": "/Genitourinary-abnormalities",
+            "text": "Genitourinary abnormalities",
+            "answerValueSet": "#Genitourinary-abnormalities",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+            "linkId": "/Endocrine",
+            "text": "Endocrine",
+            "answerValueSet": "#Endocrine",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        },
+        {
+            "type": "choice",
+            "required": false,
+            "repeats": true,
+            "linkId": "/Metabolic",
+            "text": "Metabolic",
+            "answerValueSet": "#Metabolic",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-instruction",
+                    "valueString" : "Please check all that apply. This is not a substitute for submitting clinical records."
+                }
+            ]
+        }
+    ]
+}

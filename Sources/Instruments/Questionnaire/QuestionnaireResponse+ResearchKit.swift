@@ -195,9 +195,6 @@ extension ORKChoiceQuestionResult {
     func c3_responseItems() -> [QuestionnaireResponseItemAnswer]? {
         
         guard let choices = choiceAnswers as? [String] else {
-            if let _ = choiceAnswers {
-                print("exp choice question results to be strings")
-            }
             return nil
         }
         

@@ -52,6 +52,11 @@ public enum SMError : Error, CustomStringConvertible {
     /// InstrumentProtocol could not generate a response `SMART.Bundle`
     case instrumentResultBundleNotCreated
     
+    // MARK: Instrument: Questionnaire
+    
+    /// Instrument: Questionnaire is missing required elements
+    case instrumentQuestionnaireMissingElements(linkId: String)
+    
     /// Instrument could not deduce answer type
     case instrumentCannotHandleQuestionnaireType(linkId: String)
     
@@ -155,6 +160,8 @@ public enum SMError : Error, CustomStringConvertible {
             return "Questionnaire.item.type = choice  must have answer reference for linkId: \(linkId)"
         case .instrumentHealthKitClinicalRecordTypeNotSupported(let type):
             return "HealthKit Clinical Record type `\(type)` not supported"
+        case .instrumentQuestionnaireMissingElements(let linkId):
+            return "`Questionnaire.item` is missing required elements; linkId: \(linkId)"
         
         // SessionController
         case .sessionMissingTask:

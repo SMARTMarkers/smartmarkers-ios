@@ -54,10 +54,10 @@ extension SMART.Questionnaire: Instrument {
         get {
             var searchParam = [String]()
             
-            if let id = id?.string {
-                searchParam.append(id)
-            }
-            
+//            if let id = id?.string {
+//                searchParam.append(id)
+//            }
+//            
             if let url = url?.absoluteString {
                 searchParam.append(url)
             }
@@ -131,6 +131,7 @@ extension SMART.Questionnaire: Instrument {
         // For now: lets check if task is Adaptive.
         // Fall back would be to go as usual, derive QR from `ORKTaskResult`
         if let task = task as? AdaptiveQuestionnaireTask, let questionnaireResponse = task.currentResponse {
+            questionnaireResponse.questionnaire = FHIRCanonical(self.url!.absoluteString)
             return SMART.Bundle.sm_with([questionnaireResponse])
         }
         

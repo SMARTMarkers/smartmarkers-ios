@@ -10,6 +10,9 @@ import Foundation
 import ResearchKit
 import SMART
 
+
+
+
 public enum QuestionnaireItemExtensionType {
     
     case calculatedExpression
@@ -85,9 +88,7 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
         }
         
         if let slf = self as? ORKInstructionStep {
-            
-            
-            
+        
             if let q = item.sm_questionItem_instructions() ?? item.text?.localized {
                 slf.text = q
             }
@@ -207,3 +208,83 @@ public class QuestionnaireFormStep: ORKFormStep, QuestionnaireItemStepProtocol {
     
     
 }
+
+
+/*
+
+ Future:
+ public protocol StepProperties{
+     
+     var sm_Identifier: String { get }
+     var sm_type: QuestionnaireItemType? { get set }
+     var sm_help: String? { get }
+     var sm_display: String? { get }
+     
+ }
+
+ public protocol QuestionStepProperties: StepProperties {
+     
+     var sm_question: String? { get }
+     var sm_answerFormat: ORKAnswerFormat? { get set }
+ }
+
+ public extension StepProperties where Self: ORKStep {
+     
+     var sm_Identifier: String {
+         return identifier
+     }
+ }
+
+ public extension StepProperties where Self : ORKInstructionStep {
+     
+     init(_ item: QuestionnaireItem) throws {
+         
+         self.init(identifier: item.linkId!.string)
+
+         if let instructions = item.sm_questionItem_instructions() {
+             detailText = instructions
+             text = item.text?.localized
+         }
+         else if let justText = item.text?.localized {
+             detailText = justText
+         }
+         else {
+             throw SMError.instrumentQuestionnaireMissingElements(linkId: item.linkId!.string)
+         }
+         
+         
+         sm_type = item.type
+     }
+     
+ }
+
+ class SMInstructionStep: ORKInstructionStep, StepProperties {
+     
+     var sm_type: QuestionnaireItemType?
+    
+     var sm_help: String?
+     
+     var sm_display: String? {
+         return text
+     }
+ }
+
+ class SMFormStep: ORKFormStep, StepProperties {
+     
+     var sm_type: QuestionnaireItemType?
+     
+     var sm_help: String?
+     
+     var sm_display: String?
+ }
+ public extension StepProperties where Self : ORKInstructionStep {
+
+     init(_ item: [QuestionnaireItem]) throws {
+         
+     
+     }
+ }
+
+
+
+ */

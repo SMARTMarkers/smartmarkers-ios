@@ -33,6 +33,7 @@
 		D43C71C02269FDF50008FF27 /* StroopTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71BF2269FDF50008FF27 /* StroopTest.swift */; };
 		D43C71C2226A348C0008FF27 /* TappingSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43C71C1226A348C0008FF27 /* TappingSpeed.swift */; };
 		D4491B0323A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4491B0223A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift */; };
+		D4491B1623AF2CDF00F3CAD9 /* BaseInstrument.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4491B1523AF2CDF00F3CAD9 /* BaseInstrument.swift */; };
 		D44BD43E20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */; };
 		D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45790F822386FA0001E4E8D /* OmronTaskViewController.swift */; };
 		D4618A44205ED820004E117F /* MiniPatientVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4618A43205ED820004E117F /* MiniPatientVerificationController.swift */; };
@@ -59,6 +60,7 @@
 		D48B320221FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */; };
 		D48B320421FFC84600CEA44A /* ResearchKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */; };
 		D48BBB5222D6446300FF4023 /* PROMISServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48BBB5122D6446300FF4023 /* PROMISServer.swift */; };
+		D48BD38D23CE2540005262FA /* endocrine-ordering-form.json in Resources */ = {isa = PBXBuildFile; fileRef = D48BD38C23CE2540005262FA /* endocrine-ordering-form.json */; };
 		D48C2A8E237EFE0D002C9395 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D48C2A8D237EFE0D002C9395 /* README.md */; };
 		D496FA89238C3B7400A8FAB5 /* Schedule+FHIR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D496FA88238C3B7400A8FAB5 /* Schedule+FHIR.swift */; };
 		D4AF0BB523980DB8007735A0 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41850CF2397048D0002FA16 /* HealthKit.framework */; };
@@ -137,6 +139,7 @@
 		D43C71BF2269FDF50008FF27 /* StroopTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StroopTest.swift; sourceTree = "<group>"; };
 		D43C71C1226A348C0008FF27 /* TappingSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappingSpeed.swift; sourceTree = "<group>"; };
 		D4491B0223A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentTaskViewController.swift; sourceTree = "<group>"; };
+		D4491B1523AF2CDF00F3CAD9 /* BaseInstrument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseInstrument.swift; sourceTree = "<group>"; };
 		D44BD43D20FA4F4B00C0F6F2 /* QuestionnaireResponse+ResearchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuestionnaireResponse+ResearchKit.swift"; sourceTree = "<group>"; };
 		D45790F822386FA0001E4E8D /* OmronTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OmronTaskViewController.swift; sourceTree = "<group>"; };
 		D4618A43205ED820004E117F /* MiniPatientVerificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPatientVerificationController.swift; sourceTree = "<group>"; };
@@ -163,6 +166,7 @@
 		D48B320121FFC69900CEA44A /* AdaptiveQuestionnaireTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveQuestionnaireTaskViewController.swift; sourceTree = "<group>"; };
 		D48B320321FFC84600CEA44A /* ResearchKit+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResearchKit+Extensions.swift"; sourceTree = "<group>"; };
 		D48BBB5122D6446300FF4023 /* PROMISServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PROMISServer.swift; sourceTree = "<group>"; };
+		D48BD38C23CE2540005262FA /* endocrine-ordering-form.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "endocrine-ordering-form.json"; sourceTree = "<group>"; };
 		D48C2A8D237EFE0D002C9395 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D496FA88238C3B7400A8FAB5 /* Schedule+FHIR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Schedule+FHIR.swift"; sourceTree = "<group>"; };
 		D4B964DB22298FF000F46177 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
@@ -279,6 +283,7 @@
 		D468777D229701D100717D95 /* QuestionnaireExamples */ = {
 			isa = PBXGroup;
 			children = (
+				D48BD38C23CE2540005262FA /* endocrine-ordering-form.json */,
 				D48113BD2373CAC00062B3D9 /* surgeon_general.json */,
 				D4334D8C23833E0F00279397 /* promis_qr_dynamic.json */,
 				D4334D8E23833E3200279397 /* promis_q_dynamic.json */,
@@ -364,6 +369,7 @@
 			children = (
 				D4E75D7D20361EB5000CE95A /* InstrumentListViewController.swift */,
 				D4B964E12229A74300F46177 /* Instrument.swift */,
+				D4491B1523AF2CDF00F3CAD9 /* BaseInstrument.swift */,
 				D4DFD995223C2EB40097B958 /* InstrumentFactory.swift */,
 				D4491B0223A3EF8E00F3CAD9 /* InstrumentTaskViewController.swift */,
 				D436B1D520EBF89E00CAF2F5 /* Questionnaire */,
@@ -595,6 +601,7 @@
 				D4334D8D23833E0F00279397 /* promis_qr_dynamic.json in Resources */,
 				D46877892297022B00717D95 /* bmiquestionnaire_r3.json in Resources */,
 				D465D5A4203DCB8E0057BD23 /* Installation.md in Resources */,
+				D48BD38D23CE2540005262FA /* endocrine-ordering-form.json in Resources */,
 				D48113BB2373C5E40062B3D9 /* ecg_panel.json in Resources */,
 				D46877882297022B00717D95 /* adaptivePROMISDep.json in Resources */,
 				D46877872297022B00717D95 /* adaptivePROMIS.json in Resources */,
@@ -676,6 +683,7 @@
 				D4E75D732035E7AA000CE95A /* SMARTLoginViewController.swift in Sources */,
 				D482BA6321C953F800840D2E /* AdaptiveServer.swift in Sources */,
 				D4C69A5D23465C98006C6520 /* ActivityTaskViewController.swift in Sources */,
+				D4491B1623AF2CDF00F3CAD9 /* BaseInstrument.swift in Sources */,
 				D4DFD998223C3EC20097B958 /* 9HolePeg.swift in Sources */,
 				D496FA89238C3B7400A8FAB5 /* Schedule+FHIR.swift in Sources */,
 				D45790F922386FA0001E4E8D /* OmronTaskViewController.swift in Sources */,

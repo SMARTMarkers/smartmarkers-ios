@@ -126,7 +126,7 @@ public class TaskSchedule: CustomStringConvertible {
         case Overdue
         case Upcoming
         case Unknown
-        case RequestInactive
+        case Inactive
     }
     
     public struct Frequency {
@@ -199,7 +199,7 @@ public class TaskSchedule: CustomStringConvertible {
         guard let dueDate = dueDate else {
             
             if let end = activityPeriod?.end, now > end  {
-                status = .RequestInactive
+                status = .Inactive
             }
             else {
                 status = .Unknown
