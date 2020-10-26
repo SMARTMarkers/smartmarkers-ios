@@ -39,6 +39,8 @@ open class ClinicalRecordTaskViewController: InstrumentTaskViewController {
        self.view.tintColor = UIColor.red
        task.setStepModifier(ClnicalRecordStepModifier(), forStepIdentifier: ksm_step_review)
        task.setStepModifier(ClinicalRecordAuthorizationStepModifier(), forStepIdentifier: ksm_step_auth)
+		task.setSkip(ClnicalRecordNotFoundNavigationRule(), forStepIdentifier: ksm_step_review)
+		task.setStepModifier(ClinicalRecordNotFoundStepModifier(), forStepIdentifier: ksm_step_completion)
            
     }
     
@@ -49,8 +51,8 @@ open class ClinicalRecordTaskViewController: InstrumentTaskViewController {
     // Defaults
     static let Introduction_Title  =   "Access Request"
     static let Introduction_Text   =   "Please select the type of clinical data to request from your iPhone."
-    static let Completion_Title    =   "Medical Record"
-    static let Completion_Text     =   "Selected data is ready for submission"
+    static let Completion_Title    =   "Health Records"
+    static let Completion_Text     =   "Task completed"
 }
 
 

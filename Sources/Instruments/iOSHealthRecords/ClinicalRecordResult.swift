@@ -32,7 +32,47 @@ class ClinicalRecordResult: ORKResult {
 }
 
 
+class ClnicalRecordNotFoundNavigationRule: ORKSkipStepNavigationRule {
+	
+	override func stepShouldSkip(with taskResult: ORKTaskResult) -> Bool {
+		
+		if let dataResults = taskResult.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [ClinicalRecordResult] {
+			
+			let filtered = dataResults.filter { (result) -> Bool in
+				return (result.clinicalRecords?.count ?? 0 > 0)
+			}
+			return filtered.count == 0
+        }
+		
+		return true
+	}
+	
+}
 
+class ClinicalRecordNotFoundStepModifier: ORKStepModifier {
+	
+    override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
+        
+        guard let completionStep = step as? ORKCompletionStep else {
+            return
+        }
+		
+		if let dataResults = taskResult.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [ClinicalRecordResult] {
+			
+			let filtered = dataResults.filter { (result) -> Bool in
+				return (result.clinicalRecords?.count ?? 0 > 0)
+			}
+			
+			if filtered.count > 0 {
+				completionStep.text = "Health records retrieved."
+			}
+			else {
+				completionStep.text = "Health records could not be retrieved.\n\nThis maybe due to lack of data in the health app or access permission not granted."
+			}
+        }
+		
+	}
+}
 
 class ClnicalRecordStepModifier: ORKStepModifier {
     
@@ -44,7 +84,7 @@ class ClnicalRecordStepModifier: ORKStepModifier {
         
         
         if let dataResults = taskResult.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [ClinicalRecordResult] {
-            stp.title = "Verify Submission"
+            stp.title = "Health Records"
             stp.setupUI(records: dataResults)
         }
 

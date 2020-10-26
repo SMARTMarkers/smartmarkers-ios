@@ -58,7 +58,7 @@ open class ClinicalRecordAuthorizationStepViewController: ORKWaitStepViewControl
         store.requestAuthorization(toShare: nil, read: clinicalTypes) { (success, error) in
             DispatchQueue.main.async {
                 if success {
-                    self.updateText("Authorization determined\nFetching clinical data from HealthKit")
+                    self.updateText("Authorization complete\nFetching clinical records from Health app")
                     self.runQuery()
                 }
                 else {
@@ -132,6 +132,8 @@ open class ClinicalRecordDeidentifyStep: ORKQuestionStep {
         self.text = "Identifiable elements will be obfuscated as per HIPPA guidelines before submission."
         self.question = "Should deidentify?"
         self.answerFormat = ORKAnswerFormat.booleanAnswerFormat()
+		self.isOptional = false
+
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -149,6 +151,7 @@ open class ClinicalRecordRequestStep: ORKQuestionStep {
         self.text = text
         self.title = title
         self.question = "Select the type for clinical record"
+		self.isOptional = false
         let choices = [
             HKClinicalTypeIdentifier.vitalSignsChoice,
             HKClinicalTypeIdentifier.ImmunizationChoice,
