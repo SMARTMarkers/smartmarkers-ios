@@ -55,8 +55,9 @@ open class KneeRangeOfMotion: Instrument {
         
         if let motionResult = result.stepResult(forStepIdentifier: "knee.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
             
-            if motionResult.flexed == 0.0 && motionResult.extended == 0.0 {
+            if motionResult.minimum == 0.0 && motionResult.maximum == 0.0 {
                 return nil
+				
             }
             
             
@@ -66,9 +67,9 @@ open class KneeRangeOfMotion: Instrument {
             let leftLimb = limbOption == .left
             
             let flexedComponent = ObservationComponent()
-            flexedComponent.valueQuantity = Quantity.sm_Angle(motionResult.flexed)
+            flexedComponent.valueQuantity = Quantity.sm_Angle(motionResult.minimum)
             let extendedComponent = ObservationComponent()
-            extendedComponent.valueQuantity = Quantity.sm_Angle(motionResult.extended)
+            extendedComponent.valueQuantity = Quantity.sm_Angle(motionResult.maximum)
             if leftLimb {
                 flexedComponent.code = Coding.sm_KneeLeftFlexedRangeofMotionQuantitative().sm_asCodeableConcept()
                 extendedComponent.code = Coding.sm_KneeLeftExtendedRangeofMotionQuantitative().sm_asCodeableConcept()
@@ -141,7 +142,7 @@ open class ShoulderRangeOfMotion: Instrument {
         
          if let motionResult = result.stepResult(forStepIdentifier: "shoulder.range.of.motion")?.firstResult as? ORKRangeOfMotionResult {
             
-            if motionResult.flexed == 0.0 && motionResult.extended == 0.0 {
+            if motionResult.minimum == 0.0 && motionResult.maximum == 0.0 {
                 return nil
             }
 
@@ -151,9 +152,9 @@ open class ShoulderRangeOfMotion: Instrument {
             let leftLimb = limbOption == .left
             
             let flexedComponent = ObservationComponent()
-            flexedComponent.valueQuantity = Quantity.sm_Angle(motionResult.flexed)
+            flexedComponent.valueQuantity = Quantity.sm_Angle(motionResult.minimum)
             let extendedComponent = ObservationComponent()
-            extendedComponent.valueQuantity = Quantity.sm_Angle(motionResult.extended)
+            extendedComponent.valueQuantity = Quantity.sm_Angle(motionResult.maximum)
             if leftLimb {
                 flexedComponent.code = Coding.sm_ShoulderLeftFlexionRangeOfMotionQuantitative().sm_asCodeableConcept()
                 extendedComponent.code = Coding.sm_ShoulderLeftExtensionRangeOfMotionQuantitative().sm_asCodeableConcept()

@@ -88,7 +88,7 @@ open class OmronStepViewController: WebFetchStepViewController {
                     ]
                     self.omron.text = "Fetch complete"
                     self.continueButtonTitle = "Submit"
-                    self.tableView.reloadData()
+					self.tableView?.reloadData()
                     self.updateButtonStates()
                 }
             }
