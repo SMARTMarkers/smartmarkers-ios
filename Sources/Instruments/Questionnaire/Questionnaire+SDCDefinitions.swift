@@ -29,7 +29,15 @@ let kSD_QuestionnaireResponseScores = "http://hl7.org/fhir/StructureDefinition/q
 let kSD_QuestionnaireResponseScoresTheta = "http://hl7.org/fhir/StructureDefinition/questionnaire-scores/theta"
 let kSD_QuestionnaireResponseScoresStandardError = "http://hl7.org/fhir/StructureDefinition/questionnaire-scores/standarderror"
 
+/// Questionnaire Unit Extensions
+let kSD_QuestionnaireUnitExtension = "http://hl7.org/fhir/StructureDefinition/questionnaire-unit"
+let kSD_QuestionnaireAllowedUnitsExtension = "http://hl7.org/fhir/StructureDefinition/elementdefinition-allowedUnits"
 
 // ValueSets
 
 let kVS_YesNoDontknow = "http://hl7.org/fhir/ValueSet/yesnodontknow"
+
+/// Body Weight Loinc Code
+let kBodyWeightLoinc = "29463-7"
+/// Body Height Loinc Code
+let kBodyHeightLoinc = "8302-2"

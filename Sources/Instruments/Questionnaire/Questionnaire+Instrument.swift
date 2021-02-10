@@ -53,13 +53,13 @@ extension SMART.Questionnaire: Instrument {
         set { }
         get {
             var searchParam = [String]()
-            
-//            if let id = id?.string {
-//                searchParam.append(id)
-//            }
-//            
+        
             if let url = url?.absoluteString {
                 searchParam.append(url)
+            }
+            
+            else if let id = id?.string {
+                searchParam.append(id)
             }
             
             if !searchParam.isEmpty {
@@ -150,6 +150,7 @@ extension SMART.Questionnaire: Instrument {
         let answer = QuestionnaireResponse(status: .completed)
         answer.questionnaire = (url != nil) ? FHIRCanonical(url!.absoluteString) : nil
         answer.authored = DateTime.now
+        answer.identifier = identifier?.first
         answer.item = itemGroups
         
         let qrId = "urn:uuid:\(UUID().uuidString)"
@@ -202,3 +203,4 @@ extension Questionnaire {
         return false
     }
 }
+

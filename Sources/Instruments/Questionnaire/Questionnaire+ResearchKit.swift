@@ -2,7 +2,7 @@
 //  Questionnaire+Extensions.swift
 //  SMARTMarkers
 //
-//  Created by Raheel Sayeed on 7/3/18.     
+//  Created by Raheel Sayeed on 7/3/18.
 //  Copyright © 2018 Boston Children's Hospital. All rights reserved.
 //
 
@@ -100,7 +100,7 @@ extension QuestionnaireItem {
                     }
                     break
                     
-                case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string, .integer, .decimal, .text:
+                case .choice, .openChoice, .boolean, .date, .dateTime, .time, .string, .integer, .decimal, .text, .url:
                     do {
                         if let step = try QuestionnaireItemStep(self) {
                             step.answerFormat = answerFormat
@@ -196,10 +196,10 @@ extension QuestionnaireItem {
             callback(ORKAnswerFormat.textAnswerFormat(), nil)
             
         case .integer:
-            callback(ORKAnswerFormat.integerAnswerFormat(withUnit: nil), nil)
+            callback(ORKAnswerFormat.integerAnswerFormat(withUnit: itemUnit()), nil)
             
         case .decimal:
-            callback(ORKAnswerFormat.decimalAnswerFormat(withUnit: nil), nil)
+            callback(IfWeightItem() ?? IfHeightItem() ?? ORKAnswerFormat.decimalAnswerFormat(withUnit: itemUnit()), nil)
             
         case .choice, .openChoice:
 
@@ -330,7 +330,7 @@ extension QuestionnaireItemEnableWhen {
         }
         else if let coding = answerCoding {
             // TODO
-            let value = (coding.system?.absoluteString ?? "") + kDelimiter + coding.code!.string
+            let value = (coding.system?.absoluteString ?? kDefaultSystem) + kDelimiter + coding.code!.string
             return ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector, expectedAnswerValue: value as NSCoding & NSCopying & NSObjectProtocol)
         }
         return nil
@@ -347,6 +347,10 @@ extension QuestionnaireItemEnableWhen {
         case .eq:
             let skipIfNot = NSCompoundPredicate(notPredicateWithSubpredicate: resultPredicate)
             predicates.append(skipIfNot)
+            break
+        case .ne:
+            let skipIf = NSCompoundPredicate(andPredicateWithSubpredicates: [resultPredicate])
+            predicates.append(skipIf)
             break
         default:
             break
