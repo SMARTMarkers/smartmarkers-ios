@@ -1,37 +1,46 @@
 //
-//  HKClinicalRecordStep.swift
+//  HealthRecordAuthorizationStep.swift
 //  SMARTMarkers
 //
-//  Created by Raheel Sayeed on 3/19/19.
-//  Copyright © 2019 Boston Children's Hospital. All rights reserved.
+//  Created by Raheel Sayeed on 2/24/21.
+//  Copyright © 2021 Boston Children's Hospital. All rights reserved.
 //
 
 import Foundation
-import ResearchKit
 import HealthKit
-
-
-
+import ResearchKit
 
 
 @available(iOS 12.0, *)
-open class ClinicalRecordWaitStep: ORKWaitStep {
+open class HealthRecordAuthorizationStep: ORKWaitStep {
     
     var clinicalTypes: Set<HKClinicalType> = []
 
+    public init(identifier: String, requestedHealthRecordIdentifiers: [HKClinicalTypeIdentifier]?) {
+        super.init(identifier: identifier)
+        if let types = requestedHealthRecordIdentifiers {
+            clinicalTypes = Set(types.map { HKObjectType.clinicalType(forIdentifier: HKClinicalTypeIdentifier(rawValue: $0.rawValue))!})
+        }
+    }
+    
+    required public init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+
     open override func stepViewControllerClass() -> AnyClass {
-        return ClinicalRecordAuthorizationStepViewController.self
+        return HealthRecordAuthorizationStepViewController.self
     }
     
 }
-open class ClinicalRecordAuthorizationStepViewController: ORKWaitStepViewController {
+open class HealthRecordAuthorizationStepViewController: ORKWaitStepViewController {
     
     var clinicalTypes: Set<HKClinicalType> {
         return waitStep.clinicalTypes
     }
     
-    var waitStep: ClinicalRecordWaitStep {
-        return step as! ClinicalRecordWaitStep
+    var waitStep: HealthRecordAuthorizationStep {
+        return step as! HealthRecordAuthorizationStep
     }
 
     var data: [HKSample]?
@@ -83,7 +92,7 @@ open class ClinicalRecordAuthorizationStepViewController: ORKWaitStepViewControl
                         return
                     }
                     if let records = samples as? [HKClinicalRecord] {
-                        let dataResult = ClinicalRecordResult(clinicalType: ctype, records: records)
+                        let dataResult = HealthRecordResult(clinicalType: ctype, records: records)
                         self.addResult(dataResult)
                     }
                 }
@@ -119,53 +128,4 @@ open class ClinicalRecordAuthorizationStepViewController: ORKWaitStepViewControl
     
 
     
-}
-
-
-
-@available(iOS 12.0, *)
-open class ClinicalRecordDeidentifyStep: ORKQuestionStep {
-    
-    public override init(identifier: String) {
-        super.init(identifier: identifier)
-        self.title = "Deidentification"
-        self.text = "Identifiable elements will be obfuscated as per HIPPA guidelines before submission."
-        self.question = "Should deidentify?"
-        self.answerFormat = ORKAnswerFormat.booleanAnswerFormat()
-		self.isOptional = false
-
-    }
-    
-    required public init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-
-
-@available(iOS 12.0, *)
-open class ClinicalRecordRequestStep: ORKQuestionStep {
-    
-    public required init(identifier: String, title: String?, text: String?) {
-        super.init(identifier: identifier)
-        self.text = text
-        self.title = title
-        self.question = "Select the type for clinical record"
-		self.isOptional = false
-        let choices = [
-            HKClinicalTypeIdentifier.vitalSignsChoice,
-            HKClinicalTypeIdentifier.ImmunizationChoice,
-            HKClinicalTypeIdentifier.AllergiesChoice,
-            HKClinicalTypeIdentifier.LabRecordChoice,
-            HKClinicalTypeIdentifier.ConditionsChoice,
-            HKClinicalTypeIdentifier.MedicationsChoice,
-            HKClinicalTypeIdentifier.ProceduresChoice
-        ]
-        let answerFormat = ORKAnswerFormat.choiceAnswerFormat(with: .multipleChoice, textChoices: choices)
-        self.answerFormat = answerFormat
-    }
-    
-    required public init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
 }

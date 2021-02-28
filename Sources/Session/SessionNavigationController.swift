@@ -9,23 +9,30 @@
 import Foundation
 
 
-open class SessionViewController: UINavigationController, UINavigationControllerDelegate {
+open class SessionViewController: UINavigationController {
     
     var shouldVerifyAfter: Bool = false
     
     var sessionEnded: (() -> Void)?
     
     weak var session: SessionController?
-    
-    
+        
     func superDismiss(animated: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: animated, completion: completion)
     }
     
     
     open override func popViewController(animated: Bool) -> UIViewController? {
-
-        if viewControllers.count <= 1 {
+        
+        // Checks whether submissionTask is about to show up and if there were any reports generated for submission
+        // If no reports then submissionModule is dismissed (not shown)
+        // TODO: Better way to handle this
+        // TODO: Add variables for Session && SubmissionTask
+        let hasReports = session!.tasks.filter { $0.reports?.hasReportsToSubmit == true }.count > 0
+        let shouldDismissSubmission = !hasReports && viewControllers.count == 2 && viewControllers.first is SubmissionTaskController
+        let isLastTask = viewControllers.count == 1
+        
+        if shouldDismissSubmission || isLastTask {
             if shouldVerifyAfter {
                 dismissWithDeviceLock(animated: animated)
             }
@@ -59,15 +66,20 @@ open class SessionViewController: UINavigationController, UINavigationController
         delegate = self
     }
     
+
+}
+
+
+extension SessionViewController: UINavigationControllerDelegate {
+    
     public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if operation == .pop {
             return Animator()
         }
         return nil
     }
+    
 }
-
-
 
 
 class Animator: NSObject, UIViewControllerAnimatedTransitioning {

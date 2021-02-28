@@ -20,7 +20,7 @@ public enum InstrumentCategoryType: String, Equatable {
     case ActiveTask         = "ActiveTask"
     case Device             = "Device Generated"
     case WebRepository      = "Web Repository"
-    case clinicalRecord     = "Clinical Record"
+    case healthRecords      = "Health Records"
     case unknown            = "Unknown"
 }
 

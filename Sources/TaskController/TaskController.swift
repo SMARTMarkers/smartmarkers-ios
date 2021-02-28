@@ -259,10 +259,11 @@ extension TaskController: ORKTaskViewControllerDelegate {
     /// Custom dismissal method. Checks if task controller is within a session controller or standalonen
     func dismiss(taskViewController: ORKTaskViewController) {
         
+
         if let navigationController = taskViewController.navigationController {
-            if navigationController.viewControllers.count > 1 {
+            //if navigationController.viewControllers.count > 1 {
                 navigationController.popViewController(animated: true)
-            }
+            //}
         }
         else {
             taskViewController.dismiss(animated: true, completion: nil)

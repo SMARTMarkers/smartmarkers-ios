@@ -131,7 +131,7 @@ public enum Instruments {
             case .StepCount:
                 return StepReport()
             case .HealthRecords:
-                return SMHealthKitRecords()
+                return SMARTMarkers.HealthRecords()
             }
         }
     }

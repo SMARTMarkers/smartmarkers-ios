@@ -80,8 +80,6 @@ open class SessionController: NSObject {
     
     /**
      Prepares a `SessionViewController with all child `ORKTaskViewControllers`
-     
-     
     */
     open func prepareController(callback: @escaping ((_ controller: SessionViewController?, _ error: Error?) -> Void)) {
         
@@ -93,7 +91,7 @@ open class SessionController: NSObject {
             
             group.enter()
             task.prepareSession { (taskViewController, error) in
-                if let tvc = taskViewController {
+                if let tvc = taskViewController as? InstrumentTaskViewController {
                     viewControllers.append(tvc)
                 }
                 else {
@@ -105,16 +103,14 @@ open class SessionController: NSObject {
             }
         }
         
-        
-        
-        
         group.notify(queue: .main) {
             if viewControllers.count > 0 {
                 
                 // SubmissionTask Module appended when a server and patient is found
+                var submissionTask: SubmissionTaskController?
                 if let _ = self.patient, let _ = self.server {
-                    let submissionTask = SubmissionTaskController(self)
-                    viewControllers.append(submissionTask)
+                    submissionTask = SubmissionTaskController(self)
+                    viewControllers.append(submissionTask!)
                 }
                 
                 let sessionView = self.sessionContainerController(for: viewControllers)
@@ -135,7 +131,6 @@ open class SessionController: NSObject {
         }
         
         let container = SessionViewController(views: views, reversed: true, verifyUser: verifyUser, session: self)
-        container.modalPresentationStyle = .fullScreen
 
         return container
     }
@@ -145,7 +140,12 @@ open class SessionController: NSObject {
 
 extension SessionController: ORKTaskViewControllerDelegate {
     
+    // This TaskControllerDelegate only handles the submissionTask;
+    // Not for PGHD generation tasks, i.e. `TaskController`
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        taskViewController.navigationController?.popViewController(animated: true)
+        // Dismiss the navigationController and end session
+        taskViewController.navigationController?.dismiss(animated: true, completion: { [unowned self] in
+            self.onConclusion?(self)
+        })
     }
 }

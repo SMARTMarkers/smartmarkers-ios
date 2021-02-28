@@ -110,6 +110,12 @@ extension Procedure {
         if let cencounter = dstu2["encounter"] as? FHIRJSON {
             encounter = try Reference(json: cencounter).using(source: source)
         }
+        
+        if let subject = subject {
+            var exts = extension_fhir ?? [Extension]()
+            exts.append(Extension.CreateProvenonce(for: subject.using(source: source)))
+            extension_fhir = exts
+        }
     }
     
 }
@@ -150,6 +156,12 @@ extension MedicationRequest {
             
             intent = .order
             
+            if let subject = subject {
+                var exts = extension_fhir ?? [Extension]()
+                exts.append(Extension.CreateProvenonce(for: subject.using(source: source)))
+                extension_fhir = exts
+            }
+            
         }
         catch {
             throw error
@@ -183,6 +195,12 @@ extension Condition {
             
             if let assertr = dstu2["asserter"] as? FHIRJSON {
                 asserter = try Reference(json: assertr).using(source: source)
+            }
+            
+            if let subject = subject {
+                var exts = extension_fhir ?? [Extension]()
+                exts.append(Extension.CreateProvenonce(for: subject.using(source: source)))
+                extension_fhir = exts
             }
           
             
@@ -221,6 +239,12 @@ extension AllergyIntolerance {
         
         var ctx = FHIRInstantiationContext()
         populate(from: dstu2, context: &ctx)
+        
+        if let subject = patient {
+            var exts = extension_fhir ?? [Extension]()
+            exts.append(Extension.CreateProvenonce(for: subject.using(source: source)))
+            extension_fhir = exts
+        }
 
     }
 }
@@ -235,6 +259,11 @@ extension Observation {
             var ctx = FHIRInstantiationContext()
             populate(from: dstu2, context: &ctx)
             
+            if let subject = subject {
+                var exts = extension_fhir ?? [Extension]()
+                exts.append(Extension.CreateProvenonce(for: subject.using(source: source)))
+                extension_fhir = exts
+            }
             
             if let cat = dstu2["category"] as? FHIRJSON {
                 category =  [try CodeableConcept(json: cat)]
@@ -276,6 +305,13 @@ extension Immunization {
         
         status = .completed
         
+        if let subject = patient {
+            var exts = extension_fhir ?? [Extension]()
+            exts.append(Extension.CreateProvenonce(for: subject.using(source: source)))
+            extension_fhir = exts
+        }
+        
+        
         if let vc = try? CodeableConcept(json: dstu2["vaccineCode"] as! FHIRJSON) {
             vaccineCode = vc
         }
@@ -301,3 +337,14 @@ extension Immunization {
 
 
 
+extension SMART.Extension {
+    
+    class func CreateProvenonce(for reference: Reference) -> Extension {
+        let ext = Extension()
+        ext.url = FHIRString("http://fhir-registry.smarthealthit.org/provenonce-reference-resource-location")
+        ext.valueReference = reference
+        return ext
+    }
+    
+    
+}

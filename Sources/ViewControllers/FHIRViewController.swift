@@ -16,7 +16,7 @@ open class FHIRViewController: UIViewController {
     var textView: UITextView!
     
     
-    convenience init(_ resource: Resource) {
+    public convenience init(_ resource: Resource) {
         
         self.init()
         self.resource = resource

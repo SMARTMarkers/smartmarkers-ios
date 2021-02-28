@@ -55,6 +55,7 @@ open class Reports {
         self.taskController = task
     }
     
+    /// Boolean to determine if there are reports generated Today
     public func hasReportsForToday() -> Bool {
         for report in reports {
             if Reports.calendar.isDateInToday(report.rp_date) {
@@ -62,6 +63,11 @@ open class Reports {
             }
         }
         return false
+    }
+    
+    /// Boolean to determine if there are unsubmitted FHIR resources
+    public var hasReportsToSubmit: Bool {
+        !_submissionQueue.isEmpty
     }
     
     
@@ -107,10 +113,6 @@ open class Reports {
             
             callback(nil, SMError.promeasureOrderedInstrumentMissing)
             return
-        }
-        
-        for rp in resultParams {
-            print(rp.relation)
         }
         
         let group = DispatchGroup()
@@ -181,7 +183,7 @@ open class Reports {
                 continue
             }
             
-            Reports.Tag(&submission.bundle, with: patient, request: request)
+            try? Reports.Tag(&submission.bundle, with: patient, request: request)
             group.enter()
             submit(bundle: submission.bundle, server: server) { (success, error) in
                 if let error = error {
@@ -218,7 +220,7 @@ open class Reports {
      - parameter with:      The `Patient` to associate the bundle resources with
      - parameter request:   The `Request` to associate the bundle resources with
      */
-    private static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: Request?) {
+    private static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: Request?) throws {
         
         do {
             let patientReference = try patient?.asRelativeReference()
@@ -295,8 +297,7 @@ open class Reports {
             }
         }
         catch {
-            
-            print(error)
+            throw error
         }
     }
     
@@ -337,13 +338,6 @@ open class Reports {
         }
         semaphore.wait()
     }
-    
-    
-}
-
-
-public extension Reports {
-    
     
     
 }

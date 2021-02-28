@@ -47,4 +47,51 @@ extension HKClinicalTypeIdentifier {
         
         return ORKTextChoice(text: "Vital Signs", detailText: "Requests Vital Signs data from HealthKit" , value: HKClinicalTypeIdentifier.vitalSignRecord as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
     }
+    
+    // as ORKBodyItem
+    
+    public var asBodyItem: ORKBodyItem {
+        
+        let str = HKObjectType.clinicalType(forIdentifier: self)!.categoryDisplayName
+        return ORKBodyItem(text: str, detailText: nil, image: nil, learnMoreItem: nil, bodyItemStyle: .bulletPoint)
+    }
+    
+}
+
+extension HealthRecordResult {
+    
+    func textChoice() -> ORKTextChoice {
+        
+        let clinicalType = HKObjectType.clinicalType(forIdentifier: HKClinicalTypeIdentifier(rawValue: identifier))!.categoryDisplayName
+        
+        return ORKTextChoice(text: clinicalType, detailText: "Records:  #\(records?.count ?? 0)", value: identifier as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
+        
+    }
+    
+}
+
+
+extension HKClinicalType {
+    
+    var categoryDisplayName: String {
+        
+        switch HKClinicalTypeIdentifier(rawValue: identifier) {
+        case .allergyRecord:
+            return "Allergies"
+        case .conditionRecord:
+            return "Conditions"
+        case .immunizationRecord:
+            return "Immunizations"
+        case .labResultRecord:
+            return "Lab Results"
+        case .medicationRecord:
+            return "Medications"
+        case .procedureRecord:
+            return "Procedures"
+        case .vitalSignRecord:
+            return "Vitals Signs"
+        default:
+            return identifier
+        }
+    }
 }

@@ -11,7 +11,7 @@ import ResearchKit
 import SMART
 
 @available(iOS 12.0, *)
-public class SMHealthKitRecords: Instrument {
+open class HealthRecords: Instrument {
     
     public var sm_title: String
     
@@ -27,11 +27,11 @@ public class SMHealthKitRecords: Instrument {
     
     public var sm_reportSearchOptions: [FHIRReportOptions]?
     
-    var settings: [String: String]?
+    var settings: [String: Any]?
     
-    public init(_ settings: [String:String]? = nil) {
+    public init(_ settings: [String:Any]? = nil) {
         sm_title = "HealthKit Clinical Record"
-        sm_type = .clinicalRecord
+        sm_type = .healthRecords
         sm_identifier = "com.apple.healthkit.clinicalrecords"
         self.settings = settings
     }
@@ -39,14 +39,14 @@ public class SMHealthKitRecords: Instrument {
     
     public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
-        let taskViewController = ClinicalRecordTaskViewController(settings: settings)
+        let taskViewController = HealthRecordTaskViewController(settings: settings)
         callback(taskViewController, nil)
     }
     
     public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
         guard let choice = result.stepResult(forStepIdentifier: ksm_step_review)?.results?.first as? ORKChoiceQuestionResult,
-        let dataResults = result.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [ClinicalRecordResult] else {
+        let dataResults = result.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [HealthRecordResult] else {
             return nil
         }
         
@@ -59,7 +59,7 @@ public class SMHealthKitRecords: Instrument {
         for type in clinicalTypes {
             if let healthKitRecord = dataResults.filter ({ $0.identifier == type.identifier }).first {
                 do {
-                    if let resources = try healthKitRecord.clinicalRecords?.compactMap({ try $0.fhirResource?.sm_asR4() }) {
+                    if let resources = try healthKitRecord.records?.compactMap({ try $0.fhirResource?.sm_asR4() }) {
                         fhirResources.append(contentsOf: resources)
                     }
                 } catch {

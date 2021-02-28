@@ -20,7 +20,7 @@ let kSM_Submission_Aborted      = "smartmarkers.submission.aborted"
 let kSM_Submission_Result       = "smartmarkers.submission.result"
 
 
-open class SubmissionTaskController: InstrumentTaskViewController {
+open class SubmissionTaskController: ORKTaskViewController {
     
     public init(_ session: SessionController,  requiresConsent: Bool = false) {
         
@@ -51,12 +51,11 @@ public final class SubmissionTask: ORKNavigableOrderedTask {
             ORKInstructionStep(identifier: kSM_Submission_Aborted, _title: "Cancelled", _detailText: "Submission was aborted"),
             SMSubmissionInProgressStep(identifier: kSM_Submission_InProgress),
             SMSubmissionErrorNotice(identifier: kSM_Submission_Errors),
-            ORKCompletionStep(identifier: kSM_Submission_Completion, _title: "Submitted", _detailText: "Thank You"),
-
+            SMSubmissionConclusionStep(identifier: kSM_Submission_Completion, _title: "Submitted", _detailText: "Thank You"),
         ]
         
        
-        super.init(identifier: "sm.submission.task", steps: steps)
+        super.init(identifier: "smartmarkers.submission.task", steps: steps)
         steps.forEach { (s) in
             s.task = self
         }
