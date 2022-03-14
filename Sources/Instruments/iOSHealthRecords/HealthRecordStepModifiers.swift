@@ -35,17 +35,25 @@ class HealthRecordNotFoundStepModifier: ORKStepModifier {
             return
         }
         
-        if let dataResults = taskResult.stepResult(forStepIdentifier: ksm_step_auth)?.results as? [HealthRecordResult] {
+        if let dataResults = taskResult.stepResult(forStepIdentifier: ksm_healthrecord_step_authorization)?.results as? [HealthRecordResult] {
             
             let filtered = dataResults.filter { (result) -> Bool in
                 return (result.records?.count ?? 0 > 0)
             }
             
             if filtered.count > 0 {
-                completionStep.text = "Health records retrieved."
+                completionStep.title = "Health records retrieved"
+				completionStep.bodyItems = nil
             }
             else {
-                completionStep.text = "Health records could not be retrieved.\n\nThis maybe due to lack of data in the health app or access permission not granted."
+                completionStep.title = "Health records were not retrieved"
+				completionStep.bodyItems = [
+					ORKBodyItem(text: "This maybe due to lack of data in the health app or access permission not granted." ,
+								detailText: nil,
+								image: nil,
+								learnMoreItem: HealthRecords.linkInstructionsAsLearnMoreItem(),
+								bodyItemStyle: .text)
+				]
             }
         }
         

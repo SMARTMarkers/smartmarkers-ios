@@ -11,160 +11,90 @@ import ResearchKit
 import SMART
 
 
-
-
-public enum QuestionnaireItemExtensionType {
-    
-    case calculatedExpression
-    
-    case variable
-}
-
-
 public protocol QuestionnaireItemStepProtocol {
-    
-    /**
-     Assigned Variable for Each Step: Defined in FHIR
-     http://hl7.org/fhir/StructureDefinition/variable
-    */
     
     var stepIdentifier: String { get }
     
     var type: String? { get set }
     
-    
-    var variable: String? { get set }
-    
-    /**
-     Calculable Expression
-    */
-    var variableExpression: String? { get set }
-    
-    
-    var calculatedExpression: String? { get set }
-    
-    
-    var calculationResult: String? { get }
-    
-    
-    var calculatedDescription: String? { get set }
-    
-    var isCalculationNeeded: Bool { get }
-    
-    
     var result: ORKResult? { get }
-    
-    func calculate(from result: ORKTaskResult, variables: [String: String]?) -> Decimal?
-    
+        
     init?(_ item: QuestionnaireItem) throws
-    
 }
+
+
 
 public extension QuestionnaireItemStepProtocol where Self : ORKStep {
     
-    
     init?(_ item: QuestionnaireItem) throws {
         
-        let linkId = item.linkId!.string
+		guard let linkId = item.linkId?.string else {
+			throw SMError.undefined(description: "Questionnaire.Item does not have required attribute = linkId")
+		}
         self.init(identifier: linkId)
         self.type = item.type?.rawValue
+		isOptional = (item.required?.bool != nil) ? !item.required!.bool : true
+		
         
-        if let _ = item.extension_fhir {
-            do {
-                try configureExtension(type: .calculatedExpression, item: item)
-            }
-            
-        }
-        
-        if let slf = self as? ORKQuestionStep {
-            
+        if let slf = self as? QuestionnaireItemStep {
             if let q = item.text?.localized {
                 slf.question = q
+				slf.text = item.sm_questionItem_instructions()
             }
             else {
                 throw SMError.instrumentQuestionnaireMissingText(linkId: linkId)
             }
             
         }
-        
-        if let slf = self as? ORKInstructionStep {
-        
-            if let q = item.sm_questionItem_instructions() ?? item.text?.localized {
-                slf.text = q
-            }
-            else {
-                throw SMError.instrumentQuestionnaireMissingText(linkId: linkId)
-            }
+        else if let slf = self as? SMInstructionStep {
+			slf.isOptional = false
+//			slf.text = " "
+			slf.detailText = " "
+//			slf.footnote = ""
+			slf.text =  " "
+			let text_attributed = item.text?.sm_xhtmlAttributedText()
+			let text = item.text?.localized
+			let instructions = item.sm_questionItem_instructions()
+			if text_attributed != nil {
+				// Ignore item.text
+				slf.attributedBodyString = text_attributed
+				slf.text = instructions
+			}
+			else {
+				slf.text = instructions
+				slf.detailText = text
+			}
         }
-        
+		else if let slf = self as? ORKWebViewStep {
+			
+			if let xhtml = item.text?.extensions(forURI: kSD_QuestionnaireItemRenderingXhtml)?.first?.valueString?.string {
+				slf.html = xhtml
+			}
+			else {
+				slf.html = item.text?.localized ?? item.sm_questionItem_instructions()
+			}
+		}
     }
     
     var stepIdentifier: String {
-        return identifier
+        identifier
     }
     
-    mutating func configureExtension(type: QuestionnaireItemExtensionType, item: QuestionnaireItem) throws {
-        
-        if let calculationExtension = item.extensions(forURI: kSD_QuestionnaireCalculatedExpression)?.first {
-            guard let expression = calculationExtension.valueExpression, let expStr = expression.expression?.string else {
-                throw SMError.instrumentQuestionnaireMissingCalculatedExpression(linkId: item.linkId!.string)
-            }
-            self.calculatedExpression = expStr
-            self.calculatedDescription = expression.description_fhir?.string
-        }
-    }
-    
-    mutating func configureExtension(type: QuestionnaireItemExtensionType, extensions: [Extension]) {
-        
-    }
-    
-    mutating func assignVariable(variable: String) {
-        self.variable = variable
-    }
-    
-    var isCalculationNeeded: Bool {
-        return calculatedExpression != nil
-    }
-    
-    func calculate(from result: ORKTaskResult, variables: [String: String]?) -> Decimal? {
-        
-        guard let exp = calculatedExpression else {
-            return nil
-        }
-        
-        var stepResults = [String: String]()
-        
-        if let variables = variables {
-            for (key, value) in variables {
-                if let stepResult = result.stepResult(forStepIdentifier: value)?.results?.first as? ORKNumericQuestionResult {
-                    if let decimalAnswer = stepResult.numericAnswer?.stringValue {
-                        stepResults[key] = decimalAnswer
-                    }
-                }
-                
-            }
-        }
-        
-        
-        print(stepResults)
-        
-        return nil
-    }
+}
+
+class ItemInstructionStep: SMInstructionStep, QuestionnaireItemStepProtocol {
+	
+	var type: String?
+	
+	var result: ORKResult?
+	
+	
+	
 }
 
 public class QuestionnaireItemInstructionStep: ORKInstructionStep, QuestionnaireItemStepProtocol {
     
     public var type: String?
-    
-    public var calculatedDescription: String?
-    
-    public var variable: String?
-    
-    public var variableExpression: String?
-    
-    public var calculatedExpression: String?
-    
-    public var calculationResult: String?
     
     public var result: ORKResult?
     
@@ -172,39 +102,165 @@ public class QuestionnaireItemInstructionStep: ORKInstructionStep, Questionnaire
 }
 
 public class QuestionnaireItemStep: ORKQuestionStep, QuestionnaireItemStepProtocol {
+	
     public var type: String?
-
-    public var calculatedDescription: String?
-    
-    public var variable: String?
-    
-    public var variableExpression: String?
-    
-    public var calculatedExpression: String?
-    
-    public var calculationResult: String?
     
     public var result: ORKResult?
     
+	public override func stepViewControllerClass() -> AnyClass {
+		QuestionItemStepViewController.self
+	}
     
-    
+}
+
+class QuestionItemStepViewController: ORKQuestionStepViewController {
+	
 }
 
 public class QuestionnaireFormStep: ORKFormStep, QuestionnaireItemStepProtocol {
     
     public var type: String?
-  
-    public var calculatedDescription: String?
-    
-    public var variable: String?
-    
-    public var variableExpression: String?
-    
-    public var calculatedExpression: String?
-    
-    public var calculationResult: String?
     
     public var result: ORKResult?
-    
-    
+	
+	public override func stepViewControllerClass() -> AnyClass {
+		QuestionnaireItemFormViewController.self
+	}
+}
+
+public class QuestionnaireItemFormViewController: ORKFormStepViewController {
+
+}
+
+open class SMLearnMoreInstructionStep: ORKLearnMoreInstructionStep {
+	
+	public var attributedBodyString: NSAttributedString?
+	
+	public override func stepViewControllerClass() -> AnyClass {
+		SMLearnMoreStepViewController.classForCoder()
+	}
+}
+class SMLearnMoreStepViewController: ORKLearnMoreStepViewController {
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		view.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1.0)
+	}
+
+	/*
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		print(step?.title)
+		print(stepView?.instructionStep.attributedDetailText)
+	}
+	
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		fix()
+		print(step?.title)
+
+		
+
+		
+	}
+
+	
+	override func viewLayoutMarginsDidChange() {
+		fix()
+
+		super.viewLayoutMarginsDidChange()
+
+	}
+
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		view.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1.0)
+		fix()
+	}
+
+		
+	func fix() {
+		let stp = self.step as! SMLearnMoreInstructionStep
+		stp.text = " "
+		stp.detailText = " "
+		
+		print(stp.attributedBodyString)
+		print(stp.attributedDetailText)
+		
+		if let attributedString = stp.attributedBodyString {
+			let textLabel = self.view.subviewsRecursive().filter({ $0.isKind(of: ORKLabel.self) })[2] as! ORKLabel
+			print(attributedString)
+			textLabel.attributedText  = attributedString
+			textLabel.setNeedsLayout()
+			textLabel.setNeedsDisplay()
+		}
+	}
+*/
+}
+
+
+public class SMInstructionStep: ORKInstructionStep {
+	public var attributedBodyString: NSAttributedString? {
+		willSet {
+			text = " "
+			detailText = " "
+		}
+	}
+	public override func stepViewControllerClass() -> AnyClass {
+		SMInstructionStepViewController.self
+	}
+}
+class SMInstructionStepViewController: ORKInstructionStepViewController {
+	
+
+	
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		justDoThis()
+		
+
+		
+	}
+
+	
+	override func viewLayoutMarginsDidChange() {
+		justDoThis()
+
+		super.viewLayoutMarginsDidChange()
+
+	}
+
+	
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		justDoThis()
+
+	}
+		
+	
+	
+	
+	func justDoThis() {
+		
+		
+		let stp = self.step as! SMInstructionStep
+		if let attributedString = stp.attributedBodyString {
+			let textLabel = self.view.subviewsRecursive().filter({ $0.isKind(of: ORKLabel.self) })[2] as! ORKLabel
+			textLabel.attributedText  = attributedString
+			textLabel.setNeedsLayout()
+			textLabel.setNeedsDisplay()
+		}
+		
+
+	}
+	
+}
+extension UIView {
+
+	func subviewsRecursive() -> [UIView] {
+		return subviews + subviews.flatMap { $0.subviewsRecursive() }
+	}
+
 }

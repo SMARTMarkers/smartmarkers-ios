@@ -43,7 +43,7 @@ open class StroopTest: Instrument {
         
     }
     
-    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 
         let task = ORKOrderedTask.stroopTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, numberOfAttempts: numberOfAttempts, options: [])
         let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())

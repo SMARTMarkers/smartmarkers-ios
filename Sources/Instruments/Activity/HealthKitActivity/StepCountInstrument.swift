@@ -37,8 +37,8 @@ open class StepReport: Instrument {
     
     var stepActivity = StepActivity(Date(), nil)
     
-    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
+	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+
         stepActivity.store = HKHealthStore()
         let activityTask = ActivityReportTask(activity: stepActivity)
         let activityTaskView = ActivityTaskViewController(activityTask: activityTask)

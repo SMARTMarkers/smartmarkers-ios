@@ -33,11 +33,20 @@ let kSD_QuestionnaireResponseScoresStandardError = "http://hl7.org/fhir/Structur
 let kSD_QuestionnaireUnitExtension = "http://hl7.org/fhir/StructureDefinition/questionnaire-unit"
 let kSD_QuestionnaireAllowedUnitsExtension = "http://hl7.org/fhir/StructureDefinition/elementdefinition-allowedUnits"
 
-// ValueSets
+/// Questionnaire Rendering Extension
+let kSD_QuestionnaireItemRenderingXhtml = "http://hl7.org/fhir/StructureDefinition/rendering-xhtml"
+let kSD_QuestionnaireItemRegex = "http://hl7.org/fhir/StructureDefinition/regex"
 
+// Yes No IdontKnow ValueSet System
 let kVS_YesNoDontknow = "http://hl7.org/fhir/ValueSet/yesnodontknow"
 
 /// Body Weight Loinc Code
 let kBodyWeightLoinc = "29463-7"
 /// Body Height Loinc Code
 let kBodyHeightLoinc = "8302-2"
+
+
+/// item.Answer Extensions
+let kSD_QuestionnaireMinValue = "http://hl7.org/fhir/StructureDefinition/minValue"
+let kSD_QuestionnaireMaxValue = "http://hl7.org/fhir/StructureDefinition/maxValue"
+

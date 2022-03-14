@@ -162,9 +162,9 @@ open class InstrumentListViewController :  UITableViewController {
         deselect(indexPath)
     }
     
+	/// TODO: More Info about the Measure
     override open func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         
-        print("More info about the Measure")
 		
     }
     

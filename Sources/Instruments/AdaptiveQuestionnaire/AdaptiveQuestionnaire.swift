@@ -60,7 +60,7 @@ extension Questionnaire {
 
 extension Questionnaire {
     
-    public func ResponseBody(responseIdentifier: String, answer: Any? = nil) -> QuestionnaireResponse? {
+    func ResponseBody(responseIdentifier: String, answer: Any? = nil) -> QuestionnaireResponse? {
         
         let qr = QuestionnaireResponse()
         qr.id = FHIRString(responseIdentifier)

@@ -203,14 +203,11 @@ extension ORKChoiceQuestionResult {
             let answer = QuestionnaireResponseItemAnswer()
             let components = choice.components(separatedBy: kDelimiter)
             
-            
             if components.count < 2 {
-                
                 // valueString
                 answer.valueString = components.first!.fhir_string
             }
             else {
-                
                 // valueCoding
                 let system = components[0]
                 let code = components[1]
@@ -218,8 +215,7 @@ extension ORKChoiceQuestionResult {
                 answer.valueCoding = Coding()
                 answer.valueCoding!.system = FHIRURL(system)
                 answer.valueCoding!.code = code.fhir_string
-                answer.valueCoding!.display = display?.fhir_string
-                
+				answer.valueCoding!.display = (display?.isEmpty ?? false) ? nil : display!.fhir_string
             }
             answers.append(answer)
         }

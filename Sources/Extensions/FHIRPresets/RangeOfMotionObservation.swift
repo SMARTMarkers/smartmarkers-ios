@@ -49,9 +49,13 @@ public extension Observation {
 
 public extension Coding {
     
-    func sm_asCodeableConcept() -> CodeableConcept {
-        return CodeableConcept.sm_From([self], text: display?.string)
+	func sm_asCodeableConcept(_ text: String? = nil) -> CodeableConcept {
+        return CodeableConcept.sm_From([self], text: text ?? display?.string)
     }
+	
+	class func sm_AgeLoinc() -> Coding {
+		sm_LOINC("30525-0", "Age")
+	}
     
     class func sm_ActiveRangeOfMotionPanel() -> Coding {
         return

@@ -39,6 +39,10 @@ public protocol Report: Resource {
     
     /// Representation `ViewController`
     var rp_viewController: UIViewController? { get }
+	
+	/// Assign a `Patient` to the generated Resource
+	@discardableResult
+	func sm_assign(patient: Patient) -> Bool
     
 }
 
@@ -56,6 +60,16 @@ public extension Report {
     var rp_viewController: UIViewController? {
         return ReportViewController(self)
     }
+	
+	var sm_Unit: String? {
+		if let slf = self as? Observation {
+			return slf.valueQuantity?.unit?.string ??
+				slf.valueQuantity?.code?.string ??
+				slf.component?.first?.valueQuantity?.unit?.string ??
+				slf.component?.first?.valueQuantity?.code?.string
+		}
+		return nil
+	}
 }
 
 public struct FHIRReportOptions {
@@ -123,7 +137,7 @@ public class SubmissionBundle {
      - parameter bundle: `SMART.Bundle` generated from the task session
      - parameter requestId: Optional request identifier
      */
-    init(taskId: String, bundle: SMART.Bundle, requestId: String? = nil) {
+    public init(taskId: String, bundle: SMART.Bundle, requestId: String? = nil) {
         self.taskId = taskId
         self.bundle = bundle
         self.requestId = requestId

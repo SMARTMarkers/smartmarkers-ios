@@ -10,24 +10,31 @@ import Foundation
 import HealthKit
 import ResearchKit
 
-class HealthRecordResult: ORKResult {
+public class HealthRecordResult: ORKResult {
     
-    var records: [HKClinicalRecord]?
+    public var records: [HKClinicalRecord]?
     
     required convenience init(clinicalType: HKClinicalType, records: [HKClinicalRecord]) {
         self.init(identifier: clinicalType.identifier)
         self.records = records
     }
     
-    override func encode(with aCoder: NSCoder) {
+	public override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         aCoder.encode(records as Any, forKey: "healthRecords")
     }
     
-    override func copy(with zone: NSZone? = nil) -> Any {
+	public override func copy(with zone: NSZone? = nil) -> Any {
         let result = super.copy(with: zone) as! HealthRecordResult
         result.records = records
         return result
     }
+	
+	public class func From(taskResult: ORKTaskResult) -> [HealthRecordResult]? {
+		
+		return taskResult
+			.stepResult(forStepIdentifier: ksm_healthrecord_step_authorization)?
+			.results as? [HealthRecordResult]
+	}
 }
 

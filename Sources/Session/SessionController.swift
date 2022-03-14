@@ -130,7 +130,7 @@ open class SessionController: NSObject {
             views.insert(verifyController, at: 0)
         }
         
-        let container = SessionViewController(views: views, reversed: true, verifyUser: verifyUser, session: self)
+        let container = SessionViewController(views: views, reversed: false, verifyUser: verifyUser, session: self)
 
         return container
     }
@@ -144,8 +144,8 @@ extension SessionController: ORKTaskViewControllerDelegate {
     // Not for PGHD generation tasks, i.e. `TaskController`
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
         // Dismiss the navigationController and end session
-        taskViewController.navigationController?.dismiss(animated: true, completion: { [unowned self] in
-            self.onConclusion?(self)
-        })
+		(taskViewController.navigationController ?? taskViewController).dismiss(animated: true) { [unowned self]  in
+			self.onConclusion?(self)
+		}
     }
 }

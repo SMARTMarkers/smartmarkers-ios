@@ -51,8 +51,8 @@ open class OMRON: Instrument, WebInstrument {
         try auth.handleRedirectURL(redirectURL)
     }
     
-    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
+	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+
         let omronTaskViewController = OmronTaskViewController(auth: auth)
         callback(omronTaskViewController, nil)
     }

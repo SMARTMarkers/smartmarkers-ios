@@ -22,6 +22,60 @@ public protocol InstrumentResolver: class {
     
 }
 
+/**
+TaskAttempt captures start and end times with a completion state of a task
+*/
+public struct TaskAttempt {
+	
+	public enum TaskAttemptState: String {
+		case discarded, failed, completedWithSuccess, completedWithoutSuccess, completed
+	}
+	
+	public let startTime: Date
+	public let endTime: Date?
+	public let state: TaskAttemptState
+	
+	public init(_ startTime: Date, _ endTime: Date?, _ state: TaskAttemptState) {
+		self.startTime = startTime
+		self.endTime = endTime
+		self.state = state
+	}
+	
+	public init(serialized: [String: Any]) throws {
+
+		guard let startTime_str = serialized["startTime"] as? String,
+			  let start_dateTime = DateTime(string: startTime_str)?.nsDate,
+			  let state_str 	= serialized["state"] as? String,
+			  let state			= TaskAttemptState(rawValue: state_str) else {
+			throw SMError.undefined(description: "Invalid format of JSON for TaskAttempt")
+		}
+		
+		self.startTime = start_dateTime
+		self.state = state
+		if let endTime_str = serialized["endTime"] as? String {
+			self.endTime = DateTime(string: endTime_str)?.nsDate
+		}
+		else {
+			self.endTime = nil
+		}
+	}
+	
+	public func serialize() throws -> [String: Any] {
+		var errors = [FHIRValidationError]()
+		var json = [
+			"startTime"	: startTime.fhir_asDateTime().asJSON(errors: &errors),
+			"state"		: state.rawValue
+		]
+		
+		if let endtime_str = endTime?.fhir_asDateTime().asJSON(errors: &errors) {
+			json["endTime"] = endtime_str
+		}
+		
+		return json
+	}
+	
+}
+
 /** 
 TaskController is the central class for managing PGHD
 
@@ -44,7 +98,7 @@ public final class TaskController: NSObject {
     public weak var instrumentResolver: InstrumentResolver?
    
     /// Callback; called when a PGHD user task-session is completed
-    public var onTaskCompletion: ((_ submissionBundle: SubmissionBundle?, _ error: Error?) -> Void)?
+	public var onTaskCompletion: (( _ attempt: TaskAttempt, _ submissionBundle: SubmissionBundle?, _ error: Error?) -> Void)?
    
     /// Schedule referenced from the receiver's request
     public lazy var schedule: TaskSchedule? = {
@@ -55,6 +109,14 @@ public final class TaskController: NSObject {
     public var canBegin: Bool {
         return (schedule?.status == .Due || schedule?.status == .Overdue)
     }
+	
+	/// Instrument Presenter Options
+	public var presenterOptions: InstrumentPresenterOptions?
+	
+	/// TaskAttemptedState
+	public internal(set) lazy var attempts: [TaskAttempt] = {
+		[TaskAttempt]()
+	}()
    
     /**
     Initializer
@@ -82,14 +144,14 @@ public final class TaskController: NSObject {
 
     - parameter callback: Callback called after attempting to create a view controller for task session. 
     */
-    public func prepareSession(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+	public func prepareSession(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
         
         guard let instrument = self.instrument else {
             callback(nil, SMError.promeasureOrderedInstrumentMissing)
             return
         }
         
-        instrument.sm_taskController { (taskViewController, error) in
+		instrument.sm_taskController(config: presenterOptions) { (taskViewController, error) in
             taskViewController?.delegate = self
             callback(taskViewController, error)
         }
@@ -252,6 +314,31 @@ public extension TaskController  {
     }
 }
 
+/// Serialization for locally saving task
+public extension TaskController {
+		
+	// Todo: Serialize FHIR resources also
+	/// Serialize Attempts
+	func serialize() throws -> [String: Any] {
+		
+		let jsonAttempts = try attempts.map({ try $0.serialize() })
+		return ["attempts": jsonAttempts]
+	}
+	
+	/// Create attempts from Serialized
+	func populate(from serialized: [String: Any]) throws {
+		
+		guard let attmps = serialized["attempts"] as? [[String: Any]] else {
+			throw SMError.undefined(description: "unable to populate, invalid json format")
+		}
+		
+		let attemp = try attmps.map ({ try TaskAttempt(serialized: $0) })
+		self.attempts.append(contentsOf: attemp)
+	}
+	
+	
+}
+
 
 /// Extension for PDController's ResearchKit session delegation
 extension TaskController: ORKTaskViewControllerDelegate {
@@ -272,31 +359,51 @@ extension TaskController: ORKTaskViewControllerDelegate {
    
     // MARK: Report Generation
 
-    // After each task session, the controller generates `SubmissionBundle` holding a FHIR `Bundle` to be sent to the FHIR server. See `Instrument.sm_generateResponse(from:task:)` for more info.
+    /// After each task session, the controller generates `SubmissionBundle` holding a FHIR `Bundle` to be sent to the FHIR server. See `Instrument.sm_generateResponse(from:task:)` for more info.
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        
-        // ***
+		
+        // ***************
         // Bug :Premature firing before conclusion step
-        // ***
+        // ***************
         let stepIdentifier = taskViewController.currentStepViewController!.step!.identifier
         if stepIdentifier.contains("range.of.motion") { return }
-        // ***
-        
-        if reason == .discarded, reason == .failed  {
-
+        // ***************
+		        
+        if reason == .discarded  {
+			
+			let attempt = recordAttempt(taskViewController, .discarded)
+			onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
         }
-        
-        if reason == .completed {
+		else if reason == .failed {
+			
+			let attempt = recordAttempt(taskViewController, .failed)
+			onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
+		}
+        else if reason == .completed {
             
             if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
+				
                 let gr = reports?.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString)
-                onTaskCompletion?(gr, nil)
+				let attempt = recordAttempt(taskViewController, .completedWithSuccess)
+				onTaskCompletion?(attempt, gr, nil)
             }
             else {
-                onTaskCompletion?(nil, SMError.instrumentResultBundleNotCreated)
+				
+				let attempt = recordAttempt(taskViewController, .completedWithoutSuccess)
+                onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
             }
         }
-        
+
         dismiss(taskViewController: taskViewController)
     }
+	
+	@discardableResult
+	private func recordAttempt(_ taskViewController: ORKTaskViewController, _ state: TaskAttempt.TaskAttemptState) -> TaskAttempt {
+		
+		let attempt = TaskAttempt(taskViewController.result.startDate, taskViewController.result.endDate, state)
+		attempts.insert(attempt, at: 0)
+		return attempt
+	}
 }
+
+

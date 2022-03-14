@@ -44,8 +44,8 @@ open class KneeRangeOfMotion: Instrument {
     }
     
     
-    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
+	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+
         let task = ORKOrderedTask.kneeRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
         let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
@@ -131,8 +131,8 @@ open class ShoulderRangeOfMotion: Instrument {
         sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
     }
     
-    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
+	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+
         let task = ORKOrderedTask.shoulderRangeOfMotionTask(withIdentifier: sm_title, limbOption: limbOption, intendedUseDescription: usageDescription, options: [])
         let taskViewController = ORKTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)

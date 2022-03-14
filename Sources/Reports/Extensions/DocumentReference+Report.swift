@@ -20,7 +20,11 @@ extension DocumentReference: Report {
     }
     
     public var rp_title: String? {
-        return "DocumentReference"
+		return
+			content?.compactMap({ $0.attachment?.title?.string }).first ??
+			description_fhir?.string
+			
+		
     }
     
     public var rp_description: String? {
@@ -36,5 +40,16 @@ extension DocumentReference: Report {
     public var rp_observation: String? {
         return nil
     }
+	
+	@discardableResult
+	public func sm_assign(patient: Patient) -> Bool {
+		
+		if let patientReference = try? patient.asRelativeReference() {
+			subject = patientReference
+			return true
+		}
+		
+		return false
+	}
     
 }

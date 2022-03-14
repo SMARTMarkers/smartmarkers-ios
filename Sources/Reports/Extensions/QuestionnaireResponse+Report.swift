@@ -11,6 +11,18 @@ import SMART
 
 
 extension QuestionnaireResponse : Report {
+	
+	@discardableResult
+	public func sm_assign(patient: Patient) -> Bool {
+		
+		if let patientReference = try? patient.asRelativeReference() {
+			subject = patientReference
+			return true
+		}
+		
+		return false
+	}
+	
     
     public var rp_identifier: String? {
         return id?.string ?? ""
@@ -21,7 +33,7 @@ extension QuestionnaireResponse : Report {
     }
     
     public var rp_title: String? {
-        return "Response #\(id?.string ?? "-")"
+		questionnaire?.resolved(Questionnaire.self)?.sm_title ?? "Survey Response"
     }
     
     public var rp_description: String? {

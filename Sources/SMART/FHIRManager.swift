@@ -83,8 +83,8 @@ public class FHIRManager {
     /// Convinience authorizer
     public func authorize(callback: @escaping (_ success: Bool, _ name: String?, _ error: Error?) -> Void) {
         
-        main.forgetClientRegistration()
-        main.reset()
+//        main.forgetClientRegistration()
+//        main.reset()
         main.authorize(callback: { [unowned self] (patientResource,  error) in
             
             if let p = patientResource {

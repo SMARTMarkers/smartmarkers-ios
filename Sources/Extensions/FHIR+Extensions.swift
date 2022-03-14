@@ -147,7 +147,7 @@ extension SMART.Resource {
 
 }
 
-extension SMART.Coding {
+public extension SMART.Coding {
     
     class func sm_Coding(_ code: String, _ system: String, _ display: String?) -> Coding {
         let coding = Coding()

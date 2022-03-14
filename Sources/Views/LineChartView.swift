@@ -17,7 +17,7 @@ import UIKit
         static let xBuffer : CGFloat = 40.0
         static let rightMargin : CGFloat = 40.0
         static let attributes = [NSAttributedString.Key.foregroundColor: UIColor.black,
-                                 NSAttributedString.Key.font: UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.thin)]
+								 NSAttributedString.Key.font: UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.regular)]
     }
     
     
@@ -191,7 +191,7 @@ import UIKit
         if showScore {
             let nstitle = String(points.last!) as NSString
             let lastPoint = graphPoints.last!
-            nstitle.draw(at: CGPoint.init(x: lastPoint.x + 10, y: lastPoint.y) , withAttributes: Const.attributes)
+            nstitle.draw(at: CGPoint.init(x: lastPoint.x, y: lastPoint.y) , withAttributes: Const.attributes)
         }
         
         

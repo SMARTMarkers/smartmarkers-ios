@@ -107,3 +107,33 @@ class Animator: NSObject, UIViewControllerAnimatedTransitioning {
         } )
     }
 }
+
+class PushAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+	
+	let duration = 0.4
+	
+	func transitionDuration(using context: UIViewControllerContextTransitioning?) -> TimeInterval {
+		return duration
+	}
+	
+	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+		let fz = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
+			  let tz = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
+
+			  
+			  let f = transitionContext.finalFrame(for: tz)
+			  
+			  let fOff = f.offsetBy(dx: f.width, dy: 55)
+			  tz.view.frame = fOff
+			  
+			  transitionContext.containerView.insertSubview(tz.view, aboveSubview: fz.view)
+			  
+			  UIView.animate(
+				  withDuration: transitionDuration(using: transitionContext),
+				  animations: {
+					  tz.view.frame = f
+			  }, completion: {_ in
+					  transitionContext.completeTransition(true)
+			  })
+	}
+}

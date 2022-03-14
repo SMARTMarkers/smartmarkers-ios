@@ -21,6 +21,8 @@ open class HealthRecordAuthorizationStep: ORKWaitStep {
         if let types = requestedHealthRecordIdentifiers {
             clinicalTypes = Set(types.map { HKObjectType.clinicalType(forIdentifier: HKClinicalTypeIdentifier(rawValue: $0.rawValue))!})
         }
+		self.title = "Please wait..."
+		self.text = "We are requesting authorization to fetch your health records from the app."
     }
     
     required public init(coder aDecoder: NSCoder) {
@@ -56,7 +58,7 @@ open class HealthRecordAuthorizationStepViewController: ORKWaitStepViewControlle
                 self.requestAuthorization()
             } else {
                 DispatchQueue.main.async {
-                    self.updateText("Fetching clinical data from HealthKit")
+                    self.updateText("Fetching your health record from the Health app")
                     self.runQuery()
                 }
             }
@@ -84,7 +86,7 @@ open class HealthRecordAuthorizationStepViewController: ORKWaitStepViewControlle
             group.enter()
             let sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)]
             
-            let query = HKSampleQuery(sampleType: ctype, predicate: nil, limit: 100, sortDescriptors: sortDescriptors) {(_, samplesOrNil, error) in
+            let query = HKSampleQuery(sampleType: ctype, predicate: nil, limit: 1000, sortDescriptors: sortDescriptors) {(_, samplesOrNil, error) in
                 DispatchQueue.main.async {
                     guard let samples = samplesOrNil else {
                         //TODO: handle error, goForward will still be called.

@@ -72,8 +72,8 @@ extension SMART.Questionnaire: Instrument {
     }
     
     
-    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
+	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+
         
         if item == nil, let srv = _server, let iden = id?.string  {
             let semaphore = DispatchSemaphore(value: 0)
@@ -107,8 +107,12 @@ extension SMART.Questionnaire: Instrument {
                 }
                 else {
                     let (introStep, completedStep) = self.introductionAndConclusionSteps()
-                    steps.insert(introStep, at: 0)
-                    steps.append(completedStep)
+					if config?.contains(.withoutIntroductionStep) ?? false == false {
+						steps.insert(introStep, at: 0)
+					}
+					if config?.contains(.withoutConclusionStep) ?? false == false {
+						steps.append(completedStep)
+					}
                     let task = ORKNavigableOrderedTask(identifier: taskIdentifier, steps: steps)
                     rulestupples?.forEach({ (rule, linkId) in
                         task.setSkip(rule, forStepIdentifier: linkId)

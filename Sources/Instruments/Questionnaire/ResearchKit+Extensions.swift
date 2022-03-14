@@ -16,9 +16,10 @@ extension ORKTextChoice {
     class func sm_AnswerChoice(system: String?, code: String, display: String?, displayText: String? = nil, detailText: String? = nil, style: ORKChoiceAnswerStyle = .singleChoice) -> ORKTextChoice? {
         
         let displayStr = displayText ?? display ?? code
-        let answer = (system ?? kDefaultSystem) + kDelimiter + code
+        let answer = (system ?? kDefaultSystem) + kDelimiter + code + kDelimiter + (display ?? "")
         let answerChoice = ORKTextChoice(text: displayStr, detailText: detailText, value: answer as NSCoding & NSCopying & NSObjectProtocol, exclusive: (style == .singleChoice) ? true : false)
         return answerChoice
+		
     }
 
     

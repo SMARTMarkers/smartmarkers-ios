@@ -87,12 +87,12 @@ open class Reports {
     }
     
     /// `Report conformant FHIR Resource to the receiver
-    private func add(resource: Report) {
+    private func add(_ resource: Report) {
         _reports.append(resource)
     }
     
     /// `Report` conformant FHIR Resources added to the receiver
-    private func add(resources: [Report]) {
+    private func add(_ resources: [Report]) {
         _reports.append(contentsOf: resources)
     }
     
@@ -131,7 +131,7 @@ open class Reports {
                 if let bundle = bundle, let entries = bundle.entry {
                     if entries.count > 0 {
                         let results = entries.map { $0.resource as! Report }
-                        self.add(resources: results)
+                        self.add(results)
                     }
                 }
                 if let error = error {
@@ -220,14 +220,16 @@ open class Reports {
      - parameter with:      The `Patient` to associate the bundle resources with
      - parameter request:   The `Request` to associate the bundle resources with
      */
-    private static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: Request?) throws {
+	public static func Tag(_ bundle: inout SMART.Bundle, with patient: Patient?, request: Request?) throws {
         
         do {
+			
+			
             let patientReference = try patient?.asRelativeReference()
             let requestReference = try (request as? ServiceRequest)?.asRelativeReference()
             
             for entry in bundle.entry ?? [] {
-                
+				
                 //QuestionnaireResponse
                 if let answers = entry.resource as? QuestionnaireResponse {
                     answers.subject = patientReference
@@ -266,12 +268,10 @@ open class Reports {
                     immunization.patient = patientReference
                 }
                 
-                
                 // AllergyIntolerance
                 if let allergyIntolerance = entry.resource as? AllergyIntolerance {
                     allergyIntolerance.patient = patientReference
                 }
-                
                 
                 // Condition
                 if let condition = entry.resource as? Condition {
@@ -282,6 +282,11 @@ open class Reports {
                 if let medicationRequest = entry.resource as? MedicationRequest {
                     medicationRequest.subject = patientReference
                 }
+				
+				// MedicationStatement
+				if let medicationStatement = entry.resource as? MedicationStatement {
+					medicationStatement.subject = patientReference
+				}
                 
                 
                 // Procedure
@@ -300,6 +305,85 @@ open class Reports {
             throw error
         }
     }
+	
+	public static func Tag(_ resources: inout [Resource], with patient: Patient?, request: Request?) throws {
+		
+		let patientReference = try patient?.asRelativeReference()
+		let requestReference = try request?.asRelativeReference()
+		
+		for resource in resources {
+			//QuestionnaireResponse
+			if let answers = resource as? QuestionnaireResponse {
+				answers.subject = patientReference
+				if let r = requestReference {
+					var basedOns = answers.basedOn ?? [Reference]()
+					basedOns.append(r)
+					answers.basedOn = basedOns
+				}
+			}
+			
+			//Observation
+			if let observation = resource as? Observation {
+				observation.subject = patientReference
+				if let r = requestReference {
+					var basedOns = observation.basedOn ?? [Reference]()
+					basedOns.append(r)
+					observation.basedOn = basedOns
+				}
+			}
+			
+			//Binary
+			if let binary = resource as? Binary {
+				binary.securityContext = patientReference
+			}
+			
+			//Media
+			if let media = resource as? Media {
+				media.subject = patientReference
+				if let reqReference = requestReference {
+					media.basedOn = [reqReference]
+				}
+			}
+			
+			// Immunization
+			if let immunization = resource as? Immunization {
+				immunization.patient = patientReference
+			}
+			
+			// AllergyIntolerance
+			if let allergyIntolerance = resource as? AllergyIntolerance {
+				allergyIntolerance.patient = patientReference
+			}
+			
+			// Condition
+			if let condition = resource as? Condition {
+				condition.subject = patientReference
+			}
+			
+			// MedicationRequest
+			if let medicationRequest = resource as? MedicationRequest {
+				medicationRequest.subject = patientReference
+			}
+			
+			// MedicationStatement
+			if let medicationStatement = resource as? MedicationStatement {
+				medicationStatement.subject = patientReference
+			}
+			
+			
+			// Procedure
+			if let procedure = resource as? Procedure {
+				procedure.subject = patientReference
+			}
+			
+			// DocumentReference
+			if let documentReference = resource as? DocumentReference {
+				documentReference.subject = patientReference
+			}
+		}
+		
+	}
+
     
     
     /**
@@ -324,7 +408,7 @@ open class Reports {
                 let json = response.json,
                 let responseBundle = try? SMART.Bundle(json: json) {
                 if let results = responseBundle.entry?.filter({ $0.resource is Report}).map({ $0.resource as! Report }) {
-                    self?.add(resources: results)
+                    self?.add(results)
                     callback(true, nil)
                 }
                 else {

@@ -52,8 +52,8 @@ open class SpatialSpanMemory: Instrument {
         self.sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
     }
     
-    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
+	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+
         let task = ORKOrderedTask.spatialSpanMemoryTask(withIdentifier: sm_identifier!, intendedUseDescription: nil, initialSpan: initialSpan, minimumSpan: minimumSpan, maximumSpan: maximumSpan, playSpeed: playSpeed, maximumTests: maximumSpan, maximumConsecutiveFailures: 3, customTargetImage: nil, customTargetPluralName: nil, requireReversal: false, options: [])
         
         let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())

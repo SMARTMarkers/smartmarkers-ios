@@ -11,7 +11,22 @@ import SMART
 import ResearchKit
 
 
+public extension FHIRPrimitive {
+	
+	func sm_xhtmlAttributedText() -> NSAttributedString? {
+		
+		guard let xhtmlData = extensions(forURI: kSD_QuestionnaireItemRenderingXhtml)?.first?.valueString?.string.data(using: .utf8) else {
+			return nil
+		}
+		
+		if let attributedString = try? NSAttributedString(data: xhtmlData,
+														  options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+			return attributedString
+		}
 
+		return nil
+	}
+}
 extension QuestionnaireItem {
     
     func sm_questionItem_instructions() -> String? {
@@ -21,6 +36,12 @@ extension QuestionnaireItem {
     func sm_questionItem_Help() -> String? {
         return extensions(forURI: kSD_QuestionnaireHelp)?.first?.valueString?.localized
     }
+	
+	
+	func sm_questionItem_RegexPattern() -> String? {
+		return extensions(forURI: kSD_QuestionnaireItemRegex)?.first?.valueString?.string
+	}
+
     
     func IfWeightItem() -> ORKAnswerFormat? {
         
@@ -66,10 +87,8 @@ extension QuestionnaireItem {
     
     
     func itemUnit() -> String? {
-        if let extensions = extensions(forURI: kSD_QuestionnaireUnitExtension) {
-            if let coding = extensions.first?.valueCoding {
-                return coding.code?.string ?? coding.display?.string
-            }
+		if let coding = extensions(forURI: kSD_QuestionnaireUnitExtension)?.first?.valueCoding {
+			return coding.display?.string ?? coding.code?.string
         }
         return nil
     }
@@ -78,12 +97,20 @@ extension QuestionnaireItem {
 
 extension Coding {
     
-    func sm_textAnswerChoice() -> ORKTextChoice? {
+	func sm_textAnswerChoice(style: ORKChoiceAnswerStyle) -> ORKTextChoice? {
         
         guard let code = code?.string else {
             return nil
         }
-        return ORKTextChoice.sm_AnswerChoice(system: system?.absoluteString, code: code, display: display?.string, displayText: nil, detailText: nil)
+		
+		return ORKTextChoice.sm_AnswerChoice(
+			system: system?.absoluteString,
+			code: code,
+			display: display?.localized,
+			displayText: nil,
+			detailText: nil,
+			style: style
+		)
     }
 }
 

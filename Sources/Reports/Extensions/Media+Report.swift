@@ -44,6 +44,17 @@ extension Media: Report {
     public var rp_observation: String? {
         return nil
     }
+	
+	@discardableResult
+	public func sm_assign(patient: Patient) -> Bool {
+		
+		if let patientReference = try? patient.asRelativeReference() {
+			subject = patientReference
+			return true
+		}
+		
+		return false
+	}
     
 }
 

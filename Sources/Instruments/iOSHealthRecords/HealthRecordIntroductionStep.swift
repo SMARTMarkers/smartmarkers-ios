@@ -14,9 +14,36 @@ import ResearchKit
 @available(iOS 12.0, *)
 open class HealthRecordIntroductionStep {
     
-    public static func Create<T: ORKStep>(identifier: String, title: String?, text: String?, requestedClinicalRecordTypes: [HKClinicalTypeIdentifier]?) -> T {
+	public static func Create<T: ORKStep>(identifier: String, title: String?, text: String?, learnMoreBulletText: String?, learnMoreText: String?, learnMoreTitle: String?, bodyItems: [ORKBodyItem]?, requestedClinicalRecordTypes: [HKClinicalTypeIdentifier]?) -> T {
         if requestedClinicalRecordTypes != nil && !requestedClinicalRecordTypes!.isEmpty {
-            return HealthRecordIntroductionNoticeStep(identifier: identifier, title: title, text: text, requestedClinicalRecordTypes: requestedClinicalRecordTypes!) as! T
+			
+			let introductionStep = SMInstructionStep(identifier: identifier, _title: title, _detailText: " ")
+			introductionStep.text = text
+			let learnMoreStep: SMLearnMoreInstructionStep?
+			learnMoreStep = SMLearnMoreInstructionStep(identifier: identifier+"_learnMore")
+			learnMoreStep?.title = learnMoreTitle ?? title
+			learnMoreStep?.text = learnMoreText
+			learnMoreStep?.bodyItems = bodyItems ?? requestedClinicalRecordTypes!.map { $0.asBodyItem }
+			/*
+			TODO:
+			iOS 15: Test out text, attributed string
+			*/
+			
+			var stepBodyItems = [ORKBodyItem]()
+			if let learnMoreStep = learnMoreStep {
+				let learnMoreItem = ORKLearnMoreItem(text: learnMoreBulletText ?? "Learn more", learnMoreInstructionStep: learnMoreStep)
+				
+				stepBodyItems.append(ORKBodyItem(text: nil, detailText: nil, image: nil, learnMoreItem: learnMoreItem, bodyItemStyle: .text))
+			}
+			
+			stepBodyItems.append(contentsOf: [
+				ORKBodyItem.init(horizontalRule: ()),
+				ORKBodyItem(text: nil, detailText: nil, image: nil, learnMoreItem: HealthRecords.linkInstructionsAsLearnMoreItem(), bodyItemStyle: .text)
+			])
+			
+			introductionStep.bodyItems = stepBodyItems
+			
+			return introductionStep as! T			
         }
         else {
             return HealthRecordIntroductionRequestStep(identifier: identifier, title: title, text: text) as! T
@@ -54,6 +81,9 @@ class HealthRecordIntroductionRequestStep: ORKQuestionStep {
 
 
 @available(iOS 12.0, *)
+
+
+
 class HealthRecordIntroductionNoticeStep: ORKTableStep {
     
     public required init(identifier: String, title: String?, text: String?, requestedClinicalRecordTypes: [HKClinicalTypeIdentifier]) {
@@ -61,6 +91,7 @@ class HealthRecordIntroductionNoticeStep: ORKTableStep {
         self.title = title
         self.text = text
         self.bodyItems = requestedClinicalRecordTypes.map { $0.asBodyItem }
+		self.bulletType = .number
     }
     
     required public init(coder aDecoder: NSCoder) {

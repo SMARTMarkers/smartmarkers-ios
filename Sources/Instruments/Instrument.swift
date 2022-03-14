@@ -25,6 +25,19 @@ public enum InstrumentCategoryType: String, Equatable {
 }
 
 /**
+Presentation Options
+*/
+public struct InstrumentPresenterOptions: OptionSet {
+	public let rawValue: Int
+	public init(rawValue: Int) {
+		self.rawValue = rawValue
+	}
+
+	public static let withoutIntroductionStep = InstrumentPresenterOptions(rawValue: 1)
+	public static let withoutConclusionStep = InstrumentPresenterOptions(rawValue: 2)
+	
+}
+/**
  Instrument Class Protocol
  Serializes all types of PGHD into a common protocol
  */
@@ -52,7 +65,7 @@ public protocol Instrument : class {
     var sm_reportSearchOptions: [FHIRReportOptions]? { get set }
         
     /// Protocol function to create a ResearchKit's survey task controller (`ORKTaskViewController`)
-    func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
+	func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void))
     
     /// Protocol Func to generate a FHIR `Bundle` of result resources. eg. QuestionnaireResponse, Observation
     func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle?
@@ -91,7 +104,7 @@ public extension Instrument where Self: SMART.DomainResource {
     
 }
 
-public extension Instrument {
+extension Instrument {
     
     func introductionAndConclusionSteps() -> (intro: ORKStep, completed: ORKStep) {
         let introduction = ORKInstructionStep(identifier: "instrument_introduction", _title: sm_title, _detailText: sm_publisher)

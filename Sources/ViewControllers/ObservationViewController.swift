@@ -26,27 +26,30 @@ open class ObservationViewController: UITableViewController {
     }
     
     override open func viewDidLoad() {
-        title = "Observation #\(observation.id!.string)"
+        title = "Observation \(observation.id?.string ?? "")"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSelf))
         self.scrollView = UIScrollView(frame: CGRect(x:0, y:0, width:self.view.frame.width, height:400))
         let scrollViewWidth:CGFloat = self.scrollView.frame.width
         let scrollViewHeight:CGFloat = self.scrollView.frame.height
         
-        for (i, attach) in attachments!.enumerated(){
-            let view = UIImageView(image: attach.image)
-            view.frame = CGRect(x: CGFloat(i) * scrollViewWidth, y:0,width:scrollViewWidth, height:scrollViewHeight)
-            view.contentMode = .scaleAspectFit
-            self.scrollView.addSubview(view)
-        }
-        self.scrollView.contentSize = CGSize(width:self.scrollView.frame.width * CGFloat(attachments!.count), height:self.scrollView.frame.height)
-        self.scrollView.isPagingEnabled = true
-        self.pageControl = UIPageControl()
-        self.pageControl.numberOfPages = attachments!.count
-        self.pageControl.currentPage = 0
-        self.scrollView.addSubview(pageControl)
-        self.scrollView.delegate = self
-        self.tableView.tableHeaderView = scrollView
-        self.scrollView.setNeedsDisplay()
+		if let attachements = attachments {
+			for (i, attach) in attachements.enumerated() {
+				let view = UIImageView(image: attach.image)
+				view.frame = CGRect(x: CGFloat(i) * scrollViewWidth, y:0,width:scrollViewWidth, height:scrollViewHeight)
+				view.contentMode = .scaleAspectFit
+				self.scrollView.addSubview(view)
+			}
+			self.scrollView.contentSize = CGSize(width:self.scrollView.frame.width * CGFloat(attachements.count), height:self.scrollView.frame.height)
+			self.scrollView.isPagingEnabled = true
+			self.pageControl = UIPageControl()
+			self.pageControl.numberOfPages = attachements.count
+			self.pageControl.currentPage = 0
+			self.scrollView.addSubview(pageControl)
+			self.scrollView.delegate = self
+			self.tableView.tableHeaderView = scrollView
+			self.scrollView.setNeedsDisplay()
+		}
+        
     }
     
     @objc

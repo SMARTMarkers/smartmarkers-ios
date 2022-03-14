@@ -45,6 +45,17 @@ extension Observation : Report {
     public var rp_observation: String? {
         return sm_observationValue()
     }
+	
+	@discardableResult
+	public func sm_assign(patient: Patient) -> Bool {
+		
+		if let patientReference = try? patient.asRelativeReference() {
+			subject = patientReference
+			return true
+		}
+		
+		return false
+	}
 }
 
 

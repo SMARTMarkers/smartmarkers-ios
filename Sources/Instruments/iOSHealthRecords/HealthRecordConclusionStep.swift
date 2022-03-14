@@ -11,5 +11,7 @@ import ResearchKit
 
 
 open class HealthRecordConclusionStep: ORKCompletionStep {
-    
+	open override var allowsBackNavigation: Bool {
+		false
+	}
 }

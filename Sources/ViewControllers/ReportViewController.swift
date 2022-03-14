@@ -17,7 +17,7 @@ public class ReportViewController: UITableViewController {
             ("Title",               report.rp_title ?? ""),
             ("FHIR Resource Type",  report.rp_resourceType),
             ("FHIR ID",             report.rp_identifier ?? "-NA-"),
-            ("Ontology",            report.rp_code?.display?.string ?? report.rp_code?.code?.string ?? "-"),
+			("Ontology",            "\(report.rp_code?.code?.string ?? report.rp_code?.code?.string ?? "-") \(report.rp_code?.system?.absoluteString ?? "-")"),
             ("Date",                report.rp_date.shortDate),
             ("Description",         report.rp_description ?? ""),
             ("ResultValue",         report.rp_observation ?? "")
@@ -88,7 +88,4 @@ public class ReportViewController: UITableViewController {
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
-
-
 }

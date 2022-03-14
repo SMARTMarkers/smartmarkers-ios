@@ -41,9 +41,10 @@ open class TowerOfHanoi: Instrument {
         self.sm_code = Instruments.ActiveTasks.TowerOfHanoi.coding
         self.sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
     }
-    
-    public func sm_taskController(callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
-        
+	
+	
+	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
+
         let task = ORKOrderedTask.towerOfHanoiTask(withIdentifier: sm_identifier!, intendedUseDescription: usageDescription, numberOfDisks: self.numberOfDisks, options: [])
         let taskViewController = InstrumentTaskViewController(task: task, taskRun: UUID())
         callback(taskViewController, nil)
