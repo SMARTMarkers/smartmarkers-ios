@@ -29,42 +29,42 @@ extension Questionnaire  {
         let group = DispatchGroup()
         for item in items {
             group.enter()
-			item.sm_generateSteps(callback: { [self] (steps, rules, errors) in
+            item.sm_generateSteps(callback: { [self] (steps, rules, errors) in
                 if let errors = errors {
                     all_errors.append(contentsOf: errors)
                 }
                 
                 if let steps = steps {
-					steps.forEach({ if $0.title == nil { $0.title = sm_title }})
-					itemSteps.append(contentsOf: steps)
+                    steps.forEach({ if $0.title == nil { $0.title = sm_title }})
+                    itemSteps.append(contentsOf: steps)
                 }
                 
                 if let rules = rules {
-					navigationRules.append(contentsOf: rules)
+                    navigationRules.append(contentsOf: rules)
                 }
                 
                 group.leave()
             })
-			
+            
         }
-		
+        
         group.notify(queue: .main) {
-			
+            
             if itemSteps.sm_hasDuplicates() {
                 all_errors.append(SMError.instrumentHasDuplicateLinkIds)
-				itemSteps.removeAll()
+                itemSteps.removeAll()
             }
-			
-			
-			if all_errors.count == 0 {
-				callback(itemSteps.isEmpty ? nil : itemSteps, navigationRules, nil)
+            
+            
+            if all_errors.count == 0 {
+                callback(itemSteps.isEmpty ? nil : itemSteps, navigationRules, nil)
 
-			}
-			else {
-				callback(nil, nil, all_errors.isEmpty ? nil : all_errors)
+            }
+            else {
+                callback(nil, nil, all_errors.isEmpty ? nil : all_errors)
 
-			}
-			
+            }
+            
             
         }
         
@@ -84,7 +84,7 @@ extension QuestionnaireItem {
         return items + items.flatMap { $0.allItemsRecursively() }
     }
     
-	public func sm_generateSteps(callback: @escaping StepsCallback) {
+    public func sm_generateSteps(callback: @escaping StepsCallback) {
         var steps = [ORKStep]()
         var nrules = [RuleTupple]()
         var conditionalItems = [QuestionnaireItem]()
@@ -93,7 +93,7 @@ extension QuestionnaireItem {
                 conditionalItems.append(self)
         }
         self.rk_answerFormat(callback: { (answerFormat, zerror) in
-			
+            
             if let error = zerror {
                 print(error)
             }
@@ -145,13 +145,15 @@ extension QuestionnaireItem {
                             break
                         }
                         let formItems = subSteps.flatMap  { $0.sm_toFormItem()! }
-                        let formSp = QuestionnaireFormStep.init(identifier: self.rk_Identifier(),
-																title: self.text?.string,
-																text: self.id?.string)
-                        formSp.formItems = formItems
-						formSp.detailText = self.sm_questionItem_instructions()
-						formSp.isOptional = (self.required?.bool != nil) ? !self.required!.bool : true
-                        steps.append(formSp)
+                        do {
+                            if let formStep = try QuestionnaireFormStep(self) {
+                                formStep.formItems = formItems
+                                steps.append(formStep)
+                            }
+                        }
+                        catch {
+                            all_errors.append(error)
+                        }
                     } else {
                         
                         all_errors.append(SMError.instrumentQuestionnaireMissingItems(linkId: self.linkId!.string))
@@ -163,17 +165,17 @@ extension QuestionnaireItem {
             }
         })
         
-		if all_errors.count == 0 {
-			conditionalItems.forEach { (citem) in
-				if let rule = citem.sm_enableWhenPredicate() {
-					nrules.append((rule, citem.linkId!.string))
-				}
-			}
-			callback(steps.isEmpty ? nil : steps, nrules, all_errors.isEmpty ? nil : all_errors)
-		}
-		else {
-			callback(nil, nil, all_errors)
-		}
+        if all_errors.count == 0 {
+            conditionalItems.forEach { (citem) in
+                if let rule = citem.sm_enableWhenPredicate() {
+                    nrules.append((rule, citem.linkId!.string))
+                }
+            }
+            callback(steps.isEmpty ? nil : steps, nrules, all_errors.isEmpty ? nil : all_errors)
+        }
+        else {
+            callback(nil, nil, all_errors)
+        }
 
     }
 
@@ -199,12 +201,12 @@ extension QuestionnaireItem {
             callback(ORKAnswerFormat.booleanAnswerFormat(), nil)
             
         case .date:
-			let answerFormat = ORKAnswerFormat.dateAnswerFormat(
-				withDefaultDate: initial?.first?.valueDate?.nsDate,
-				minimumDate: extensions(forURI: kSD_QuestionnaireMinValue)?.first?.valueDate?.nsDate,
-				maximumDate: extensions(forURI: kSD_QuestionnaireMaxValue)?.first?.valueDate?.nsDate,
-				calendar: nil
-			)
+            let answerFormat = ORKAnswerFormat.dateAnswerFormat(
+                withDefaultDate: initial?.first?.valueDate?.nsDate,
+                minimumDate: extensions(forURI: kSD_QuestionnaireMinValue)?.first?.valueDate?.nsDate,
+                maximumDate: extensions(forURI: kSD_QuestionnaireMaxValue)?.first?.valueDate?.nsDate,
+                calendar: nil
+            )
             callback(answerFormat, nil)
             
         case .dateTime:
@@ -213,41 +215,41 @@ extension QuestionnaireItem {
         case .time:
             callback(ORKAnswerFormat.timeOfDayAnswerFormat(), nil)
             
-		case .text:
-			let answerFormat = ORKTextAnswerFormat()
-			answerFormat.multipleLines = true
-			callback(answerFormat, nil)
-			
-		case .string:
-			if let pattern = self.sm_questionItem_RegexPattern() {
-				let expression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-				let format = ORKTextAnswerFormat(validationRegularExpression: expression, invalidMessage: "Invalid Entry")
-				callback(format, nil)
-			}
-			else {
-				callback(ORKAnswerFormat.textAnswerFormat(), nil)
-			}
+        case .text:
+            let answerFormat = ORKTextAnswerFormat()
+            answerFormat.multipleLines = true
+            callback(answerFormat, nil)
+            
+        case .string:
+            if let pattern = self.sm_questionItem_RegexPattern() {
+                let expression = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+                let format = ORKTextAnswerFormat(validationRegularExpression: expression, invalidMessage: "Invalid Entry")
+                callback(format, nil)
+            }
+            else {
+                callback(ORKAnswerFormat.textAnswerFormat(), nil)
+            }
             
         case .url:
-			callback(ORKTextAnswerFormat(), nil)
+            callback(ORKTextAnswerFormat(), nil)
             
         case .integer:
-			let min = extensions(forURI: kSD_QuestionnaireMinValue)?.first?.valueInteger?.int
-			let max = extensions(forURI: kSD_QuestionnaireMaxValue)?.first?.valueInteger?.int
-			let minNumber : NSNumber? = (min != nil) ? NSNumber(value: min!) : nil
-			let maxNumber : NSNumber? = (max != nil) ? NSNumber(value: max!) : nil
-			let answerFormat = IfWeightItem() ?? IfHeightItem() ?? ORKNumericAnswerFormat(
-				style: .integer, unit: itemUnit(), minimum: minNumber, maximum:maxNumber, maximumFractionDigits: nil)
-			callback(answerFormat, nil)
+            let min = extensions(forURI: kSD_QuestionnaireMinValue)?.first?.valueInteger?.int
+            let max = extensions(forURI: kSD_QuestionnaireMaxValue)?.first?.valueInteger?.int
+            let minNumber : NSNumber? = (min != nil) ? NSNumber(value: min!) : nil
+            let maxNumber : NSNumber? = (max != nil) ? NSNumber(value: max!) : nil
+            let answerFormat = IfWeightItem() ?? IfHeightItem() ?? ORKNumericAnswerFormat(
+                style: .integer, unit: itemUnit(), minimum: minNumber, maximum:maxNumber, maximumFractionDigits: nil)
+            callback(answerFormat, nil)
             
         case .decimal:
-			let min = extensions(forURI: kSD_QuestionnaireMinValue)?.first?.valueDecimal?.decimal
-			let max = extensions(forURI: kSD_QuestionnaireMaxValue)?.first?.valueDecimal?.decimal
-			let minNumber : NSNumber? = (min != nil) ? NSDecimalNumber(decimal: min!) : nil
-			let maxNumber : NSNumber? = (max != nil) ? NSDecimalNumber(decimal: max!) : nil
-			let answerFormat = IfWeightItem() ?? IfHeightItem() ?? ORKNumericAnswerFormat(
-				style: .decimal, unit: itemUnit(), minimum: minNumber, maximum:maxNumber, maximumFractionDigits: nil)
-			callback(answerFormat, nil)
+            let min = extensions(forURI: kSD_QuestionnaireMinValue)?.first?.valueDecimal?.decimal
+            let max = extensions(forURI: kSD_QuestionnaireMaxValue)?.first?.valueDecimal?.decimal
+            let minNumber : NSNumber? = (min != nil) ? NSDecimalNumber(decimal: min!) : nil
+            let maxNumber : NSNumber? = (max != nil) ? NSDecimalNumber(decimal: max!) : nil
+            let answerFormat = IfWeightItem() ?? IfHeightItem() ?? ORKNumericAnswerFormat(
+                style: .decimal, unit: itemUnit(), minimum: minNumber, maximum:maxNumber, maximumFractionDigits: nil)
+            callback(answerFormat, nil)
             
         case .choice, .openChoice:
 
@@ -314,11 +316,11 @@ extension QuestionnaireItemAnswerOption {
     public func rk_choiceAnswerFormat(style: ORKChoiceAnswerStyle = .singleChoice) -> ORKTextChoice? {
         
         if let valueCoding = valueCoding {
-			return valueCoding.sm_textAnswerChoice(style: style)
+            return valueCoding.sm_textAnswerChoice(style: style)
         }
         
-        if let string = valueString?.string {			
-			return ORKTextChoice(text: string, detailText: nil, value: string as NSCoding & NSCopying & NSObjectProtocol, exclusive: (style == .singleChoice) ? true : false)
+        if let string = valueString?.string {
+            return ORKTextChoice(text: string, detailText: nil, value: string as NSCoding & NSCopying & NSObjectProtocol, exclusive: (style == .singleChoice) ? true : false)
         }
         
         return nil
@@ -352,14 +354,14 @@ extension ResearchKit.ORKStep {
     
     func sm_toFormItem() -> [ORKFormItem]? {
         if let slf = self as? ORKQuestionStep {
-			let item = ORKFormItem(identifier: slf.identifier,
-									  text: slf.question,
-									  detailText: slf.detailText,
-									  learnMoreItem: nil,
-									  showsProgress: true,
-									  answerFormat: slf.answerFormat,
-									  tagText: nil,
-									  optional: slf.isOptional)
+            let item = ORKFormItem(identifier: slf.identifier,
+                                      text: slf.question,
+                                      detailText: slf.detailText,
+                                      learnMoreItem: nil,
+                                      showsProgress: true,
+                                      answerFormat: slf.answerFormat,
+                                      tagText: nil,
+                                      optional: slf.isOptional)
             return [item]
         }
         else {
@@ -372,77 +374,77 @@ extension ResearchKit.ORKStep {
 
 extension QuestionnaireItemEnableWhen {
     
-	func sm_resultPredicate(_ existsOperator: Bool? = nil) -> NSPredicate? {
-		
+    func sm_resultPredicate(_ existsOperator: Bool? = nil) -> NSPredicate? {
+        
         let resultSelector = ORKResultSelector(stepIdentifier: question!.string, resultIdentifier: question!.string)
-				
-		if let string = answerString?.string {
-			return ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector, expectedAnswerValue: string as NSCoding & NSCopying & NSObjectProtocol)
-		}
-				
+                
+        if let string = answerString?.string {
+            return ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector, expectedAnswerValue: string as NSCoding & NSCopying & NSObjectProtocol)
+        }
+                
         if let bool = answerBoolean {
-			if let existsOperator = existsOperator, existsOperator == true {
-				let is_nil = ORKResultPredicate.predicateForNilQuestionResult(with: resultSelector)
-				return is_nil
-			}
-			else {
-				return ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: bool.bool)
-			}
+            if let existsOperator = existsOperator, existsOperator == true {
+                let is_nil = ORKResultPredicate.predicateForNilQuestionResult(with: resultSelector)
+                return is_nil
+            }
+            else {
+                return ORKResultPredicate.predicateForBooleanQuestionResult(with: resultSelector, expectedAnswer: bool.bool)
+            }
         }
         
-		if let coding = answerCoding {
+        if let coding = answerCoding {
             /*
-			Reverse engineered the RK Predicate to work with `valueCoding`
-			Problem: Coding.display is optional. To represent valueCoding with Display,
-			we encode the answer with or without coding.display.
-			To work with ResearchKit, we write a custom predicate where the framework checks whether coding.system and coding.code
-			match the given answer. For this `BEGINWITH` is sufficient as we check the system and code and optionally the display
-			As usual, we match the questionnaire linkId.
-			*/
-			let value = (coding.system?.absoluteString ?? kDefaultSystem) + kDelimiter + coding.code!.string + kDelimiter
-			let valueWithDisplay = value + (coding.display?.string ?? "")
-			let predicateString = "SUBQUERY(SELF, $x, $x.identifier == $ORK_TASK_IDENTIFIER AND SUBQUERY($x.results, $y, $y.identifier == %@ AND $y.isPreviousResult == NO AND SUBQUERY($y.results, $z, $z.identifier == %@ AND SUBQUERY($z.answer, $w, ($w == %@) || ($w BEGINSWITH %@)).@count > 0).@count > 0).@count > 0).@count > 0"
-			let args: [CVarArg] = [question!.string, question!.string, value, valueWithDisplay]
-			return NSPredicate(format: predicateString, arguments: getVaList(args))
-		}
+            Reverse engineered the RK Predicate to work with `valueCoding`
+            Problem: Coding.display is optional. To represent valueCoding with Display,
+            we encode the answer with or without coding.display.
+            To work with ResearchKit, we write a custom predicate where the framework checks whether coding.system and coding.code
+            match the given answer. For this `BEGINWITH` is sufficient as we check the system and code and optionally the display
+            As usual, we match the questionnaire linkId.
+            */
+            let value = (coding.system?.absoluteString ?? kDefaultSystem) + kDelimiter + coding.code!.string + kDelimiter
+            let valueWithDisplay = value + (coding.display?.string ?? "")
+            let predicateString = "SUBQUERY(SELF, $x, $x.identifier == $ORK_TASK_IDENTIFIER AND SUBQUERY($x.results, $y, $y.identifier == %@ AND $y.isPreviousResult == NO AND SUBQUERY($y.results, $z, $z.identifier == %@ AND SUBQUERY($z.answer, $w, ($w == %@) || ($w BEGINSWITH %@)).@count > 0).@count > 0).@count > 0).@count > 0"
+            let args: [CVarArg] = [question!.string, question!.string, value, valueWithDisplay]
+            return NSPredicate(format: predicateString, arguments: getVaList(args))
+        }
         return nil
     }
     
     func sm_enableWhenPredicate() -> [NSPredicate]? {
         
 
-		
+        
         var predicates = [NSPredicate]()
         let enableOperator = operator_fhir
         switch enableOperator! {
         case .eq:
-			guard let resultPredicate = sm_resultPredicate() else {
-				return nil
-			}
+            guard let resultPredicate = sm_resultPredicate() else {
+                return nil
+            }
             let skipIfNot = NSCompoundPredicate(notPredicateWithSubpredicate: resultPredicate)
             predicates.append(skipIfNot)
             break
         case .ne:
-			guard let resultPredicate = sm_resultPredicate() else {
-				return nil
-			}
+            guard let resultPredicate = sm_resultPredicate() else {
+                return nil
+            }
             let skipIf = NSCompoundPredicate(andPredicateWithSubpredicates: [resultPredicate])
             predicates.append(skipIf)
             break
-		case .exists:
-			guard let is_nil = sm_resultPredicate(true),
-				  let shouldExist = answerBoolean?.bool else {
-				return nil
-			}
-			if shouldExist {
-				let shouldNotSkipIfExist = is_nil
-				predicates.append(shouldNotSkipIfExist)
-			}
-			else {
-				let shouldSkipIfExist = NSCompoundPredicate.init(notPredicateWithSubpredicate: is_nil)
-				predicates.append(shouldSkipIfExist)
-			}
-			break
+        case .exists:
+            guard let is_nil = sm_resultPredicate(true),
+                  let shouldExist = answerBoolean?.bool else {
+                return nil
+            }
+            if shouldExist {
+                let shouldNotSkipIfExist = is_nil
+                predicates.append(shouldNotSkipIfExist)
+            }
+            else {
+                let shouldSkipIfExist = NSCompoundPredicate.init(notPredicateWithSubpredicate: is_nil)
+                predicates.append(shouldSkipIfExist)
+            }
+            break
         default:
             break
         }
@@ -451,5 +453,6 @@ extension QuestionnaireItemEnableWhen {
     }
     
 }
+
 
 
