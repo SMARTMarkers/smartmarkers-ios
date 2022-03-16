@@ -33,8 +33,8 @@ extension DocumentReference: Report {
         })
     }
     
-    public var rp_date: Date {
-        return date?.nsDate ?? meta?.lastUpdated?.nsDate ?? Date()
+    public var rp_date: Date? {
+        return date?.nsDate ?? meta?.lastUpdated?.nsDate
     }
     
     public var rp_observation: String? {

@@ -32,7 +32,7 @@ public protocol Report: Resource {
     var rp_description: String? { get }
     
     /// Date resource created/generated/updated
-    var rp_date: Date { get }
+    var rp_date: Date? { get }
     
     /// Observation value; if any
     var rp_observation: String? { get }
@@ -155,7 +155,7 @@ extension SMART.Bundle {
         let content = entry?.reduce(into: String(), { (bundleString, entry) in
             let report = entry.resource as? Report
             bundleString += report?.sm_resourceType() ?? "Type: \(entry.resource?.sm_resourceType() ?? "-")"
-            bundleString += ": " + (report?.rp_date.shortDate ?? "-")
+            bundleString += ": " + (report?.rp_date?.shortDate ?? "-")
             bundleString += "\n"
         })
         

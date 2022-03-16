@@ -58,7 +58,7 @@ open class Reports {
     /// Boolean to determine if there are reports generated Today
     public func hasReportsForToday() -> Bool {
         for report in reports {
-            if Reports.calendar.isDateInToday(report.rp_date) {
+            if let date = report.rp_date, Reports.calendar.isDateInToday(date) {
                 return true
             }
         }

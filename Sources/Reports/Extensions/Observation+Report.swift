@@ -38,8 +38,8 @@ extension Observation : Report {
         return "Observation [\(meta)]"
     }
     
-    public var rp_date: Date {
-        return effectiveDateTime?.nsDate ?? Date()
+    public var rp_date: Date? {
+        effectiveDateTime?.nsDate ?? issued?.nsDate
     }
     
     public var rp_observation: String? {

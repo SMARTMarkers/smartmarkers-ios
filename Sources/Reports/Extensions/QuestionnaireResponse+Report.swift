@@ -40,8 +40,8 @@ extension QuestionnaireResponse : Report {
         return "QuestionnaireResponse ID: \(id?.string ?? "-")"
     }
     
-    public var rp_date: Date {
-        return authored?.nsDate ?? Date()
+    public var rp_date: Date? {
+        return authored?.nsDate
     }
     
     public var rp_observation: String? {

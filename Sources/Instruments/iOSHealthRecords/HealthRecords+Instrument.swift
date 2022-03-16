@@ -111,7 +111,7 @@ public extension HealthRecords {
 	
 	class func linkInstructionsAsLearnMoreItem() -> ORKLearnMoreItem {
 		
-		let instructionStep = ORKLearnMoreInstructionStep(identifier: "learnMore-HealthRecord", _title: "Link your care privder to the Health app", _detailText: nil)
+		let instructionStep = ORKLearnMoreInstructionStep(identifier: "learnMore-HealthRecord", _title: "Link your care provider to the Health app", _detailText: nil)
 		instructionStep.text = "You will need access credentials to your care provider's patient portal"
 		instructionStep.bodyItems = [.init(horizontalRule: ())] + HealthRecords.InstructionItems()
 		return ORKLearnMoreItem(text: "Learn more about how to link your care provider to the health app", learnMoreInstructionStep: instructionStep)
@@ -119,7 +119,7 @@ public extension HealthRecords {
 	
 	class func InstructionStep() ->  SMInstructionStep {
 		
-		let step = SMInstructionStep(identifier: "learnMore-HealthRecord", _title: "Link your care privder to the Health app to retrieve your health record", _detailText: nil)
+		let step = SMInstructionStep(identifier: "learnMore-HealthRecord", _title: "Link your care provider to the Health app to retrieve your health record", _detailText: nil)
 		step.bodyItems = [.init(horizontalRule: ())] + HealthRecords.InstructionItems()
 		return step
 	}

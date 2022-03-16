@@ -18,7 +18,7 @@ public class ReportViewController: UITableViewController {
             ("FHIR Resource Type",  report.rp_resourceType),
             ("FHIR ID",             report.rp_identifier ?? "-NA-"),
 			("Ontology",            "\(report.rp_code?.code?.string ?? report.rp_code?.code?.string ?? "-") \(report.rp_code?.system?.absoluteString ?? "-")"),
-            ("Date",                report.rp_date.shortDate),
+            ("Date",                report.rp_date?.shortDate ?? "-"),
             ("Description",         report.rp_description ?? ""),
             ("ResultValue",         report.rp_observation ?? "")
         ]
@@ -27,7 +27,7 @@ public class ReportViewController: UITableViewController {
     public required convenience init(_ report: Report) {
         self.init(style: .grouped)
         self.report = report
-        self.title = "\(report.rp_date.shortDate)"
+        self.title = "\(report.rp_title ?? "")"
     }
     
     public override func viewDidLoad() {

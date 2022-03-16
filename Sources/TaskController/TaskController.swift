@@ -194,7 +194,7 @@ public final class TaskController: NSObject {
     public func updateSchedule(_ _reports: [Report]?) {
 
         guard let rpts = self.reports?.reports ?? _reports else { return }
-        schedule?.update(with: rpts.map { $0.rp_date })
+        schedule?.update(with: rpts.compactMap { $0.rp_date })
 
     }
     

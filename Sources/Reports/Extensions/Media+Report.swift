@@ -37,7 +37,7 @@ extension Media: Report {
         })
     }
     
-    public var rp_date: Date {
+    public var rp_date: Date? {
         return content!.creation!.nsDate
     }
     
