@@ -26,7 +26,7 @@ import SMART
 
 
 
-extension ORKStepResult {
+public extension ORKStepResult {
     
     func responseItems(for questionnaire: Questionnaire?, task: ORKTask) -> [QuestionnaireResponseItem]? {
         
@@ -194,7 +194,7 @@ extension ORKChoiceQuestionResult {
     
     func c3_responseItems() -> [QuestionnaireResponseItemAnswer]? {
         
-        guard let choices = choiceAnswers as? [String] else {
+        guard let choices = choiceAnswers as? [String], choices.count > 0 else {
             return nil
         }
         

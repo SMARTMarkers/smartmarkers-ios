@@ -45,10 +45,6 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
             else {
                 throw SMError.instrumentQuestionnaireMissingText(linkId: linkId)
             }
-            
-            // BUG FIX FOR iOS 15.0
-            //
-
         }
         else if let slf = self as? SMInstructionStep {
             slf.isOptional = false
@@ -145,6 +141,23 @@ public class QuestionnaireItemStep: ORKQuestionStep, QuestionnaireItemStepProtoc
 
 class QuestionItemStepViewController: ORKQuestionStepViewController {
     
+    private var fixCheck = 0
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        fix()
+    }
+
+    func fix() {
+        for v in self.view.subviewsRecursive() {
+            if let n = v as? ORKNavigationContainerView {
+                n.skipButton.setAppearanceAsTextButton()
+                n.continueButton.resetAppearanceAsBorderedButton()
+                n.updateContinueAndSkipEnabled()
+                n.skipButton.setAppearanceAsBoldTextButton()
+            }
+        }
+        fixCheck += 1
+    }
 }
 
 public class QuestionnaireFormStep: ORKFormStep, QuestionnaireItemStepProtocol {
@@ -159,7 +172,24 @@ public class QuestionnaireFormStep: ORKFormStep, QuestionnaireItemStepProtocol {
 }
 
 public class QuestionnaireItemFormViewController: ORKFormStepViewController {
+    
+    private var fixCheck = 0
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        fix()
+    }
 
+    func fix() {
+        for v in self.view.subviewsRecursive() {
+            if let n = v as? ORKNavigationContainerView {
+                n.skipButton.setAppearanceAsTextButton()
+                n.continueButton.resetAppearanceAsBorderedButton()
+                n.updateContinueAndSkipEnabled()
+                n.skipButton.setAppearanceAsBoldTextButton()
+            }
+        }
+        fixCheck += 1
+    }
 }
 
 open class SMLearnMoreInstructionStep: ORKLearnMoreInstructionStep {
@@ -176,57 +206,6 @@ class SMLearnMoreStepViewController: ORKLearnMoreStepViewController {
         super.viewWillAppear(animated)
         view.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1.0)
     }
-
-    /*
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        print(step?.title)
-        print(stepView?.instructionStep.attributedDetailText)
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        fix()
-        print(step?.title)
-
-        
-
-        
-    }
-
-    
-    override func viewLayoutMarginsDidChange() {
-        fix()
-
-        super.viewLayoutMarginsDidChange()
-
-    }
-
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        view.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1.0)
-        fix()
-    }
-
-        
-    func fix() {
-        let stp = self.step as! SMLearnMoreInstructionStep
-        stp.text = " "
-        stp.detailText = " "
-        
-        print(stp.attributedBodyString)
-        print(stp.attributedDetailText)
-        
-        if let attributedString = stp.attributedBodyString {
-            let textLabel = self.view.subviewsRecursive().filter({ $0.isKind(of: ORKLabel.self) })[2] as! ORKLabel
-            print(attributedString)
-            textLabel.attributedText  = attributedString
-            textLabel.setNeedsLayout()
-            textLabel.setNeedsDisplay()
-        }
-    }
-*/
 }
 
 
@@ -244,7 +223,12 @@ public class SMInstructionStep: ORKInstructionStep {
 class SMInstructionStepViewController: ORKInstructionStepViewController {
     
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        justDoThis()
+    }
     
+    /*
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         justDoThis()
@@ -267,7 +251,7 @@ class SMInstructionStepViewController: ORKInstructionStepViewController {
         super.viewWillAppear(animated)
         justDoThis()
 
-    }
+    }*/
         
     
     

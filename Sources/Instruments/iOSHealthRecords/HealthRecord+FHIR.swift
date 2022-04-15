@@ -23,6 +23,10 @@ extension HKFHIRResourceType {
         if self == .medicationOrder     { return MedicationRequest()    as! T }
         if self == .medicationStatement { return MedicationStatement()  as! T }
         if self == .procedure           { return Procedure()            as! T }
+
+        if #available(iOS 14.0, *) {
+            if self == .medicationRequest   { return MedicationRequest()    as! T }
+        }
         
         throw SMError.instrumentHealthKitClinicalRecordTypeNotSupported(type: "<HKFHIRResourceType: \(self.rawValue)>")
     }
@@ -35,14 +39,27 @@ public extension HKFHIRResource {
         
 		let json = try JSONSerialization.jsonObject(with: data, options: []) as! FHIRJSON
 		let resource = try self.resourceType.as_FHIRResource()
-		try resource.sm_populate(from: json, source: sourceURL)
+        if #available(iOS 14, *) {
+            if fhirVersion.majorVersion == 4, fhirVersion.minorVersion == 0 {
+                var ctx = FHIRInstantiationContext()
+                resource.populate(from: json, context: &ctx)
+            }
+            else {
+                try resource.sm_populate(from: json, source: sourceURL, version: nil)
+            }
+        }
+        else {
+            try resource.sm_populate(from: json, source: sourceURL, version: nil)
+        }
+        
+        
 		return resource as! T
     }
 }
 
 public extension DomainResource {
     
-    func sm_populate(from dstu2: FHIRJSON, source: URL?) throws {
+    func sm_populate(from dstu2: FHIRJSON, source: URL?, version: String?) throws {
         
         let type = sm_resourceType()
 		
@@ -72,6 +89,14 @@ public extension DomainResource {
 			let slf = self as! MedicationRequest
 			try slf.sm__populate(from: dstu2, source: source)
 		}
+        else if type == "MedicationStatement" {
+            let slf = self as! MedicationStatement
+            try slf.sm__populate(from: dstu2, source: source)
+        }
+        else if type == "MedicationDispense" {
+            let slf = self as! MedicationDispense
+            try slf.sm__populate(from: dstu2, source: source)
+        }
 		else if type == "Procedure" {
 			let slf = self as! Procedure
 			try slf.sm__populate(from: dstu2, source: source)
@@ -83,6 +108,40 @@ public extension DomainResource {
     
 }
 
+
+public extension MedicationDispense {
+    
+    func sm__populate(from r4: FHIRJSON, source: URL?) throws {
+        
+        var ctx = FHIRInstantiationContext()
+        ctx.strict = false
+        populate(from: r4, context: &ctx)
+    }
+}
+
+public extension MedicationStatement {
+    
+    func sm__populate(from dstu2: FHIRJSON, source: URL?) throws {
+        
+        var ctx = FHIRInstantiationContext()
+        populate(from: dstu2, context: &ctx)
+        
+        if let patient_reference = dstu2["patient"] as? FHIRJSON {
+            subject = try Reference(json: patient_reference).using(source: source)
+        }
+
+        if let jsonA = dstu2["dosage"] as? [FHIRJSON] {
+            for (i, json) in jsonA.enumerated() {
+                if let punit = json["timing"] as? FHIRJSON,
+                   let rep = punit["repeat"] as? FHIRJSON,
+                   let unit = rep["periodUnits"] as? String {
+                    self.dosage![i].timing!.repeat_fhir!.periodUnit = unit.fhir_string
+                }
+            }
+        }
+    }
+}
+    
 public extension Procedure {
     
     func sm__populate(from dstu2: FHIRJSON, source: URL?) throws {
@@ -131,7 +190,7 @@ public extension MedicationRequest {
 		if let prescribr = dstu2["prescriber"] as? FHIRJSON {
 			requester = try Reference(json: prescribr).using(source: source)
 		}
-		
+
 		if let medicationCC = dstu2["medicationCodeableConcept"] as? FHIRJSON {
 			medicationCodeableConcept = try CodeableConcept(json: medicationCC)
 		}

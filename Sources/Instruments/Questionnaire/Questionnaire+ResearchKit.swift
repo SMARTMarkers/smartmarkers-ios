@@ -350,11 +350,11 @@ extension ORKAnswerFormat {
 
 
 
-extension ResearchKit.ORKStep {
+public extension ResearchKit.ORKStep {
     
-    func sm_toFormItem() -> [ORKFormItem]? {
+    func sm_toFormItem(_ prefixIdentifier: String? = nil) -> [ORKFormItem]? {
         if let slf = self as? ORKQuestionStep {
-            let item = ORKFormItem(identifier: slf.identifier,
+            let item = ORKFormItem(identifier: (prefixIdentifier ?? "") + slf.identifier,
                                       text: slf.question,
                                       detailText: slf.detailText,
                                       learnMoreItem: nil,

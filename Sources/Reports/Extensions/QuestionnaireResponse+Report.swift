@@ -29,11 +29,11 @@ extension QuestionnaireResponse : Report {
     }
     
     public var rp_code: Coding? {
-        return nil
+        resolveQuestionnaireIfContained()?.sm_code
     }
     
     public var rp_title: String? {
-		questionnaire?.resolved(Questionnaire.self)?.sm_title ?? "Survey Response"
+        resolveQuestionnaireIfContained()?.sm_title ?? "Survey Response"
     }
     
     public var rp_description: String? {
@@ -72,4 +72,19 @@ extension QuestionnaireResponse : Report {
         }
         return nil
     }
+    
+    private func resolveQuestionnaireIfContained() -> Questionnaire? {
+        
+        print(self.questionnaire?.absoluteString)
+        guard let fragment = self.questionnaire?.fragment else {
+            print(self.questionnaire?.absoluteString)
+            print(self.questionnaire?.fragment)
+            return nil
+        }
+        
+        return contained?.filter({ $0.id?.string == fragment }).first as? Questionnaire
+    }
 }
+
+
+

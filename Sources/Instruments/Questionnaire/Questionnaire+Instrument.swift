@@ -88,7 +88,7 @@ extension SMART.Questionnaire: Instrument {
             
             if var steps = steps {
                 let uuid = UUID()
-                let taskIdentifier = uuid.uuidString
+                let taskIdentifier = uuid.uuidString + (self.sm_identifier == nil ? "" : "\(kDelimiter)\(self.sm_identifier!)")
      
                 
                 /*

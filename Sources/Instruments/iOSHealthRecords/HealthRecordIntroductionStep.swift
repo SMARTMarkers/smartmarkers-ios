@@ -17,24 +17,32 @@ open class HealthRecordIntroductionStep {
 	public static func Create<T: ORKStep>(identifier: String, title: String?, text: String?, learnMoreBulletText: String?, learnMoreText: String?, learnMoreTitle: String?, bodyItems: [ORKBodyItem]?, requestedClinicalRecordTypes: [HKClinicalTypeIdentifier]?) -> T {
         if requestedClinicalRecordTypes != nil && !requestedClinicalRecordTypes!.isEmpty {
 			
-			let introductionStep = SMInstructionStep(identifier: identifier, _title: title, _detailText: " ")
+            
+            let requestedItems = bodyItems ?? requestedClinicalRecordTypes!.map { $0.asBodyItem }
+			
+            // main step
+            let introductionStep = SMInstructionStep(identifier: identifier)
+            introductionStep.title = title
 			introductionStep.text = text
+            
+            // Learn more about data being requested
 			let learnMoreStep: SMLearnMoreInstructionStep?
 			learnMoreStep = SMLearnMoreInstructionStep(identifier: identifier+"_learnMore")
 			learnMoreStep?.title = learnMoreTitle ?? title
 			learnMoreStep?.text = learnMoreText
-			learnMoreStep?.bodyItems = bodyItems ?? requestedClinicalRecordTypes!.map { $0.asBodyItem }
+			learnMoreStep?.bodyItems = requestedItems
 			/*
 			TODO:
 			iOS 15: Test out text, attributed string
 			*/
 			
 			var stepBodyItems = [ORKBodyItem]()
-			if let learnMoreStep = learnMoreStep {
-				let learnMoreItem = ORKLearnMoreItem(text: learnMoreBulletText ?? "Learn more", learnMoreInstructionStep: learnMoreStep)
-				
-				stepBodyItems.append(ORKBodyItem(text: nil, detailText: nil, image: nil, learnMoreItem: learnMoreItem, bodyItemStyle: .text))
-			}
+//			if let learnMoreStep = learnMoreStep {
+//				let learnMoreItem = ORKLearnMoreItem(text: learnMoreBulletText ?? "Learn more", learnMoreInstructionStep: learnMoreStep)
+//
+//				stepBodyItems.append(ORKBodyItem(text: nil, detailText: nil, image: nil, learnMoreItem: learnMoreItem, bodyItemStyle: .text))
+//			}
+            stepBodyItems.append(contentsOf: requestedItems)
 			
 			stepBodyItems.append(contentsOf: [
 				ORKBodyItem.init(horizontalRule: ()),
