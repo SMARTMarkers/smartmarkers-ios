@@ -36,6 +36,9 @@ let kSD_QuestionnaireAllowedUnitsExtension = "http://hl7.org/fhir/StructureDefin
 /// Questionnaire Rendering Extension
 let kSD_QuestionnaireItemRenderingXhtml = "http://hl7.org/fhir/StructureDefinition/rendering-xhtml"
 let kSD_QuestionnaireItemRegex = "http://hl7.org/fhir/StructureDefinition/regex"
+let kSD_QuestionnaireItemControlExtension = "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl"
+let kSD_QuestionnaireItemControlValueSet = "http://hl7.org/fhir/ValueSet/questionnaire-item-control"
+
 
 // Yes No IdontKnow ValueSet System
 let kVS_YesNoDontknow = "http://hl7.org/fhir/ValueSet/yesnodontknow"
@@ -50,3 +53,6 @@ let kBodyHeightLoinc = "8302-2"
 let kSD_QuestionnaireMinValue = "http://hl7.org/fhir/StructureDefinition/minValue"
 let kSD_QuestionnaireMaxValue = "http://hl7.org/fhir/StructureDefinition/maxValue"
 
+
+/// MedicationStatement
+let kSD_MedicationStatementCategoryExtension = "http://hl7.org/fhir/v3/StructureDefinition/extension-MedicationStatement.category"

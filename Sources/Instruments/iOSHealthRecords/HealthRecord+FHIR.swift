@@ -132,11 +132,21 @@ public extension MedicationStatement {
 
         if let jsonA = dstu2["dosage"] as? [FHIRJSON] {
             for (i, json) in jsonA.enumerated() {
-                if let punit = json["timing"] as? FHIRJSON,
-                   let rep = punit["repeat"] as? FHIRJSON,
-                   let unit = rep["periodUnits"] as? String {
-                    self.dosage![i].timing!.repeat_fhir!.periodUnit = unit.fhir_string
+                if let timing_json = json["timing"] as? FHIRJSON,
+                   let repeat_json = timing_json["repeat"] as? FHIRJSON,
+                   let unit = repeat_json["periodUnits"] as? String {
+                    let repeattiming = dosage![i].timing?.repeat_fhir ?? TimingRepeat()
+                    repeattiming.periodUnit = unit.fhir_string
+                    dosage![i].timing?.repeat_fhir = repeattiming
                 }
+            }
+        }
+        
+        // correct extensions
+        for ext in extension_fhir ?? [] {
+            if ext.url?.string.contains("extension-MedicationStatement.category") == true {
+                ext.url = kSD_MedicationStatementCategoryExtension.fhir_string
+                break
             }
         }
     }

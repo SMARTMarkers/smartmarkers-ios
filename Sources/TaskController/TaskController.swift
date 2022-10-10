@@ -81,7 +81,7 @@ TaskController is the central class for managing PGHD
 
 Each controller class can read a FHIR `Request` resource, resolve the embedded reference to its `Instrument` and fetch historical `Reports` from the `Server. Through the `Instrument` protocol, it also manages `ResearchKit` based task controllers for FHIR `Questionnaire`, `AdaptiveQuestionnaire`, active tasks, web fetches and other digital data
 */
-public final class TaskController: NSObject {
+open class TaskController: NSObject {
     
     /// `Request` protocol conformant FHIR resource. If present, instrument is resolved from the request. See `Request.swift`
     public var request: Request?
@@ -117,6 +117,11 @@ public final class TaskController: NSObject {
 	public internal(set) lazy var attempts: [TaskAttempt] = {
 		[TaskAttempt]()
 	}()
+    
+    /// Last Attempt
+    public var lastAttempt: TaskAttempt? {
+        attempts.first
+    }
    
     /**
     Initializer
@@ -321,13 +326,23 @@ public extension TaskController {
 	/// Serialize Attempts
 	func serialize() throws -> [String: Any] {
 		
+        guard let instrument_identifier = instrument?.sm_code?.sm_searchableToken() else {
+            throw SMError.undefined(description: "Unable to serialize; No instrument.code found")
+        }
+        
 		let jsonAttempts = try attempts.map({ try $0.serialize() })
-		return ["attempts": jsonAttempts]
+        let json = ["instrument": instrument_identifier, "attempts": jsonAttempts] as [String : Any]
+        return json
 	}
 	
 	/// Create attempts from Serialized
 	func populate(from serialized: [String: Any]) throws {
 		
+        guard let instrument_id = serialized["instrument"] as? String,
+              instrument_id == instrument?.sm_code?.sm_searchableToken() else {
+                  throw SMError.undefined(description: "unable to populate, mismatched instrument identifier")
+              }
+        
 		guard let attmps = serialized["attempts"] as? [[String: Any]] else {
 			throw SMError.undefined(description: "unable to populate, invalid json format")
 		}
@@ -337,6 +352,46 @@ public extension TaskController {
 	}
 	
 	
+}
+
+
+public extension TaskController {
+    
+    func generateReports(from taskViewController: ORKTaskViewController, result: ORKTaskResult, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+        
+        
+        // ***************
+        // Bug :Premature firing before conclusion step
+        // ***************
+        let stepIdentifier = taskViewController.currentStepViewController!.step!.identifier
+        if stepIdentifier.contains("range.of.motion") { return }
+        // ***************
+                
+        if reason == .discarded  {
+            
+            let attempt = recordAttempt(taskViewController, .discarded)
+            onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
+        }
+        else if reason == .failed {
+            
+            let attempt = recordAttempt(taskViewController, .failed)
+            onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
+        }
+        else if reason == .completed {
+            
+            if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
+                
+                let gr = reports?.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString)
+                let attempt = recordAttempt(taskViewController, .completedWithSuccess)
+                onTaskCompletion?(attempt, gr, nil)
+            }
+            else {
+                
+                let attempt = recordAttempt(taskViewController, .completedWithoutSuccess)
+                onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
+            }
+        }
+    }
 }
 
 
@@ -361,39 +416,9 @@ extension TaskController: ORKTaskViewControllerDelegate {
 
     /// After each task session, the controller generates `SubmissionBundle` holding a FHIR `Bundle` to be sent to the FHIR server. See `Instrument.sm_generateResponse(from:task:)` for more info.
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-		
-        // ***************
-        // Bug :Premature firing before conclusion step
-        // ***************
-        let stepIdentifier = taskViewController.currentStepViewController!.step!.identifier
-        if stepIdentifier.contains("range.of.motion") { return }
-        // ***************
-		        
-        if reason == .discarded  {
-			
-			let attempt = recordAttempt(taskViewController, .discarded)
-			onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
-        }
-		else if reason == .failed {
-			
-			let attempt = recordAttempt(taskViewController, .failed)
-			onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
-		}
-        else if reason == .completed {
-            
-            if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
-				
-                let gr = reports?.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString)
-				let attempt = recordAttempt(taskViewController, .completedWithSuccess)
-				onTaskCompletion?(attempt, gr, nil)
-            }
-            else {
-				
-				let attempt = recordAttempt(taskViewController, .completedWithoutSuccess)
-                onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
-            }
-        }
 
+
+        generateReports(from: taskViewController, result: taskViewController.result, didFinishWith: reason, error: error)
         dismiss(taskViewController: taskViewController)
     }
 	

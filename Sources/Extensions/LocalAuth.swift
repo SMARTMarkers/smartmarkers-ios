@@ -20,7 +20,7 @@ public class LocalAuth: NSObject {
             context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: verifyMsg, reply: { (success, eerror) in
                 
                 if success {
-                    print("successful authentication")
+//                    print("successful authentication")
                     callback(true, error)
                     
                 }

@@ -31,9 +31,9 @@ class HealthRecordNotFoundStepModifier: ORKStepModifier {
     
     override func modifyStep(_ step: ORKStep, with taskResult: ORKTaskResult) {
         
-        guard let completionStep = step as? ORKCompletionStep else {
-            return
-        }
+//        guard let completionStep = step as? ORKCompletionStep else {
+//            return
+//        }
         
         if let dataResults = taskResult.stepResult(forStepIdentifier: ksm_healthrecord_step_authorization)?.results as? [HealthRecordResult] {
             
@@ -42,17 +42,24 @@ class HealthRecordNotFoundStepModifier: ORKStepModifier {
             }
             
             if filtered.count > 0 {
-                completionStep.title = "Health records retrieved"
-				completionStep.bodyItems = nil
+                step.title = "Health records retrieved"
+                step.bodyItems = nil
             }
             else {
-                completionStep.title = "Health records were not retrieved"
-				completionStep.bodyItems = [
-					ORKBodyItem(text: "This maybe due to lack of data in the health app or access permission not granted." ,
+                step.title = "Health records were not retrieved"
+                step.bodyItems = [
+					ORKBodyItem(text: "This maybe due to lack of data in the Health app. You can try this task again after linking your EHR." ,
 								detailText: nil,
 								image: nil,
 								learnMoreItem: HealthRecords.linkInstructionsAsLearnMoreItem(),
-								bodyItemStyle: .text)
+								bodyItemStyle: .text),
+                    ORKBodyItem(text: "This may also occur if permission to access the health records was not granted.\nYou can enable access by going into the Health app → Your Profile (upper right icon) → Health Records → Select app → enable access toggles",
+                                detailText: nil,
+                                image: nil,
+                                learnMoreItem: nil,
+                                bodyItemStyle: .text),
+                    
+                    
 				]
             }
         }

@@ -41,6 +41,10 @@ extension QuestionnaireItem {
 	func sm_questionItem_RegexPattern() -> String? {
 		return extensions(forURI: kSD_QuestionnaireItemRegex)?.first?.valueString?.string
 	}
+    
+    func sm_questionItemControl() -> String? {
+        return extensions(forURI: kSD_QuestionnaireItemControlExtension)?.first?.valueCodeableConcept?.coding?.first?.code?.string
+    }
 
     
     func IfWeightItem() -> ORKAnswerFormat? {
@@ -63,6 +67,7 @@ extension QuestionnaireItem {
         }
         return nil
     }
+    
     
     func IfHeightItem() -> ORKAnswerFormat? {
         
@@ -95,12 +100,20 @@ extension QuestionnaireItem {
     
 }
 
+
+
 extension Coding {
     
-	func sm_textAnswerChoice(style: ORKChoiceAnswerStyle) -> ORKTextChoice? {
+    func sm_textAnswerChoice(style: ORKChoiceAnswerStyle, answerOption: QuestionnaireItemAnswerOption? = nil) -> ORKTextChoice? {
         
         guard let code = code?.string else {
             return nil
+        }
+        
+        var styl = style
+        // Is this answer Choice exclusive?
+        if let ext = answerOption?.extensions(forURI: "http://researchkit.org/vs-choiceIsExclusive")?.first?.valueBoolean {
+            styl = (ext.bool == true) ? .singleChoice : .multipleChoice
         }
 		
 		return ORKTextChoice.sm_AnswerChoice(
@@ -109,7 +122,7 @@ extension Coding {
 			display: display?.localized,
 			displayText: nil,
 			detailText: nil,
-			style: style
+			style: styl
 		)
     }
 }

@@ -26,9 +26,9 @@ extension Questionnaire  {
         var itemSteps = [ORKStep]()
         var navigationRules = [RuleTupple]()
         var all_errors = [Error]()
-        let group = DispatchGroup()
+
+        let sema = DispatchSemaphore(value: 1)
         for item in items {
-            group.enter()
             item.sm_generateSteps(callback: { [self] (steps, rules, errors) in
                 if let errors = errors {
                     all_errors.append(contentsOf: errors)
@@ -43,13 +43,12 @@ extension Questionnaire  {
                     navigationRules.append(contentsOf: rules)
                 }
                 
-                group.leave()
+                sema.signal()
             })
-            
+         
+            sema.wait()
         }
-        
-        group.notify(queue: .main) {
-            
+                    
             if itemSteps.sm_hasDuplicates() {
                 all_errors.append(SMError.instrumentHasDuplicateLinkIds)
                 itemSteps.removeAll()
@@ -64,10 +63,6 @@ extension Questionnaire  {
                 callback(nil, nil, all_errors.isEmpty ? nil : all_errors)
 
             }
-            
-            
-        }
-        
     }
     
     
@@ -95,7 +90,7 @@ extension QuestionnaireItem {
         self.rk_answerFormat(callback: { (answerFormat, zerror) in
             
             if let error = zerror {
-                print(error)
+//                print(error)
             }
             else {
                 switch self.type! {
@@ -125,9 +120,10 @@ extension QuestionnaireItem {
                 case .group:
                     if let subItems = self.item {
                         var subSteps = [ORKStep]()
-                        let newgroup = DispatchGroup()
+//                        let newgroup = DispatchGroup()
+                        let sem2 = DispatchSemaphore(value: 0)
                         for subitem in subItems {
-                            newgroup.enter()
+//                            newgroup.enter()
                             subitem.sm_generateSteps(callback: { (steps, rules, errs ) in
                                 if let errs = errs {
                                     all_errors.append(contentsOf: errs)
@@ -135,9 +131,11 @@ extension QuestionnaireItem {
                                 if let steps = steps {
                                     subSteps.append(contentsOf: steps)
                                 }
-                                newgroup.leave()
+//                                newgroup.leave()
+                                sem2.signal()
                             })
-                            newgroup.wait()
+//                            newgroup.wait()
+                            sem2.wait()
                         }
                         if subSteps.isEmpty {
                             let err_msg = "Could Not create Questionnaire `form` item with linkId: \(self.linkId?.string ?? ""); Unable to create `ORKSteps`"
@@ -147,7 +145,9 @@ extension QuestionnaireItem {
                         let formItems = subSteps.flatMap  { $0.sm_toFormItem()! }
                         do {
                             if let formStep = try QuestionnaireFormStep(self) {
-                                formStep.formItems = formItems
+                                // add a section title
+                                let formitemSectionTitle = ORKFormItem(sectionTitle: self.text?.string)
+                                formStep.formItems = [formitemSectionTitle] + formItems
                                 steps.append(formStep)
                             }
                         }
@@ -189,6 +189,8 @@ extension QuestionnaireItem {
             callback(nil, SMError.instrumentQuestionnaireTypeMissing(linkId: linkId!.string))
             return
         }
+        
+        let itemControl = sm_questionItemControl()
         
         switch type {
         case .group:
@@ -252,7 +254,7 @@ extension QuestionnaireItem {
             callback(answerFormat, nil)
             
         case .choice, .openChoice:
-
+            
             if let answerValueSet = answerValueSet {
                 if answerValueSet.absoluteString == kVS_YesNoDontknow {
                     callback(ORKAnswerFormat.sm_hl7YesNoDontKnow(), nil)
@@ -273,9 +275,28 @@ extension QuestionnaireItem {
                 }
                 
             } else if let answerSet = answerOption {
+                
+                
+                let answerFormat: ORKAnswerFormat
                 let style : ORKChoiceAnswerStyle = (repeats?.bool ?? false) ? .multipleChoice : .singleChoice
                 let choices = answerSet.compactMap ({ $0.rk_choiceAnswerFormat(style: style) })
-                let answerFormat = ORKAnswerFormat.choiceAnswerFormat(with: style, textChoices: choices)
+                
+                // itemControl == slider
+                if itemControl == "slider" {
+                    // TextScale slider in ResearchKit only works with a max of 8 choices
+                    if choices.count > 8 {
+                        answerFormat = ORKAnswerFormat.valuePickerAnswerFormat(with: choices)
+                    }
+                    else {
+                        let slider = ORKTextScaleAnswerFormat(textChoices: choices, defaultIndex: -1, vertical: false)
+                        slider.shouldHideRanges = true
+                        answerFormat = slider
+                    }
+                }
+                else {
+                    answerFormat = ORKAnswerFormat.choiceAnswerFormat(with: style, textChoices: choices)
+                }
+                
                 callback(answerFormat, nil)
             }
             else {
@@ -316,11 +337,25 @@ extension QuestionnaireItemAnswerOption {
     public func rk_choiceAnswerFormat(style: ORKChoiceAnswerStyle = .singleChoice) -> ORKTextChoice? {
         
         if let valueCoding = valueCoding {
-            return valueCoding.sm_textAnswerChoice(style: style)
+            return valueCoding.sm_textAnswerChoice(style: style, answerOption: self)
         }
         
         if let string = valueString?.string {
-            return ORKTextChoice(text: string, detailText: nil, value: string as NSCoding & NSCopying & NSObjectProtocol, exclusive: (style == .singleChoice) ? true : false)
+            return ORKTextChoice(
+                text: string,
+                detailText: nil,
+                value: string as NSCoding & NSCopying & NSObjectProtocol,
+                exclusive: (style == .singleChoice) ? true : false
+            )
+        }
+        
+        if let integer = valueInteger?.int {
+            return ORKTextChoice(
+                text: String(integer),
+                detailText: nil,
+                value: NSNumber(value: Double(integer)) as NSCoding & NSCopying & NSObjectProtocol,
+                exclusive: (style == .singleChoice) ? true : false
+            )
         }
         
         return nil
@@ -374,12 +409,24 @@ public extension ResearchKit.ORKStep {
 
 extension QuestionnaireItemEnableWhen {
     
-    func sm_resultPredicate(_ existsOperator: Bool? = nil) -> NSPredicate? {
+    func sm_resultPredicate(itemType: QuestionnaireItemType?, _ existsOperator: Bool? = nil) -> NSPredicate? {
         
         let resultSelector = ORKResultSelector(stepIdentifier: question!.string, resultIdentifier: question!.string)
                 
         if let string = answerString?.string {
             return ORKResultPredicate.predicateForChoiceQuestionResult(with: resultSelector, expectedAnswerValue: string as NSCoding & NSCopying & NSObjectProtocol)
+        }
+        
+        if let integer = answerInteger?.int {
+            switch self.operator_fhir {
+            case .gte, .lt, .lte, .gt, .eq, .ne:
+                let value = NSNumber(value: Double(integer))
+                let predicateString = "SUBQUERY(SELF, $x, $x.identifier == $ORK_TASK_IDENTIFIER AND SUBQUERY($x.results, $y, $y.identifier == %@ AND $y.isPreviousResult == 0 AND SUBQUERY($y.results, $z, $z.identifier == %@ AND $z.answer \(operator_fhir!.rawValue) %@).@count > 0).@count > 0).@count > 0"
+                let args: [CVarArg] = [question!.string, question!.string, value]
+                return NSPredicate(format: predicateString, arguments: getVaList(args))
+            default:
+                return nil
+            }
         }
                 
         if let bool = answerBoolean {
@@ -413,26 +460,28 @@ extension QuestionnaireItemEnableWhen {
     func sm_enableWhenPredicate() -> [NSPredicate]? {
         
 
+        // TODO:
+        // Error handling and throws
         
         var predicates = [NSPredicate]()
         let enableOperator = operator_fhir
         switch enableOperator! {
-        case .eq:
-            guard let resultPredicate = sm_resultPredicate() else {
+        case .eq, .gte, .lte:
+            guard let resultPredicate = sm_resultPredicate(itemType: nil) else {
                 return nil
             }
             let skipIfNot = NSCompoundPredicate(notPredicateWithSubpredicate: resultPredicate)
-            predicates.append(skipIfNot)
+                predicates.append(skipIfNot)
             break
         case .ne:
-            guard let resultPredicate = sm_resultPredicate() else {
+            guard let resultPredicate = sm_resultPredicate(itemType: nil) else {
                 return nil
             }
             let skipIf = NSCompoundPredicate(andPredicateWithSubpredicates: [resultPredicate])
             predicates.append(skipIf)
             break
         case .exists:
-            guard let is_nil = sm_resultPredicate(true),
+            guard let is_nil = sm_resultPredicate(itemType: nil, true),
                   let shouldExist = answerBoolean?.bool else {
                 return nil
             }
@@ -441,10 +490,11 @@ extension QuestionnaireItemEnableWhen {
                 predicates.append(shouldNotSkipIfExist)
             }
             else {
-                let shouldSkipIfExist = NSCompoundPredicate.init(notPredicateWithSubpredicate: is_nil)
+                let shouldSkipIfExist = NSCompoundPredicate(notPredicateWithSubpredicate: is_nil)
                 predicates.append(shouldSkipIfExist)
             }
             break
+            
         default:
             break
         }

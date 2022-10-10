@@ -17,7 +17,11 @@ extension ORKTextChoice {
         
         let displayStr = displayText ?? display ?? code
         let answer = (system ?? kDefaultSystem) + kDelimiter + code + kDelimiter + (display ?? "")
-        let answerChoice = ORKTextChoice(text: displayStr, detailText: detailText, value: answer as NSCoding & NSCopying & NSObjectProtocol, exclusive: (style == .singleChoice) ? true : false)
+        let answerChoice = ORKTextChoice(
+            text: displayStr,
+            detailText: detailText,
+            value: answer as NSCoding & NSCopying & NSObjectProtocol,
+            exclusive: (style == .singleChoice) ? true : false)
         return answerChoice
 		
     }

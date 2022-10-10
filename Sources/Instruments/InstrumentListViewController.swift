@@ -85,7 +85,7 @@ open class InstrumentListViewController :  UITableViewController {
         Questionnaire.Get(from: server, options: [:]) { [unowned self] (questionnaires, error) in
             
             if let error = error {
-                print(error)
+//                print(error)
             }
             if let questionnaires = questionnaires {
 				self.set(questionnaires)

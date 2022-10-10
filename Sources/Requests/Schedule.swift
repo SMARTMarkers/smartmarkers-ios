@@ -316,7 +316,7 @@ extension Date {
 		return Date.dateFormat.string(from: self)
 	}
 	
-	func sm_addDays(days: Int) -> Date {
+	public func sm_addDays(days: Int) -> Date {
 		let calender = UTCCalender.shared.calender
 		return calender.date(byAdding: .day, value: days, to: self)!
 	}

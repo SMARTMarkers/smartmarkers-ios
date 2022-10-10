@@ -12,6 +12,8 @@ public class ReportViewController: UITableViewController {
     
     public var report: Report!
     
+    public var viewFHIRResource: Bool = true
+    
     public lazy var data : [(String, String)] = {
         return [
             ("Title",               report.rp_title ?? ""),
@@ -51,7 +53,7 @@ public class ReportViewController: UITableViewController {
     // MARK: - Table view data source
 
     override public func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return viewFHIRResource ? 2 : 1
     }
 
     override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

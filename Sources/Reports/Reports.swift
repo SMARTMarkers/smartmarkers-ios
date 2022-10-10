@@ -288,7 +288,6 @@ open class Reports {
 					medicationStatement.subject = patientReference
 				}
                 
-                
                 // Procedure
                 if let procedure = entry.resource as? Procedure {
                     procedure.subject = patientReference

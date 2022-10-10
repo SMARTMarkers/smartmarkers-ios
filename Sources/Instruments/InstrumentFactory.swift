@@ -120,9 +120,9 @@ public enum Instruments {
         public var description: String {
             switch self {
             case .HealthRecords:
-                return "iOS Health Records"
+                return "Health Records"
             case .StepCount:
-                return "HealthKit Step Count"
+                return "Step Count"
             }
         }
         

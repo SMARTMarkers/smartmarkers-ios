@@ -9,13 +9,14 @@
 import Foundation
 import SMART
 import ResearchKit
+import HealthKit
 
 
 open class StepReport: Instrument {
     
     public init() {
         sm_type = .Device
-        sm_title = "Step Count (Health App)"
+        sm_title = "Your Step Counts"
         sm_code = Coding.sm_LOINC("41950-7", "Number of steps in 24 hour Measured")
         sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
         sm_identifier = sm_code?.sm_searchableToken()
@@ -35,27 +36,58 @@ open class StepReport: Instrument {
     
     public var sm_reportSearchOptions: [FHIRReportOptions]?
     
-    var stepActivity = StepActivity(Date(), nil)
+    public var introductionText: String?
+    
+    public var stepActivity = StepActivity(start: Date(), end: nil)
     
 	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 
         stepActivity.store = HKHealthStore()
-        let activityTask = ActivityReportTask(activity: stepActivity)
+        let activityTask = ActivityReportTask(activity: stepActivity, presenterOptions: config)
         let activityTaskView = ActivityTaskViewController(activityTask: activityTask)
         callback(activityTaskView, nil)
     }
     
     public func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
-        if let stepCountResult = stepActivity.value as? SMQuantitySampleResult,
-            let samples = stepCountResult.samples,
-            samples.count != 0 {
-            
-            let observation = Observation.sm_StepCount(count: 0, start: result.startDate, end: result.endDate, samples: samples)
-            return SMART.Bundle.sm_with([observation])
+        guard let collection = stepActivity.value as? SMStatisticsCollectionResult,
+                let stats = collection.statistics else {
+            return nil
         }
         
-        return nil
+        var observations = [Observation]()
+
+        let sem = DispatchSemaphore(value: 0)
+        stats.enumerateStatistics(from: stepActivity.period!.start!,
+                                  to: stepActivity.period!.end!) { statistics, stop in
+            
+            if let quantity = statistics.sumQuantity() {
+                let date = statistics.startDate
+                let steps = quantity.doubleValue(for: HKUnit.count())
+                let observation = Observation.sm_DailyStepCount(count: steps, date: date)
+                observations.append(observation)
+            }
+            
+            sem.signal()
+        }
+        sem.wait()
+        
+        return observations.count > 0 ? SMART.Bundle.sm_with(observations) : nil
+        
+//        if let statistics = stepActivity.value as? SMStatisticsCollectionResult, let quantity = statistics.statistics?.sumQuantity() {
+//                    let date = statistics.startDate
+//                    let steps = quantity.doubleValue(for: HKUnit.count())
+//                    print("\(date): steps = \(steps)")
+//        }
+//        if let stepCountResult = stepActivity.value as? SMStatisticsResult,
+//            let samples = stepCountResult.samples,
+//            samples.count != 0 {
+//
+//            let observation = Observation.sm_StepCount(count: 0, start: result.startDate, end: result.endDate, samples: samples)
+//            return SMART.Bundle.sm_with([observation])
+//        }
+        
+//        return nil
     }
     
     
@@ -65,6 +97,18 @@ open class StepReport: Instrument {
 
 extension Observation {
     
+    class func sm_DailyStepCount(count: Double, date: Date) -> Observation {
+        
+        let observation = Observation()
+        let stepCountCode = Coding.sm_LOINC("41950-7", "Number of steps in 24 hour Measured")
+        observation.code = CodeableConcept.sm_From([stepCountCode], text: "Number of steps in 24 hour Measured")
+        observation.category = [CodeableConcept.sm_Activity()]
+        observation.status = .final
+        observation.effectiveDateTime = date.fhir_asDateTime()
+        observation.valueInteger = FHIRInteger(integerLiteral: Int(count))
+        
+        return observation
+    }
     class func sm_StepCount(count: Int, start: Date, end: Date, samples: [HKQuantitySample]) -> Observation {
         
         let observation = Observation()
@@ -72,11 +116,12 @@ extension Observation {
         observation.code = CodeableConcept.sm_From([stepCountCode], text: "Number of steps in 24 hour Measured")
         observation.category = [CodeableConcept.sm_Activity()]
         observation.status = .final
+        observation.issued = Date().fhir_asInstant()
         
         let period = Period()
         period.start = start.fhir_asDateTime()
-        period.end   = start.fhir_asDateTime()
-        observation.effectivePeriod = period
+        period.end   = end.fhir_asDateTime()
+
         
         observation.component = samples.map { $0.sm_ObservationComponent() }
         return observation
@@ -106,8 +151,6 @@ extension HKQuantitySample {
         let period = Period()
         period.start = startDate.fhir_asDateTime()
         period.end   = endDate.fhir_asDateTime()
-        component.valuePeriod = period
-        
         return component
     }
 }

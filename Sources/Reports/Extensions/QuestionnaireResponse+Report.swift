@@ -33,7 +33,7 @@ extension QuestionnaireResponse : Report {
     }
     
     public var rp_title: String? {
-        resolveQuestionnaireIfContained()?.sm_title ?? "Survey Response"
+        resolveQuestionnaireIfContained()?.sm_title ?? "Survey"
     }
     
     public var rp_description: String? {
@@ -75,10 +75,8 @@ extension QuestionnaireResponse : Report {
     
     private func resolveQuestionnaireIfContained() -> Questionnaire? {
         
-        print(self.questionnaire?.absoluteString)
+
         guard let fragment = self.questionnaire?.fragment else {
-            print(self.questionnaire?.absoluteString)
-            print(self.questionnaire?.fragment)
             return nil
         }
         

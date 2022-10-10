@@ -10,7 +10,7 @@ import Foundation
 import ResearchKit
 
 
-open class HealthRecordConclusionStep: ORKCompletionStep {
+open class HealthRecordConclusionStep: ORKInstructionStep {
 	open override var allowsBackNavigation: Bool {
 		false
 	}

@@ -15,9 +15,24 @@ public protocol Activity: class {
     
     var period: ActivityPeriod? { get set }
     
+    var showDateSelector: Bool { get set }
+    
     var value: Any? { get set }
             
     func fetch(_ _store: HKHealthStore?, callback: @escaping ((Any?, Error?) -> Void))
+}
+
+
+extension Activity  {
+    
+    var showDateStep: Bool {
+        
+        if showDateSelector == false && period?.start != nil && period?.end != nil {
+            return false
+        }
+        
+        return true
+    }
 }
 
 public struct ActivityPeriod {

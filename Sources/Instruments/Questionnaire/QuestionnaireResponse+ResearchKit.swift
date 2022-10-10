@@ -59,7 +59,6 @@ public extension ORKStepResult {
                 answerItem.text = form.formItems!.filter({ $0.identifier == answerItem.linkId!.string }).first!.text!.fhir_string
             }
             let groupItem = QuestionnaireResponseItem(linkId: identifier.fhir_string)
-            groupItem.text = step?.title?.fhir_string
             groupItem.item = stepAnswerItems
             groupItem.extension_fhir = questionnaireItemForStep?.extension_fhir
             items.append(groupItem)
@@ -115,10 +114,13 @@ extension ORKQuestionResult {
             return slf.sm_IntegerItemAnswer()
         }
         
+        
         return nil
         
     }
 }
+
+
 
 extension ORKNumericQuestionResult {
     
@@ -194,31 +196,54 @@ extension ORKChoiceQuestionResult {
     
     func c3_responseItems() -> [QuestionnaireResponseItemAnswer]? {
         
-        guard let choices = choiceAnswers as? [String], choices.count > 0 else {
+        guard let choices = choiceAnswers, choices.count > 0 else {
             return nil
         }
         
         var answers = [QuestionnaireResponseItemAnswer]()
-        for choice in choices {
-            let answer = QuestionnaireResponseItemAnswer()
-            let components = choice.components(separatedBy: kDelimiter)
-            
-            if components.count < 2 {
-                // valueString
-                answer.valueString = components.first!.fhir_string
+        
+        // strings
+        if let choices = choices as? [String] {
+            for choice in choices {
+                let answer = QuestionnaireResponseItemAnswer()
+                let components = choice.components(separatedBy: kDelimiter)
+                
+                if components.count < 2 {
+                    // valueString
+                    answer.valueString = components.first!.fhir_string
+                }
+                else {
+                    // valueCoding
+                    let system = components[0]
+                    let code = components[1]
+                    let display = (components.count > 2) ? components[2] : nil
+                    answer.valueCoding = Coding()
+                    answer.valueCoding!.system = FHIRURL(system)
+                    answer.valueCoding!.code = code.fhir_string
+                    answer.valueCoding!.display = (display?.isEmpty ?? false) ? nil : display!.fhir_string
+                }
+                answers.append(answer)
             }
-            else {
-                // valueCoding
-                let system = components[0]
-                let code = components[1]
-                let display = (components.count > 2) ? components[2] : nil
-                answer.valueCoding = Coding()
-                answer.valueCoding!.system = FHIRURL(system)
-                answer.valueCoding!.code = code.fhir_string
-				answer.valueCoding!.display = (display?.isEmpty ?? false) ? nil : display!.fhir_string
-            }
-            answers.append(answer)
         }
+        
+        // integers
+        else if let choices = choices as? [Int] {
+            answers = choices.map ({ number -> QuestionnaireResponseItemAnswer in
+                let answer = QuestionnaireResponseItemAnswer()
+                answer.valueInteger = FHIRInteger(integerLiteral: number)
+                return answer
+            })
+        }
+        
+        // decimal
+        else if let choices = choices as? [Decimal] {
+            answers = choices.map ({ decimal -> QuestionnaireResponseItemAnswer in
+                let answer = QuestionnaireResponseItemAnswer()
+                answer.valueDecimal = FHIRDecimal(decimal)
+                return answer
+            })
+        }
+        
         return answers
     }
 }

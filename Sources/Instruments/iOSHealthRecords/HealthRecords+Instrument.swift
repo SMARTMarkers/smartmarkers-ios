@@ -33,6 +33,7 @@ open class HealthRecords: Instrument {
         sm_title = "HealthKit Clinical Record"
         sm_type = .healthRecords
         sm_identifier = "com.apple.healthkit.clinicalrecords"
+        sm_code = Coding.sm_Coding("healthrecords", "http://apple.com", "Health Records")
         self.settings = settings
     }
     
@@ -53,6 +54,7 @@ open class HealthRecords: Instrument {
 		var fhirResources = [DomainResource]()
 		var errors = [Error]()
 		var context = FHIRInstantiationContext()
+        
 		
 		// Found A selector
 		if let choices = result.stepResult(forStepIdentifier: ksm_healthrecord_step_review)?.results?.first as? ORKChoiceQuestionResult {
@@ -123,4 +125,8 @@ public extension HealthRecords {
 		step.bodyItems = [.init(horizontalRule: ())] + HealthRecords.InstructionItems()
 		return step
 	}
+    
+    class func isSupportedByDevice() -> Bool {
+        HKHealthStore().supportsHealthRecords()
+    }
 }

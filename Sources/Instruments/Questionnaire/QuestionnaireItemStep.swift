@@ -77,8 +77,8 @@ public extension QuestionnaireItemStepProtocol where Self : ORKStep {
         
         else if let slf = self as? QuestionnaireFormStep {
 
-            slf.title = item.text?.string
-            slf.text = item.id?.string
+//            slf.text = item.text?.string
+//            slf.text = item.id?.string
             slf.detailText = item.sm_questionItem_instructions()
             slf.isOptional = (item.required?.bool != nil) ? !item.required!.bool : true
         }
@@ -194,17 +194,37 @@ public class QuestionnaireItemFormViewController: ORKFormStepViewController {
 
 open class SMLearnMoreInstructionStep: ORKLearnMoreInstructionStep {
     
-    public var attributedBodyString: NSAttributedString?
+    public var attributedBodyString: NSAttributedString? {
+        willSet {
+            text = " "
+            detailText = " "
+        }
+    }
     
-    public override func stepViewControllerClass() -> AnyClass {
+    open override func stepViewControllerClass() -> AnyClass {
         SMLearnMoreStepViewController.classForCoder()
     }
 }
-class SMLearnMoreStepViewController: ORKLearnMoreStepViewController {
-    
-    override func viewWillAppear(_ animated: Bool) {
+open class SMLearnMoreStepViewController: ORKLearnMoreStepViewController  {
+   
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        view.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1.0)
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        fixattributedText()
+    }
+    func fixattributedText() {
+        let stp = self.step as! SMLearnMoreInstructionStep
+        if let attributedString = stp.attributedBodyString {
+            let textLabel = self.view.subviewsRecursive().filter({ $0.isKind(of: ORKLabel.self) })[2] as! ORKLabel
+            textLabel.attributedText  = attributedString
+            textLabel.setNeedsLayout()
+            textLabel.setNeedsDisplay()
+        }
+        
+
     }
 }
 
@@ -225,7 +245,7 @@ class SMInstructionStepViewController: ORKInstructionStepViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        justDoThis()
+        fixattributedText()
     }
     
     /*
@@ -256,7 +276,7 @@ class SMInstructionStepViewController: ORKInstructionStepViewController {
     
     
     
-    func justDoThis() {
+    func fixattributedText() {
         
         
         let stp = self.step as! SMInstructionStep
