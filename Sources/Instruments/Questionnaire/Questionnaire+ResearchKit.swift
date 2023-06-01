@@ -336,6 +336,17 @@ extension QuestionnaireItemAnswerOption {
     
     public func rk_choiceAnswerFormat(style: ORKChoiceAnswerStyle = .singleChoice) -> ORKTextChoice? {
         
+        // TODO: Add value reference
+//        if let valueReference {
+//
+//            return ORKTextChoice(text: valueReference.display?.string ?? valueReference.reference!.string,
+//                                 primaryTextAttributedString: nil,
+//                                 detailText: valueReference.reference!.string,
+//                                 detailTextAttributedString: nil,
+//                                 value: valueReference.reference!.string as NSCoding & NSCopying & NSObjectProtocol,
+//                                 exclusive: (style == .singleChoice) ? true : false)
+//        }
+        
         if let valueCoding = valueCoding {
             return valueCoding.sm_textAnswerChoice(style: style, answerOption: self)
         }

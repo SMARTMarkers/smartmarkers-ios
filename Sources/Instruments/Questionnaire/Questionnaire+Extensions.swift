@@ -115,13 +115,13 @@ extension Coding {
         if let ext = answerOption?.extensions(forURI: "http://researchkit.org/vs-choiceIsExclusive")?.first?.valueBoolean {
             styl = (ext.bool == true) ? .singleChoice : .multipleChoice
         }
-		
+        
 		return ORKTextChoice.sm_AnswerChoice(
 			system: system?.absoluteString,
 			code: code,
 			display: display?.localized,
 			displayText: nil,
-			detailText: nil,
+            displayAttributedString: display?.sm_xhtmlAttributedText(),
 			style: styl
 		)
     }
@@ -136,7 +136,12 @@ extension ValueSet {
         
         if let expansion = expansion?.contains {
             for option in expansion {
-                if let textChoice = ORKTextChoice.sm_AnswerChoice(system: option.system?.absoluteString, code: option.code!.string, display: option.display?.string, displayText: option.display_localized, style: style) {
+                if let textChoice = ORKTextChoice.sm_AnswerChoice(
+                    system: option.system?.absoluteString,
+                    code: option.code!.string,
+                    display: option.display?.string,
+                    displayText: option.display_localized,
+                    style: style) {
                     choices.append(textChoice)
                 }
             }
@@ -145,7 +150,12 @@ extension ValueSet {
         else if let includes = compose?.include {
             for include in includes {
                 include.concept?.forEach({ (concept) in
-                    if let answerChoice = ORKTextChoice.sm_AnswerChoice(system: include.system?.absoluteString, code: concept.code!.string, display: concept.display?.string, displayText: concept.display_localized, style: style) {
+                    if let answerChoice = ORKTextChoice.sm_AnswerChoice(
+                        system: include.system?.absoluteString,
+                        code: concept.code!.string,
+                        display: concept.display?.string,
+                        displayText: concept.display_localized,
+                        style: style) {
                         choices.append(answerChoice)
                     }
                 })
