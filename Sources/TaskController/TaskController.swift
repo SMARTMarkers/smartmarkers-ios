@@ -31,14 +31,16 @@ public struct TaskAttempt {
 		case discarded, failed, completedWithSuccess, completedWithoutSuccess, completed
 	}
 	
+    public let taskId: String
 	public let startTime: Date
 	public let endTime: Date?
 	public let state: TaskAttemptState
 	
-	public init(_ startTime: Date, _ endTime: Date?, _ state: TaskAttemptState) {
+    public init(_ taskId: String, _ startTime: Date, _ endTime: Date?, _ state: TaskAttemptState) {
 		self.startTime = startTime
 		self.endTime = endTime
 		self.state = state
+        self.taskId = taskId
 	}
 	
 	public init(serialized: [String: Any]) throws {
@@ -46,12 +48,14 @@ public struct TaskAttempt {
 		guard let startTime_str = serialized["startTime"] as? String,
 			  let start_dateTime = DateTime(string: startTime_str)?.nsDate,
 			  let state_str 	= serialized["state"] as? String,
+              let task_id     = serialized["task_id"] as? String,
 			  let state			= TaskAttemptState(rawValue: state_str) else {
 			throw SMError.undefined(description: "Invalid format of JSON for TaskAttempt")
 		}
 		
 		self.startTime = start_dateTime
 		self.state = state
+        self.taskId = task_id
 		if let endTime_str = serialized["endTime"] as? String {
 			self.endTime = DateTime(string: endTime_str)?.nsDate
 		}
@@ -64,7 +68,8 @@ public struct TaskAttempt {
 		var errors = [FHIRValidationError]()
 		var json = [
 			"startTime"	: startTime.fhir_asDateTime().asJSON(errors: &errors),
-			"state"		: state.rawValue
+			"state"		: state.rawValue,
+            "task_id"   : taskId
 		]
 		
 		if let endtime_str = endTime?.fhir_asDateTime().asJSON(errors: &errors) {
@@ -122,6 +127,9 @@ open class TaskController: NSObject {
     public var lastAttempt: TaskAttempt? {
         attempts.first
     }
+    
+    /// last attempt
+    public var currentAttempt: TaskAttempt?
    
     /**
     Initializer
@@ -158,6 +166,7 @@ open class TaskController: NSObject {
         
 		instrument.sm_taskController(config: presenterOptions) { (taskViewController, error) in
             taskViewController?.delegate = self
+            self.currentAttempt = nil
             callback(taskViewController, error)
         }
     }
@@ -363,8 +372,8 @@ public extension TaskController {
         // ***************
         // Bug :Premature firing before conclusion step
         // ***************
-        let stepIdentifier = taskViewController.currentStepViewController!.step!.identifier
-        if stepIdentifier.contains("range.of.motion") { return }
+//        let stepIdentifier = taskViewController.currentStepViewController!.step!.identifier
+//        if stepIdentifier.contains("range.of.motion") { return }
         // ***************
                 
         if reason == .discarded  {
@@ -381,9 +390,9 @@ public extension TaskController {
             
             if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
                 
-                let gr = reports?.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString)
                 let attempt = recordAttempt(taskViewController, .completedWithSuccess)
-                onTaskCompletion?(attempt, gr, nil)
+                let submissionBundle = reports?.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString, metric: attempt)
+                onTaskCompletion?(attempt, submissionBundle, nil)
             }
             else {
                 
@@ -418,14 +427,27 @@ extension TaskController: ORKTaskViewControllerDelegate {
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
 
 
-        generateReports(from: taskViewController, result: taskViewController.result, didFinishWith: reason, error: error)
+        generateReports(from: taskViewController,
+                        result: taskViewController.result,
+                        didFinishWith: reason,
+                        error: error)
+        
         dismiss(taskViewController: taskViewController)
     }
+
 	
 	@discardableResult
 	private func recordAttempt(_ taskViewController: ORKTaskViewController, _ state: TaskAttempt.TaskAttemptState) -> TaskAttempt {
 		
-		let attempt = TaskAttempt(taskViewController.result.startDate, taskViewController.result.endDate, state)
+        guard let instrument_identifier_code = instrument?.sm_code?.sm_searchableToken() else {
+            fatalError("Requires a code as an identifier")
+        }
+
+        let attempt = TaskAttempt(instrument_identifier_code,
+                                  taskViewController.result.startDate,
+                                  taskViewController.result.endDate,
+                                  state)
+        currentAttempt = attempt
 		attempts.insert(attempt, at: 0)
 		return attempt
 	}

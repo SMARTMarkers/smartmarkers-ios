@@ -10,6 +10,37 @@ import Foundation
 import SMART
 
 
+public struct TaskReport {
+    
+    /// Weak reference to `taskController`
+    weak var taskController: TaskController?
+    
+    /// Practitioner's `Request`
+    weak var request: Request?
+    
+    /// Instrument for which the reports are fetched or generated
+    weak var instrument: Instrument?
+    
+    /// Patient for which the reports are fetched or generated
+    weak var patient: Patient?
+    
+    /// generated bundle
+    var bundle: SMART.Bundle?
+    
+    /// attempted metric
+    var metric: TaskAttempt
+    
+    /// Are the reports in bundle submitted to server?
+    var isSubmitted: Bool {
+        bundle?.entry?.filter({ $0.resource?.id == nil }).count == 0
+    }
+    
+    var reports: [Report]? {
+        bundle?.entry?.compactMap ({ $0.resource as? Report })
+    }
+    
+}
+
 /**
  Reports Collection Class
  
@@ -33,17 +64,17 @@ open class Reports {
     
     /// Collection of `Report`s fetched from the FHIR `Server`
     private lazy var _reports: [Report] = {
-        return [Report]()
+        [Report]()
     }()
     
     /// Public reference to _reports
     open var reports: [Report] {
-        return _reports
+        _reports
     }
     
     /// Collection of `SubmissionBundle`; Yet to be submitted
     private lazy var _submissionQueue: [SubmissionBundle] = {
-        return [SubmissionBundle]()
+        [SubmissionBundle]()
     }()
     
     /// Public reference to queue
@@ -148,8 +179,8 @@ open class Reports {
     
     /// Enqueue newly created `SMART.Bundle` into the receiver's queue; prepared for submission to `FHIR Server`
     @discardableResult
-    open func enqueueSubmission(_ bundle: SMART.Bundle,  taskId: String, requestId: String? = nil) -> SubmissionBundle  {
-        let gr = SubmissionBundle(taskId: taskId, bundle: bundle, requestId: nil)
+    open func enqueueSubmission(_ bundle: SMART.Bundle,  taskId: String, metric: TaskAttempt, requestId: String? = nil) -> SubmissionBundle  {
+        let gr = SubmissionBundle(taskId: taskId, bundle: bundle, metric: metric, requestId: requestId)
         _submissionQueue.append(gr)
         return gr
     }

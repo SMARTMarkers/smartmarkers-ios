@@ -127,6 +127,9 @@ public class SubmissionBundle {
     /// Boolean to indicate if "ok" to submit
     public var canSubmit: Bool = false
     
+    /// Metrics (start time, end time and conclusion
+    public var metric: TaskAttempt
+    
     /// Submission status
     public internal(set) var status: SubmissionStatus
     
@@ -137,11 +140,20 @@ public class SubmissionBundle {
      - parameter bundle: `SMART.Bundle` generated from the task session
      - parameter requestId: Optional request identifier
      */
-    public init(taskId: String, bundle: SMART.Bundle, requestId: String? = nil) {
+    public init(taskId: String, bundle: SMART.Bundle, metric: TaskAttempt, requestId: String? = nil) {
         self.taskId = taskId
         self.bundle = bundle
         self.requestId = requestId
         self.status = .readyToSubmit
+        self.metric = metric
+    }
+    
+    /**
+     Convinience methods
+     */
+    
+    public func resources() -> [Report]? {
+        bundle.entry?.compactMap({ $0.resource as? Report })
     }
     
     
