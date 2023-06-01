@@ -42,22 +42,31 @@ class HealthRecordNotFoundStepModifier: ORKStepModifier {
             }
             
             if filtered.count > 0 {
-                step.title = "Health records retrieved"
+                step.title = "Health record retrieved"
                 step.bodyItems = nil
+                step.text = nil
             }
             else {
-                step.title = "Health records were not retrieved"
+                step.title = "Health record was not retrieved"
+                step.text = "This may be due to:"
                 step.bodyItems = [
-					ORKBodyItem(text: "This maybe due to lack of data in the Health app. You can try this task again after linking your EHR." ,
-								detailText: nil,
+					ORKBodyItem(text: "No data in your Apple Health app" ,
+								detailText: "Requires linking with your care provider(s)",
 								image: nil,
-								learnMoreItem: HealthRecords.linkInstructionsAsLearnMoreItem(),
-								bodyItemStyle: .text),
-                    ORKBodyItem(text: "This may also occur if permission to access the health records was not granted.\nYou can enable access by going into the Health app → Your Profile (upper right icon) → Health Records → Select app → enable access toggles",
-                                detailText: nil,
+								learnMoreItem: nil,
+                                bodyItemStyle: .bulletPoint),
+                    ORKBodyItem(text: "Permission to access the health records was not granted.",
+                                detailText: "You can enable access by going into the Health app → Your Profile (upper right icon) → Health Records → Select app → enable access toggles",
                                 image: nil,
                                 learnMoreItem: nil,
+                                bodyItemStyle: .bulletPoint),
+                    .init(horizontalRule: ()),
+                    ORKBodyItem(text: nil,
+                                detailText: nil,
+                                image: nil,
+                                learnMoreItem: HealthRecords.linkInstructionsAsLearnMoreItem(),
                                 bodyItemStyle: .text),
+
                     
                     
 				]
