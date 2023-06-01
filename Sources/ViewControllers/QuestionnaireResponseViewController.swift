@@ -118,7 +118,7 @@ open class QuestionnaireResponseViewController: UITableViewController {
 
 // MARK - Parse QuestionnaireResponse.item to get answers and question strings
 
-public extension QuestionnaireResponseItem {
+extension QuestionnaireResponseItem {
     
     func sm_QuestionAndAnswer() -> (String, String) {
 		var questionAnswerTuple = (text?.string ?? String(), sm_getAnswer(answer))

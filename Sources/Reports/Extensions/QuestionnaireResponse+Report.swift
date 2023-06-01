@@ -33,7 +33,15 @@ extension QuestionnaireResponse : Report {
     }
     
     public var rp_title: String? {
-        resolveQuestionnaireIfContained()?.sm_title ?? "Survey"
+        
+        if let title = resolveQuestionnaireIfContained()?.sm_title {
+            return title
+        }
+        if let identifier = self.identifier?.value?.string {
+            return "\(identifier) | SurveyResponse"
+        }
+        
+        return "SurveyResponse" + (rp_identifier ?? "")
     }
     
     public var rp_description: String? {
@@ -81,6 +89,13 @@ extension QuestionnaireResponse : Report {
         }
         
         return contained?.filter({ $0.id?.string == fragment }).first as? Questionnaire
+    }
+}
+
+public extension Report {
+    
+    var is_a_questionnaireResponse: Bool {
+        self is QuestionnaireResponse
     }
 }
 
