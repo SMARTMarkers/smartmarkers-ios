@@ -40,6 +40,10 @@ open class StepReport: Instrument {
     
     public var stepActivity = StepActivity(start: Date(), end: nil)
     
+    public func sm_configure(_ settings: Any?) {
+        
+    }
+    
 	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 
         stepActivity.store = HKHealthStore()
@@ -77,7 +81,7 @@ open class StepReport: Instrument {
 //        if let statistics = stepActivity.value as? SMStatisticsCollectionResult, let quantity = statistics.statistics?.sumQuantity() {
 //                    let date = statistics.startDate
 //                    let steps = quantity.doubleValue(for: HKUnit.count())
-//                    print("\(date): steps = \(steps)")
+//                    smLog("\(date): steps = \(steps)")
 //        }
 //        if let stepCountResult = stepActivity.value as? SMStatisticsResult,
 //            let samples = stepCountResult.samples,

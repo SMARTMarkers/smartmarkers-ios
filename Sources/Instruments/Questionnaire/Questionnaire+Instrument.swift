@@ -18,7 +18,7 @@ import SMART
  The receiver initializes
  */
 extension SMART.Questionnaire: Instrument {
-    
+
     public var sm_title: String {
         get { return sm_displayTitle() ?? "FHIR Questionnaire" }
         set { }
@@ -69,6 +69,10 @@ extension SMART.Questionnaire: Instrument {
             }
             return nil
         }
+    }
+    
+    public func sm_configure(_ settings: Any?) {
+        
     }
     
     

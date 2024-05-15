@@ -26,7 +26,7 @@ open class SubmissionTaskController: ORKTaskViewController {
         
         let task = SubmissionTask(session)
         super.init(task: task, taskRun: UUID())
-        self.delegate = session
+//        self.delegate = session
     }
     
     required public init(coder aDecoder: NSCoder) {

@@ -125,7 +125,7 @@ class EPPatientListViewController : PatientListViewController {
 	}
 	
 	func selectList(list: PatientList) {
-		print("Number of patients: ", list.actualNumberOfPatients)
+		smLog("Number of patients: ", list.actualNumberOfPatients)
 		patientList = list
 		if 0 == patientList?.actualNumberOfPatients {
 			patientList?.retrieve(fromServer: server)

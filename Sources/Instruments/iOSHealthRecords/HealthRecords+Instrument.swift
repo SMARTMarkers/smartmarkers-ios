@@ -27,14 +27,22 @@ open class HealthRecords: Instrument {
     
     public var sm_reportSearchOptions: [FHIRReportOptions]?
     
+    var outputValueSet: ValueSet?
+    
     var settings: [String: Any]?
     
     public init(_ settings: [String:Any]? = nil) {
         sm_title = "HealthKit Clinical Record"
         sm_type = .healthRecords
-        sm_identifier = "com.apple.healthkit.clinicalrecords"
-        sm_code = Coding.sm_Coding("healthrecords", "http://apple.com", "Health Records")
+        sm_identifier = "smartmarkers.ios"
+        sm_code = Coding.sm_Coding("healthrecords.access", InstrumentSystem, "Health Records")
         self.settings = settings
+    }
+    
+    public func sm_configure(_ settings: Any?) {
+        
+        self.settings = settings as? [String: Any]
+        
     }
     
     
@@ -44,12 +52,38 @@ open class HealthRecords: Instrument {
         callback(taskViewController, nil)
     }
     
+    open func codeFilter(resources: [DomainResource], requirements: [DataRequired]) throws -> [DomainResource] {
+        
+        
+        var filtered = [DomainResource]()
+
+        for requirement in requirements {
+
+            let includes = requirement.valueSet.compactMap { $0.compose?.include }.flatMap { $0 }
+            
+            for inc in includes {
+                
+                let codes = inc.concept?.compactMap({ $0.code?.string })
+                let system = inc.system?.absoluteString
+                let fil    = resources.sm_filter(codes: codes, system: system, type: requirement.fhirType)
+                filtered.append(contentsOf: fil ?? [])
+            }
+        }
+        
+        return filtered
+        
+    }
+
     open func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle? {
         
+       
 		
 		guard let data = result.stepResult(forStepIdentifier: ksm_healthrecord_step_authorization)?.results as? [HealthRecordResult] else {
 			return nil
 		}
+        
+        
+        
 		
 		var fhirResources = [DomainResource]()
 		var errors = [Error]()
@@ -63,6 +97,7 @@ open class HealthRecords: Instrument {
 			}
 			
 			
+            
 			for type in clinicalTypes {
 				if let healthRecord = data.filter({ $0.identifier == type.identifier }).first {
 					
@@ -87,6 +122,10 @@ open class HealthRecords: Instrument {
 			
 			
 		}
+        
+        if let requirements = self.settings?["output"] as? [DataRequired] {
+            fhirResources = try! self.codeFilter(resources: fhirResources, requirements: requirements)
+        }
 		
 		return fhirResources.isEmpty ? nil : SMART.Bundle.sm_with(fhirResources)
     }

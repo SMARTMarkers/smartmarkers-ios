@@ -7,13 +7,28 @@
 //
 
 import Foundation
+import SMART
+
+
+func smLog(_ message: @autoclosure () -> Any, function: String = #function, file: NSString = #file, line: Int = #line) {
+    #if DEBUG
+    print("[\(file.lastPathComponent)]:\(String(describing: message()))")
+    #endif
+}
+
+
 
 public enum SMError : Error, CustomStringConvertible {
+    
+    
+    /// Enrollment errors (Eligibility, Consenting, Enrolling)
+    case CannotEnroll(message: String, error: Error?)
     
     case undefined(description: String)
     
     // Mark: PROServer
-    
+   
+    case ResourceNotCreated(resource: DomainResource, serverError: Error)
     /// PROServer User Is not Practitioner or Patient
     case proserverUserNotPractitionerOrPatient(profileType: String)
     
@@ -53,6 +68,9 @@ public enum SMError : Error, CustomStringConvertible {
     case instrumentResultBundleNotCreated
     
     // MARK: Instrument: Questionnaire
+    
+    /// Instrument could not be resolved
+    case instrumentUnresolved(_ description: String)
     
     /// Instrument: Questionnaire is missing required elements
     case instrumentQuestionnaireMissingElements(linkId: String)
@@ -162,6 +180,8 @@ public enum SMError : Error, CustomStringConvertible {
             return "HealthKit Clinical Record type `\(type)` not supported"
         case .instrumentQuestionnaireMissingElements(let linkId):
             return "`Questionnaire.item` is missing required elements; linkId: \(linkId)"
+        case .instrumentUnresolved(description: let description):
+            return "Could not resolve instrument; \(description)"
         
         // SessionController
         case .sessionMissingTask:
@@ -170,7 +190,17 @@ public enum SMError : Error, CustomStringConvertible {
             return "SessionController created with some missing Tasks"
         case .instrumentQuestionnaireMissingCalculatedExpression(let linkId):
             return "Questionnaire.item is missing calculated expression for linkId: \(linkId)"
+        
+        // Server
+        case .ResourceNotCreated(let resource, let err):
+            return "FHIR Resource not created error=\(err), resource=\(resource)"
+            
+        // Enrollment Errors
+        case .CannotEnroll(let message, let error):
+            return "Cannot enroll participant, description=\(message), error=\(error)"
+
         }
+        
         
     }
     

@@ -13,6 +13,29 @@ import HealthKit
 
 extension HKFHIRResourceType {
     
+    
+    
+    func as_HKIdentifierClinicalType() -> HKClinicalTypeIdentifier? {
+        
+        if self == .allergyIntolerance  { return .allergyRecord }
+        if self == .immunization        { return .immunizationRecord }
+        if self == .observation         { return .labResultRecord }
+        if self == .condition           { return .conditionRecord }
+        if self == .medicationDispense  { return .medicationRecord }
+        if self == .medicationOrder     { return .medicationRecord }
+        if self == .medicationStatement { return .medicationRecord }
+        if self == .procedure           { return .procedureRecord }
+        if self == .medicationOrder     { return .medicationRecord }
+
+        if #available(iOS 14.0, *) {
+            if self == .medicationRequest   { return .medicationRecord }
+        }
+        
+         smLog(SMError.instrumentHealthKitClinicalRecordTypeNotSupported(type: "<HKFHIRResourceType: \(self.rawValue)>"))
+        return nil
+
+    }
+    
     func as_FHIRResource<T: DomainResource>() throws -> T {
         
         if self == .allergyIntolerance  { return AllergyIntolerance()   as! T }

@@ -70,6 +70,9 @@ public protocol Instrument : class {
     /// Protocol Func to generate a FHIR `Bundle` of result resources. eg. QuestionnaireResponse, Observation
     func sm_generateResponse(from result: ORKTaskResult, task: ORKTask) -> SMART.Bundle?
     
+    /// Func to offer any "settings" to offer further customization
+    func sm_configure(_ settings: Any?)
+    
 }
 
 
@@ -103,6 +106,7 @@ public extension Instrument where Self: SMART.DomainResource {
     }
     
 }
+
 
 extension Instrument {
     

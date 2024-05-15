@@ -72,17 +72,21 @@ open class Reports {
         _reports
     }
     
-    /// Collection of `SubmissionBundle`; Yet to be submitted
-    private lazy var _submissionQueue: [SubmissionBundle] = {
-        [SubmissionBundle]()
+    /// Collection of `InstrumentResult`; Yet to be submitted
+    private lazy var _submissionQueue: [InstrumentResult] = {
+        [InstrumentResult]()
     }()
     
     /// Public reference to queue
-    open var submissionQueue: [SubmissionBundle] {
-        return _submissionQueue
+//    open var submissionQueue: [InstrumentResult] {
+//        return _submissionQueue
+//    }
+    
+    open var recent: InstrumentResult? {
+        _submissionQueue.last
     }
     
-    public init(task: TaskController) {
+    public init(for task: TaskController) {
         self.taskController = task
     }
     
@@ -99,6 +103,10 @@ open class Reports {
     /// Boolean to determine if there are unsubmitted FHIR resources
     public var hasReportsToSubmit: Bool {
         !_submissionQueue.isEmpty
+    }
+    
+    public func reportsToSubmit() -> [InstrumentResult]? {
+        _submissionQueue
     }
     
     
@@ -127,11 +135,11 @@ open class Reports {
         _reports.append(contentsOf: resources)
     }
     
-    /// Returns `SubmissionBundle` generated from a specific user task session (taskId) from the queue
-    open func submissionBundle(for taskId: String) -> SubmissionBundle? {
+    /// Returns `InstrumentResult` generated from a specific user task session (taskId) from the queue
+    open func instrumentResult(for taskId: String) -> InstrumentResult? {
         
-        return submissionQueue.filter({ (submissionBundle) -> Bool in
-            return submissionBundle.taskId == taskId
+        return _submissionQueue.filter({ (instrumentResult) -> Bool in
+            return instrumentResult.taskId == taskId
         }).first
     }
     
@@ -177,19 +185,23 @@ open class Reports {
         }
     }
     
+   /// Add InstrumentResult to the results queue
+    open func enqueueBundle(_ instrumentResult: InstrumentResult) {
+        _submissionQueue.append(instrumentResult)
+    }
     /// Enqueue newly created `SMART.Bundle` into the receiver's queue; prepared for submission to `FHIR Server`
     @discardableResult
-    open func enqueueSubmission(_ bundle: SMART.Bundle,  taskId: String, metric: TaskAttempt, requestId: String? = nil) -> SubmissionBundle  {
-        let gr = SubmissionBundle(taskId: taskId, bundle: bundle, metric: metric, requestId: requestId)
+    open func enqueueSubmission(_ bundle: SMART.Bundle,  taskId: String, metric: TaskAttempt, requestId: String? = nil) -> InstrumentResult  {
+        let gr = InstrumentResult(taskId: taskId, bundle: bundle, metric: metric, requestId: requestId)
         _submissionQueue.append(gr)
         return gr
     }
     
     
     /**
-     Attempts to submit the `submissionBundles` in the receiver's queue (`submissionQueue`)
+     Attempts to submit the `reportBundles` in the receiver's queue (`submissionQueue`)
      
-     Note: `SubmissionBundle.canSubmit` flag must be `true` for submission; else will be discarded.
+     Note: `instrumentResult.canSubmit` flag must be `true` for submission; else will be discarded.
      
      - parameter server:    `FHIR Server` to submit too
      - parameter patient:   `SMART.Patient` resource
@@ -209,18 +221,19 @@ open class Reports {
         
         for submission in _submissionQueue {
             
-            if !submission.canSubmit {
-                submission.status = .discarded
+            // TODO: Send the taskMetric?
+            if submission.bundle == nil {
                 continue
             }
             
-            try? Reports.Tag(&submission.bundle, with: patient, request: request)
+          
+            
+            try? Reports.Tag(&submission.bundle!, with: patient, request: request)
             group.enter()
-            submit(bundle: submission.bundle, server: server) { (success, error) in
+            submit(bundle: submission.bundle!, server: server) { (success, error) in
                 if let error = error {
                     errors.append(error)
                 }
-                submission.status = (success) ? .submitted : .failedToSubmit
                 group.leave()
             }
         }
@@ -419,7 +432,7 @@ open class Reports {
     /**
      Submission method
      
-     Submits FHIR resources in the receiver's SubmissionBundle (`SMART.Bundle`) to the FHIR server
+     Submits FHIR resources in the receiver's InstrumentResult (`SMART.Bundle`) to the FHIR server
      FHIR Bundle **Transaction** method is used.
      
      - parameter bundle: `SMART.Bundle` containing FHIR resources

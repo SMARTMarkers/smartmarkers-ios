@@ -30,6 +30,10 @@ open class OMRON: Instrument, WebInstrument {
     
     public var sm_reportSearchOptions: [FHIRReportOptions]?
     
+    public func sm_configure(_ settings: Any?) {
+        
+    }
+    
     public init(authSettings: [String:Any], usageDescription: String? = nil, callbackManager: inout CallbackManager) {
 
         self.auth = OAuth2CodeGrant(settings: authSettings)

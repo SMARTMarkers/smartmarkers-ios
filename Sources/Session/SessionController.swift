@@ -1,32 +1,21 @@
 //
 //  SessionController.swift
-//  SMARTMarkers
+//  PPMG
 //
-//  Created by Raheel Sayeed on 15/02/18.
-//  Copyright © 2018 Boston Children's Hospital. All rights reserved.
+//  Created by raheel on 4/4/22.
 //
 
 import Foundation
 import ResearchKit
+import UIKit
 import SMART
-
-/**
- Instances can conform to `SessionControllerDelegate` to be notified about task session conclusion and reason
- */
-public protocol SessionControllerDelegate: class {
-    
-    func sessionEnded(_ session: SessionController, taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason, error: Error?)
-    
-    func sessionShouldBegin(_ session: SessionController, taskViewController: ORKTaskViewController, reason: ORKTaskViewControllerFinishReason, error: Error?) -> Bool
-    
-}
 
 /**
  `SessionController` for Multiple Tasks
  
  SessionController is to create a single unified user session to generate data from multiple tasks. Can also submit generated FHIR Bundles to the `FHIR Server` for a given `Patient`
  */
-open class SessionController: NSObject {
+open class SessionController {
     
     /// Session identifier; a UUID string
     public let identifier: String
@@ -40,41 +29,26 @@ open class SessionController: NSObject {
     /// `FHIR Server` for submission of the results
     public internal(set) var server: Server?
     
-    /// Delegate to inform task completion progress
-    weak var delegate: SessionControllerDelegate?
-    
     /// Callback to call if a task has been cancelled
     public var onCancellation: ((_ task: TaskController) -> Void)?
     
     /// Callback to call when all tasks have concluded
-    public var onConclusion: (( _ session: SessionController) -> Void)?
+    public var onConclusion: ((_ sessionResult: StudyTaskResult) -> Void)?
     
-    /// Optional `Patient` verification;
-    let verifyUser: Bool
-    
-    /// Collection of errors
-    private lazy var _errors: [Error] = {
-        return [Error]()
-    }()
-    
-    
-    public var errors: [Error] {
-        return _errors
-    }
-    
+    /// LearnMore steps color
+    public var learnMoreStepColor: UIColor?
+
     /**
      Designated Initializer
      
      - parameter tasks:         Array of `TaskControllers` that need to be administered
      - parameter patient:       optional `Patient`; needed for submission to `FHIR Server`
      - parameter server:        optional `Server`; needed for submission to `FHIR Server`
-     - parameter verifyUser:    optional; Set true for initial patient check
     */
-    public init(_ tasks: [TaskController], patient: Patient?, server: Server?, verifyUser: Bool = false) {
-        self.identifier = UUID().uuidString
+    public init(_ tasks: [TaskController], patient: Patient?, server: Server?) {
+        identifier = UUID().uuidString
         self.tasks = tasks
         self.patient = patient
-        self.verifyUser = verifyUser
         self.server = server
     }
     
@@ -83,69 +57,263 @@ open class SessionController: NSObject {
     */
     open func prepareController(callback: @escaping ((_ controller: SessionViewController?, _ error: Error?) -> Void)) {
         
-        var viewControllers = [ORKTaskViewController]()
-        
-        let group = DispatchGroup()
+        var taskViews = [ORKTaskViewController]()
         var errors = [Error]()
-        for task in tasks {
-            
-            group.enter()
+        
+        let sem = DispatchSemaphore(value: 0)
+        for (i, task) in self.tasks.enumerated() {
+            smLog("[Session]\(i)---\(task.instrument?.sm_title ?? "")")
             task.prepareSession { (taskViewController, error) in
-                if let tvc = taskViewController as? InstrumentTaskViewController {
-                    viewControllers.append(tvc)
+                smLog("[Session]------\(taskViewController?.task?.description ?? "")")
+                if let tvc = taskViewController {
+                    taskViews.append(tvc)
                 }
-                else {
-                    if let err = error {
-                        errors.append(err)
-                    }
+                if let error = error {
+                    errors.append(error)
                 }
-                group.leave()
+                sem.signal()
             }
+            sem.wait()
         }
+
+        if taskViews.count > 0 {
+
+            var i = 0
+            taskViews.forEach({ $0.view.tag = i; i += 1; })
+
+
+            if server != nil, patient != nil {
+                // TODO: Add a Submission Task
+            }
+
+            let sessionView = SessionViewController(viewControllers: taskViews, for: self)
+
+            smLog(errors)
+            callback(sessionView, errors.isEmpty ? nil : errors.first)
+        }
+        else {
+            callback(nil, errors.first)
+        }
+
         
-        group.notify(queue: .main) {
-            if viewControllers.count > 0 {
-                
-                // SubmissionTask Module appended when a server and patient is found
-                var submissionTask: SubmissionTaskController?
-                if let _ = self.patient, let _ = self.server {
-                    submissionTask = SubmissionTaskController(self)
-                    viewControllers.append(submissionTask!)
-                }
-                
-                let sessionView = self.sessionContainerController(for: viewControllers)
-                callback(sessionView, (errors.isEmpty) ? nil : SMError.sessionCreatedWithMissingTasks)
-            }
-            else {
-                callback(nil, SMError.sessionMissingTask)
-            }
-        }
     }
     
-    open func sessionContainerController(for taskViewControllers: [ORKTaskViewController]) -> SessionViewController {
-        
-        var views : [UIViewController] = taskViewControllers
-        if  verifyUser, let patient = patient {
-            let verifyController = MiniPatientVerificationController(patient: patient)
-            views.insert(verifyController, at: 0)
-        }
-        
-        let container = SessionViewController(views: views, reversed: false, verifyUser: verifyUser, session: self)
-
-        return container
-    }
-
 }
 
 
-extension SessionController: ORKTaskViewControllerDelegate {
+
+open class SessionViewController: UIViewController {
     
-    // This TaskControllerDelegate only handles the submissionTask;
-    // Not for PGHD generation tasks, i.e. `TaskController`
+    private var pages: UIPageViewController!
+    private var pageIndices: [Int]
+    private var taskResults: [Int: ORKTaskResult]
+    private var currentPageIndex: Int
+    public internal(set) var taskViewControllers: [ORKTaskViewController]
+    unowned var session: SessionController!
+
+
+    init(viewControllers: [ORKTaskViewController], for session: SessionController) {
+        self.taskViewControllers = viewControllers
+        pageIndices = [Int]()
+        currentPageIndex = NSNotFound
+        taskResults = [Int: ORKTaskResult]()
+        self.session = session
+        super.init(nibName: nil, bundle: nil)
+        taskViewControllers.forEach{ $0.delegate = self }
+    }
+    
+    func taskDidChange() {
+        if !isViewLoaded { return }
+        
+        currentPageIndex = NSNotFound
+        
+        self.goto(taskIndex: 0, animated: false)
+    }
+    
+    func goto(taskIndex: Int, animated: Bool) {
+        
+        guard let taskController = taskViewController(index: taskIndex) else {
+            smLog("No view Controller")
+            return
+        }
+        
+        var animated = animated
+        let currentTask = currentPageIndex
+        if currentTask == NSNotFound {
+            animated = false
+        }
+        
+        let direction: UIPageViewController.NavigationDirection = (!animated || taskIndex > currentTask) ? .forward : .reverse
+        
+        currentPageIndex = taskIndex
+        
+        pages.setViewControllers([taskController], direction: direction, animated: animated) {  finished in
+            if finished {
+                UIAccessibility.post(notification: .screenChanged, argument: nil)
+            }
+        }
+    }
+    
+    func updateBackButton() {
+        smLog("update back button due \(currentPageIndex)")
+        let task = pages.viewControllers!.first as! ORKTaskViewController
+        task.currentStepViewController?.backButtonItem = self.backButtonItem()
+    }
+    
+    func taskViewController(index: Int) -> UIViewController? {
+        if index >= taskViewControllers.count { return nil }
+        
+        return taskViewControllers[index]
+    }
+    
+    func navigate(delta: Int) -> Bool {
+        
+        let pageCount = taskViewControllers.count
+        if (currentPageIndex == 0 && delta < 0) {
+            return false
+        }
+        else if (currentPageIndex >= (pageCount - 1) && delta > 0) {
+            return false
+        }
+        else {
+            self.goto(taskIndex: (currentPageIndex + delta), animated: true)
+            return true
+        }
+    }
+    
+    @discardableResult
+    func goForward() -> Bool {
+        navigate(delta: 1)
+    }
+    
+    @discardableResult
+    func goBackword() -> Bool {
+        navigate(delta: -1)
+    }
+    
+    
+    open override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        pages = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        pages.view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        pages.view.frame = self.view.bounds
+        self.view.addSubview(pages.view)
+        self.addChild(pages)
+        pages.didMove(toParent: self)
+        
+        taskDidChange()
+    }
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func backButtonItem() -> UIBarButtonItem {
+        let img = UIImage(named: "arrowLeft")
+        let back = UIBarButtonItem(image: img, style: .plain, target: self, action: #selector(backButtonTapped(_:)))
+        return back
+    }
+    
+    @objc
+    func backButtonTapped(_ sender: Any?) {
+        smLog("back item pressed")
+        goBackword()
+    }
+    
+    @objc
+    func cancelButtonTapped(_ sender: Any?) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+
+
+
+extension SessionViewController: ORKTaskViewControllerDelegate {
+    
+    func findTask(with taskView: ORKTaskViewController) -> TaskController {
+        
+        let tag = taskView.view.tag
+        let task = session.tasks[tag]
+        return task
+    }
+    
+    
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
-        // Dismiss the navigationController and end session
-		(taskViewController.navigationController ?? taskViewController).dismiss(animated: true) { [unowned self]  in
-			self.onConclusion?(self)
-		}
+
+        let sessionId = taskViewController.taskRunUUID.uuidString
+        var instrumentResults = [InstrumentResult]()
+        weak var ss = session
+        if reason == .discarded {
+            let index = taskViewController.view.tag
+            taskViewControllers[0...index].forEach { taskView in
+                let report = findTask(with: taskView)
+                    .generateReports(
+                        from: taskView,
+                        result: taskView.result,
+                        didFinishWith: .discarded,
+                        error: error
+                    )
+                instrumentResults.append(report)
+            }
+            dismiss(animated: true) {
+                ss?.onConclusion?(StudyTaskResult(sessionId: sessionId, result: instrumentResults))
+            }
+        }
+        else {
+            if goForward() == false {
+                // Session Ended with success, dismiss and grab all data
+                taskViewControllers.forEach { taskView in
+                    let report = findTask(with: taskView)
+                        .generateReports(
+                            from: taskView,
+                            result: taskView.result,
+                            didFinishWith: .completed,
+                            error: error
+                        )
+                    instrumentResults.append(report)
+                }
+                dismiss(animated: true) {
+                    ss?.onConclusion?(StudyTaskResult(sessionId: sessionId, result: instrumentResults))
+                }
+            }
+        }
     }
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillAppear stepViewController: ORKStepViewController) {
+        
+        let previous = taskViewController.stepViewControllerHasPreviousStep(stepViewController)
+        
+        if false == previous && currentPageIndex > 0 {
+            stepViewController.backButtonItem = self.backButtonItem()
+        }
+        
+        let hasNextStep = taskViewController.stepViewControllerHasNextStep(stepViewController)
+        
+        if true == hasNextStep || currentPageIndex < (taskViewControllers.count - 1) {
+            stepViewController.continueButtonTitle = "Next"
+        }
+        
+    }
+    
+  
+    
+    public func taskViewController(_ taskViewController: ORKTaskViewController, learnMoreButtonPressedWith learnMoreStep: ORKLearnMoreInstructionStep, for stepViewController: ORKStepViewController) {
+
+
+        let clss = learnMoreStep.instantiateStepViewController(with: ORKResult())
+        let nav = UINavigationController(rootViewController: clss)
+        nav.view.tintColor = session.learnMoreStepColor
+        stepViewController.present(nav, animated: true, completion: nil)
+    }
+
 }
+

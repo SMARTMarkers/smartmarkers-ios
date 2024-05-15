@@ -43,6 +43,10 @@ public class AmslerGrid : Instrument {
         ]
     }
     
+    public func sm_configure(_ settings: Any?) {
+        
+    }
+    
 	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 
         let amslerGridTask = ORKOrderedTask.amslerGridTask(withIdentifier: self.sm_identifier!, intendedUseDescription: sm_taskDescription, options: [])
@@ -102,6 +106,7 @@ public class AmslerGrid : Instrument {
         
         return nil
     }
+    
     
 }
 

@@ -27,7 +27,7 @@ controller.prepareSession() { taskViewController, error in
     } 
     else { 
         // check error:
-        print(error)
+        smLog(error)
     } 
 } 
 
@@ -35,10 +35,10 @@ controller.prepareSession() { taskViewController, error in
 controller.onTaskCompletion = { submissionBundle, error in 
     if let submissionBundle = submissionBundle { 
         // Output: FHIR Bundle 
-        print(submissionBundle.bundle)
+        smLog(submissionBundle.bundle)
     } 
     else { 
-        print(error)
+        smLog(error)
     }
 }
 ```

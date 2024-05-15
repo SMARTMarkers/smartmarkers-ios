@@ -82,10 +82,10 @@ class SMSubmissionInProgressStepVeiwController: ORKWaitStepViewController {
             })
             
             //
-            _ = session.tasks.compactMap { (taskController) -> [SubmissionBundle]? in
-                var toSubmit = [SubmissionBundle]()
+            _ = session.tasks.compactMap { (taskController) -> [InstrumentResult]? in
+                var toSubmit = [InstrumentResult]()
                 selectedTasksIdentifiers?.forEach({ (taskId) in
-                    if let sb = taskController.reports?.submissionBundle(for: taskId) {
+                    if let sb = taskController.reports?.instrumentResult(for: taskId) {
                         sb.canSubmit = true
                         toSubmit.append(sb)
                     }

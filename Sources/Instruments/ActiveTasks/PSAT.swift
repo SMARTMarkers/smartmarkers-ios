@@ -41,6 +41,9 @@ open class PASAT: Instrument {
             ]
         
     }
+    public func sm_configure(_ settings: Any?) {
+        
+    }
 	
 	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 

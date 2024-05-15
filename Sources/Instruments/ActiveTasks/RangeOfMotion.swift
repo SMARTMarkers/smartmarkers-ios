@@ -43,6 +43,9 @@ open class KneeRangeOfMotion: Instrument {
         sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
     }
     
+    public func sm_configure(_ settings: Any?) {
+        
+    }
     
 	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 
@@ -129,6 +132,10 @@ open class ShoulderRangeOfMotion: Instrument {
         self.sm_title = i.description
         self.sm_code = i.coding
         sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code":sm_code!.sm_searchableToken()!])]
+    }
+    
+    public func sm_configure(_ settings: Any?) {
+        
     }
     
 	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {

@@ -28,6 +28,25 @@ extension String {
             }
         }
     }
+    
+    
+    
+//    public func sm_htmlToNSAttributedString(largeFontSize: Bool = false) -> NSAttributedString? {
+//        
+//        let size = UIFont.preferredFont(forTextStyle: .body).pointSize
+//        let titleSize = UIFont.preferredFont(forTextStyle: .title2).pointSize
+//        let str =  String(format:"<span style=\"font-family: '-apple-system'; font-size: \(largeFontSize ? titleSize : size)\">%@</span>", self)
+//
+//        
+//        if let attributedString = try? NSAttributedString(data: Data(str.utf8),
+//                                                          options: [.documentType: NSAttributedString.DocumentType.html,
+//                                                                    .characterEncoding: String.Encoding.utf8.rawValue],
+//                                                          documentAttributes: nil) {
+//            return attributedString
+//        }
+//        
+//        return nil
+//    }
 }
 
 extension UIViewController {
@@ -45,6 +64,35 @@ extension UIView {
     func sm_addVisualConstraint(_ visualFormat: String,_ vs: [String:Any]) {
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: [], metrics: nil, views: vs))
     }
+    
+        func addBorder(_ edge: UIRectEdge, color: UIColor, thickness: CGFloat) {
+            let subview = UIView()
+            subview.translatesAutoresizingMaskIntoConstraints = false
+            subview.backgroundColor = color
+            self.addSubview(subview)
+            switch edge {
+            case .top, .bottom:
+                subview.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
+                subview.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
+                subview.heightAnchor.constraint(equalToConstant: thickness).isActive = true
+                if edge == .top {
+                    subview.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+                } else {
+                    subview.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+                }
+            case .left, .right:
+                subview.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+                subview.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+                subview.widthAnchor.constraint(equalToConstant: thickness).isActive = true
+                if edge == .left {
+                    subview.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
+                } else {
+                    subview.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
+                }
+            default:
+                break
+            }
+        }
 }
 
 extension UIButton {
@@ -60,5 +108,25 @@ extension UIButton {
         btn.addTarget(target, action: action , for: UIControl.Event.touchUpInside)
         
         return btn
+    }
+}
+
+
+public extension String {
+    
+    func sm_htmlToNSAttributedString(largeFontSize: Bool = false) -> NSAttributedString? {
+        
+        let size = UIFont.preferredFont(forTextStyle: .body).pointSize
+        let titleSize = UIFont.preferredFont(forTextStyle: .title2).pointSize
+        let str =  String(format:"<span style=\"font-family: '-apple-system'; font-size: \(largeFontSize ? titleSize : size)\">%@</span>", self)
+
+        if let attributedString = try? NSAttributedString(data: Data(str.utf8),
+                                                          options: [.documentType: NSAttributedString.DocumentType.html,
+                                                                    .characterEncoding: String.Encoding.utf8.rawValue],
+                                                          documentAttributes: nil) {
+            return attributedString
+        }
+        
+        return nil
     }
 }

@@ -90,7 +90,7 @@ extension QuestionnaireItem {
         self.rk_answerFormat(callback: { (answerFormat, zerror) in
             
             if let error = zerror {
-//                print(error)
+//                smLog(error)
             }
             else {
                 switch self.type! {
@@ -207,7 +207,7 @@ extension QuestionnaireItem {
                 withDefaultDate: initial?.first?.valueDate?.nsDate,
                 minimumDate: extensions(forURI: kSD_QuestionnaireMinValue)?.first?.valueDate?.nsDate,
                 maximumDate: extensions(forURI: kSD_QuestionnaireMaxValue)?.first?.valueDate?.nsDate,
-                calendar: nil
+                calendar: Calendar.current
             )
             callback(answerFormat, nil)
             

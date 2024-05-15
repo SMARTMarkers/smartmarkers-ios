@@ -20,23 +20,23 @@ public class LocalAuth: NSObject {
             context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: verifyMsg, reply: { (success, eerror) in
                 
                 if success {
-//                    print("successful authentication")
+//                    smLog("successful authentication")
                     callback(true, error)
                     
                 }
                 else       {
                     
-                    print("no successful authentication")
+                    smLog("no successful authentication")
                     
                     switch eerror!._code {
                     case LAError.systemCancel.rawValue:
-                        print("Auth cancelled by system")
+                        smLog("Auth cancelled by system")
                     case LAError.userCancel.rawValue:
-                        print("Auth cancelled by User")
+                        smLog("Auth cancelled by User")
                     case LAError.userFallback.rawValue:
-                        print("user selected custom password")
+                        smLog("user selected custom password")
                     default:
-                        print("Authentication failed")
+                        smLog("Authentication failed")
                     }
                     
                     callback(false, error)

@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import SMART
 
 public class ReportViewController: UITableViewController {
     
     public var report: Report!
     
     public var viewFHIRResource: Bool = true
+    
+    public var contained: [Report]?
     
     public lazy var data : [(String, String)] = {
         return [
@@ -30,6 +33,8 @@ public class ReportViewController: UITableViewController {
         self.init(style: .grouped)
         self.report = report
         self.title = "\(report.rp_title ?? "")"
+        
+        self.contained = (self.report as? DomainResource)?.contained?.compactMap({ $0 as? Report })
     }
     
     public override func viewDidLoad() {
@@ -53,12 +58,28 @@ public class ReportViewController: UITableViewController {
     // MARK: - Table view data source
 
     override public func numberOfSections(in tableView: UITableView) -> Int {
-        return viewFHIRResource ? 2 : 1
+        return viewFHIRResource ? 3 : 2
     }
 
     override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? data.count : 1
+        
+        if section == 0 {
+            return data.count
+        }
+        if section == 1 {
+            return contained?.count ?? 0
+        }
+        
+        return 1
     }
+    
+    public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "Contained FHIR Resources"
+        }
+        return nil
+    }
+    
     
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "ReportCell"
@@ -76,6 +97,16 @@ public class ReportViewController: UITableViewController {
             cell?.textLabel?.text = text
             cell?.detailTextLabel?.text = title
         }
+        
+        else if indexPath.section == 1  {
+            
+            cell?.accessoryType = .none
+            let re = contained![indexPath.row]
+            let title = contained![indexPath.row].rp_title
+            cell?.textLabel?.text = re.rp_title ?? re.sm_resourceType()
+            cell?.detailTextLabel?.text = re.sm_resourceType()
+        }
+        
         else {
             cell?.accessoryType = .disclosureIndicator
             cell?.textLabel?.text = "FHIR Resource"
@@ -85,9 +116,16 @@ public class ReportViewController: UITableViewController {
     }
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1 {
+        
+        if indexPath.section == 2 {
             showFHIR(nil)
         }
+        
+        if indexPath.section == 1 {
+            let rep = contained![indexPath.row]
+            self.navigationController?.pushViewController(ReportViewController(rep), animated: true)
+        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

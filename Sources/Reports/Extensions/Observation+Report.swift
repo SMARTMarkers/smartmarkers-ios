@@ -51,6 +51,7 @@ extension Observation : Report {
 		
 		if let patientReference = try? patient.asRelativeReference() {
 			subject = patientReference
+            smLog(subject?.reference)
 			return true
 		}
 		

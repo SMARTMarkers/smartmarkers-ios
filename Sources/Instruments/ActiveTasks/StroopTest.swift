@@ -42,6 +42,9 @@ open class StroopTest: Instrument {
         self.sm_reportSearchOptions = [FHIRReportOptions(Observation.self, ["code": sm_code!.sm_searchableToken()!])]
         
     }
+    public func sm_configure(_ settings: Any?) {
+        
+    }
     
 	public func sm_taskController(config: InstrumentPresenterOptions?, callback: @escaping ((ORKTaskViewController?, Error?) -> Void)) {
 

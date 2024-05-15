@@ -9,6 +9,10 @@
 import Foundation
 import SMART
 
+
+let SMARTMarkersSystem = "http://smartmarkers.smarthealthit.org"
+let InstrumentSystem = SMARTMarkersSystem + "/vs-instruments"
+let TaskAttemptSystem = SMARTMarkersSystem + "/vs-taskAttempt"
 /**
  Convenience enums to list all available instruments supported natively by SMART Markers.
  
@@ -21,8 +25,8 @@ public enum Instruments {
     public enum ActiveTasks: String, CaseIterable, CustomStringConvertible {
         
         case AmslerGrid                     = "amslergrid"
-        case TowerOfHanoi                   = "towerOfHanoi"
-        case NineHolePegTest                = "holePegTest"
+        case TowerOfHanoi                   = "towerofhanoi"
+        case NineHolePegTest                = "mineholepegtest"
         case PSAT_2                         = "psat-2"
         case PSAT_3                         = "psat-3"
         case RangeOfMotion_shoulder_right   = "rangeofmotion.shoulder.right"
@@ -32,8 +36,8 @@ public enum Instruments {
         case FingerTappingSpeed             = "fingertappingspeed.both"
         case FingerTappingSpeed_Left        = "fingertappingspeed.left"
         case FingerTappingSpeed_Right       = "fingertappingspeed.right"
-        case SpatialSpanMemory              = "spatialSpanMemory"
-        case StroopTest                     = "stroopTest"
+        case SpatialSpanMemory              = "spatialspanmemory"
+        case StroopTest                     = "strooptest"
         
         
         public var instance: Instrument {
@@ -109,13 +113,23 @@ public enum Instruments {
                 return Coding.sm_ResearchKit(self.rawValue, self.description)
             }
         }
+        
+   
+    }
+    
+    public static func Code(_ code: String) -> Instrument? {
+        
+        
+        ActiveTasks(rawValue: code)?.instance ??
+        HealthKit(rawValue: code)?.instance
+        
     }
     
     /// HealthKit: Instruments modules that retrieve data from iPhone's HealthKit repository.
     public enum HealthKit: String, CaseIterable, CustomStringConvertible {
         
-        case StepCount                  = "stepCount"
-        case HealthRecords              = "healthRecords"
+        case StepCount                  = "stepcount"
+        case HealthRecords              = "healthrecords"
         
         public var description: String {
             switch self {
@@ -139,7 +153,7 @@ public enum Instruments {
     /// Web repository Instruments. (Omron Blood Pressure)
     public enum Web: String, CaseIterable {
         
-        case OmronBloodPressure             = "omronBloodPressure"
+        case OmronBloodPressure             = "omronbloodpressure"
         
         public func instance(authSettings: [String: Any], callbackManager: inout CallbackManager) -> Instrument {
             switch self {

@@ -21,16 +21,34 @@ open class HealthRecordTaskViewController: InstrumentTaskViewController {
     public required init(settings: [String:Any]?) {
         
         // Settings
+        
         let introductionTitle = settings?["introduction_title"] as? String ?? HealthRecordTaskViewController.Introduction_Title
-        let introductionText = settings?["introduction_text"] as? String ?? HealthRecordTaskViewController.Introduction_Title
 		let learnMoreText		= settings?["learnmore_text"] as? String ?? nil
         let completionTitle   = settings?["completion_step_title"] as? String ?? HealthRecordTaskViewController.Completion_Title
         let completionText    = settings?["completion_step_text"] as? String ?? HealthRecordTaskViewController.Completion_Text
-        let requestedClinicalRecordTypes = settings?["requestedClinicalRecordTypes"] as? [HKClinicalTypeIdentifier] ?? nil
-		let learnMoreBodyItems = settings?["learnMoreBodyItems"] as? [ORKBodyItem] ?? nil
+            
+        let requirements = (settings?["output"] as? [DataRequired])
+        let dataRequirementsAsBodyItems = requirements?.compactMap({ $0.valueSet.compactMap { $0.asResearchKitBodyItem() } }).flatMap { $0 }
+        let dataRequirementsRequestedTypes = requirements?
+            .compactMap({ $0.fhirType.rawValue })
+            .map({ HKFHIRResourceType(rawValue: $0) })
+            .compactMap({ $0.as_HKIdentifierClinicalType() })
+        
+        let requestedClinicalRecordTypes = settings?["requestedClinicalRecordTypes"] as? [HKClinicalTypeIdentifier] ?? dataRequirementsRequestedTypes
+
+        let learnMoreBodyItems = settings?["learnMoreBodyItems"] as? [ORKBodyItem] ?? dataRequirementsAsBodyItems ?? requestedClinicalRecordTypes?.compactMap { $0.asBodyItem }
+        
+        let introductionText = settings?["introduction_text"] as? String ??
+        (requestedClinicalRecordTypes != nil ? Self.Introduction_Text_Alt : Self.Introduction_Text)
+       
+        
+//        let reconcileMedications = settings?["reconcileMedications"] as? Bool
+//        let
+        
+
         
         
-		var steps = [ORKStep]()
+        var steps = [ORKStep]()
 
 		let introStep = HealthRecordIntroductionStep.Create(identifier: ksm_healthrecord_step_introduction,
                                                             title: introductionTitle,
@@ -80,7 +98,7 @@ open class HealthRecordTaskViewController: InstrumentTaskViewController {
 
     
     // Defaults
-    static let Introduction_Title       =   "Access Request"
+    static let Introduction_Title       =   "Health records access"
     static let Introduction_Text        =   "Please select the type of clinical data to request from your iPhone."
     static let Introduction_Text_Alt    =   "The following type of health records will be requested from your Health app"
     static let Introduction_Learnmore   =   "Learn more about this specific step"

@@ -8,6 +8,8 @@
 
 import Foundation
 import SMART
+import ResearchKit
+
 
 
 let kSD_Variable = "http://hl7.org/fhir/StructureDefinition/variable"
@@ -20,6 +22,16 @@ let kHL7ConditionClinicalStatus = "http://terminology.hl7.org/CodeSystem/conditi
 let kHL7ObservationCategory = "http://terminology.hl7.org/CodeSystem/observation-category"
 
 
+extension ValueSet {
+    
+    func asResearchKitBodyItem() -> ORKBodyItem? {
+        
+        ORKBodyItem(text: self.title?.string ?? self.name?.string, detailText: self.description_fhir?.string, image: nil, learnMoreItem: nil, bodyItemStyle: .bulletPoint)
+    }
+    func describeInHtml() -> String? {
+        return title?.string
+    }
+}
 
 
 extension Appointment {
@@ -185,9 +197,9 @@ public extension SMART.Coding {
     
 }
 
-extension SMART.DomainResource {
+public extension SMART.DomainResource {
     
-    func sm_asBundleEntry() -> BundleEntry {
+     func sm_asBundleEntry() -> BundleEntry {
         let entry = BundleEntry()
         let uri = "urn:uuid:\(UUID().uuidString)"
         entry.fullUrl = FHIRURL(uri)
@@ -195,6 +207,103 @@ extension SMART.DomainResource {
         entry.request = BundleEntryRequest(method: .POST, url: FHIRURL(self.sm_resourceType())!)
         return entry
     }
+}
+
+public extension Array where Element: DomainResource {
+    
+
+    func sm_filter<ResourceType: DomainResource>(codes: [String]?, system: String?, surveyCode:String? = nil, surveySystem: String? = nil, type: SMART.ResourceType) -> [ResourceType]? {
+ 
+                
+        let filtered = filter { (resource) -> Bool in
+            
+            
+            if let codes = codes, let system = system {
+                
+                let coding: [Coding]?
+                
+                if type.rawValue == "Observation", let resource = resource as? Observation {
+                    coding = resource.code?.coding
+                }
+                else if type.rawValue == "Condition", let resource = resource as? Condition {
+                    coding = resource.code?.coding
+                }
+                else if type.rawValue == "MedicationRequest", let resource = resource as? MedicationRequest {
+                    coding = resource.medicationCodeableConcept?.coding
+                }
+                else if type.rawValue == "MedicationStatement", let resource = resource as? MedicationStatement {
+                    coding = resource.medicationCodeableConcept?.coding
+                }
+                else if type.rawValue == "MedicationDispense", let resource = resource as? MedicationDispense {
+                    coding = resource.medicationCodeableConcept?.coding
+                }
+                else if type.rawValue == "Medication", let resource = resource as? Medication {
+                    coding = resource.code?.coding
+                }
+                else if type.rawValue == "QuestionnaireResponse", let resource = resource as? QuestionnaireResponse {
+                    
+                    if let q = resource.contained?.first as? Questionnaire {
+                        coding = q.code
+                    }
+                    else  if
+                        let qcode =  resource.identifier?.value,
+                        let qsys  = resource.identifier?.system {
+                        let codng = Coding()
+                        codng.code = qcode
+                        codng.system = qsys
+                        coding = [codng]
+                    }
+                    else {
+                        coding = nil
+                    }
+                }
+                else {
+                    coding = nil
+                }
+                
+                if surveyCode != nil && surveySystem != nil && type.rawValue == "QuestionnaireResponse" {
+                    let count = coding?.filter({
+                                                $0.system!.absoluteString == surveySystem! &&
+                                                    surveyCode == $0.code!.string }).count ?? 0
+                    return count > 0
+                }
+                else {
+                    let count = coding?.filter({
+                                                $0.system!.absoluteString == system &&
+                                                    codes.contains($0.code!.string) }).count ?? 0
+                    return count > 0
+                }
+            }
+            
+            return true
+            
+        } as! [ResourceType]
+        
+        return filtered.count > 0 ? filtered : nil
+    }
+    
+
+    
+    func sm_Filter<D: DomainResource>(_  ofTypes: [D.Type], codes: [String], system: String) -> [DomainResource]? {
+
+        let filtered = filter { (report) -> Bool in
+            for typ in ofTypes {
+                if let rep = report as? Report, typ.resourceType == rep.sm_resourceType(), let code = rep.rp_code {
+                    let match = ((codes.contains(code.code!.string)) && (system == code.system!.absoluteString))
+                    if match {
+//                        smLog(try? code.asJSON())
+                    }
+                    return match
+                    
+                }
+            }
+            return false
+        }
+    
+        
+        return filtered
+    }
+     
 }
 
 extension SMART.BundleEntry {

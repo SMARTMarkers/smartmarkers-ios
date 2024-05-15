@@ -17,6 +17,11 @@ Optional instrument resolving delegate for `TaskController`. Delegates can const
 */
 public protocol InstrumentResolver: class {
    
+    /// Resolve instrument based on code and identifier
+    func resolveInstrument(for code:[Coding], identifier:[Identifier], callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
+    
+    /// Resolve instrument from a Request type
+    func resolveInstrument(from request: any Request, callback: @escaping ((_ instrument: Instrument?, _ error :Error?) -> Void))
     /// Called when trying to resolve the `Instrument` referenced in `Request` from the `TaskController`
     func resolveInstrument(in controller: TaskController, callback: @escaping ((_ instrument: Instrument?, _ error: Error?) -> Void))
     
@@ -64,7 +69,7 @@ public struct TaskAttempt {
 		}
 	}
 	
-	public func serialize() throws -> [String: Any] {
+	public func serialize() -> [String: Any] {
 		var errors = [FHIRValidationError]()
 		var json = [
 			"startTime"	: startTime.fhir_asDateTime().asJSON(errors: &errors),
@@ -78,15 +83,72 @@ public struct TaskAttempt {
 		
 		return json
 	}
-	
+    
+
+}
+
+public extension TaskAttempt {
+    
+    func inFHIR(participant: (any Participant)?) -> SMART.Observation {
+        
+        let observation = Observation()
+        observation.status = .final
+        let observation_cc = CodeableConcept()
+        let observation_coding = Coding()
+        observation_cc.text = "Task Attempt Metrics"
+        observation_coding.code = "taskattemptv3".fhir_string
+        observation_coding.display = "Task Attempt Metrics".fhir_string
+        observation_coding.system = FHIRURL(TaskAttemptSystem)
+        observation_cc.coding = [observation_coding]
+        observation.code = observation_cc
+        if let participant {
+            observation.subject = try? participant.fhirPatient.asRelativeReference()
+        }
+        
+        let cc_period = CodeableConcept()
+        let coding_period = Coding()
+        coding_period.code = "task-period".fhir_string
+        coding_period.display = "Task Period".fhir_string
+        coding_period.system = FHIRURL(TaskAttemptSystem)
+        cc_period.coding = [coding_period]
+        let period = Period()
+        period.start = startTime.fhir_asDateTime()
+        period.end = endTime?.fhir_asDateTime()
+        let component1 = ObservationComponent(code: cc_period)
+        component1.valuePeriod = period
+
+        let cc_result = CodeableConcept()
+        let coding_result_status = Coding()
+        coding_result_status.code = "task-result-status".fhir_string
+        coding_result_status.display = "Task Result Status".fhir_string
+        coding_result_status.system = FHIRURL(TaskAttemptSystem)
+        cc_result.coding = [coding_result_status]
+        let component2 = ObservationComponent(code: cc_result)
+        component2.valueString = state.rawValue.fhir_string
+        
+        let cc_instrument = CodeableConcept()
+        let coding_instrument_identifier = Coding()
+        coding_instrument_identifier.code = "task-identifier".fhir_string
+        coding_instrument_identifier.display = "Task Identifier".fhir_string
+        coding_instrument_identifier.system = FHIRURL(TaskAttemptSystem)
+        cc_instrument.coding = [coding_instrument_identifier]
+        let component3 = ObservationComponent(code: cc_instrument)
+        component3.valueString = self.taskId.fhir_string
+        
+        observation.component = [component1, component2, component3]
+        return observation
+       
+    }
 }
 
 /** 
-TaskController is the central class for managing PGHD
+TaskController is the manager class ffor "request--> instrument --> report"
 
 Each controller class can read a FHIR `Request` resource, resolve the embedded reference to its `Instrument` and fetch historical `Reports` from the `Server. Through the `Instrument` protocol, it also manages `ResearchKit` based task controllers for FHIR `Questionnaire`, `AdaptiveQuestionnaire`, active tasks, web fetches and other digital data
 */
 open class TaskController: NSObject {
+    
+    public typealias TaskControllerCompletionCallback = (( _ attempt: TaskAttempt, _ instrumentResult: InstrumentResult?, _ error: Error?) -> Void)
     
     /// `Request` protocol conformant FHIR resource. If present, instrument is resolved from the request. See `Request.swift`
     public var request: Request?
@@ -96,14 +158,14 @@ open class TaskController: NSObject {
    
     /// `Reports` holds all historial FHIR resources and the newly generated FHIR `Bundle(s)` after a user session. See `Reports.swift`
     public internal(set) final lazy var reports: Reports? = {
-        return Reports(task: self)
+        return Reports(for: self)
     }()
    
     /// Optional: External resolver for the instrument. 
     public weak var instrumentResolver: InstrumentResolver?
    
     /// Callback; called when a PGHD user task-session is completed
-	public var onTaskCompletion: (( _ attempt: TaskAttempt, _ submissionBundle: SubmissionBundle?, _ error: Error?) -> Void)?
+	public var onTaskCompletion: TaskControllerCompletionCallback?
    
     /// Schedule referenced from the receiver's request
     public lazy var schedule: TaskSchedule? = {
@@ -129,7 +191,7 @@ open class TaskController: NSObject {
     }
     
     /// last attempt
-    public var currentAttempt: TaskAttempt?
+//    public var currentAttempt: TaskAttempt?
    
     /**
     Initializer
@@ -166,7 +228,7 @@ open class TaskController: NSObject {
         
 		instrument.sm_taskController(config: presenterOptions) { (taskViewController, error) in
             taskViewController?.delegate = self
-            self.currentAttempt = nil
+//            self.currentAttempt = nil
             callback(taskViewController, error)
         }
     }
@@ -185,6 +247,7 @@ open class TaskController: NSObject {
         }
         
         
+        // No instrument, check if resolver can give us
         if let resolver = instrumentResolver {
             
             resolver.resolveInstrument(in: self) { [weak self] (instrument, error) in
@@ -339,7 +402,7 @@ public extension TaskController {
             throw SMError.undefined(description: "Unable to serialize; No instrument.code found")
         }
         
-		let jsonAttempts = try attempts.map({ try $0.serialize() })
+		let jsonAttempts = attempts.map({ $0.serialize() })
         let json = ["instrument": instrument_identifier, "attempts": jsonAttempts] as [String : Any]
         return json
 	}
@@ -359,14 +422,13 @@ public extension TaskController {
 		let attemp = try attmps.map ({ try TaskAttempt(serialized: $0) })
 		self.attempts.append(contentsOf: attemp)
 	}
-	
-	
 }
 
 
 public extension TaskController {
     
-    func generateReports(from taskViewController: ORKTaskViewController, result: ORKTaskResult, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
+    @discardableResult
+    func generateReports(from taskViewController: ORKTaskViewController, result: ORKTaskResult, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) -> InstrumentResult {
         
         
         // ***************
@@ -376,28 +438,35 @@ public extension TaskController {
 //        if stepIdentifier.contains("range.of.motion") { return }
         // ***************
                 
+        let taskId = taskViewController.taskRunUUID.uuidString
         if reason == .discarded  {
-            
             let attempt = recordAttempt(taskViewController, .discarded)
-            onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
+            let instrumentResult = InstrumentResult(taskId: taskId, bundle: nil, metric: attempt)
+            reports?.enqueueBundle(instrumentResult)
+            onTaskCompletion?(attempt, instrumentResult, SMError.instrumentResultBundleNotCreated)
+            return instrumentResult
         }
         else if reason == .failed {
-            
             let attempt = recordAttempt(taskViewController, .failed)
-            onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
+            let instrumentResult = InstrumentResult(taskId: taskId, bundle: nil, metric: attempt)
+            reports?.enqueueBundle(instrumentResult)
+            onTaskCompletion?(attempt, instrumentResult, SMError.instrumentResultBundleNotCreated)
+            return instrumentResult
         }
-        else if reason == .completed {
-            
+        else  {
+           // reason == .completed or .saved
             if let bundle = instrument?.sm_generateResponse(from: taskViewController.result, task: taskViewController.task!) {
-                
                 let attempt = recordAttempt(taskViewController, .completedWithSuccess)
-                let submissionBundle = reports?.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString, metric: attempt)
-                onTaskCompletion?(attempt, submissionBundle, nil)
+                let instrumentResult = reports!.enqueueSubmission(bundle, taskId: taskViewController.taskRunUUID.uuidString, metric: attempt)
+                onTaskCompletion?(attempt, instrumentResult, nil)
+                return instrumentResult
             }
             else {
-                
                 let attempt = recordAttempt(taskViewController, .completedWithoutSuccess)
-                onTaskCompletion?(attempt, nil, SMError.instrumentResultBundleNotCreated)
+                let instrumentResult = InstrumentResult(taskId: taskId, bundle: nil, metric: attempt)
+                reports?.enqueueBundle(instrumentResult)
+                onTaskCompletion?(attempt, instrumentResult, nil)
+                return instrumentResult
             }
         }
     }
@@ -423,7 +492,7 @@ extension TaskController: ORKTaskViewControllerDelegate {
    
     // MARK: Report Generation
 
-    /// After each task session, the controller generates `SubmissionBundle` holding a FHIR `Bundle` to be sent to the FHIR server. See `Instrument.sm_generateResponse(from:task:)` for more info.
+    /// After each task session, the controller generates `InstrumentResult` holding a FHIR `Bundle` to be sent to the FHIR server. See `Instrument.sm_generateResponse(from:task:)` for more info.
     public func taskViewController(_ taskViewController: ORKTaskViewController, didFinishWith reason: ORKTaskViewControllerFinishReason, error: Error?) {
 
 
@@ -440,14 +509,14 @@ extension TaskController: ORKTaskViewControllerDelegate {
 	private func recordAttempt(_ taskViewController: ORKTaskViewController, _ state: TaskAttempt.TaskAttemptState) -> TaskAttempt {
 		
         guard let instrument_identifier_code = instrument?.sm_code?.sm_searchableToken() else {
-            fatalError("Requires a code as an identifier")
+             fatalError("Requires a code as an identifier")
         }
 
         let attempt = TaskAttempt(instrument_identifier_code,
                                   taskViewController.result.startDate,
                                   taskViewController.result.endDate,
                                   state)
-        currentAttempt = attempt
+//        currentAttempt = attempt
 		attempts.insert(attempt, at: 0)
 		return attempt
 	}

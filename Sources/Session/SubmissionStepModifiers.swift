@@ -72,16 +72,32 @@ extension Reports {
     
     func sm_asTextChoiceAnswerFormat() -> ORKTextChoiceAnswerFormat? {
         
-        guard !submissionQueue.isEmpty else {
+        guard hasReportsToSubmit else {
             return nil
         }
         
-        let choices = submissionQueue.map { (gr) -> ORKTextChoice in
-            let content = gr.bundle.sm_ContentSummary()! + "\n\nStatus: \(gr.status)" + "\nTaskId: \(gr.taskId)"
-                let count  = gr.bundle.sm_resourceCount()
-
+        var choices = [ORKTextChoice]()
+        for sub in reportsToSubmit() ?? [] {
             
-            return ORKTextChoice(text: "#\(count) Resources", detailText: content, value: gr.taskId as NSCoding & NSCopying & NSObjectProtocol, exclusive: false)
+            guard let bundle = sub.bundle else { continue }
+            
+            let title = "#\(bundle.sm_resourceCount()) health data resources"
+            let content = """
+            \(bundle.sm_ContentSummary() ?? "")
+            
+            Status: \(sub.status.rawValue)
+            Task Id: \(sub.taskId)
+            
+            """
+            
+            let choice = ORKTextChoice(
+                text: title,
+                detailText: content, 
+                value: sub.taskId as NSCoding & NSCopying & NSObjectProtocol,
+                exclusive: false
+            )
+            
+            choices.append(choice)
         }
         
         return ORKTextChoiceAnswerFormat(style: .multipleChoice, textChoices: choices)

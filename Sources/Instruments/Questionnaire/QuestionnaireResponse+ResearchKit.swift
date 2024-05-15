@@ -167,6 +167,7 @@ extension ORKDateQuestionResult {
         guard let date = dateAnswer else {
             return nil
         }
+
         let answer = QuestionnaireResponseItemAnswer()
         answer.valueDate = date.fhir_asDate()
         return [answer]
