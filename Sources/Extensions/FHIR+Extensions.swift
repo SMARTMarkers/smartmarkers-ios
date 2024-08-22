@@ -261,16 +261,18 @@ public extension Array where Element: DomainResource {
                     coding = nil
                 }
                 
+            
+                
                 if surveyCode != nil && surveySystem != nil && type.rawValue == "QuestionnaireResponse" {
                     let count = coding?.filter({
-                                                $0.system!.absoluteString == surveySystem! &&
-                                                    surveyCode == $0.code!.string }).count ?? 0
+                                                $0.system?.absoluteString == surveySystem! &&
+                                                    surveyCode == $0.code?.string }).count ?? 0
                     return count > 0
                 }
                 else {
                     let count = coding?.filter({
-                                                $0.system!.absoluteString == system &&
-                                                    codes.contains($0.code!.string) }).count ?? 0
+                                                $0.system?.absoluteString == system &&
+                                                    codes.contains($0.code?.string ?? "") }).count ?? 0
                     return count > 0
                 }
             }
@@ -289,7 +291,7 @@ public extension Array where Element: DomainResource {
         let filtered = filter { (report) -> Bool in
             for typ in ofTypes {
                 if let rep = report as? Report, typ.resourceType == rep.sm_resourceType(), let code = rep.rp_code {
-                    let match = ((codes.contains(code.code!.string)) && (system == code.system!.absoluteString))
+                    let match = ((codes.contains(code.code?.string ?? "")) && (system == code.system?.absoluteString))
                     if match {
 //                        smLog(try? code.asJSON())
                     }
