@@ -49,7 +49,9 @@ extension HKFHIRResourceType {
 
         if #available(iOS 14.0, *) {
             if self == .medicationRequest   { return MedicationRequest()    as! T }
+            
         }
+
         
         throw SMError.instrumentHealthKitClinicalRecordTypeNotSupported(type: "<HKFHIRResourceType: \(self.rawValue)>")
     }

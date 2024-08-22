@@ -131,15 +131,20 @@ public class Persistor: PersistorProtocol {
     
     public func persist(data ofTask: StudyTask, for participant: (any Participant)?) throws {
         
-        guard let gb = ofTask.result else {
+        guard let task_result = ofTask.result else {
             // Nothing to persist
             return
         }
         
+       
         // Preprocessing resources //
-        preProcessor?.prepareForPersistance(result: gb, for: participant)
+        preProcessor?.prepareForPersistance(result: task_result, for: participant)
         
-      
+        // Tag metrics
+        task_result.taskMetricsFHIR.forEach({
+            preProcessor?.prepareForPersistance(resource: $0, for: participant)
+        })
+        
         // TODO: check here if gb is empty.
         // if empty? then, maybe forget about upload?
         // Save locally - on device

@@ -14,11 +14,13 @@ public struct DeIdentifiedResource {
     let resource: DomainResource
 }
 
+/**
+ Protocol to process newly generated FHIR resources before storage or submission to a FHIR server
+ */
 public protocol PreProcessorProtocol {
     
-    associatedtype ConsentDocument: Consented
-        /// consent policy to abide by
-    var consent: ConsentDocument? { get }
+    /// consent policy to abide by
+    var consent: SignedConsent? { get }
     
     /// Prepare enrollment
     func prepareEnrollment(participant: any Participant)
@@ -28,7 +30,6 @@ public protocol PreProcessorProtocol {
     
     /// Prepares a bundle for storage
     func prepareForPersistance(result: StudyTaskResult, for participant: (any Participant)?)
-    
     
     /// Should the participant and its conents be deIdentified
     func mustDeIdentifyParticipant() -> Bool
@@ -47,13 +48,11 @@ public extension PreProcessorProtocol {
 
 private let kDevice_associated_identifier = "ppm.device_synthetic_identifier"
 
-open class PreProcessor<T: Consented>: PreProcessorProtocol {
+open class PreProcessor: PreProcessorProtocol {
     
     public let device_associated_identifier: String
 
-    public typealias ConsentDocument = T
-    
-    public var consent: T?
+    public var consent: SignedConsent?
     
     public init() {
         
@@ -80,12 +79,16 @@ open class PreProcessor<T: Consented>: PreProcessorProtocol {
     }
     
     open func prepareForPersistance(resource: DomainResource, for participant: (any Participant)?) {
-       
-        if let participant = participant {
+        
+        guard let participant else {
+           return
+        }
             if let resource = resource as? Report {
                 if false == resource.sm_assign(patient: participant.fhirPatient) {
-                    fatalError()
+                    print("Could not assign participant to the resource")
                 }
+                // Nollify the resource.id; else submission will be rejected by the FHIR Server
+                // This is necessary for "Exchange" FHIR Resources
                 resource.id = nil
                 
                 if let resource = resource as? Observation {
@@ -93,14 +96,12 @@ open class PreProcessor<T: Consented>: PreProcessorProtocol {
                 }
             }
             else {
+                print("FHIR Resource could not be casted as a SMARTMarkers.Report")
                 smLog(try? resource.asJSON())
+                #if DEBUG
                 fatalError()
+                #endif
             }
-            
-        }
-        else {
-            fatalError("no participant")
-        }
     }
 
     

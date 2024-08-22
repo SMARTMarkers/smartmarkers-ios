@@ -129,6 +129,7 @@ open class SMConsentReviewStepViewController: ORKConsentReviewStepViewController
         return vc
     }
     
+    
     public override func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
 
         if stepViewController.step?.identifier == "nameForm" {

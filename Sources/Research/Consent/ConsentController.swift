@@ -11,7 +11,7 @@ import SMART
 import ResearchKit
 
 
-open class Consented {
+open class SignedConsent {
     
     public let consentResource: Consent
     
@@ -52,14 +52,14 @@ open class SConsentController: NSObject, ORKTaskViewControllerDelegate {
     public let requiredToShowEnrollmentOptions: Bool
     public let consentDocument: SMConsentDocument
     public var consentResult: SMConsentResult?
-    public internal(set) var consented: Consented?
+    public internal(set) var consented: SignedConsent?
     public internal(set) var signedPDF: Data?
     public internal(set) var consentStepIdentifiers = [String]()
     
     public var isConsented: Bool {
         consentResult?.isConsented ?? false
     }
-    public var onConsentTaskDidEnd: ((_ controller: SConsentController, _ consent: Consented?) -> Void)?
+    public var onConsentTaskDidEnd: ((_ controller: SConsentController, _ consent: SignedConsent?) -> Void)?
     
     public init(study_title: String, htmlTemplate: String, signatureTitle: String?, signaturePageContent: String?, requiredToShowEnrollmentOptions: Bool = false, requiredConsentToShare: Bool = false, requiredConsentToSubmitHealthRecord: Bool = false) {
         

@@ -124,7 +124,10 @@ open class StudyManger {
         guard !sessionResult.discarded else {
             // Submit metrics to server
             if let submissions = persistor?.submissions {
-                let obs = sessionResult.taskMetrics.map { $0.inFHIR(participant: self.participant!) }
+                let obs = sessionResult.taskMetrics.map { $0.inFHIR() }
+                obs.forEach({
+                    persistor?.preProcessor?.prepareForPersistance(resource: $0, for: self.participant)
+                })
                 submissions.addToQueue(name: "Task-Metrics",
                                       resources: obs,
                                       completion: nil)

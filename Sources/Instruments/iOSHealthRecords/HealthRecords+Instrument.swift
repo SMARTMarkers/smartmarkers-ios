@@ -52,7 +52,7 @@ open class HealthRecords: Instrument {
         callback(taskViewController, nil)
     }
     
-    open func codeFilter(resources: [DomainResource], requirements: [DataRequired]) throws -> [DomainResource] {
+    open func codeFilter(resources: [DomainResource], requirements: [DataRequired]) -> [DomainResource] {
         
         
         var filtered = [DomainResource]()
@@ -117,14 +117,11 @@ open class HealthRecords: Instrument {
 				.flatMap{ $0 }
 				.compactMap { try? $0.fhirResource?.sm_asR4() }
 				.compactMap({ $0 })
-			
-			
-			
-			
+		
 		}
         
         if let requirements = self.settings?["output"] as? [DataRequired] {
-            fhirResources = try! self.codeFilter(resources: fhirResources, requirements: requirements)
+            fhirResources = self.codeFilter(resources: fhirResources, requirements: requirements)
         }
 		
 		return fhirResources.isEmpty ? nil : SMART.Bundle.sm_with(fhirResources)

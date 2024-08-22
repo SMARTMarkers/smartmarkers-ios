@@ -14,7 +14,7 @@ import SMART
 /// Protocol to create FHIR based Participant
 public protocol Participant: class, CustomStringConvertible {
     
-    associatedtype ConsentedType: Consented
+    associatedtype ConsentedType: SignedConsent
         
     /// Study Participant Identifier
     var identifier: String? { get  }

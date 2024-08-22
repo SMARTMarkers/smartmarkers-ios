@@ -104,9 +104,6 @@ public class SubmissionsManager: SubmissionsQueueProtocol {
             }
  
             
-            
-            
-            
             queue.addOperations([dataOp], waitUntilFinished: false)
         
             
@@ -189,7 +186,7 @@ class DataSubmissionOperation: Operation {
     }
     func submit(callback: @escaping FHIRErrorCallback) {
         
-        guard let srv = server, let gd = task?.result?.fhir,let metrics = task?.result?.taskMetricsFHIR else {
+        guard let srv = server, let gd = task?.result?.fhir, let metrics = task?.result?.taskMetricsFHIR else {
             return
         }
         let count = gd.count

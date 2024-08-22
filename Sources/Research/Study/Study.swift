@@ -114,6 +114,8 @@ open class Study {
         }
         
         self.organization = researchStudy.sponsor?.resolved(Organization.self)
+        self.principleInvestigator = researchStudy.principalInvestigator?.resolved(Practitioner.self)
+        
         
         if let contact = researchStudy.contact?.first {
             self.contactName = contact.name?.string

@@ -9,6 +9,10 @@
 import Foundation
 import SMART
 
+/**
+ One StudyTaskResult represents the result of a single session.
+ May contain multiple InstrumentResults.
+ */
 public class StudyTaskResult {
     
     let id: String

@@ -89,6 +89,10 @@ public struct TaskAttempt {
 
 public extension TaskAttempt {
     
+    func inFHIR() -> SMART.Observation {
+        return inFHIR(participant: nil)
+    }
+    /// Deprecation peending: remove
     func inFHIR(participant: (any Participant)?) -> SMART.Observation {
         
         let observation = Observation()
